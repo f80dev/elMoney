@@ -1,16 +1,8 @@
 import logging
 
-from erdpy import cli_shared, wallet
-from erdpy.accounts import Address
-from erdpy.wallet import pem
-from argparse import ArgumentParser
-
-from erdpy import config
 from erdpy.accounts import Account
 from erdpy.contracts import SmartContract
 from erdpy.environments import TestnetEnvironment
-from erdpy.projects import ProjectClang
-from erdpy.proxy import ElrondProxy
 
 class ElrondNet:
     contract=None

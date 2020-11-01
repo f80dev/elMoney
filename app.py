@@ -1,5 +1,4 @@
 from flask import Flask
-
 from elrondTools import ElrondNet
 
 app = Flask(__name__)

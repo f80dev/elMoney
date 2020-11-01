@@ -1,0 +1,4 @@
+pynacl
+pycryptodome
+erdpy
+flask
