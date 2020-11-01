@@ -1,0 +1,19 @@
+Metadata-Version: 2.1
+Name: erdpy
+Version: 0.9.5
+Summary: Elrond Smart Contracts Tools and Python SDK
+Home-page: https://github.com/ElrondNetwork/erdpy
+Author: Elrond Network
+License: GPL
+Description: https://github.com/ElrondNetwork/erdpy
+Keywords: Elrond
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: License :: OSI Approved :: GNU General Public License (GPL)
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Intended Audience :: Developers
+Classifier: Development Status :: 3 - Alpha
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown

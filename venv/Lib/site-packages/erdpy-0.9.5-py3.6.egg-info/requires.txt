@@ -1,0 +1,6 @@
+toml==0.10.0
+bottle
+requests
+pynacl
+pycryptodomex
+cryptography
