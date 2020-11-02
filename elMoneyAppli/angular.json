@@ -17,13 +17,15 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/elMoneyAppli",
+            "outputPath": "../docs/",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "aot": true,
             "assets": [
+              "src/404.html",
+              "src/CNAME",
               "src/favicon.ico",
               "src/assets",
               "src/manifest.webmanifest"

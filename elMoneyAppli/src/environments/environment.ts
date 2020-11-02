@@ -8,6 +8,7 @@ export const environment = {
   config_file:"config",
   domain_appli: "http://localhost:4200",
   //appVersion: require('../../package.json').version + '-dev',
+  default_contract: "erd1qqqqqqqqqqqqqpgqg0559g20jaclkpc9apzeqdd5wetevhwd9e3scrwaeu"
 };
 
 /*

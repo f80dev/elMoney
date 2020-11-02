@@ -25,6 +25,8 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import { TransferComponent } from './transfer/transfer.component';
 import { MainComponent } from './main/main.component';
+import { ShareComponent } from './share/share.component';
+import { CreateComponent } from './create/create.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,9 @@ import { MainComponent } from './main/main.component';
     AboutComponent,
     PromptComponent,
     TransferComponent,
-    MainComponent
+    MainComponent,
+    ShareComponent,
+    CreateComponent
   ],
   imports: [
     BrowserModule,

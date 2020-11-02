@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from "@angular/router";
 import {ApiService} from "../api.service";
+import {ConfigService} from "../config.service";
 
 @Component({
   selector: 'app-main',
@@ -10,13 +11,14 @@ import {ApiService} from "../api.service";
 export class MainComponent implements OnInit {
   addr: any;
   solde:any;
+  name:string;
 
-  constructor(public router:Router,public api:ApiService) { }
+  constructor(public router:Router,public api:ApiService,public config:ConfigService) { }
 
   ngOnInit(): void {
     this.addr=localStorage.getItem("addr");
     if(this.addr)
-      this.api._get("/balance/"+this.addr+"/").subscribe((r:any)=>{
+      this.api.balance(this.addr).subscribe((r:any)=>{
         this.solde=r;
       })
   }

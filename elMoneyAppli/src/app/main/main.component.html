@@ -4,15 +4,24 @@
     Votre adresse:<br>
     <small>{{addr}}</small><br><br>
 
-    Votre solde  : {{solde}}
+    Votre solde: {{solde}}{{config.unity}}
     <br><br>
   </div>
 
+  <hr><br>
 
   <button mat-raised-button
-        mat-button class="app-button"
-        (click)="router.navigate(['transfer'])">
+          mat-button
+          class="app-button"
+          (click)="router.navigate(['transfer'])">
     Envoyer
+  </button>
+
+  <button mat-raised-button
+          mat-button
+          class="app-button"
+          (click)="router.navigate(['create'])">
+    <div class="bloc-bouton">Créer une<br>monnaie</div>
   </button>
 
 </div>

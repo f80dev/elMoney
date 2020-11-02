@@ -4,6 +4,8 @@ import {Router} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {showError, showMessage} from "../tools";
 import {Location} from "@angular/common";
+import {toBase64String} from "@angular/compiler/src/output/source_map";
+import {ConfigService} from "../config.service";
 
 @Component({
   selector: 'app-transfer',
@@ -18,6 +20,7 @@ export class TransferComponent implements OnInit {
   solde: any;
 
    constructor(public api:ApiService,
+               public config:ConfigService,
                public _location:Location,
                public router:Router,public toast:MatSnackBar) { }
 
@@ -26,23 +29,26 @@ export class TransferComponent implements OnInit {
      this.address_to=localStorage.getItem("last_to");
      this.amount=localStorage.getItem("last_amount");
      if(this.address_to){
-       this.api._get("/balance/"+this.address_to).subscribe((r:any)=>{
+       this.api.balance(this.address_to).subscribe((r:any)=>{
          this.solde=r;
        })
      }
   }
 
    import(fileInputEvent: any) {
-     localStorage.setItem("last_to",this.address_to);
-     localStorage.setItem("last_amount",this.amount);
+      localStorage.setItem("last_to",this.address_to);
+      localStorage.setItem("last_amount",this.amount);
       var reader = new FileReader();
       this.message="Signature ...";
       reader.onload = ()=>{
         this.message="Transfert des fonds";
-        this.api._post("transfer/"+this.address_to+"/"+this.amount,"",reader.result).subscribe((r:any)=>{
+        let bytes=btoa(reader.result.toString());
+        localStorage.setItem("pem_file",bytes);
+        this.api._post("transfer/"+this.api.contract+"/"+this.address_to+"/"+this.amount,"",reader.result).subscribe((r:any)=>{
           this.message="";
           showMessage(this,"Fond transféré");
           localStorage.setItem("addr",r.from_addr);
+
           this._location.back();
         },(err)=>{
           showError(this,err);

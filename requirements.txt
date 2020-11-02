@@ -2,3 +2,4 @@ pynacl
 pycryptodome
 erdpy
 flask
+flask-cors

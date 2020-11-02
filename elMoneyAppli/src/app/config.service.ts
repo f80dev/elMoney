@@ -21,6 +21,7 @@ export class ConfigService {
   profils:any[]=[];
   jobs: any[]=[];
   query_cache: any[]; //Conserve le contenu de la dernière requete
+  unity: string ="";
 
     constructor(private location: Location,
               private http: HttpClient,

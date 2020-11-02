@@ -12,6 +12,7 @@ export class ApiService {
   user: any;
   token: string = null;
   token_expires: Date;
+  contract: string=environment.default_contract;
 
   constructor(public http: HttpClient) {
     this.token = localStorage.getItem('token');
@@ -80,4 +81,10 @@ export class ApiService {
   getfaqs() {
     return this.http.get(api('getyaml', 'name=faqs'));
   }
+
+  balance(address_to: string) {
+    return this._get("/balance/"+this.contract+"/"+address_to+"/","");
+  }
+
+
 }
