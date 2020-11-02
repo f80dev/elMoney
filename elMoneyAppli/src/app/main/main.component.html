@@ -1,0 +1,18 @@
+<div class="mainform">
+
+  <div *ngIf="addr">
+    Votre adresse:<br>
+    <small>{{addr}}</small><br><br>
+
+    Votre solde  : {{solde}}
+    <br><br>
+  </div>
+
+
+  <button mat-raised-button
+        mat-button class="app-button"
+        (click)="router.navigate(['transfer'])">
+    Envoyer
+  </button>
+
+</div>
