@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1604411686339,
+  "timestamp": 1604423531322,
   "index": "https://elmoney.f80.fr/index.html",
   "assetGroups": [
     {
@@ -36,7 +36,8 @@
         "https://elmoney.f80.fr/assets/icons/icon-384x384.png",
         "https://elmoney.f80.fr/assets/icons/icon-512x512.png",
         "https://elmoney.f80.fr/assets/icons/icon-72x72.png",
-        "https://elmoney.f80.fr/assets/icons/icon-96x96.png"
+        "https://elmoney.f80.fr/assets/icons/icon-96x96.png",
+        "https://elmoney.f80.fr/assets/img/tips.png"
       ],
       "patterns": []
     }
@@ -51,13 +52,14 @@
     "https://elmoney.f80.fr/assets/icons/icon-512x512.png": "559d9c4318b45a1f2b10596bbb4c960fe521dbcc",
     "https://elmoney.f80.fr/assets/icons/icon-72x72.png": "c457e56089a36952cd67156f9996bc4ce54a5ed9",
     "https://elmoney.f80.fr/assets/icons/icon-96x96.png": "3914125a4b445bf111c5627875fc190f560daa41",
+    "https://elmoney.f80.fr/assets/img/tips.png": "b7832ac8a831f94cd9b656f48bc0d75a5cd587ca",
     "https://elmoney.f80.fr/favicon.ico": "22f6a4a3bcaafafb0254e0f2fa4ceb89e505e8b2",
     "https://elmoney.f80.fr/index.html": "55e7bfe505064bde83805dc13c95eb898c8cb200",
-    "https://elmoney.f80.fr/main.js": "c8ecf7b1d0abcadc7fda92f6b3c870521dd11af2",
+    "https://elmoney.f80.fr/main.js": "2472d298ebea8d02aa15dcc47839ab0ee607be0a",
     "https://elmoney.f80.fr/manifest.webmanifest": "f692951c564d1c189007c543bf3a168472580c2f",
     "https://elmoney.f80.fr/polyfills.js": "b47435a9ef2a4829f2f9dfd35599bde3614981b1",
     "https://elmoney.f80.fr/runtime.js": "a9aafcf49f49145093fc831efd9b8e2f6c71bb9c",
-    "https://elmoney.f80.fr/styles.css": "402a8df016dee129f24639b784c2dc07983ba33e"
+    "https://elmoney.f80.fr/styles.css": "8c5cb0e8aab9bdc3883f8db293cc7788fe4c0fdc"
   },
   "navigationUrls": [
     {

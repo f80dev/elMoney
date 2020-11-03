@@ -1,17 +1,27 @@
 <div class="mainform">
 
+  <app-tuto label="Bienvenu sur elMoney.">
+
+  </app-tuto>
   <div *ngIf="addr">
     Votre adresse:<br>
-    <small>{{addr}}</small><br><br>
-
-    Votre solde: {{solde}}{{config.unity}}
+    <a [href]="url_explorer" target="_blank">
+      <small>{{addr}}</small>
+    </a>
+    <br><br>
+    <div *ngIf="config.unity">
+      Votre solde: {{solde}}{{config.unity}}
+    </div>
     <br><br>
   </div>
 
-  <hr><br>
+</div>
 
+<div class="bottom-bar">
+  <hr>
   <button mat-raised-button
           mat-button
+          *ngIf="config.unity"
           class="app-button"
           (click)="router.navigate(['transfer'])">
     Envoyer
@@ -22,6 +32,13 @@
           class="app-button"
           (click)="router.navigate(['create'])">
     <div class="bloc-bouton">Créer une<br>monnaie</div>
+  </button>
+
+  <button mat-raised-button
+          mat-button
+          class="app-button"
+          (click)="router.navigate(['moneys'])">
+    <div class="bloc-bouton">Sélectionner<br>une monnaie</div>
   </button>
 
 </div>

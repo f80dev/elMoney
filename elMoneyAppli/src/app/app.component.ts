@@ -15,9 +15,12 @@ export class AppComponent {
               public routes:ActivatedRoute,
               public api:ApiService){
     let contract=this.routes.snapshot.queryParamMap.get("contract");
-
     let addr=this.routes.snapshot.queryParamMap.get("addr");
-    if(contract)this.api.contract=contract;
+    if(contract){
+      this.api.contract=contract;
+      localStorage.setItem("contract",contract);
+    }
+
     if(addr)localStorage.setItem("addr",addr);
     this.api._get("/name/"+this.api.contract).subscribe((r:any)=>{
       this.config.unity=r.name;

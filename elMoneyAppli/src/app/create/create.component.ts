@@ -16,6 +16,7 @@ export class CreateComponent implements OnInit {
   name: string="RV";
   amount: number=10000;
   url:string="";
+  url_transaction: string="";
 
   constructor(public api:ApiService,
               public router:Router,
@@ -31,7 +32,9 @@ export class CreateComponent implements OnInit {
     this.message="Déploiement en cours ...";
     this.api._post("/deploy/"+this.name+"/"+this.amount,"",this.config.pem,240).subscribe((r:any)=>{
       this.message="";
-      showMessage(this,"Contrat en cours de déploiement. Voir la transaction ?",0,()=>{open(r.link,"_blank");},"Ouvrir");
+      localStorage.setItem("contract",r.contract);
+      showMessage(this,"Votre monnaie est maintenant disponible");
+      this._location.back();
     },(err:any)=>{
       this.message="";
       showMessage(this,err.error.message,0,()=>{

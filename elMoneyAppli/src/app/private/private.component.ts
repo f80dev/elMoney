@@ -18,12 +18,13 @@ export class PrivateComponent implements OnInit {
   }
 
   import(fileInputEvent: any) {
-
       var reader = new FileReader();
       this.message="Signature ...";
       reader.onload = ()=>{
         this.message="Transfert des fonds";
         this.config.pem=reader.result.toString();
+        let pubkey=atob(this.config.pem.split("base64,")[1]);
+        localStorage.setItem("addr","erd"+pubkey.split(" for erd")[1].split("---")[0]);
         this._location.back();
       };
       reader.readAsDataURL(fileInputEvent.target.files[0]);

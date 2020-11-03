@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  domain_server: "http://localhost:5000",
+  domain_server: "http://localhost:5555",
   config_file:"config",
   domain_appli: "http://localhost:4200",
   //appVersion: require('../../package.json').version + '-dev',

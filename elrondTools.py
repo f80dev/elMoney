@@ -67,7 +67,7 @@ class ElrondNet:
                                              value=None,
                                              chain=config.get_chain_id(),
                                              version=config.get_tx_version())
-        return {"from":user_from.address,"tx":rc}
+        return {"from":user_from.address,"tx":rc,"to":user_to.address}
 
     def set_contract(self, contract):
         self.contract= SmartContract(address=contract)
@@ -84,8 +84,8 @@ class ElrondNet:
                 contract=contract,
                 owner=user,
                 arguments=[amount,base_alphabet_to_10(unity)],
-                gas_price=config.DEFAULT_GAS_PRICE*1.4,
-                gas_limit=5000000000,
+                gas_price=config.DEFAULT_GAS_PRICE,
+                gas_limit=500000000,
                 value=None,
                 chain=config.get_chain_id(),
                 version=config.get_tx_version()
@@ -108,12 +108,16 @@ class ElrondNet:
 
         if result["data"]["status"]=="pending":
             log("Echec de déploiement, timeout")
-            return {"link": "https://testnet-explorer.elrond.com/transactions/" + tx, "addr": address.bech32()}
+            return {"error":600,
+                    "message":"timeout",
+                    "link": "https://testnet-explorer.elrond.com/transactions/" + tx,
+                    "addr": address.bech32()
+                    }
         else:
             self.contract=address
             url="https://testnet-explorer.elrond.com/transactions/"+tx
-            log("Déploiement réussi "+url+" a l'adresse "+self.contract)
-            return {"link":url,"addr":address.bech32()}
+            log("Déploiement du nouveau contrat réussi a l'adresse "+self.contract.bech32()+" voir transaction "+url)
+            return {"link":url,"contract":address.bech32()}
 
     def getName(self):
         lst=self.environment.query_contract(self.contract,"name")

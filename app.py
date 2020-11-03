@@ -2,26 +2,31 @@ import base64
 import os
 import ssl
 import sys
+import sqlite3
 
 from flask import Flask, Response, request, jsonify
 from flask_cors import CORS
 
-from Tools import base_10_to_alphabet
+from Tools import base_10_to_alphabet, log
 from elrondTools import ElrondNet
 
 app = Flask(__name__)
 CORS(app)
 bc=ElrondNet()
 
-
 #test http://localhost:5000/api/transfer
 @app.route('/api/transfer/<contract>/<dest>/<amount>/',methods=["POST"])
 def transfer(contract:str,dest:str,amount:str):
+    log("Demande de transfert vers "+dest+" de "+amount)
     pem_body=str(base64.b64decode(str(request.data).split("base64,")[1]),encoding="utf-8")
     with open("./PEM/temp.pem", "w") as pem_file:pem_file.write(pem_body)
 
     bc.set_contract(contract)
     rc=bc.transfer("./PEM/temp.pem",dest,int(amount))
+
+    if "to" in rc and "@" in dest:
+        sql = "INSERT INTO email_addr (Address,Email) VALUES ('" + rc["to"] + "','" + dest + "')"
+        sqlite3.connect("elmoney").cursor().execute(sql)
 
     os.remove("./PEM/temp.pem")
     url="https://testnet-explorer.elrond.com/transactions/"+rc["tx"]
@@ -33,6 +38,7 @@ def transfer(contract:str,dest:str,amount:str):
 
 @app.route('/api/deploy/<unity>/<amount>/',methods=["POST"])
 def deploy(unity:str,amount:str):
+    log("Appel du service de déploiement de contrat")
     data=str(request.data,encoding="utf-8")
     if "base64" in data:data=data.split("base64,")[1]
     pem_body = str(base64.b64decode(data), encoding="utf-8")
@@ -41,7 +47,10 @@ def deploy(unity:str,amount:str):
     if "error" in result:
         return jsonify(result), 500
     else:
+        sql="INSERT INTO Moneys (Address,Unity) VALUES ('"+result["contract"]+"','"+unity+"')"
+        rc=sqlite3.connect("elmoney").cursor().execute(sql)
         return jsonify(result),200
+
 
 
 
@@ -50,7 +59,19 @@ def deploy(unity:str,amount:str):
 def getbalance(contract:str,addr:str):
     bc.set_contract(contract)
     rc = bc.getBalance(addr)
+    log("Balance de "+addr+" à "+str(rc))
     return Response(str(rc), 200)
+
+
+
+
+@app.route('/api/moneys/')
+def getmoneys():
+    c=sqlite3.connect("elmoney").cursor()
+    rc=list(c.execute("SELECT * FROM Moneys"))
+    return jsonify(rc)
+
+
 
 
 @app.route('/api/name/<contract>/')
@@ -58,6 +79,7 @@ def getname(contract:str):
     bc.set_contract(contract)
     name=bc.getName()
     rc = base_10_to_alphabet(name)
+    log("Nom de la monnaie sur " + contract + " à " + rc)
     return jsonify({"name":rc}), 200
 
 
@@ -75,7 +97,7 @@ if __name__ == '__main__':
     else:
         if "ssl" in sys.argv:
             context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
-            context.load_cert_chain("/app/certs/fullchain.pem", "/app/certs/privkey.pem")
+            context.load_cert_chain("/certs/fullchain.pem", "/certs/privkey.pem")
             app.run(host="0.0.0.0", port=_port, debug=False, ssl_context=context)
         else:
             app.run(host="0.0.0.0", port=_port, debug=False)

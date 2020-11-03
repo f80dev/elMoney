@@ -12,15 +12,20 @@ export class MainComponent implements OnInit {
   addr: any;
   solde:any;
   name:string;
+  url_explorer: string="";
 
   constructor(public router:Router,public api:ApiService,public config:ConfigService) { }
 
   ngOnInit(): void {
     this.addr=localStorage.getItem("addr");
-    if(this.addr)
-      this.api.balance(this.addr).subscribe((r:any)=>{
-        this.solde=r;
-      })
+    if(this.addr){
+      this.url_explorer="https://testnet-explorer.elrond.com/address/"+this.addr;
+      if(this.api.contract){
+        this.api.balance(this.addr).subscribe((r:any)=>{
+          this.solde=r;
+        });
+      }
+    }
   }
 
 }

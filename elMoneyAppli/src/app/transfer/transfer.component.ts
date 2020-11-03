@@ -43,7 +43,6 @@ export class TransferComponent implements OnInit {
     this.api._post("transfer/" + this.api.contract + "/" + this.address_to + "/" + this.amount, "", this.config.pem).subscribe((r: any) => {
       this.message = "";
       showMessage(this, "Fond transféré");
-      localStorage.setItem("addr", r.from_addr);
       this._location.back();
     }, (err) => {
       showError(this, err);

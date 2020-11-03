@@ -2,6 +2,11 @@
   <h2 *ngIf="message?.length==0">Créer votre monnaie</h2>
   <app-hourglass [message]="message"></app-hourglass>
 
+  <div *ngIf="url_transaction?.length>0">
+    <a [href]="url_transaction" target="_blank">Voir la transaction</a>
+  </div>
+
+
    <mat-form-field appearance="fill" class="app-field" style="max-width: 150px">
     <mat-label>Nom de la monnaie</mat-label>
     <input matInput type="text" maxlength="4" [(ngModel)]="name">
@@ -15,9 +20,10 @@
     <input matInput type="number" min="0" [(ngModel)]="amount">
    </mat-form-field>
 
-  <br><br><hr>
 
-  <div class="bottom-bar">
+</div>
+<div class="bottom-bar">
+      <hr>
   <button mat-raised-button
         mat-button class="app-button"
         (click)="create()">
@@ -32,8 +38,6 @@
 
   </div>
 
-
-</div>
 
 
 

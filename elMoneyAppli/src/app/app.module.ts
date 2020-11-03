@@ -28,6 +28,8 @@ import { MainComponent } from './main/main.component';
 import { ShareComponent } from './share/share.component';
 import { CreateComponent } from './create/create.component';
 import { PrivateComponent } from './private/private.component';
+import { TransPipe } from './trans.pipe';
+import { MoneysComponent } from './moneys/moneys.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +44,9 @@ import { PrivateComponent } from './private/private.component';
     MainComponent,
     ShareComponent,
     CreateComponent,
-    PrivateComponent
+    PrivateComponent,
+    TransPipe,
+    MoneysComponent
   ],
   imports: [
     BrowserModule,
@@ -61,7 +65,7 @@ import { PrivateComponent } from './private/private.component';
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [
-    ApiService,
+    ApiService,TransPipe,
     {
       provide: 'SocialAuthServiceConfig',
       useValue: {

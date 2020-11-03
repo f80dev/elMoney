@@ -4,5 +4,5 @@ export const environment = {
   config_file: "config",
   domain_appli: "https://elmoney.f80.fr",
   //appVersion: require('../../package.json').version + '-dev',
-  default_contract: "erd1qqqqqqqqqqqqqpgqg0559g20jaclkpc9apzeqdd5wetevhwd9e3scrwaeu"
+  default_contract: "erd1qqqqqqqqqqqqqpgq29fc046ru67d60xlj4n0emany383f6xyd8sspxxmu3"
 };
