@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1604423531322,
+  "timestamp": 1604441203428,
   "index": "https://elmoney.f80.fr/index.html",
   "assetGroups": [
     {
@@ -55,7 +55,7 @@
     "https://elmoney.f80.fr/assets/img/tips.png": "b7832ac8a831f94cd9b656f48bc0d75a5cd587ca",
     "https://elmoney.f80.fr/favicon.ico": "22f6a4a3bcaafafb0254e0f2fa4ceb89e505e8b2",
     "https://elmoney.f80.fr/index.html": "55e7bfe505064bde83805dc13c95eb898c8cb200",
-    "https://elmoney.f80.fr/main.js": "2472d298ebea8d02aa15dcc47839ab0ee607be0a",
+    "https://elmoney.f80.fr/main.js": "50dc63e68507d6924e49c8c1db6ce317db7bbfc5",
     "https://elmoney.f80.fr/manifest.webmanifest": "f692951c564d1c189007c543bf3a168472580c2f",
     "https://elmoney.f80.fr/polyfills.js": "b47435a9ef2a4829f2f9dfd35599bde3614981b1",
     "https://elmoney.f80.fr/runtime.js": "a9aafcf49f49145093fc831efd9b8e2f6c71bb9c",

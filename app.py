@@ -64,6 +64,13 @@ def getbalance(contract:str,addr:str):
 
 
 
+@app.route('/api/new_account/')
+def new_account():
+    rc=bc.create_account()
+    rc["account"]=None
+    return jsonify(rc),200
+
+
 
 @app.route('/api/moneys/')
 def getmoneys():

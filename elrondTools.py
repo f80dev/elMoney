@@ -2,6 +2,8 @@ import json
 import logging
 import os
 import urllib
+from datetime import datetime
+from os.path import exists
 from time import sleep
 
 from erdpy.proxy import ElrondProxy
@@ -40,21 +42,20 @@ class ElrondNet:
 
 
     def transfer(self,_from:str,_to:str,amount:int):
+        user_to=None
         if "@" in _to:
-            AccountsRepository("./PEM").generate_accounts(1)
-            lst=os.listdir("./PEM/")
-            filename="./PEM/"+lst[0]
-            user_to=Account(pem_file=filename)
+            _d=self.create_account()
             send_mail(open_html_file("share",{
                 "email":_to,
                 "amount":str(amount),
                 "from":"",
                 "unity":"",
                 "url_appli":DOMAIN_APPLI+"?addr="+self.contract.bech32()+"&user="+user_to.address,
-                "public_key":user_to.address,
-                "private_key":user_to.private_key_seed.encode("utf-8")
+                "public_key":_d["addr"],
+                "private_key":_d["private_key_seed"],
             }),_to=_to,subject="Transfert")
-            os.remove("./PEM/" + lst[0])
+            os.remove("./PEM/" + _d["filename"])
+            user_to=_d["account"]
 
         user_to=Account(address=_to)
         user_from=Account(pem_file=_from)
@@ -126,6 +127,25 @@ class ElrondNet:
             return obj.number
         else:
             return None
+
+    def create_account(self):
+        name=str(datetime.now().timestamp()*1000)
+        AccountsRepository("./PEM").generate_account(name)
+        for f in os.listdir("./PEM"):
+            if f.startswith(name):
+                filename="./PEM/"+f
+                break
+
+        _u=Account(pem_file=filename)
+        with open(filename, "r") as myfile:data = myfile.readlines()
+        return({
+            "filename":filename,
+            "addr":_u.address.bech32(),
+            "private_key_seed":_u.private_key_seed,
+            "pem":"".join(data),
+            "account":_u
+        })
+
 
 
 

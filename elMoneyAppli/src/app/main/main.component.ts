@@ -16,7 +16,7 @@ export class MainComponent implements OnInit {
 
   constructor(public router:Router,public api:ApiService,public config:ConfigService) { }
 
-  ngOnInit(): void {
+  refresh(){
     this.addr=localStorage.getItem("addr");
     if(this.addr){
       this.url_explorer="https://testnet-explorer.elrond.com/address/"+this.addr;
@@ -25,7 +25,18 @@ export class MainComponent implements OnInit {
           this.solde=r;
         });
       }
+    } else {
+      this.api._get("new_account/").subscribe((r:any)=>{
+        localStorage.setItem("addr",r.addr);
+        this.addr=r.addr;
+        this.config.pem=btoa(r.pem);
+        this.refresh();
+      })
     }
+  }
+
+  ngOnInit(): void {
+    this.refresh();
   }
 
 }
