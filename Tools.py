@@ -3,17 +3,7 @@ from datetime import datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-from conda.exports import ArgumentParser
-
 from definitions import SMTP_SERVER, USERNAME, PASSWORD, DOMAIN_APPLI
-
-
-def read_args(args):
-    parser = ArgumentParser()
-    parser.add_argument("--proxy", help="Testnet Proxy URL", default=config.get_proxy())
-    parser.add_argument("--contract", help="Existing contract address")
-    parser.add_argument("--pem", help="PEM file", required=True)
-    return parser.parse_args()
 
 
 #Retourne la date du jour en secondes

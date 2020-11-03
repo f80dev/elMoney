@@ -9,9 +9,8 @@ from erdpy import config
 from erdpy.accounts import Account,AccountsRepository
 from erdpy.contracts import SmartContract
 from erdpy.environments import TestnetEnvironment
-from erdpy.wallet import generate_pair
 
-from Tools import send_mail, open_html_file, base_alphabet_to_10
+from Tools import send_mail, open_html_file, base_alphabet_to_10, log
 from definitions import DOMAIN_APPLI
 
 
@@ -77,9 +76,9 @@ class ElrondNet:
     def deploy(self,wasm_file,pem_file,unity="RVC",amount=1000):
         user=Account(pem_file=pem_file)
         user.sync_nonce(ElrondProxy(self.proxy))
-
         contract = SmartContract(bytecode=wasm_file)
 
+        log("Déploiement du contrat "+unity+" via le compte "+user.address.bech32())
         try:
             tx, address = self.environment.deploy_contract(
                 contract=contract,
@@ -92,19 +91,29 @@ class ElrondNet:
                 version=config.get_tx_version()
             )
         except Exception as e:
-            url = 'https://testnet-explorer.elrond.com/'+user.address
+            url = 'https://testnet-explorer.elrond.com/'+user.address.bech32()
+            log("Echec de déploiement "+url)
             return {"error":500,"message":str(e.args),"link":url}
 
         #TODO: intégrer la temporisation pour événement
         url = 'https://api-testnet.elrond.com/transaction/' + tx + '/status'
+        log("Attente du déploiement "+url)
         result={"data":{"status":"pending"}}
-        while result["data"]["status"]=="pending":
+        timeout=240
+        while result["data"]["status"]=="pending" and timeout>0:
             with urllib.request.urlopen(url) as response:
                 result = json.loads(response.read())
+            timeout=timeout-2
             sleep(2)
 
-        self.contract=address
-        return {"link":"https://testnet-explorer.elrond.com/transactions/"+tx,"addr":address.bech32()}
+        if result["data"]["status"]=="pending":
+            log("Echec de déploiement, timeout")
+            return {"link": "https://testnet-explorer.elrond.com/transactions/" + tx, "addr": address.bech32()}
+        else:
+            self.contract=address
+            url="https://testnet-explorer.elrond.com/transactions/"+tx
+            log("Déploiement réussi "+url+" a l'adresse "+self.contract)
+            return {"link":url,"addr":address.bech32()}
 
     def getName(self):
         lst=self.environment.query_contract(self.contract,"name")

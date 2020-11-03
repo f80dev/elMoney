@@ -33,7 +33,9 @@ def transfer(contract:str,dest:str,amount:str):
 
 @app.route('/api/deploy/<unity>/<amount>/',methods=["POST"])
 def deploy(unity:str,amount:str):
-    pem_body = str(base64.b64decode(str(request.data).split("base64,")[1]), encoding="utf-8")
+    data=str(request.data,encoding="utf-8")
+    if "base64" in data:data=data.split("base64,")[1]
+    pem_body = str(base64.b64decode(data), encoding="utf-8")
     with open("./PEM/temp.pem", "w") as pem_file: pem_file.write(pem_body)
     result=bc.deploy("./static/RV_coin.wasm","./PEM/temp.pem",unity,int(amount))
     if "error" in result:

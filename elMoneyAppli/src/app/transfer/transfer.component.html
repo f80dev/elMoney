@@ -19,15 +19,11 @@ M
    </mat-form-field>
 
 <br>
-<input #csvInput hidden="true"
-       type="file" onclick="this.value=null"
-       (change)="import($event)"
-       accept=".pem"/>
 
   <button mat-raised-button
         mat-button class="app-button"
-        (click)="csvInput.click()">
-    Signer
+        (click)="transfer()">
+    Transfert
   </button>
 
   <button mat-raised-button

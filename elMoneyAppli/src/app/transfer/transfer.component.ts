@@ -26,6 +26,7 @@ export class TransferComponent implements OnInit {
 
 
   ngOnInit(): void {
+     if(!this.config.pem)this.router.navigate(["private"]);
      this.address_to=localStorage.getItem("last_to");
      this.amount=localStorage.getItem("last_amount");
      if(this.address_to){
@@ -35,26 +36,18 @@ export class TransferComponent implements OnInit {
      }
   }
 
-   import(fileInputEvent: any) {
-      localStorage.setItem("last_to",this.address_to);
-      localStorage.setItem("last_amount",this.amount);
-      var reader = new FileReader();
-      this.message="Signature ...";
-      reader.onload = ()=>{
-        this.message="Transfert des fonds";
-        let bytes=btoa(reader.result.toString());
-        localStorage.setItem("pem_file",bytes);
-        this.api._post("transfer/"+this.api.contract+"/"+this.address_to+"/"+this.amount,"",reader.result).subscribe((r:any)=>{
-          this.message="";
-          showMessage(this,"Fond transféré");
-          localStorage.setItem("addr",r.from_addr);
 
-          this._location.back();
-        },(err)=>{
-          showError(this,err);
-        })
-      };
-      reader.readAsDataURL(fileInputEvent.target.files[0]);
+  transfer() {
+    localStorage.setItem("last_to", this.address_to);
+    localStorage.setItem("last_amount", this.amount);
+    this.api._post("transfer/" + this.api.contract + "/" + this.address_to + "/" + this.amount, "", this.config.pem).subscribe((r: any) => {
+      this.message = "";
+      showMessage(this, "Fond transféré");
+      localStorage.setItem("addr", r.from_addr);
+      this._location.back();
+    }, (err) => {
+      showError(this, err);
+    })
+
   }
-
 }

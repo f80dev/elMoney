@@ -17,6 +17,7 @@ export class ConfigService {
   webcamsAvailable: any;
   width_screen: number;
   ready=false;
+  pem:any=null;
 
   profils:any[]=[];
   jobs: any[]=[];

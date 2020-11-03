@@ -3,6 +3,8 @@ import {ApiService} from "../api.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {showError, showMessage} from "../tools";
 import {Location} from "@angular/common";
+import {Router} from "@angular/router";
+import {ConfigService} from "../config.service";
 
 @Component({
   selector: 'app-create',
@@ -16,17 +18,18 @@ export class CreateComponent implements OnInit {
   url:string="";
 
   constructor(public api:ApiService,
+              public router:Router,
+              public config:ConfigService,
               public _location:Location,
               public toast:MatSnackBar) { }
 
   ngOnInit(): void {
-
+     if(!this.config.pem)this.router.navigate(["private"]);
   }
 
   create() {
-    let body=atob(localStorage.getItem("pem_file"));
     this.message="Déploiement en cours ...";
-    this.api._post("/deploy/"+this.name+"/"+this.amount,"",body,240).subscribe((r:any)=>{
+    this.api._post("/deploy/"+this.name+"/"+this.amount,"",this.config.pem,240).subscribe((r:any)=>{
       this.message="";
       showMessage(this,"Contrat en cours de déploiement. Voir la transaction ?",0,()=>{open(r.link,"_blank");},"Ouvrir");
     },(err:any)=>{

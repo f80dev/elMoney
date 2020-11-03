@@ -27,6 +27,7 @@ import { TransferComponent } from './transfer/transfer.component';
 import { MainComponent } from './main/main.component';
 import { ShareComponent } from './share/share.component';
 import { CreateComponent } from './create/create.component';
+import { PrivateComponent } from './private/private.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { CreateComponent } from './create/create.component';
     TransferComponent,
     MainComponent,
     ShareComponent,
-    CreateComponent
+    CreateComponent,
+    PrivateComponent
   ],
   imports: [
     BrowserModule,
