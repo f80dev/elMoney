@@ -7,14 +7,6 @@ imports!();
 #[elrond_wasm_derive::contract(SimpleErc20TokenImpl)]
 pub trait SimpleErc20Token {
 
-    // name
-    // #[view(name)]
-    // #[storage_get("name")]
-    // fn get_name(&self) -> BigUint;
-    // #[storage_set("name")]
-    // fn set_name(&self, name: &BigUint);
-
-
     /// Total number of tokens in existence.
     #[view(totalSupply)]
     #[storage_get("total_supply")]
@@ -56,14 +48,11 @@ pub trait SimpleErc20Token {
     /// Constructor, is called immediately after the contract is created
     /// Will set the fixed global token supply and give all the supply to the creator.
     #[init]
-    fn init(&self, total_supply: &BigUint) {
+    fn init(&self, total_supply: &BigUint, erc_name: &BigUint) {
         let creator = self.get_caller();
 
         // save total supply
         self.set_total_supply(total_supply);
-
-        // save name
-        // self.set_name(name);
 
         // deployer initially receives the total supply
         let mut creator_balance = self.get_mut_balance(&creator);
