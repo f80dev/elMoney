@@ -10,7 +10,7 @@ import {Location} from "@angular/common";
   styleUrls: ['./support.component.sass']
 })
 export class SupportComponent implements OnInit {
-  private message: string="";
+  message: string="";
 
   constructor(
     public _location:Location,
