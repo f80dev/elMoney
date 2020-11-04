@@ -6,7 +6,7 @@ DEPLOY_TRANSACTION=$(erdpy data load --key=deployTransaction)
 ARGUMENTS=1000
 
 deploy() {
-    erdpy --verbose contract deploy --project=${PROJECT} --arguments 0xFFFF 0xFFFF --recall-nonce --pem=${ALICE} --gas-limit=50000000 --send --outfile="deploy.json"
+    erdpy --verbose contract deploy --project=${PROJECT} --arguments 0xFFFF --recall-nonce --pem=${ALICE} --gas-limit=50000000 --send --outfile="deploy.json"
 
     TRANSACTION=$(erdpy data parse --file="deploy.json" --expression="data['result']['hash']")
     ADDRESS=$(erdpy data parse --file="deploy.json" --expression="data['emitted_tx']['address']")
