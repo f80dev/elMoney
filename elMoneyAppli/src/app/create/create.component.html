@@ -1,4 +1,6 @@
 <div class="mainform">
+
+  <app-tuto label="Pour créer une nouvelle monnaie il vous suffit d'indiquer son nom en 3 ou 4 lettres et d'indique le nombre de pieces total en circulation"></app-tuto>
   <h2 *ngIf="message?.length==0">Créer votre monnaie</h2>
   <app-hourglass [message]="message"></app-hourglass>
 
@@ -22,6 +24,9 @@
 
 
 </div>
+
+
+
 <div class="bottom-bar">
       <hr>
   <button mat-raised-button
@@ -35,8 +40,7 @@
         (click)="_location.back()">
     Retour
   </button>
-
-  </div>
+</div>
 
 
 

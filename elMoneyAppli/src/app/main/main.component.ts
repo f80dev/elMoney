@@ -26,6 +26,10 @@ export class MainComponent implements OnInit {
       if(this.api.contract){
         this.api.balance(this.addr).subscribe((r:any)=>{
           this.solde=r;
+        },(err)=>{
+          showMessage(this,"Aucune monnaie sélectionnée");
+          localStorage.removeItem("contract");
+          this.router.navigate(["create"]);
         });
       }
     } else {
