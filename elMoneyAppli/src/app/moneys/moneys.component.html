@@ -1,0 +1,47 @@
+<div class="mainform">
+  <h2>Liste des monnaies disponibles</h2>
+
+  <div *ngIf="moneys?.length==0">
+    Aucune monnaie publique pour l'instant
+  </div>
+
+  <table>
+    <tr *ngFor="let m of moneys">
+      <td style="width:60vw;text-align: left;">{{m.unity}}</td>
+      <td>
+        <button mat-raised-button mat-icon-button
+        mat-button class="icon-button"
+        (click)="select(m.contract)">
+        <mat-icon>checkmark</mat-icon>
+  </button>
+        &nbsp;
+        <button mat-raised-button mat-icon-button
+        mat-button class="icon-button"
+        (click)="openContrat(m.contract)">
+        <mat-icon>visibility</mat-icon>
+  </button>
+      </td>
+
+    </tr>
+  </table>
+  <div >
+    &nbsp;
+
+
+  </div>
+
+
+
+
+</div>
+<div class="bottom-bar">
+  <hr>
+  <button mat-raised-button
+        mat-button class="app-button"
+        (click)="_location.back()">
+    Retour
+  </button>
+  </div>
+
+
+

@@ -24,11 +24,11 @@ RUN pip3 install pyopenssl
 WORKDIR /
 RUN mkdir PEM
 RUN mkdir static
+VOLUME /certs
 
 COPY *.py $APP_HOME/
 COPY ./PEM $APP_HOME/PEM
 
-VOLUME /certs
 
 EXPOSE 5555
 
