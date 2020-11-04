@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Location} from "@angular/common";
 import {ApiService} from "../api.service";
-import {showMessage} from "../tools";
+import {$$, showMessage} from "../tools";
 
 @Component({
   selector: 'app-moneys',
@@ -21,7 +21,9 @@ export class MoneysComponent implements OnInit {
   }
 
   select(addr:string){
+    $$("on change le contrat pour utiliser maintenant "+addr);
     localStorage.setItem("contract",addr);
+    this.api.contract=addr;
     this._location.back();
   }
 

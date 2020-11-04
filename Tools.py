@@ -52,7 +52,7 @@ def base_alphabet_to_10(letters):
 
 def open_html_file(name:str,replace=dict(),domain_appli=DOMAIN_APPLI):
     if not name.endswith("html"):name=name+".html"
-    with open(name, 'r', encoding='utf-8') as f: body = f.read()
+    with open("./static/"+name, 'r', encoding='utf-8') as f: body = f.read()
 
     style="""
         <style>

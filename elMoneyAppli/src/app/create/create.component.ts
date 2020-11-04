@@ -29,7 +29,7 @@ export class CreateComponent implements OnInit {
   }
 
   create() {
-    this.message="Déploiement en cours ...";
+    this.message="Déploiement de "+this.name+" en cours ...";
     this.api._post("/deploy/"+this.name+"/"+this.amount,"",this.config.pem,240).subscribe((r:any)=>{
       this.message="";
       localStorage.setItem("contract",r.contract);

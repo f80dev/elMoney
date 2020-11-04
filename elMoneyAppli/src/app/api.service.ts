@@ -80,6 +80,7 @@ export class ApiService {
   }
 
   balance(address_to: string) {
+    $$("Récupération du solde de "+address_to+" sur le contrat "+this.contract);
     return this._get("/balance/"+this.contract+"/"+address_to+"/","");
   }
 

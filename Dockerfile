@@ -27,6 +27,8 @@ RUN mkdir static
 VOLUME /certs
 
 COPY *.py $APP_HOME/
+COPY ./static $APP_HOME/static
+COPY elmoney $APP_HOME
 COPY ./PEM $APP_HOME/PEM
 
 

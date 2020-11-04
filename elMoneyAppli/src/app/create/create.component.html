@@ -1,8 +1,11 @@
 <div class="mainform">
-
+  <br><br>
   <app-tuto label="Pour créer une nouvelle monnaie il vous suffit d'indiquer son nom en 3 ou 4 lettres et d'indique le nombre de pieces total en circulation"></app-tuto>
   <h2 *ngIf="message?.length==0">Créer votre monnaie</h2>
   <app-hourglass [message]="message"></app-hourglass>
+
+  <div *ngIf="message?.length==0">
+
 
   <div *ngIf="url_transaction?.length>0">
     <a [href]="url_transaction" target="_blank">Voir la transaction</a>
@@ -22,6 +25,14 @@
     <input matInput type="number" min="0" [(ngModel)]="amount">
    </mat-form-field>
 
+  <br><br>
+  <button mat-raised-button
+        mat-button class="app-button"
+        (click)="create()">
+    Créer
+  </button>
+
+    </div>
 
 </div>
 
@@ -29,11 +40,7 @@
 
 <div class="bottom-bar">
       <hr>
-  <button mat-raised-button
-        mat-button class="app-button"
-        (click)="create()">
-    Créer
-  </button>
+
 
   <button mat-raised-button
         mat-button class="app-button"
