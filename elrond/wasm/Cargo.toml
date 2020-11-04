@@ -1,5 +1,5 @@
 [package]
-name = "myerc20-wasm"
+name = "RVcoin-wasm"
 version = "0.0.1"
 authors = [ "you",]
 edition = "2018"

@@ -12,6 +12,9 @@
         (click)="csvInput.click()">
     Signer
   </button>
+  <br><br>
+  <mat-checkbox [value]="savePrivateKey">Conserver ma signature sur cet appareil</mat-checkbox>
+  <mat-icon (click)="openFAQ()" style="font-size: small;cursor: pointer;">help</mat-icon>
 </div>
 
 <div class="bottom-bar">

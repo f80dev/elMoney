@@ -12,6 +12,7 @@ import {Router} from "@angular/router";
 export class PrivateComponent implements OnInit {
 
   message:string="";
+  savePrivateKey: any;
 
   constructor(public config:ConfigService,
               public router:Router,
@@ -31,5 +32,9 @@ export class PrivateComponent implements OnInit {
         this._location.back();
       };
       reader.readAsDataURL(fileInputEvent.target.files[0]);
+  }
+
+  openFAQ() {
+    //TODO a connecter
   }
 }
