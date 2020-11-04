@@ -19,6 +19,13 @@ deploy() {
 }
 
 
+
+checkDeployment() {
+    erdpy tx get --hash=$DEPLOY_TRANSACTION --omit-fields="['data', 'signature']"
+    erdpy account get --address=$ADDRESS --omit-fields="['code']"
+}
+
+
 build(){
   erdpy --verbose contract build
 }
@@ -30,6 +37,17 @@ checkDeployment() {
 }
 
 name() {
-    erdpy --verbose contract call ${ADDRESS} --recall-nonce --pem=${ALICE} --gas-limit=5000000 --function="name" --send
+  echo "Contrat ${ADDRESS}"
+  erdpy --verbose contract query ${ADDRESS} --function="name"
+}
+
+transfer() {
+  echo "Contrat ${ADDRESS}"
+  erdpy --verbose contract call ${ADDRESS} --recall-nonce --pem=${ALICE} --gas-limit=5000000 --function="name" --send
+}
+
+balance() {
+  echo "Contrat ${ADDRESS}"
+  erdpy --verbose contract query ${ADDRESS} --function="balanceOf"
 }
 
