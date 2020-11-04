@@ -1,0 +1,38 @@
+<div class="mainform">
+  Votre adresse:<br>
+    <a [href]="url_explorer" target="_blank">
+      <small>{{addr}}</small>
+    </a>
+    <br>
+    <br>
+
+  <a [href]="fileUrl"
+     *ngIf="config.pem"
+     download="elrond_key.pem">Télécharger ma clé</a>
+
+  <br><br><br>
+  ______
+  <br><br><br>
+
+  Contrat utilisé<br>
+    <a [href]="url_contrat" target="_blank">
+      <small>{{contrat}}</small>
+    </a>
+
+
+</div>
+<div class="bottom-bar">
+  <hr>
+    <button mat-raised-button mat-button
+          class="app-button"
+          (click)="router.navigate(['private'])">
+    <div class="bloc-bouton">Changer<br>de compte</div>
+    </button>
+
+   <button mat-raised-button mat-button
+          class="app-button"
+          (click)="_location.back()">
+      Retour
+    </button>
+
+</div>

@@ -30,6 +30,9 @@ import { CreateComponent } from './create/create.component';
 import { PrivateComponent } from './private/private.component';
 import { TransPipe } from './trans.pipe';
 import { MoneysComponent } from './moneys/moneys.component';
+import { SettingsComponent } from './settings/settings.component';
+import {QRCodeModule} from "angularx-qrcode";
+import {ClipboardModule} from "@angular/cdk/clipboard";
 
 @NgModule({
   declarations: [
@@ -46,7 +49,8 @@ import { MoneysComponent } from './moneys/moneys.component';
     CreateComponent,
     PrivateComponent,
     TransPipe,
-    MoneysComponent
+    MoneysComponent,
+    SettingsComponent
   ],
   imports: [
     BrowserModule,
@@ -62,7 +66,9 @@ import { MoneysComponent } from './moneys/moneys.component';
     AppRoutingModule,
     MatInputModule,
     BrowserAnimationsModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+    ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
+    QRCodeModule,
+    ClipboardModule
   ],
   providers: [
     ApiService,TransPipe,

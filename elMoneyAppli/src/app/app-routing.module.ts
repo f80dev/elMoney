@@ -6,6 +6,7 @@ import {TransferComponent} from "./transfer/transfer.component";
 import {CreateComponent} from "./create/create.component";
 import {PrivateComponent} from "./private/private.component";
 import {MoneysComponent} from "./moneys/moneys.component";
+import {SettingsComponent} from "./settings/settings.component";
 
 const routes: Routes = [
    { path: 'admin', component: AdminComponent},
@@ -13,6 +14,7 @@ const routes: Routes = [
    { path: 'create', component: CreateComponent},
    { path: 'private', component: PrivateComponent},
    { path: 'moneys', component: MoneysComponent},
+   { path: 'settings', component: SettingsComponent},
    { path: '', component: MainComponent},
 ];
 

@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {Router} from "@angular/router";
 import {ApiService} from "../api.service";
 import {ConfigService} from "../config.service";
+import {showMessage} from "../tools";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-main',
@@ -14,12 +16,13 @@ export class MainComponent implements OnInit {
   name:string;
   url_explorer: string="";
 
-  constructor(public router:Router,public api:ApiService,public config:ConfigService) { }
+  constructor(public router:Router,
+              public toast:MatSnackBar,
+              public api:ApiService,public config:ConfigService) { }
 
   refresh(){
     this.addr=localStorage.getItem("addr");
     if(this.addr){
-      this.url_explorer="https://testnet-explorer.elrond.com/address/"+this.addr;
       if(this.api.contract){
         this.api.balance(this.addr).subscribe((r:any)=>{
           this.solde=r;
@@ -39,4 +42,7 @@ export class MainComponent implements OnInit {
     this.refresh();
   }
 
+  informe_clipboard() {
+    showMessage(this,"Adresse dans le presse papier")
+  }
 }

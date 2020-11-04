@@ -4,42 +4,53 @@
 
   </app-tuto>
   <div *ngIf="addr">
-    Votre adresse:<br>
-    <a [href]="url_explorer" target="_blank">
-      <small>{{addr}}</small>
-    </a>
-    <br>
-    <button mat-raised-button mat-button
-          class="app-button"
-          (click)="router.navigate(['private'])">
-    <div class="bloc-bouton">Changer<br>de compte</div>
-    </button>
-    <br>
-
     <br>
     <div *ngIf="config.unity">
-      Votre solde: {{solde}}{{config.unity}}
+      <small>Votre solde</small>
+      <br><br>
+      <span style="font-size: 3em;">{{solde}}</span>&nbsp;{{config.unity}}
     </div>
     <br><br>
+    <button mat-raised-button
+          mat-button
+          *ngIf="config.unity && solde>0"
+          class="app-button"
+          (click)="router.navigate(['transfer'])">
+    Envoyer
+  </button>
+    <br><br>
+    Recevoir<br>
+    <br>
+    <qrcode
+      [width]="100"
+      ngxClipboard
+      [cdkCopyToClipboard]="addr"
+      (click)="informe_clipboard()"
+      style="display: inline-block;"
+      [elementType]="'svg'"
+      [errorCorrectionLevel]="'M'"
+      [qrdata]="addr">
+    </qrcode>
   </div>
 
 </div>
 
 <div class="bottom-bar">
   <hr>
-  <button mat-raised-button
-          mat-button
-          *ngIf="config.unity"
-          class="app-button"
-          (click)="router.navigate(['transfer'])">
-    Envoyer
-  </button>
+
 
   <button mat-raised-button
           mat-button
           class="app-button"
           (click)="router.navigate(['create'])">
     <div class="bloc-bouton">Créer une<br>monnaie</div>
+  </button>
+
+  <button mat-raised-button
+          mat-button
+          class="app-button"
+          (click)="router.navigate(['settings'])">
+    <div class="bloc-bouton">Préférences</div>
   </button>
 
   <button mat-raised-button

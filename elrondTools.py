@@ -86,7 +86,7 @@ class ElrondNet:
                 owner=user,
                 arguments=[amount,base_alphabet_to_10(unity)],
                 gas_price=config.DEFAULT_GAS_PRICE,
-                gas_limit=500000000,
+                gas_limit=50000000000,
                 value=None,
                 chain=config.get_chain_id(),
                 version=config.get_tx_version()

@@ -26,7 +26,7 @@ def transfer(contract:str,dest:str,amount:str):
 
     if "to" in rc and "@" in dest:
         sql = "INSERT INTO email_addr (Address,Email) VALUES ('" + rc["to"] + "','" + dest + "')"
-        sqlite3.connect("elmoney").cursor().execute(sql)
+        sqlite3.connect("elmoney").cursor().executescript(sql)
 
     os.remove("./PEM/temp.pem")
     url="https://testnet-explorer.elrond.com/transactions/"+rc["tx"]
@@ -48,7 +48,8 @@ def deploy(unity:str,amount:str):
         return jsonify(result), 500
     else:
         sql="INSERT INTO Moneys (Address,Unity) VALUES ('"+result["contract"]+"','"+unity+"')"
-        rc=sqlite3.connect("elmoney").cursor().execute(sql)
+        log("Execution de la requete : "+sql)
+        sqlite3.connect("elmoney").cursor().executescript(sql)
         return jsonify(result),200
 
 
@@ -59,7 +60,7 @@ def deploy(unity:str,amount:str):
 def getbalance(contract:str,addr:str):
     bc.set_contract(contract)
     rc = bc.getBalance(addr)
-    log("Balance de "+addr+" à "+str(rc))
+    log("Balance de "+addr+" à "+str(rc)+" pour le contrat "+contract)
     return Response(str(rc), 200)
 
 
@@ -75,7 +76,9 @@ def new_account():
 @app.route('/api/moneys/')
 def getmoneys():
     c=sqlite3.connect("elmoney").cursor()
-    rc=list(c.execute("SELECT * FROM Moneys"))
+    rc=[]
+    for row in c.execute("SELECT * FROM Moneys"):
+        rc.append({"contract":row[0],"unity":row[1]})
     return jsonify(rc)
 
 
