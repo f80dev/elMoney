@@ -21,9 +21,7 @@ export class MoneysComponent implements OnInit {
   }
 
   select(addr:string){
-    $$("on change le contrat pour utiliser maintenant "+addr);
-    localStorage.setItem("contract",addr);
-    this.api.contract=addr;
+    this.api.set_contract(addr);
     this._location.back();
   }
 

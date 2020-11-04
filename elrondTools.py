@@ -26,6 +26,7 @@ class ElrondNet:
         # Now, we create a environment which intermediates deployment and execution
         self.proxy=proxy
         self.environment = TestnetEnvironment(proxy)
+        #Récupération de la configuration : https://api-testnet.elrond.com/network/config
 
 
 
@@ -85,9 +86,9 @@ class ElrondNet:
                 contract=contract,
                 owner=user,
                 arguments=[amount,base_alphabet_to_10(unity)],
-                gas_price=config.DEFAULT_GAS_PRICE,
+                gas_price=config.DEFAULT_GAS_PRICE*10,
                 gas_limit=500000000,
-                value=0,
+                value=None,
                 chain=config.get_chain_id(),
                 version=config.get_tx_version()
             )

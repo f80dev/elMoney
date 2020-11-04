@@ -3,6 +3,7 @@ import os
 import ssl
 import sys
 import sqlite3
+from datetime import datetime
 from urllib.request import urlopen
 
 import yaml
@@ -50,7 +51,7 @@ def deploy(unity:str,amount:str):
     if "error" in result:
         return jsonify(result), 500
     else:
-        sql="INSERT INTO Moneys (Address,Unity) VALUES ('"+result["contract"]+"','"+unity+"')"
+        sql="INSERT INTO Moneys (Address,Unity,dtCreate) VALUES ('"+result["contract"]+"','"+unity+"',"+str(datetime.now().timestamp())+")"
         log("Execution de la requete : "+sql)
         sqlite3.connect("elmoney").cursor().executescript(sql)
         return jsonify(result),200
@@ -86,7 +87,7 @@ def new_account():
 def getmoneys():
     c=sqlite3.connect("elmoney").cursor()
     rc=[]
-    for row in c.execute("SELECT * FROM Moneys"):
+    for row in c.execute("SELECT * FROM Moneys ORDER dtCreate"):
         rc.append({"contract":row[0],"unity":row[1]})
     return jsonify(rc)
 

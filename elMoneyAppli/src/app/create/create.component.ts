@@ -32,7 +32,7 @@ export class CreateComponent implements OnInit {
     this.message="Déploiement de "+this.name+" en cours ...";
     this.api._post("/deploy/"+this.name+"/"+this.amount,"",this.config.pem,240).subscribe((r:any)=>{
       this.message="";
-      localStorage.setItem("contract",r.contract);
+      this.api.set_contract(r.contract);
       showMessage(this,"Votre monnaie est maintenant disponible");
       this._location.back();
     },(err:any)=>{
