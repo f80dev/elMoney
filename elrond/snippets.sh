@@ -3,7 +3,7 @@ PROJECT="."
 ALICE="${USERS}/alice.pem"
 ADDRESS=$(erdpy data load --key=address)
 DEPLOY_TRANSACTION=$(erdpy data load --key=deployTransaction)
-ARGUMENTS="1000 1000"
+ARGUMENTS="1000 4564"
 
 deploy() {
     erdpy --verbose contract deploy --project=${PROJECT} --arguments ${ARGUMENTS} --recall-nonce --pem="alice.pem" --gas-limit=5000000 --send --outfile="deploy.json"
@@ -48,6 +48,6 @@ transfer() {
 
 balance() {
   echo "Contrat ${ADDRESS}"
-  erdpy --verbose contract query ${ADDRESS} --function="balanceOf"
+  erdpy --verbose contract query ${ADDRESS} --arguments "erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx" --function="balanceOf"
 }
 
