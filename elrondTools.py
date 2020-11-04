@@ -92,7 +92,7 @@ class ElrondNet:
                 arguments=arguments,
                 gas_price=config.DEFAULT_GAS_PRICE,
                 gas_limit=50000000,
-                value=None,
+                value=0,
                 chain=config.get_chain_id(),
                 version=config.get_tx_version()
             )

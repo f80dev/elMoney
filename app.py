@@ -47,7 +47,7 @@ def deploy(unity:str,amount:str):
     if "base64" in data:data=data.split("base64,")[1]
     pem_body = str(base64.b64decode(data), encoding="utf-8")
     with open("./PEM/temp.pem", "w") as pem_file: pem_file.write(pem_body)
-    result=bc.deploy("./static/RVcoin.wasm","./PEM/temp.pem",unity,int(amount))
+    result=bc.deploy("RVcoin.wasm","./PEM/temp.pem",unity,int(amount))
     if "error" in result:
         return jsonify(result), 500
     else:
