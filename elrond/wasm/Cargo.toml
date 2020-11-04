@@ -16,7 +16,7 @@ lto = true
 debug = false
 panic = "abort"
 
-[dependencies.myerc20]
+[dependencies.RVcoin]
 features = [ "wasm-output-mode",]
 default-features = false
 path = ".."
