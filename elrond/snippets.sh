@@ -1,11 +1,12 @@
 USERS="../PEM"
+PROJECT="."
 ALICE="${USERS}/alice.pem"
 ADDRESS=$(erdpy data load --key=address)
 DEPLOY_TRANSACTION=$(erdpy data load --key=deployTransaction)
 ARGUMENTS="1000 1000"
 
 deploy() {
-    erdpy --verbose contract deploy --project=${PROJECT}/elrond --arguments ${ARGUMENTS} --recall-nonce --pem="alice.pem" --gas-limit=5000000 --send --outfile="deploy.json"
+    erdpy --verbose contract deploy --project=${PROJECT} --arguments ${ARGUMENTS} --recall-nonce --pem="alice.pem" --gas-limit=5000000 --send --outfile="deploy.json"
 
     TRANSACTION=$(erdpy data parse --file="deploy.json" --expression="data['result']['hash']")
     ADDRESS=$(erdpy data parse --file="deploy.json" --expression="data['emitted_tx']['address']")
