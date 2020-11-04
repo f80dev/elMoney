@@ -1,4 +1,5 @@
 <div class="mainform">
+  <br><br>
   Votre adresse:<br>
     <a [href]="url_explorer" target="_blank">
       <small>{{addr}}</small>
@@ -13,11 +14,13 @@
   <br><br><br>
   ______
   <br><br><br>
-
+  <div *ngIf="contrat">
   Contrat utilisé<br>
     <a [href]="url_contrat" target="_blank">
       <small>{{contrat}}</small>
     </a>
+
+  </div>
 
 
 </div>

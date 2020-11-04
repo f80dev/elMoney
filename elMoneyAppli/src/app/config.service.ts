@@ -52,7 +52,7 @@ export class ConfigService {
 
    private async getConfig(): Promise<any> {
       if (!this.config) {
-        this.config = (await this.api.getyaml("",environment.config_file).toPromise());
+        this.config = (await this.api.getyaml(environment.config_file).toPromise());
       }
       return Promise.resolve(this.config);
   }
@@ -61,34 +61,20 @@ export class ConfigService {
    * Initialisation des principaux paramètres
    * @param func
    */
-  init(func=null){
+  init(func=null,func_error=null){
     $$("Initialisation de la configuration");
     this.width_screen=window.innerWidth;
 
     $$("Chargement des jobs");
-    this.getJson('/assets/jobs.json').then((r:any)=>{
-      if(this.jobs.length==0){
-        for(let i of Object.values(r)){
-          this.jobs.push({value:i,label:i});
-        }
-        this.api.getyaml("","profils").subscribe((r:any)=>{
-          this.profils=r.profils;
-          this.raz_user();
-
-          this.getConfig().then(r=>{
-              this.values=r;
-              this.ready=true;
-              $$("Chargement du fichier de configuration",r);
-              if(func!=null)func(this.values);
-            },()=>{
-              $$("Probléme de chargement de la configuration")
-            });
-        })
-
-      }
-    })
-
-
+    this.getConfig().then(r=>{
+        this.values=r;
+        this.ready=true;
+        $$("Chargement du fichier de configuration",r);
+        if(func!=null)func(this.values);
+      },()=>{
+        $$("Probléme de chargement de la configuration")
+        if(func_error!=null)func_error();
+      });
 
   }
 

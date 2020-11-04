@@ -7,6 +7,8 @@ import {CreateComponent} from "./create/create.component";
 import {PrivateComponent} from "./private/private.component";
 import {MoneysComponent} from "./moneys/moneys.component";
 import {SettingsComponent} from "./settings/settings.component";
+import {AboutComponent} from "./about/about.component";
+import {SupportComponent} from "./support/support.component";
 
 const routes: Routes = [
    { path: 'admin', component: AdminComponent},
@@ -15,7 +17,10 @@ const routes: Routes = [
    { path: 'private', component: PrivateComponent},
    { path: 'moneys', component: MoneysComponent},
    { path: 'settings', component: SettingsComponent},
+   { path: 'about', component: AboutComponent},
+   { path: 'support', component: SupportComponent},
    { path: '', component: MainComponent},
+    { path: 'main', component: MainComponent},
 ];
 
 @NgModule({

@@ -18,7 +18,8 @@ export class MainComponent implements OnInit {
 
   constructor(public router:Router,
               public toast:MatSnackBar,
-              public api:ApiService,public config:ConfigService) { }
+              public api:ApiService,
+              public config:ConfigService) { }
 
   refresh(){
     this.addr=localStorage.getItem("addr");
@@ -27,7 +28,7 @@ export class MainComponent implements OnInit {
         this.api.balance(this.addr).subscribe((r:any)=>{
           this.solde=r;
         },(err)=>{
-          showMessage(this,"Aucune monnaie sélectionnée");
+          showMessage(this,this.config.values?.messages.nomoney);
           localStorage.removeItem("contract");
           this.router.navigate(["create"]);
         });
@@ -43,7 +44,7 @@ export class MainComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.refresh();
+      this.refresh();
   }
 
   informe_clipboard() {

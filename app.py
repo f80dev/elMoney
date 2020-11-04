@@ -3,6 +3,9 @@ import os
 import ssl
 import sys
 import sqlite3
+from urllib.request import urlopen
+
+import yaml
 
 from flask import Flask, Response, request, jsonify
 from flask_cors import CORS
@@ -63,6 +66,12 @@ def getbalance(contract:str,addr:str):
     log("Balance de "+addr+" à "+str(rc)+" pour le contrat "+contract)
     return Response(str(rc), 200)
 
+
+@app.route('/api/getyaml/<name>/')
+def getyaml(name):
+    f=open("./static/"+name+".yaml","r")
+    rc=yaml.safe_load(f.read())
+    return jsonify(rc),200
 
 
 @app.route('/api/new_account/')

@@ -1,0 +1,41 @@
+<div class="mainform">
+  <app-tuto label="Retrouvez ici l'ensemble des informations lié à l'application {{config.values?.appname}}"></app-tuto>
+
+  <br>
+  <br>
+  <div style="font-size: xx-large;font-weight: lighter;">
+     {{message}}<br>
+  </div>
+
+  <br><br>
+
+  <button mat-raised-button
+        mat-button class="large-button"
+        (click)="openForum()">
+    <div class="bloc-bouton">Joindre le forum<br>des utilisateurs</div>
+  </button>
+  <br>
+
+  <button mat-raised-button
+        mat-button class="large-button"
+        (click)="restart(false)">
+    Relancer {{config.values?.appname}}
+  </button>
+
+  <br>
+  <button mat-raised-button
+        mat-button class="large-button"
+        (click)="restart(true)">
+    Effacer les préférences
+  </button>
+
+
+</div>
+<div class="bottom-bar">
+  <hr>
+  <button mat-raised-button
+        mat-button class="app-button"
+        (click)="_location.back()">
+    Retour
+  </button>
+</div>

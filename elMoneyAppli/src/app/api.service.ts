@@ -61,11 +61,8 @@ export class ApiService {
   }
 
 
-  getyaml(url: string= '', name: string= ''){
-    let param = '';
-    if (url.length > 0) {param = 'url=' + url; }
-    if (name.length > 0) {param = 'name=' + name; }
-    return this._get('getyaml', param);
+  getyaml(name: string){
+    return this._get('getyaml/'+name+"/", "");
   }
 
   updateData(token) {

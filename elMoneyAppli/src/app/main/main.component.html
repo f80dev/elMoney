@@ -1,12 +1,13 @@
 <div class="mainform">
 
-  <app-tuto label="Bienvenu sur elMoney.">
+  <h1 (click)="router.navigate(['about'])">
+    {{config.values?.appname}}
+  </h1>
 
-  </app-tuto>
   <div *ngIf="addr">
     <br>
     <div *ngIf="config.unity">
-      <small>Votre solde</small>
+      <small>{{config.values?.labels.solde}}</small>
       <br><br>
       <span style="font-size: 3em;">{{solde}}</span>&nbsp;{{config.unity}}
     </div>

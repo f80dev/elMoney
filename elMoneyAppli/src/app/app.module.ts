@@ -33,6 +33,7 @@ import { MoneysComponent } from './moneys/moneys.component';
 import { SettingsComponent } from './settings/settings.component';
 import {QRCodeModule} from "angularx-qrcode";
 import {ClipboardModule} from "@angular/cdk/clipboard";
+import { SupportComponent } from './support/support.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import {ClipboardModule} from "@angular/cdk/clipboard";
     PrivateComponent,
     TransPipe,
     MoneysComponent,
-    SettingsComponent
+    SettingsComponent,
+    SupportComponent
   ],
   imports: [
     BrowserModule,

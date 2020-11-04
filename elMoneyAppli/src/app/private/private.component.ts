@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {showError, showMessage} from "../tools";
 import {ConfigService} from "../config.service";
 import {Location} from "@angular/common";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-private',
@@ -12,7 +13,9 @@ export class PrivateComponent implements OnInit {
 
   message:string="";
 
-  constructor(public config:ConfigService,public _location:Location) { }
+  constructor(public config:ConfigService,
+              public router:Router,
+              public _location:Location) { }
 
   ngOnInit(): void {
   }

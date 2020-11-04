@@ -1,0 +1,21 @@
+appname: "elMoney"
+
+labels:
+  solde: "Votre solde"
+
+messages:
+  nomoney: "Aucune monnaie sélectionnée"
+
+editor:
+  author: "Herve Hoareau"
+  name: "F80"
+  link_author: "https://www.linkedin.com/in/hhoareau/"
+  website: "https://f80.fr"
+
+
+support:
+  forum: "https://t.me/el_money_forum"
+  email: "support@elmoney.f80.fr"
+  faq: "https://elmoney.f80.fr/faqs"
+  facebook: "https://facebook.com/page/elmoneyappli"
+  website: "https://elrond.com"
