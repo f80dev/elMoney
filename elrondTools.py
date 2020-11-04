@@ -80,14 +80,27 @@ class ElrondNet:
         user.sync_nonce(ElrondProxy(self.proxy))
         contract = SmartContract(bytecode=wasm_file)
 
+        arguments=[hex(amount),hex(base_alphabet_to_10(unity))]
         log("Déploiement du contrat "+unity+" via le compte "+user.address.bech32())
+        log("Passage des arguments "+str(arguments))
+        address=""
         try:
+            # tx=contract.deploy(
+            #     owner=user,
+            #     arguments=arguments,
+            #     gas_price=config.DEFAULT_GAS_PRICE,
+            #     gas_limit=500000000,
+            #     value=None,
+            #     chain=config.get_chain_id(),
+            #     version=config.get_tx_version()
+            # )
+
             tx, address = self.environment.deploy_contract(
                 contract=contract,
                 owner=user,
-                arguments=[amount,base_alphabet_to_10(unity)],
-                gas_price=config.DEFAULT_GAS_PRICE*10,
-                gas_limit=500000000,
+                arguments=arguments,
+                gas_price=config.DEFAULT_GAS_PRICE,
+                gas_limit=50000000,
                 value=None,
                 chain=config.get_chain_id(),
                 version=config.get_tx_version()
@@ -99,7 +112,7 @@ class ElrondNet:
 
         #TODO: intégrer la temporisation pour événement
         url = 'https://api-testnet.elrond.com/transaction/' + tx + '/status'
-        log("Attente du déploiement "+url)
+        log("Attente du déploiement https://testnet-explorer.elrond.com/transactions/" + tx)
         result={"data":{"status":"pending"}}
         timeout=240
         while result["data"]["status"]=="pending" and timeout>0:
