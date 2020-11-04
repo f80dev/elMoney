@@ -80,21 +80,12 @@ class ElrondNet:
         user.sync_nonce(ElrondProxy(self.proxy))
         contract = SmartContract(bytecode=wasm_file)
 
-        arguments=[hex(amount),hex(base_alphabet_to_10(unity))]
+        #TODO: arguments=[hex(amount),hex(base_alphabet_to_10(unity))]
+        arguments = [hex(amount)]
         log("Déploiement du contrat "+unity+" via le compte "+user.address.bech32())
         log("Passage des arguments "+str(arguments))
         address=""
         try:
-            # tx=contract.deploy(
-            #     owner=user,
-            #     arguments=arguments,
-            #     gas_price=config.DEFAULT_GAS_PRICE,
-            #     gas_limit=500000000,
-            #     value=None,
-            #     chain=config.get_chain_id(),
-            #     version=config.get_tx_version()
-            # )
-
             tx, address = self.environment.deploy_contract(
                 contract=contract,
                 owner=user,

@@ -48,7 +48,7 @@ pub trait SimpleErc20Token {
     /// Constructor, is called immediately after the contract is created
     /// Will set the fixed global token supply and give all the supply to the creator.
     #[init]
-    fn init(&self, total_supply: &BigUint, erc_name: &BigUint) {
+    fn init(&self, total_supply: &BigUint) {
         let creator = self.get_caller();
 
         // save total supply

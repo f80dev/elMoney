@@ -47,7 +47,7 @@ def deploy(unity:str,amount:str):
     if "base64" in data:data=data.split("base64,")[1]
     pem_body = str(base64.b64decode(data), encoding="utf-8")
     with open("./PEM/temp.pem", "w") as pem_file: pem_file.write(pem_body)
-    result=bc.deploy("./static/RV_coin.wasm","./PEM/temp.pem",unity,int(amount))
+    result=bc.deploy("./static/RVcoin.wasm","./PEM/temp.pem",unity,int(amount))
     if "error" in result:
         return jsonify(result), 500
     else:
@@ -97,8 +97,9 @@ def getmoneys():
 @app.route('/api/name/<contract>/')
 def getname(contract:str):
     bc.set_contract(contract)
-    name=bc.getName()
-    rc = base_10_to_alphabet(name)
+    #name=bc.getName()
+    #rc = base_10_to_alphabet(name)
+    rc="RVC"
     log("Nom de la monnaie sur " + contract + " à " + rc)
     return jsonify({"name":rc}), 200
 
