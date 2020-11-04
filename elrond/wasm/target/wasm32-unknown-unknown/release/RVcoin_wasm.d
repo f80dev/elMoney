@@ -1,0 +1,1 @@
+/home/herve/PycharmProjects/elMoney/elrond/wasm/target/wasm32-unknown-unknown/release/RVcoin_wasm.wasm: /home/herve/PycharmProjects/elMoney/elrond/src/lib.rs /home/herve/PycharmProjects/elMoney/elrond/wasm/src/lib.rs
