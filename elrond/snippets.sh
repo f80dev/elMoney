@@ -3,10 +3,17 @@ PROJECT="."
 ALICE="${USERS}/dan.pem"
 ADDRESS=$(erdpy data load --key=address)
 DEPLOY_TRANSACTION=$(erdpy data load --key=deployTransaction)
-ARGUMENTS=1000
+ARGUMENTS=0xFFFF
+
+
+checkDeployment() {
+    erdpy tx get --hash=$DEPLOY_TRANSACTION --omit-fields="['data', 'signature']"
+    erdpy account get --address=$ADDRESS --omit-fields="['code']"
+}
+
 
 deploy() {
-    erdpy --verbose contract deploy --project=${PROJECT} --arguments 0xFFFF --recall-nonce --pem=${ALICE} --gas-limit=50000000 --send --outfile="deploy.json"
+    erdpy --verbose contract deploy --project=${PROJECT} --arguments ${ARGUMENTS} --recall-nonce --pem=${ALICE} --gas-limit=50000000 --send --outfile="deploy.json"
 
     TRANSACTION=$(erdpy data parse --file="deploy.json" --expression="data['result']['hash']")
     ADDRESS=$(erdpy data parse --file="deploy.json" --expression="data['emitted_tx']['address']")
@@ -16,18 +23,14 @@ deploy() {
 
     echo ""
     echo "Smart contract address: ${ADDRESS}"
-}
-
-
-
-checkDeployment() {
-    erdpy tx get --hash=$DEPLOY_TRANSACTION --omit-fields="['data', 'signature']"
-    erdpy account get --address=$ADDRESS --omit-fields="['code']"
+    checkDeployment
 }
 
 
 build(){
+  rm ./output/*
   erdpy --verbose contract build
+  ls -l ./output
 }
 
 
@@ -36,9 +39,10 @@ checkDeployment() {
     erdpy account get --address=$ADDRESS --omit-fields="['code']"
 }
 
-name() {
+info() {
   echo "Contrat ${ADDRESS}"
-  erdpy --verbose contract query ${ADDRESS} --function="name"
+  erdpy contract query ${ADDRESS} --function="getName"
+  erdpy contract query ${ADDRESS} --function="totalSupply"
 }
 
 transfer() {

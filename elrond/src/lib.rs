@@ -13,7 +13,7 @@ pub trait SimpleErc20Token {
     #[storage_set("total_supply")]
     fn set_total_supply(&self, total_supply: &BigUint);
 
-    #[view]
+    #[view(getName)]
     #[storage_get("name")]
     fn get_name(&self) -> BigUint;
     #[storage_set("name")]
