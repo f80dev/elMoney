@@ -12,6 +12,7 @@ from erdpy.accounts import Account,AccountsRepository
 from erdpy.contracts import SmartContract
 from erdpy.environments import TestnetEnvironment
 
+
 from Tools import send_mail, open_html_file, base_alphabet_to_10, log
 from definitions import DOMAIN_APPLI
 
@@ -26,6 +27,7 @@ class ElrondNet:
         # Now, we create a environment which intermediates deployment and execution
         self.proxy=proxy
         self.environment = TestnetEnvironment(proxy)
+
         #Récupération de la configuration : https://api-testnet.elrond.com/network/config
 
 
@@ -58,7 +60,7 @@ class ElrondNet:
             os.remove("./PEM/" + _d["filename"])
             user_to=_d["account"]
 
-        user_to=Account(address=_to)
+        user_to:Account=Account(address=_to)
         user_from=Account(pem_file=_from)
         user_from.sync_nonce(ElrondProxy(self.proxy))
         rc=self.environment.execute_contract(self.contract,user_from,
@@ -75,13 +77,19 @@ class ElrondNet:
         self.contract= SmartContract(address=contract)
 
 
-    def deploy(self,wasm_file,pem_file,unity="RVC",amount=1000):
+    def deploy(self,bytecode_file,pem_file,unity="RVC",amount=1000):
         user=Account(pem_file=pem_file)
         user.sync_nonce(ElrondProxy(self.proxy))
-        contract = SmartContract(bytecode=wasm_file)
+        with open(bytecode_file,"r") as file:
+            _json=file.read()
+        json_bytecode=json.loads(_json)
+
+        bytecode=json_bytecode["emitted_tx"]["data"]
+        bytecode=bytecode.split("@0500")[0]
+        contract = SmartContract(bytecode=bytecode)
 
         #TODO: arguments=[hex(amount),hex(base_alphabet_to_10(unity))]
-        arguments = [hex(amount)]
+        arguments = [amount]
         log("Déploiement du contrat "+unity+" via le compte "+user.address.bech32())
         log("Passage des arguments "+str(arguments))
         address=""
@@ -150,6 +158,9 @@ class ElrondNet:
             "pem":"".join(data),
             "account":_u
         })
+
+    def find_events(self, contract):
+        self.set_contract(contract)
 
 
 

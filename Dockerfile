@@ -20,6 +20,8 @@ RUN export PATH="$HOME/.local/bin:$PATH"
 RUN pip3 install --user --upgrade --no-cache-dir erdpy
 RUN pip3 install pyopenssl
 
+RUN pip3 -v install apscheduler
+RUN pip3 -v install flask-socketio
 
 WORKDIR /
 RUN mkdir PEM

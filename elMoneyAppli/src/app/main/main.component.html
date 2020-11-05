@@ -4,6 +4,17 @@
     {{config.values?.appname}}
   </h1>
 
+
+  <button mat-raised-button
+          mat-button
+          *ngIf="config.unity && solde>0"
+          class="app-button"
+          (click)="router.navigate(['transfer'])">
+    Envoyer
+  </button>
+
+
+
   <div *ngIf="addr">
     <br>
     <div *ngIf="config.unity">
@@ -12,13 +23,7 @@
       <span style="font-size: 3em;">{{solde}}</span>&nbsp;{{config.unity}}
     </div>
     <br><br>
-    <button mat-raised-button
-          mat-button
-          *ngIf="config.unity && solde>0"
-          class="app-button"
-          (click)="router.navigate(['transfer'])">
-    Envoyer
-  </button>
+
     <br><br>
     Recevoir<br>
     <br>

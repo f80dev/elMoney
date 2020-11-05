@@ -10,7 +10,7 @@ export const environment = {
   config_file:"config",
   domain_appli: "http://localhost:4200",
   appVersion: version,
-  default_contract: "erd1qqqqqqqqqqqqqpgqz0d043wm8u2mxnyw6uc9qqrv4enclvnzd8ss2saazm"
+  default_contract: "erd1qqqqqqqqqqqqqpgqeyayz09s2a4gnvcghdh9ma3he3j7cda0d8ss2apk2a"
 };
 
 /*

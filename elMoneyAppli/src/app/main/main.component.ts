@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import {Router} from "@angular/router";
 import {ApiService} from "../api.service";
 import {ConfigService} from "../config.service";
-import {showMessage} from "../tools";
+import {showMessage, subscribe_socket} from "../tools";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {Socket} from "ngx-socket-io";
 
 @Component({
   selector: 'app-main',
@@ -13,11 +14,11 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 export class MainComponent implements OnInit {
   addr: any;
   solde:any;
-  name:string;
   url_explorer: string="";
 
   constructor(public router:Router,
               public toast:MatSnackBar,
+               public socket:Socket,
               public api:ApiService,
               public config:ConfigService) { }
 
@@ -26,11 +27,12 @@ export class MainComponent implements OnInit {
     if(this.addr){
       if(this.api.contract){
         this.api.balance(this.addr).subscribe((r:any)=>{
-          this.solde=r;
+          this.solde=r.balance;
+          this.config.unity=r.name;
         },(err)=>{
           showMessage(this,this.config.values?.messages.nomoney);
           localStorage.removeItem("contract");
-          this.router.navigate(["create"]);
+          this.router.navigate(["moneys"]);
         });
       }
     } else {
@@ -44,7 +46,8 @@ export class MainComponent implements OnInit {
   }
 
   ngOnInit(): void {
-      this.refresh();
+    subscribe_socket(this,"refresh_account",()=>{this.refresh();})
+    setTimeout(()=>{this.refresh();},1000);
   }
 
   informe_clipboard() {

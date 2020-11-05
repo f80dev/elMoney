@@ -34,6 +34,10 @@ import { SettingsComponent } from './settings/settings.component';
 import {QRCodeModule} from "angularx-qrcode";
 import {ClipboardModule} from "@angular/cdk/clipboard";
 import { SupportComponent } from './support/support.component';
+import { AccountComponent } from './account/account.component';
+import {SocketIoConfig, SocketIoModule} from "ngx-socket-io";
+
+const config: SocketIoConfig = { url: environment.domain_server, options: {} };
 
 @NgModule({
   declarations: [
@@ -52,7 +56,8 @@ import { SupportComponent } from './support/support.component';
     TransPipe,
     MoneysComponent,
     SettingsComponent,
-    SupportComponent
+    SupportComponent,
+    AccountComponent
   ],
   imports: [
     BrowserModule,
@@ -61,6 +66,7 @@ import { SupportComponent } from './support/support.component';
     MatIconModule,
     MatSnackBarModule,
     SocialLoginModule,
+    SocketIoModule.forRoot(config),
     FormsModule,
     HttpClientModule,
     MatCheckboxModule,

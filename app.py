@@ -4,19 +4,49 @@ import ssl
 import sys
 import sqlite3
 from datetime import datetime
-from urllib.request import urlopen
+from apscheduler.schedulers.background import BackgroundScheduler
 
 import yaml
+from apscheduler.triggers.base import BaseTrigger
 
 from flask import Flask, Response, request, jsonify
 from flask_cors import CORS
+from flask_socketio import SocketIO
 
 from Tools import base_10_to_alphabet, log
 from elrondTools import ElrondNet
 
+
+#Initialisation des instances principales statics
 app = Flask(__name__)
 CORS(app)
 bc=ElrondNet()
+socketio = SocketIO(app, cors_allowed_origins="*", logger=False,ping_interval=50)
+scheduler = BackgroundScheduler()
+
+
+
+def send(event_name: str, dest, message: str = "", param: dict = {}):
+    if not type(dest)==list:dest=[dest]
+    for d in dest:
+        body = dict({'to': d, 'message': message, 'param': param})
+        rc = socketio.emit(event_name, body, broadcast=True)
+        log("WebSocket.send de " + event_name + " à " + d);
+    return rc
+
+
+
+@app.route('/api/events/<contract>/',methods=["GET"])
+def event_loop(contract:str,dest:str,amount:str):
+    bc.find_events(contract)
+
+
+
+def refresh_client(dest:str):
+    send("refresh_account",dest)
+    scheduler.remove_job("id_"+dest)
+
+
 
 #test http://localhost:5000/api/transfer
 @app.route('/api/transfer/<contract>/<dest>/<amount>/',methods=["POST"])
@@ -32,9 +62,11 @@ def transfer(contract:str,dest:str,amount:str):
         sql = "INSERT INTO email_addr (Address,Email) VALUES ('" + rc["to"] + "','" + dest + "')"
         sqlite3.connect("elmoney").cursor().executescript(sql)
 
+    scheduler.add_job(refresh_client,id="id_"+dest,args=[dest],trigger="interval",minutes=0.25,max_instances=1)
+    scheduler.add_job(refresh_client,id="id_"+dest,args=[rc['from'].bech32()],trigger="interval",minutes=0.2,max_instances=1)
+
     os.remove("./PEM/temp.pem")
     url="https://testnet-explorer.elrond.com/transactions/"+rc["tx"]
-    print(url)
     return jsonify({"from_addr":str(rc["from"].bech32()),
                     "tx":url})
 
@@ -45,9 +77,11 @@ def deploy(unity:str,amount:str):
     log("Appel du service de déploiement de contrat")
     data=str(request.data,encoding="utf-8")
     if "base64" in data:data=data.split("base64,")[1]
+
     pem_body = str(base64.b64decode(data), encoding="utf-8")
     with open("./PEM/temp.pem", "w") as pem_file: pem_file.write(pem_body)
-    result=bc.deploy("RVcoin.wasm","./PEM/temp.pem",unity,int(amount))
+
+    result=bc.deploy("./static/deploy.json","./PEM/temp.pem",unity,int(amount))
     if "error" in result:
         return jsonify(result), 500
     else:
@@ -58,14 +92,26 @@ def deploy(unity:str,amount:str):
 
 
 
+def get_name(contract):
+    sql = "SELECT * FROM Moneys WHERE Address='" + contract + "'"
+    row = sqlite3.connect("elmoney").cursor().execute(sql).fetchall()
+    if len(row) == 0: return None
+    name=row[0][1]
+    log("Nom de la monnaie sur " + contract + " à " + name)
+    return name
+
 
 #test http://localhost:5000/api/balance/erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx/
 @app.route('/api/balance/<contract>/<addr>/')
 def getbalance(contract:str,addr:str):
+    name=get_name(contract)
+    if name is None:return "Pas de money correspondante", 404
+
     bc.set_contract(contract)
     rc = bc.getBalance(addr)
-    log("Balance de "+addr+" à "+str(rc)+" pour le contrat "+contract)
-    return Response(str(rc), 200)
+
+    log("Balance de "+addr+" à "+str(rc)+name+" pour le contrat "+contract)
+    return jsonify({"balance":rc,"name":name}),200
 
 
 @app.route('/api/getyaml/<name>/')
@@ -87,7 +133,7 @@ def new_account():
 def getmoneys():
     c=sqlite3.connect("elmoney").cursor()
     rc=[]
-    for row in c.execute("SELECT * FROM Moneys ORDER dtCreate"):
+    for row in c.execute("SELECT * FROM Moneys").fetchall():
         rc.append({"contract":row[0],"unity":row[1]})
     return jsonify(rc)
 
@@ -96,11 +142,8 @@ def getmoneys():
 
 @app.route('/api/name/<contract>/')
 def getname(contract:str):
-    bc.set_contract(contract)
-    #name=bc.getName()
-    #rc = base_10_to_alphabet(name)
-    rc="RVC"
-    log("Nom de la monnaie sur " + contract + " à " + rc)
+    rc=get_name(contract)
+    if rc is None:return "Pas de monnaie correspondant à ce contrat",404
     return jsonify({"name":rc}), 200
 
 
@@ -112,6 +155,8 @@ if __name__ == '__main__':
     _port=5555
     if len(sys.argv)>2:
         _port = sys.argv[1]
+
+    scheduler.start()
 
     if "debug" in sys.argv:
         app.run(host="0.0.0.0", port=_port, debug=True)

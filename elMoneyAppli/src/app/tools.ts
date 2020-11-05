@@ -224,7 +224,7 @@ export function subscribe_socket(vm:any,event_name:string,func=null){
   if(vm.socket!=null){
     $$("Installation de la socket pour l'event "+event_name);
     vm.socket.on(event_name, (data: any) => {
-      if (data.to == vm.config.user.address || data.to=="*") {
+      if (data.to == localStorage.getItem("addr") || data.to=="*") {
         $$("Réception de "+event_name+" avec data=",data);
         if(vm.toast!=null && data.message!=null && data.message.length>0)showMessage(vm,data.message);
 

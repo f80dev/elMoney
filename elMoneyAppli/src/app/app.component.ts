@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import {ConfigService} from "./config.service";
 import {ApiService} from "./api.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {environment} from "../environments/environment";
+import {$$} from "./tools";
 
 @Component({
   selector: 'app-root',
@@ -17,17 +19,20 @@ export class AppComponent {
               public api:ApiService){
 
     this.config.init(()=>{
+      $$("Recherche du contrat à utiliser pour le device");
       let contract=this.routes.snapshot.queryParamMap.get("contract");
-      let addr=this.routes.snapshot.queryParamMap.get("addr");
-      if(contract){
-        this.api.contract=contract;
-        localStorage.setItem("contract",contract);
-      }
+      if(!contract)contract=localStorage.getItem("contract");
+      if(!contract)contract=environment.default_contract;
+      this.api.set_contract(contract);
 
-      if(addr)localStorage.setItem("addr",addr);
-      this.api._get("/name/"+this.api.contract).subscribe((r:any)=>{
-        this.config.unity=r.name;
-      });
+      let addr=this.routes.snapshot.queryParamMap.get("addr");
+      if(!addr)
+        addr=localStorage.getItem("addr")
+      else
+        localStorage.setItem("addr",addr);
+
+      this.router.navigate(["main"]);
+
     },()=>{
       this.router.navigate(["support"],{queryParams:{message:"Problème grave de connexion"}});
     });

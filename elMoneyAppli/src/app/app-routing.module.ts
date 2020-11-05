@@ -19,7 +19,6 @@ const routes: Routes = [
    { path: 'settings', component: SettingsComponent},
    { path: 'about', component: AboutComponent},
    { path: 'support', component: SupportComponent},
-   { path: '', component: MainComponent},
     { path: 'main', component: MainComponent},
 ];
 

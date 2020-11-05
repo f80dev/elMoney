@@ -86,8 +86,10 @@ export class ApiService {
 
 
   set_contract(contract: string) {
-    $$("Changement de contract : "+contract);
-    localStorage.setItem("contract",contract);
-    this.contract=contract;
+    if(contract && contract.length>0){
+      $$("Changement de contract : "+contract);
+      localStorage.setItem("contract",contract);
+      this.contract=contract;
+    }
   }
 }
