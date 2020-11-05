@@ -1,4 +1,3 @@
-
 #![no_std]
 #![allow(clippy::string_lit_as_bytes)]
 
@@ -14,7 +13,11 @@ pub trait SimpleErc20Token {
     #[storage_set("total_supply")]
     fn set_total_supply(&self, total_supply: &BigUint);
 
-
+    #[view]
+    #[storage_get("name")]
+    fn get_name(&self) -> BigUint;
+    #[storage_set("name")]
+    fn set_name(&self, name: &BigUint);
 
     /// Gets the balance of the specified address.
     /// 
@@ -53,6 +56,7 @@ pub trait SimpleErc20Token {
 
         // save total supply
         self.set_total_supply(total_supply);
+
 
         // deployer initially receives the total supply
         let mut creator_balance = self.get_mut_balance(&creator);
