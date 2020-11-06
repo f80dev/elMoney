@@ -22,7 +22,7 @@ from elrondTools import ElrondNet
 #Initialisation des instances principales statics
 app = Flask(__name__)
 CORS(app)
-bc=ElrondNet()
+bc=ElrondNet(proxy="http://172.26.244.241:7950")
 socketio = SocketIO(app, cors_allowed_origins="*", logger=False,ping_interval=50)
 scheduler = BackgroundScheduler()
 dao=DAO("./elmoney")
@@ -159,7 +159,7 @@ def raz(password:str):
     if password!="hh4271":return "Password incorrect",501
     if dao.raz():
         rc=deploy("CMK","10000",dict(
-            {"pem":"./PEM/admin.pem",
+            {"pem":"./PEM/alice.pem",
              "public":True,
              "transferable":True}
         ))

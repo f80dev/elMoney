@@ -23,11 +23,14 @@ class ElrondNet:
     environment=None
     proxy=None
 
-    def __init__(self,proxy="https://api-testnet.elrond.com",pem="./PEM/alice.pem"):
+
+    def __init__(self,proxy="https://api-testnet.elrond.com",bank_pem="./PEM/alice.pem"):
         logging.basicConfig(level=logging.DEBUG)
         # Now, we create a environment which intermediates deployment and execution
         self.proxy=proxy
         self.environment = TestnetEnvironment(proxy)
+        self.bank=Account(pem_file=bank_pem)
+
 
         #Récupération de la configuration : https://api-testnet.elrond.com/network/config
 
@@ -157,19 +160,19 @@ class ElrondNet:
 
         if fund>0:
             log("On transfere un peu d'eGold pour assurer les premiers transferts")
-            bank = Account(pem_file="./PEM/bank.pem")
-            bank.sync_nonce(ElrondProxy(self.proxy))
+            _proxy=ElrondProxy(self.proxy)
+            self.bank.sync_nonce(_proxy)
             t=Transaction()
-            t.nonce=bank.nonce
+            t.nonce=self.bank.nonce
             t.version=config.get_tx_version()
             t.data="refund for transfert"
-            t.chainID=config.get_chain_id()
+            t.chainID=_proxy.get_chain_id()
             t.gasLimit=50000000
             t.value=str(fund)
-            t.sender=bank.address.bech32()
+            t.sender=self.bank.address.bech32()
             t.receiver=_u.address.bech32()
             t.gasPrice=config.DEFAULT_GAS_PRICE
-            t.sign(bank)
+            t.sign(self.bank)
             t.send(ElrondProxy(self.proxy))
 
         with open(filename, "r") as myfile:data = myfile.readlines()
