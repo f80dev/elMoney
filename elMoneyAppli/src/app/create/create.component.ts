@@ -17,8 +17,8 @@ export class CreateComponent implements OnInit {
   amount: number=10000;
   url:string="";
   url_transaction: string="";
-  transferable: any;
-  _public: any;
+  transferable=false;
+  _public=true;
 
   constructor(public api:ApiService,
               public router:Router,
@@ -36,9 +36,9 @@ export class CreateComponent implements OnInit {
       pem:this.config.pem,
       owner:localStorage.getItem("attr"),
       public:this._public,
-      transferable:this.transferable
+      transferable:this.transferable,
+      url:this.url
     };
-    debugger
 
     this.api._post("/deploy/"+this.name+"/"+this.amount,"",obj,240).subscribe((r:any)=>{
       this.message="";

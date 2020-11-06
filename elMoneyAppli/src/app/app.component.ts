@@ -19,7 +19,7 @@ export class AppComponent {
               public api:ApiService){
 
     this.config.init(()=>{
-      $$("Recherche du contrat à utiliser pour le device");
+      $$("!Recherche du contrat à utiliser pour le device");
       let contract=this.routes.snapshot.queryParamMap.get("contract");
       if(!contract)contract=localStorage.getItem("contract");
       if(!contract)contract=environment.default_contract;
