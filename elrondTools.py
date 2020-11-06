@@ -3,7 +3,7 @@ import logging
 import os
 import urllib
 from datetime import datetime
-from os.path import exists
+
 from time import sleep
 
 from erdpy.proxy import ElrondProxy
@@ -11,7 +11,8 @@ from erdpy import config
 from erdpy.accounts import Account,AccountsRepository
 from erdpy.contracts import SmartContract
 from erdpy.environments import TestnetEnvironment
-
+import erdpy.wallet.signing as signing_tools
+from erdpy.transactions import Transaction
 
 from Tools import send_mail, open_html_file, base_alphabet_to_10, log
 from definitions import DOMAIN_APPLI
@@ -98,7 +99,7 @@ class ElrondNet:
                 contract=contract,
                 owner=user,
                 arguments=arguments,
-                gas_price=config.DEFAULT_GAS_PRICE,
+                gas_price=config.DEFAULT_GAS_PRICE/1,
                 gas_limit=50000000,
                 value=0,
                 chain=config.get_chain_id(),
@@ -110,17 +111,18 @@ class ElrondNet:
             return {"error":500,"message":str(e.args),"link":url}
 
         #TODO: intégrer la temporisation pour événement
-        url = 'https://api-testnet.elrond.com/transaction/' + tx + '/status'
+        url = 'https://api-testnet.elrond.com/transaction/' + tx
         log("Attente du déploiement https://testnet-explorer.elrond.com/transactions/" + tx)
-        result={"data":{"status":"pending"}}
+        result={"data":{"transaction":{"status":"pending"}}}
         timeout=240
-        while result["data"]["status"]=="pending" and timeout>0:
+        while result["data"]["transaction"]["status"]=="pending" and timeout>0:
+            sleep(3)
             with urllib.request.urlopen(url) as response:
                 result = json.loads(response.read())
-            timeout=timeout-2
-            sleep(2)
+            timeout=timeout-3
 
-        if result["data"]["status"]=="pending":
+
+        if result["data"]["transaction"]["status"]=="pending":
             log("Echec de déploiement, timeout")
             return {"error":600,
                     "message":"timeout",
@@ -131,7 +133,8 @@ class ElrondNet:
             self.contract=address
             url="https://testnet-explorer.elrond.com/transactions/"+tx
             log("Déploiement du nouveau contrat réussi a l'adresse "+self.contract.bech32()+" voir transaction "+url)
-            return {"link":url,"contract":address.bech32()}
+            return {"link":url,"contract":address.bech32(),"owner":user.address.bech32()}
+
 
     def getName(self):
         lst=self.environment.query_contract(self.contract,"name")
@@ -141,8 +144,9 @@ class ElrondNet:
         else:
             return None
 
-    def create_account(self):
+    def create_account(self,fund):
         name=str(datetime.now().timestamp()*1000)
+
         AccountsRepository("./PEM").generate_account(name)
         for f in os.listdir("./PEM"):
             if f.startswith(name):
@@ -150,6 +154,24 @@ class ElrondNet:
                 break
 
         _u=Account(pem_file=filename)
+
+        if fund>0:
+            log("On transfere un peu d'eGold pour assurer les premiers transferts")
+            bank = Account(pem_file="./PEM/bank.pem")
+            bank.sync_nonce(ElrondProxy(self.proxy))
+            t=Transaction()
+            t.nonce=bank.nonce
+            t.version=config.get_tx_version()
+            t.data="refund for transfert"
+            t.chainID=config.get_chain_id()
+            t.gasLimit=50000000
+            t.value=str(fund)
+            t.sender=bank.address.bech32()
+            t.receiver=_u.address.bech32()
+            t.gasPrice=config.DEFAULT_GAS_PRICE
+            t.sign(bank)
+            t.send(ElrondProxy(self.proxy))
+
         with open(filename, "r") as myfile:data = myfile.readlines()
         return({
             "filename":filename,

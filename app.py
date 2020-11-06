@@ -15,6 +15,7 @@ from flask_cors import CORS
 from flask_socketio import SocketIO
 
 from Tools import base_10_to_alphabet, log
+from dao import DAO
 from elrondTools import ElrondNet
 
 
@@ -24,6 +25,7 @@ CORS(app)
 bc=ElrondNet()
 socketio = SocketIO(app, cors_allowed_origins="*", logger=False,ping_interval=50)
 scheduler = BackgroundScheduler()
+dao=DAO("./elmoney")
 
 
 
@@ -60,8 +62,7 @@ def transfer(contract:str,dest:str,amount:str):
     rc=bc.transfer("./PEM/temp.pem",dest,int(amount))
 
     if "to" in rc and "@" in dest:
-        sql = "INSERT INTO email_addr (Address,Email) VALUES ('" + rc["to"] + "','" + dest + "')"
-        sqlite3.connect("elmoney").cursor().executescript(sql)
+        dao.add_contact(rc["from"],dest,rc["to"])
 
     scheduler.add_job(refresh_client,id="id_"+dest,args=[dest],trigger="interval",minutes=0.25,max_instances=1)
     scheduler.add_job(refresh_client,id="id_"+dest,args=[rc['from'].bech32()],trigger="interval",minutes=0.2,max_instances=1)
@@ -74,43 +75,42 @@ def transfer(contract:str,dest:str,amount:str):
 
 
 @app.route('/api/deploy/<unity>/<amount>/',methods=["POST"])
-def deploy(unity:str,amount:str):
+def deploy(unity:str,amount:str,data:dict=None):
     log("Appel du service de déploiement de contrat")
-    data=str(request.data,encoding="utf-8")
-    data=json.loads(data)
-    if "base64" in data["pem"]:data["pem"]=data["pem"].split("base64,")[1]
+    if data is None:
+       data = str(request.data, encoding="utf-8")
+       data = json.loads(data)
 
-    pem_body = str(base64.b64decode(data["pem"]), encoding="utf-8")
-    with open("./PEM/temp.pem", "w") as pem_file: pem_file.write(pem_body)
+    if not "/PEM/" in data["pem"]:
+        if "base64" in data["pem"]: data["pem"] = data["pem"].split("base64,")[1]
+        pem_body = str(base64.b64decode(data["pem"]), encoding="utf-8")
+        pem_file="./PEM/temp.pem"
+        with open(pem_file, "w") as file:file.write(pem_body)
+    else:
+        pem_file=data["pem"]
 
-    result=bc.deploy("./static/deploy.json","./PEM/temp.pem",unity,int(amount))
+    result=bc.deploy("./static/deploy.json",pem_file,unity,int(amount))
     if "error" in result:
         return jsonify(result), 500
     else:
-        sql="INSERT INTO Moneys (Address,Unity,dtCreate,Owner,Public,Transferable) " \
-            "VALUES ('"+result["contract"]+"','"+unity+"',"+str(datetime.now().timestamp())+"'"+data["owner"]+"',"+data["public"]+","+data["transferable"]+")"
-        log("Execution de la requete : "+sql)
-        sqlite3.connect("elmoney").cursor().executescript(sql)
-        return jsonify(result),200
+        dao.add_money(result["contract"],unity,result["owner"],data["public"],data["transferable"])
 
+    return jsonify(result),200
 
 
 def get_name(contract):
-    sql = "SELECT * FROM Moneys WHERE Address='" + contract + "'"
-    row = sqlite3.connect("elmoney").cursor().execute(sql).fetchall()
-    if len(row) == 0: return None
-    name=row[0][1]
+    name=dao.get_name(contract)
+    if name is None:return "Contrat inconnu",404
     log("Nom de la monnaie sur " + contract + " à " + name)
-    return name
+    return jsonify({"name":name}),200
 
 
 
 
 @app.route('/api/friends/<addr>/')
 def friends(addr:str):
-    sql = "SELECT * FROM Friends WHERE owner='" + addr + "'"
-    rows = sqlite3.connect("elmoney").cursor().execute(sql).fetchall()
-    if len(rows) == 0: return None
+    rows=dao.get_friends(addr)
+    if len(rows) == 0: return "Aucun ami",404
     rc = []
     for row in rows:
         rc.append({"firstname": row[2], "email": row[1],"address":row[0]})
@@ -139,7 +139,7 @@ def getyaml(name):
 
 @app.route('/api/new_account/')
 def new_account():
-    rc=bc.create_account()
+    rc=bc.create_account(1)
     rc["account"]=None
     return jsonify(rc),200
 
@@ -147,11 +147,27 @@ def new_account():
 
 @app.route('/api/moneys/<addr>')
 def getmoneys(addr:str):
-    c=sqlite3.connect("elmoney").cursor()
     rc=[]
-    for row in c.execute("SELECT * FROM Moneys WHERE Public=TRUE or Owner='"+addr+"'").fetchall():
+    for row in dao.get_moneys(addr):
         rc.append({"contract":row[0],"unity":row[1],"public":row[3],"owner":row[4]})
     return jsonify(rc)
+
+
+#http://localhost:5555/api/raz/hh4271
+@app.route('/api/raz/<password>')
+def raz(password:str):
+    if password!="hh4271":return "Password incorrect",501
+    if dao.raz():
+        rc=deploy("CMK","10000",dict(
+            {"pem":"./PEM/admin.pem",
+             "public":True,
+             "transferable":True}
+        ))
+        if "error" in rc:
+            return "Probleme dans la création de la monnaie par défaut",501
+
+    return "Effacement terminé",200
+
 
 
 

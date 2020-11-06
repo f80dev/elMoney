@@ -25,19 +25,26 @@
    </mat-form-field>
 <br>
     <div style="width:200px;text-align: left;display: inline-block">
-    <br><br>
-    <mat-checkbox [(ngModel)]="_public">Public</mat-checkbox>
-    <br><br>
-    <mat-checkbox [(ngModel)]="transferable">Transférable</mat-checkbox>
-
+      <br><br>
+      <mat-checkbox [(ngModel)]="_public">Public</mat-checkbox>
+      <br><br>
+      <mat-checkbox [(ngModel)]="transferable">Transférable entre personnes</mat-checkbox>
     </div>
 
+    <br><br><br>
 
-  <br><br>
-  <button mat-raised-button
-        mat-button class="app-button"
+     <mat-form-field appearance="fill" class="app-field" style="max-width: 320px">
+    <mat-label>Lien internet associé (optionnel)</mat-label>
+    <input matInput type="text" maxlength="200" [(ngModel)]="url">
+     <mat-hint>Renvoi vers la documentation / promotion de votre monnaie</mat-hint>
+   </mat-form-field>
+
+
+  <br><br><br>
+  <button mat-raised-button  color="primary"
+        mat-button class="large-button"
         (click)="create()">
-    Créer
+    Publier votre monnaie !
   </button>
 
     </div>
