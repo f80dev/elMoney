@@ -12,7 +12,7 @@ import {Router} from "@angular/router";
 export class PrivateComponent implements OnInit {
 
   message:string="";
-  savePrivateKey: any;
+  savePrivateKey={value:false};
 
   constructor(public config:ConfigService,
               public router:Router,
@@ -27,6 +27,8 @@ export class PrivateComponent implements OnInit {
       reader.onload = ()=>{
         this.message="Transfert des fonds";
         this.config.pem=reader.result.toString();
+        if(this.savePrivateKey)localStorage.setItem("pem",this.config.pem);
+
         let pubkey=atob(this.config.pem.split("base64,")[1]);
         localStorage.setItem("addr","erd"+pubkey.split(" for erd")[1].split("---")[0]);
         this._location.back();

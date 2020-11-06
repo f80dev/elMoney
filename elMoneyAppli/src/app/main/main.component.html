@@ -1,33 +1,70 @@
 <div class="mainform">
+  <br>
 
-  <h1 (click)="router.navigate(['about'])">
-    {{config.values?.appname}}
-  </h1>
+  <table style="width: 90vw;text-align: center;">
+    <tr>
+      <td *ngFor="let fr of friends">
+        <mat-icon>arrow_drop_up</mat-icon>
+      </td>
+    </tr>
+  </table>
 
 
-  <button mat-raised-button
-          mat-button
-          *ngIf="config.unity && solde>0"
-          class="app-button"
-          (click)="router.navigate(['transfer'])">
+
+  <button mat-raised-button mat-button class="app-button"
+              *ngIf="config.unity && solde>0"
+              (click)="router.navigate(['transfer'])">
     Envoyer
   </button>
 
 
+  <br><br><br>
+
+  <app-account [solde]="hand"
+                   [unity]="config.unity">
+  </app-account>
+  <br><br>
+
+  <table style="width: 90vw;text-align: center;">
+    <tr>
+      <td *ngFor="let bt of buttons">
+        <mat-icon>arrow_drop_up</mat-icon>
+      </td>
+    </tr>
+    <tr>
+    <td *ngFor="let bt of buttons">
+      <button mat-raised-button mat-button mat-icon-button
+              class="large-icon-button"
+              (click)="addInHand(bt.value)">
+        <span *ngIf="bt.label">{{bt.label}}</span>
+        <span *ngIf="!bt.label">{{bt.value}}</span>
+      </button>
+    </td>
+  </tr>
+  </table>
+
+  <br><br><br>
 
   <div *ngIf="addr">
     <br>
-    <div *ngIf="config.unity">
-      <small>{{config.values?.labels.solde}}</small>
-      <br><br>
-      <span style="font-size: 3em;">{{solde}}</span>&nbsp;{{config.unity}}
-    </div>
+      <app-account [solde]="solde"
+                   [unity]="config.unity">
+      </app-account>
     <br><br>
+    <br>
+    <mat-icon>arrow_drop_up</mat-icon>
 
-    <br><br>
-    Recevoir<br>
+    <br>
+
+     <button mat-raised-button mat-button class="app-button"
+              *ngIf="config.unity && solde>0"
+              (click)="showQRCode=true">
+        Recevoir
+      </button>
+
     <br>
     <qrcode
+      *ngIf="showQRCode"
       [width]="100"
       ngxClipboard
       [cdkCopyToClipboard]="addr"
@@ -64,6 +101,12 @@
           class="app-button"
           (click)="router.navigate(['moneys'])">
     <div class="bloc-bouton">Sélectionner<br>une monnaie</div>
+  </button>
+
+  <button mat-raised-button mat-button
+          class="app-button"
+          (click)="router.navigate(['contacts'])">
+    <div class="bloc-bouton">Ajouter<br>des amis</div>
   </button>
 
 </div>

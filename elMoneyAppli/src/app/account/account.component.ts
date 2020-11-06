@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-account',
@@ -6,6 +6,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./account.component.sass']
 })
 export class AccountComponent implements OnInit {
+  @Input("label") label: any;
+  @Input("solde") solde: any;
+  @Input("unity") unity: any;
 
   constructor() { }
 

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Location} from "@angular/common";
 import {ApiService} from "../api.service";
 import {$$, showMessage} from "../tools";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-moneys',
@@ -12,6 +13,7 @@ export class MoneysComponent implements OnInit {
   moneys: any[]=[];
 
   constructor(public api:ApiService,
+              public router:Router,
               public _location:Location) { }
 
   ngOnInit(): void {

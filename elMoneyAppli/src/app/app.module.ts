@@ -36,6 +36,8 @@ import {ClipboardModule} from "@angular/cdk/clipboard";
 import { SupportComponent } from './support/support.component';
 import { AccountComponent } from './account/account.component';
 import {SocketIoConfig, SocketIoModule} from "ngx-socket-io";
+import { ContactsComponent } from './contacts/contacts.component';
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 
 const config: SocketIoConfig = { url: environment.domain_server, options: {} };
 
@@ -57,7 +59,8 @@ const config: SocketIoConfig = { url: environment.domain_server, options: {} };
     MoneysComponent,
     SettingsComponent,
     SupportComponent,
-    AccountComponent
+    AccountComponent,
+    ContactsComponent
   ],
   imports: [
     BrowserModule,
@@ -76,7 +79,8 @@ const config: SocketIoConfig = { url: environment.domain_server, options: {} };
     BrowserAnimationsModule,
     ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
     QRCodeModule,
-    ClipboardModule
+    ClipboardModule,
+    MatSlideToggleModule
   ],
   providers: [
     ApiService,TransPipe,

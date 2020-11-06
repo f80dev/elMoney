@@ -9,6 +9,7 @@ import {MoneysComponent} from "./moneys/moneys.component";
 import {SettingsComponent} from "./settings/settings.component";
 import {AboutComponent} from "./about/about.component";
 import {SupportComponent} from "./support/support.component";
+import {ContactsComponent} from "./contacts/contacts.component";
 
 const routes: Routes = [
    { path: 'admin', component: AdminComponent},
@@ -20,6 +21,7 @@ const routes: Routes = [
    { path: 'about', component: AboutComponent},
    { path: 'support', component: SupportComponent},
     { path: 'main', component: MainComponent},
+      { path: 'contacts', component: ContactsComponent},
 ];
 
 @NgModule({

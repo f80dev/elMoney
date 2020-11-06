@@ -15,10 +15,16 @@ export class MainComponent implements OnInit {
   addr: any;
   solde:any;
   url_explorer: string="";
+  showQRCode: boolean=false;
+  friends=[];
+  buttons=[
+    {value:10},{value:5},{value:2},{value:1}
+  ]
+  hand:number=0;
 
   constructor(public router:Router,
               public toast:MatSnackBar,
-               public socket:Socket,
+              public socket:Socket,
               public api:ApiService,
               public config:ConfigService) { }
 
@@ -47,10 +53,21 @@ export class MainComponent implements OnInit {
 
   ngOnInit(): void {
     subscribe_socket(this,"refresh_account",()=>{this.refresh();})
-    setTimeout(()=>{this.refresh();},1000);
+    setTimeout(()=>{
+      this.refresh();
+      this.api._get("friends/"+this.addr+"/").subscribe((r:any)=>{
+        this.friends=r;
+      })
+    },1000);
+
   }
 
   informe_clipboard() {
     showMessage(this,"Adresse dans le presse papier")
+  }
+
+  addInHand(value: number) {
+    this.hand=this.hand+value;
+    this.solde=this.solde-value;
   }
 }

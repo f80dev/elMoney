@@ -1,7 +1,7 @@
 {
   "configVersion": 1,
-  "timestamp": 1604583685016,
-  "index": "https://elmoney.f80.fr/index.html",
+  "timestamp": 1604621609343,
+  "index": "https://coinmaker.f80.fr/index.html",
   "assetGroups": [
     {
       "name": "app",
@@ -11,13 +11,13 @@
         "ignoreVary": true
       },
       "urls": [
-        "https://elmoney.f80.fr/favicon.ico",
-        "https://elmoney.f80.fr/index.html",
-        "https://elmoney.f80.fr/main.js",
-        "https://elmoney.f80.fr/manifest.webmanifest",
-        "https://elmoney.f80.fr/polyfills.js",
-        "https://elmoney.f80.fr/runtime.js",
-        "https://elmoney.f80.fr/styles.css"
+        "https://coinmaker.f80.fr/favicon.ico",
+        "https://coinmaker.f80.fr/index.html",
+        "https://coinmaker.f80.fr/main.js",
+        "https://coinmaker.f80.fr/manifest.webmanifest",
+        "https://coinmaker.f80.fr/polyfills.js",
+        "https://coinmaker.f80.fr/runtime.js",
+        "https://coinmaker.f80.fr/styles.css"
       ],
       "patterns": []
     },
@@ -29,41 +29,41 @@
         "ignoreVary": true
       },
       "urls": [
-        "https://elmoney.f80.fr/assets/icons/icon-128x128.png",
-        "https://elmoney.f80.fr/assets/icons/icon-144x144.png",
-        "https://elmoney.f80.fr/assets/icons/icon-152x152.png",
-        "https://elmoney.f80.fr/assets/icons/icon-192x192.png",
-        "https://elmoney.f80.fr/assets/icons/icon-384x384.png",
-        "https://elmoney.f80.fr/assets/icons/icon-512x512.png",
-        "https://elmoney.f80.fr/assets/icons/icon-72x72.png",
-        "https://elmoney.f80.fr/assets/icons/icon-96x96.png",
-        "https://elmoney.f80.fr/assets/img/LinkedIn.png",
-        "https://elmoney.f80.fr/assets/img/anonymous.png",
-        "https://elmoney.f80.fr/assets/img/tips.png"
+        "https://coinmaker.f80.fr/assets/icons/icon-128x128.png",
+        "https://coinmaker.f80.fr/assets/icons/icon-144x144.png",
+        "https://coinmaker.f80.fr/assets/icons/icon-152x152.png",
+        "https://coinmaker.f80.fr/assets/icons/icon-192x192.png",
+        "https://coinmaker.f80.fr/assets/icons/icon-384x384.png",
+        "https://coinmaker.f80.fr/assets/icons/icon-512x512.png",
+        "https://coinmaker.f80.fr/assets/icons/icon-72x72.png",
+        "https://coinmaker.f80.fr/assets/icons/icon-96x96.png",
+        "https://coinmaker.f80.fr/assets/img/LinkedIn.png",
+        "https://coinmaker.f80.fr/assets/img/anonymous.png",
+        "https://coinmaker.f80.fr/assets/img/tips.png"
       ],
       "patterns": []
     }
   ],
   "dataGroups": [],
   "hashTable": {
-    "https://elmoney.f80.fr/assets/icons/icon-128x128.png": "dae3b6ed49bdaf4327b92531d4b5b4a5d30c7532",
-    "https://elmoney.f80.fr/assets/icons/icon-144x144.png": "b0bd89982e08f9bd2b642928f5391915b74799a7",
-    "https://elmoney.f80.fr/assets/icons/icon-152x152.png": "7479a9477815dfd9668d60f8b3b2fba709b91310",
-    "https://elmoney.f80.fr/assets/icons/icon-192x192.png": "1abd80d431a237a853ce38147d8c63752f10933b",
-    "https://elmoney.f80.fr/assets/icons/icon-384x384.png": "329749cd6393768d3131ed6304c136b1ca05f2fd",
-    "https://elmoney.f80.fr/assets/icons/icon-512x512.png": "559d9c4318b45a1f2b10596bbb4c960fe521dbcc",
-    "https://elmoney.f80.fr/assets/icons/icon-72x72.png": "c457e56089a36952cd67156f9996bc4ce54a5ed9",
-    "https://elmoney.f80.fr/assets/icons/icon-96x96.png": "3914125a4b445bf111c5627875fc190f560daa41",
-    "https://elmoney.f80.fr/assets/img/LinkedIn.png": "dec770e0a226b15021d0b80154aa18841097a46e",
-    "https://elmoney.f80.fr/assets/img/anonymous.png": "c015f4d0bf7c81184706a840cfabef65c3f4e0c4",
-    "https://elmoney.f80.fr/assets/img/tips.png": "b7832ac8a831f94cd9b656f48bc0d75a5cd587ca",
-    "https://elmoney.f80.fr/favicon.ico": "22f6a4a3bcaafafb0254e0f2fa4ceb89e505e8b2",
-    "https://elmoney.f80.fr/index.html": "55e7bfe505064bde83805dc13c95eb898c8cb200",
-    "https://elmoney.f80.fr/main.js": "28c60f530371a66e97f62462ae4c1cfd783b0d5d",
-    "https://elmoney.f80.fr/manifest.webmanifest": "2497a5934fa8f56e30741f457ea21514e6ff01f6",
-    "https://elmoney.f80.fr/polyfills.js": "72ad4ccc0a3916ae4598199447cdeadd6d380570",
-    "https://elmoney.f80.fr/runtime.js": "a9aafcf49f49145093fc831efd9b8e2f6c71bb9c",
-    "https://elmoney.f80.fr/styles.css": "e229f2aec5baab991f4c761b43e813a41eaca563"
+    "https://coinmaker.f80.fr/assets/icons/icon-128x128.png": "dae3b6ed49bdaf4327b92531d4b5b4a5d30c7532",
+    "https://coinmaker.f80.fr/assets/icons/icon-144x144.png": "b0bd89982e08f9bd2b642928f5391915b74799a7",
+    "https://coinmaker.f80.fr/assets/icons/icon-152x152.png": "7479a9477815dfd9668d60f8b3b2fba709b91310",
+    "https://coinmaker.f80.fr/assets/icons/icon-192x192.png": "1abd80d431a237a853ce38147d8c63752f10933b",
+    "https://coinmaker.f80.fr/assets/icons/icon-384x384.png": "329749cd6393768d3131ed6304c136b1ca05f2fd",
+    "https://coinmaker.f80.fr/assets/icons/icon-512x512.png": "559d9c4318b45a1f2b10596bbb4c960fe521dbcc",
+    "https://coinmaker.f80.fr/assets/icons/icon-72x72.png": "c457e56089a36952cd67156f9996bc4ce54a5ed9",
+    "https://coinmaker.f80.fr/assets/icons/icon-96x96.png": "3914125a4b445bf111c5627875fc190f560daa41",
+    "https://coinmaker.f80.fr/assets/img/LinkedIn.png": "dec770e0a226b15021d0b80154aa18841097a46e",
+    "https://coinmaker.f80.fr/assets/img/anonymous.png": "c015f4d0bf7c81184706a840cfabef65c3f4e0c4",
+    "https://coinmaker.f80.fr/assets/img/tips.png": "b7832ac8a831f94cd9b656f48bc0d75a5cd587ca",
+    "https://coinmaker.f80.fr/favicon.ico": "22f6a4a3bcaafafb0254e0f2fa4ceb89e505e8b2",
+    "https://coinmaker.f80.fr/index.html": "4754944efe21e644766e34dc57ec101f73f0c5ac",
+    "https://coinmaker.f80.fr/main.js": "a8ff2cc8fd95b4ff84ce0ef31739bb70c13508cb",
+    "https://coinmaker.f80.fr/manifest.webmanifest": "2497a5934fa8f56e30741f457ea21514e6ff01f6",
+    "https://coinmaker.f80.fr/polyfills.js": "72ad4ccc0a3916ae4598199447cdeadd6d380570",
+    "https://coinmaker.f80.fr/runtime.js": "a9aafcf49f49145093fc831efd9b8e2f6c71bb9c",
+    "https://coinmaker.f80.fr/styles.css": "d99dbd45acda36524342fceada9befcd9d1d094e"
   },
   "navigationUrls": [
     {

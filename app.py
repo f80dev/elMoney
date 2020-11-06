@@ -1,4 +1,5 @@
 import base64
+import json
 import os
 import ssl
 import sys
@@ -76,16 +77,18 @@ def transfer(contract:str,dest:str,amount:str):
 def deploy(unity:str,amount:str):
     log("Appel du service de déploiement de contrat")
     data=str(request.data,encoding="utf-8")
-    if "base64" in data:data=data.split("base64,")[1]
+    data=json.loads(data)
+    if "base64" in data["pem"]:data["pem"]=data["pem"].split("base64,")[1]
 
-    pem_body = str(base64.b64decode(data), encoding="utf-8")
+    pem_body = str(base64.b64decode(data["pem"]), encoding="utf-8")
     with open("./PEM/temp.pem", "w") as pem_file: pem_file.write(pem_body)
 
     result=bc.deploy("./static/deploy.json","./PEM/temp.pem",unity,int(amount))
     if "error" in result:
         return jsonify(result), 500
     else:
-        sql="INSERT INTO Moneys (Address,Unity,dtCreate) VALUES ('"+result["contract"]+"','"+unity+"',"+str(datetime.now().timestamp())+")"
+        sql="INSERT INTO Moneys (Address,Unity,dtCreate,Owner,Public,Transferable) " \
+            "VALUES ('"+result["contract"]+"','"+unity+"',"+str(datetime.now().timestamp())+"'"+data["owner"]+"',"+data["public"]+","+data["transferable"]+")"
         log("Execution de la requete : "+sql)
         sqlite3.connect("elmoney").cursor().executescript(sql)
         return jsonify(result),200
@@ -99,6 +102,19 @@ def get_name(contract):
     name=row[0][1]
     log("Nom de la monnaie sur " + contract + " à " + name)
     return name
+
+
+
+
+@app.route('/api/friends/<addr>/')
+def friends(addr:str):
+    sql = "SELECT * FROM Friends WHERE owner='" + addr + "'"
+    rows = sqlite3.connect("elmoney").cursor().execute(sql).fetchall()
+    if len(rows) == 0: return None
+    rc = []
+    for row in rows:
+        rc.append({"firstname": row[2], "email": row[1],"address":row[0]})
+    return jsonify(rc)
 
 
 #test http://localhost:5000/api/balance/erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx/
@@ -129,12 +145,12 @@ def new_account():
 
 
 
-@app.route('/api/moneys/')
-def getmoneys():
+@app.route('/api/moneys/<addr>')
+def getmoneys(addr:str):
     c=sqlite3.connect("elmoney").cursor()
     rc=[]
-    for row in c.execute("SELECT * FROM Moneys").fetchall():
-        rc.append({"contract":row[0],"unity":row[1]})
+    for row in c.execute("SELECT * FROM Moneys WHERE Public=TRUE or Owner='"+addr+"'").fetchall():
+        rc.append({"contract":row[0],"unity":row[1],"public":row[3],"owner":row[4]})
     return jsonify(rc)
 
 

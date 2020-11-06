@@ -17,13 +17,21 @@
     <input matInput type="text" maxlength="12" [(ngModel)]="name">
      <mat-hint>Le nom abrégé de votre monnaie</mat-hint>
    </mat-form-field>
-
   &nbsp;&nbsp;
 
    <mat-form-field appearance="fill" class="app-field" style="max-width: 150px">
     <mat-label>Quantité initiale</mat-label>
     <input matInput type="number" min="0" [(ngModel)]="amount">
    </mat-form-field>
+<br>
+    <div style="width:200px;text-align: left;display: inline-block">
+    <br><br>
+    <mat-checkbox [(ngModel)]="_public">Public</mat-checkbox>
+    <br><br>
+    <mat-checkbox [(ngModel)]="transferable">Transférable</mat-checkbox>
+
+    </div>
+
 
   <br><br>
   <button mat-raised-button

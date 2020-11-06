@@ -17,6 +17,8 @@ export class CreateComponent implements OnInit {
   amount: number=10000;
   url:string="";
   url_transaction: string="";
+  transferable: any;
+  _public: any;
 
   constructor(public api:ApiService,
               public router:Router,
@@ -30,7 +32,15 @@ export class CreateComponent implements OnInit {
 
   create() {
     this.message="Déploiement de "+this.name+" en cours ...";
-    this.api._post("/deploy/"+this.name+"/"+this.amount,"",this.config.pem,240).subscribe((r:any)=>{
+    let obj={
+      pem:this.config.pem,
+      owner:localStorage.getItem("attr"),
+      public:this._public,
+      transferable:this.transferable
+    };
+    debugger
+
+    this.api._post("/deploy/"+this.name+"/"+this.amount,"",obj,240).subscribe((r:any)=>{
       this.message="";
       this.api.set_contract(r.contract);
       showMessage(this,"Votre monnaie est maintenant disponible");

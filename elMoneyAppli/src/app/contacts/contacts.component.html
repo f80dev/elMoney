@@ -1,0 +1,10 @@
+<table style="width: 90vw;">
+  <tr *ngFor="let contact of contacts">
+    <td>{{contact.firstname}}</td>
+    <td>{{contact.email}}</td>
+    <td>
+      <mat-icon>send</mat-icon>
+      <mat-icon>cancel</mat-icon>
+    </td>
+  </tr>
+</table>

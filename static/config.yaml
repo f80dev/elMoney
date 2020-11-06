@@ -1,4 +1,5 @@
-appname: "elMoney"
+appname: "CoinMaKer"
+description: "Simple and free coin-maker and wallet for everyone"
 
 labels:
   solde: "Votre solde"

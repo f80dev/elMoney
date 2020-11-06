@@ -64,7 +64,7 @@ export class ConfigService {
   init(func=null,func_error=null){
     $$("Initialisation de la configuration");
     this.width_screen=window.innerWidth;
-
+    this.pem=localStorage.getItem("pem");
     $$("Chargement des jobs");
     this.getConfig().then(r=>{
         this.values=r;
