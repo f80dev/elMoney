@@ -1,9 +1,9 @@
 USERS="../PEM"
 PROJECT="."
-ALICE="${USERS}/dan.pem"
+ALICE="${USERS}/alice.pem"
 ADDRESS=$(erdpy data load --key=address)
 DEPLOY_TRANSACTION=$(erdpy data load --key=deployTransaction)
-ARGUMENTS=0xFFFF
+ARGUMENTS=10000
 
 
 checkDeployment() {
@@ -11,6 +11,19 @@ checkDeployment() {
     erdpy account get --address=$ADDRESS --omit-fields="['code']"
 }
 
+configTestnet() {
+  erdpy testnet prerequisites
+  erdpy config set chainID local-testnet
+  erdpy config set proxy http://localhost:7950
+  rm testnet.toml
+  echo "[networking]" >> testnet.toml
+  echo "post_proxy = 7950" >> testnet.toml
+  erdpy testnet config
+}
+
+testnet(){
+  erdpy testnet start
+}
 
 deploy() {
     erdpy --verbose contract deploy --project=${PROJECT} --arguments ${ARGUMENTS} --recall-nonce --pem=${ALICE} --gas-limit=50000000 --send --outfile="deploy.json"
@@ -31,6 +44,7 @@ build(){
   rm ./output/*
   erdpy --verbose contract build
   ls -l ./output
+  deploy
 }
 
 
@@ -41,13 +55,12 @@ checkDeployment() {
 
 info() {
   echo "Contrat ${ADDRESS}"
-  erdpy contract query ${ADDRESS} --function="getName"
   erdpy contract query ${ADDRESS} --function="totalSupply"
 }
 
 transfer() {
   echo "Contrat ${ADDRESS}"
-  erdpy --verbose contract call ${ADDRESS} --recall-nonce --pem=${ALICE} --arguments "" --gas-limit=5000000 --function="tranfer" --send
+  erdpy --verbose contract call ${ADDRESS} --recall-nonce --pem=${ALICE} --arguments "erd1kyaqzaprcdnv4luvanah0gfxzzsnpaygsy6pytrexll2urtd05ts9vegu7" --gas-limit=5000000 --function="tranfer" --send
 }
 
 balance() {

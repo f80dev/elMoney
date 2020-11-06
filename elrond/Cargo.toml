@@ -1,5 +1,5 @@
 [package]
-name = "RVcoin"
+name = "rvcoin"
 version = "0.0.1"
 authors = [ "you",]
 edition = "2018"

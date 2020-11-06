@@ -1,5 +1,5 @@
 [package]
-name = "RVcoin-wasm"
+name = "rvcoin-wasm"
 version = "0.0.1"
 authors = [ "you",]
 edition = "2018"
@@ -16,7 +16,7 @@ lto = true
 debug = false
 panic = "abort"
 
-[dependencies.RVcoin]
+[dependencies.rvcoin]
 features = [ "wasm-output-mode",]
 default-features = false
 path = ".."
