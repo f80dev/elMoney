@@ -12,12 +12,18 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 export class AdminComponent implements OnInit {
 
 
-   constructor(public api:ApiService,public router:Router) { }
+   constructor(public api:ApiService,
+               public toast:MatSnackBar,
+               public router:Router) { }
 
 
   ngOnInit(): void {
   }
 
 
-
+  raz() {
+    this.api._get("raz/hh4271/").subscribe(()=>{
+      showMessage(this,"Base effacée")
+    });
+  }
 }

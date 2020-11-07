@@ -110,11 +110,16 @@
 
   <button mat-raised-button
           mat-button
+          class="small-button"
+          (click)="router.navigate(['admin'])">
+    <mat-icon>settings</mat-icon>
+  </button>
+
+  <button mat-raised-button
+          mat-button
           class="app-button"
           (click)="router.navigate(['moneys'])">
     <div class="bloc-bouton">Sélectionner<br>une monnaie</div>
   </button>
-
-
 
 </div>

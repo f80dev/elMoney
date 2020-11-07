@@ -24,8 +24,11 @@ from elrondTools import ElrondNet
 #Initialisation des instances principales statics
 app = Flask(__name__)
 CORS(app)
+
 #bc=ElrondNet(proxy="http://172.26.244.241:7950")
-bc=ElrondNet()
+bc=ElrondNet(proxy="http://161.97.75.165:7950")
+#bc=ElrondNet()
+
 socketio = SocketIO(app, cors_allowed_origins="*", logger=False,ping_interval=50)
 scheduler = BackgroundScheduler()
 dao=DAO("./elmoney")
@@ -204,7 +207,7 @@ def getmoneys(addr:str):
 
 
 #http://localhost:5555/api/raz/hh4271
-@app.route('/api/raz/<password>')
+@app.route('/api/raz/<password>/')
 def raz(password:str):
     if password!="hh4271":return "Password incorrect",501
     if dao.raz():
