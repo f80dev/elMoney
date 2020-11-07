@@ -76,50 +76,10 @@
       [qrdata]="user.addr">
     </qrcode>
 
-
-</div>
-
-<div class="bottom-bar">
-  <hr>
-  <button mat-raised-button mat-button
-          class="small-button"
-          (click)="router.navigate(['contacts'])">
-    <mat-icon>person_add</mat-icon>
-  </button>
-
   <button mat-raised-button mat-button class="small-button"
               *ngIf="config.unity && solde>0"
               (click)="router.navigate(['transfer'])">
     <mat-icon>send</mat-icon>
-  </button>
-
-
-  <button mat-raised-button
-          mat-button
-          class="app-button"
-          (click)="router.navigate(['create'])">
-    <div class="bloc-bouton">Créer une<br>monnaie</div>
-  </button>
-
-  <button mat-raised-button
-          mat-button
-          class="small-button"
-          (click)="router.navigate(['settings'])">
-    <mat-icon>build</mat-icon>
-  </button>
-
-  <button mat-raised-button
-          mat-button
-          class="small-button"
-          (click)="router.navigate(['admin'])">
-    <mat-icon>settings</mat-icon>
-  </button>
-
-  <button mat-raised-button
-          mat-button
-          class="app-button"
-          (click)="router.navigate(['moneys'])">
-    <div class="bloc-bouton">Sélectionner<br>une monnaie</div>
   </button>
 
 </div>

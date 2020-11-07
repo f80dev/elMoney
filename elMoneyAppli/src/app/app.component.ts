@@ -1,10 +1,12 @@
-import { Component } from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {ConfigService} from "./config.service";
 import {ApiService} from "./api.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {environment} from "../environments/environment";
 import {$$} from "./tools";
 import {UserService} from "./user.service";
+import {MatSidenav} from "@angular/material/sidenav";
+import {Location} from "@angular/common";
 
 @Component({
   selector: 'app-root',
@@ -12,11 +14,15 @@ import {UserService} from "./user.service";
   styleUrls: ['./app.component.sass']
 })
 export class AppComponent {
-  title = 'elMoneyAppli';
+  title = 'CoinMaKer';
+  @ViewChild('drawer', {static: false}) drawer: MatSidenav;
+  appVersion: any;
+  message: string="";
 
   constructor(public config: ConfigService,
               public routes:ActivatedRoute,
               public router:Router,
+              public _location:Location,
               public user:UserService,
               public api:ApiService){
 
@@ -39,5 +45,15 @@ export class AppComponent {
       this.router.navigate(["support"],{queryParams:{message:"Problème grave de connexion"}});
     });
   }
+
+   closeMenu() {
+      this.drawer.close();
+    }
+
+    logout() {
+      this.api.logout();
+      this.user.reset();
+      window.location.reload();
+    }
 
 }

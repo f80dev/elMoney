@@ -25,10 +25,7 @@ from elrondTools import ElrondNet
 app = Flask(__name__)
 CORS(app)
 
-#bc=ElrondNet(proxy="http://172.26.244.241:7950")
-bc=ElrondNet(proxy="http://161.97.75.165:7950")
-#bc=ElrondNet()
-
+bc=None
 socketio = SocketIO(app, cors_allowed_origins="*", logger=False,ping_interval=50)
 scheduler = BackgroundScheduler()
 dao=DAO("./elmoney")
@@ -238,9 +235,17 @@ def getname(contract:str):
 
 if __name__ == '__main__':
     _port=5555
-    if len(sys.argv)>2:
+    if len(sys.argv)>1:
         _port = sys.argv[1]
 
+    if len(sys.argv)>2:
+        # bc=ElrondNet(proxy="http://172.26.244.241:7950")
+        #bc = ElrondNet(proxy="http://161.97.75.165:7950")
+        bc=ElrondNet(proxy="http://"+sys.argv[2])
+    else:
+        bc=ElrondNet()
+
+    log("Connexion sur le réseau elrond "+bc.environment.url)
     scheduler.start()
 
     if "debug" in sys.argv:

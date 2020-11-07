@@ -177,8 +177,7 @@ class ElrondNet:
             "account":_u
         })
 
-    def find_events(self, contract):
-        self.set_contract(contract)
+
 
 
 

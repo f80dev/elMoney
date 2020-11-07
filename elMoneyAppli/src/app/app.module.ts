@@ -38,6 +38,10 @@ import { AccountComponent } from './account/account.component';
 import {SocketIoConfig, SocketIoModule} from "ngx-socket-io";
 import { ContactsComponent } from './contacts/contacts.component';
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {MatToolbarModule} from "@angular/material/toolbar";
+import { SidemenuComponent } from './sidemenu/sidemenu.component';
+import {MatSidenavModule} from "@angular/material/sidenav";
+import {MatListModule} from "@angular/material/list";
 
 const config: SocketIoConfig = { url: environment.domain_server, options: {} };
 
@@ -60,7 +64,8 @@ const config: SocketIoConfig = { url: environment.domain_server, options: {} };
     SettingsComponent,
     SupportComponent,
     AccountComponent,
-    ContactsComponent
+    ContactsComponent,
+    SidemenuComponent
   ],
   imports: [
     BrowserModule,
@@ -80,7 +85,10 @@ const config: SocketIoConfig = { url: environment.domain_server, options: {} };
     ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
     QRCodeModule,
     ClipboardModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatToolbarModule,
+    MatSidenavModule,
+    MatListModule
   ],
   providers: [
     ApiService,TransPipe,

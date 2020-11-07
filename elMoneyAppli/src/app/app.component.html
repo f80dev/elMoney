@@ -1,1 +1,48 @@
-<router-outlet></router-outlet>
+<mat-toolbar class="mat-elevation-z2 toolbar-app" (mousedown)="closeMenu()">
+    <mat-icon
+      id="cmdMenu"
+      (click)="drawer.toggle()"
+      style="cursor: pointer;">
+      menu
+    </mat-icon>
+
+    &nbsp;
+    <!--    <img src="./assets/icons/icon-72x72.png"-->
+    <!--         *ngIf="config.width_screen>800"-->
+    <!--         style="width:30px;display: inline;">-->
+    &nbsp;
+
+    <span>
+    {{config.values?.appname}}
+  </span>
+
+
+    &nbsp;
+    <span class="fill-remaining-space"></span>
+
+
+    <mat-icon style="font-size: x-large;cursor: pointer;"
+              (click)="_location.back()">navigate_before</mat-icon>
+
+    <!--    <mat-icon -->
+    <!--              title="Se déconnecter de l'application"-->
+    <!--              (click)="logout()" style="cursor: pointer;">exit_to_app-->
+    <!--    </mat-icon>-->
+  </mat-toolbar>
+
+<mat-drawer-container class="container" autosize>
+    <mat-drawer #drawer class="sidenav" mode="over">
+      <app-sidemenu (click)="closeMenu()" (logout)="logout()">
+      </app-sidemenu>
+    </mat-drawer>
+
+    <mat-drawer-content style="overflow: scroll">
+      <div class="sidenav-content"
+           (mousedown)="closeMenu()">
+        <router-outlet style="width:100%;" *ngIf="message.length==0" ></router-outlet>
+      </div>
+    </mat-drawer-content>
+
+</mat-drawer-container>
+
+

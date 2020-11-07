@@ -47,4 +47,13 @@ export class UserService {
     this.addr=addr;
     this.saveOnDevice();
   }
+
+  reset() {
+    debugger
+    localStorage.removeItem("addr");
+    localStorage.removeItem("contacts");
+    localStorage.removeItem("email");
+    localStorage.removeItem("pem");
+    window.location.reload();
+  }
 }
