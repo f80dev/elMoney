@@ -9,6 +9,7 @@ export class AccountComponent implements OnInit {
   @Input("label") label: any;
   @Input("solde") solde: any;
   @Input("unity") unity: any;
+  @Input("fontsize") fontsize: any;
 
   constructor() { }
 

@@ -9,20 +9,23 @@ from apscheduler.schedulers.background import BackgroundScheduler
 
 import yaml
 from apscheduler.triggers.base import BaseTrigger
+from erdpy.accounts import Account
 
 from flask import Flask, Response, request, jsonify
 from flask_cors import CORS
 from flask_socketio import SocketIO
 
-from Tools import base_10_to_alphabet, log
+from Tools import base_10_to_alphabet, log, send_mail, open_html_file
 from dao import DAO
+from definitions import DOMAIN_APPLI
 from elrondTools import ElrondNet
 
 
 #Initialisation des instances principales statics
 app = Flask(__name__)
 CORS(app)
-bc=ElrondNet(proxy="http://172.26.244.241:7950")
+#bc=ElrondNet(proxy="http://172.26.244.241:7950")
+bc=ElrondNet()
 socketio = SocketIO(app, cors_allowed_origins="*", logger=False,ping_interval=50)
 scheduler = BackgroundScheduler()
 dao=DAO("./elmoney")
@@ -52,25 +55,47 @@ def refresh_client(dest:str):
 
 
 #test http://localhost:5000/api/transfer
-@app.route('/api/transfer/<contract>/<dest>/<amount>/',methods=["POST"])
-def transfer(contract:str,dest:str,amount:str):
-    log("Demande de transfert vers "+dest+" de "+amount)
+@app.route('/api/transfer/<contract>/<dest>/<amount>/<unity>/',methods=["POST"])
+def transfer(contract:str,dest:str,amount:str,unity:str):
+    if "@" in dest:
+        addr_dest=dao.find_contact(dest)
+    else:
+        addr_dest=dest
+
+    if addr_dest is None:
+        log("Le destinataire n'a pas encore d'adresse elrond")
+        bc.set_contract(contract)
+        _d:dict=bc.create_account(1)
+        send_mail(open_html_file("share", {
+            "email": dest,
+            "amount": str(amount),
+            "from": "",
+            "unity": unity,
+            "url_appli": DOMAIN_APPLI + "?addr=" + contract + "&user=" + _d["addr"],
+            "public_key": _d["addr"],
+            "private_key": _d["private_key_seed"],
+        }), _to=dest, subject="Transfert")
+        _dest=_d["account"]
+        dao.add_contact(email=dest,addr=_d["addr"])
+    else:
+        _dest=Account(address=addr_dest)
+
+    log("Demande de transfert vers "+_dest.address.bech32()+" de "+amount)
+    pem_file="./PEM/temp.pem"
     pem_body=str(base64.b64decode(str(request.data).split("base64,")[1]),encoding="utf-8")
-    with open("./PEM/temp.pem", "w") as pem_file:pem_file.write(pem_body)
+    with open(pem_file, "w") as file:file.write(pem_body)
+    _from = Account(pem_file=pem_file)
 
     bc.set_contract(contract)
-    rc=bc.transfer("./PEM/temp.pem",dest,int(amount))
+    rc=bc.transfer(_from,_dest,int(amount))
 
-    if "to" in rc and "@" in dest:
-        dao.add_contact(rc["from"],dest,rc["to"])
-
-    scheduler.add_job(refresh_client,id="id_"+dest,args=[dest],trigger="interval",minutes=0.25,max_instances=1)
-    scheduler.add_job(refresh_client,id="id_"+dest,args=[rc['from'].bech32()],trigger="interval",minutes=0.2,max_instances=1)
+    scheduler.add_job(refresh_client,id="id_"+rc["to"],args=[rc["to"]],trigger="interval",minutes=0.25,max_instances=1)
+    scheduler.add_job(refresh_client,id="id_"+rc['from'].bech32(),args=[rc['from'].bech32()],trigger="interval",minutes=0.2,max_instances=1)
 
     os.remove("./PEM/temp.pem")
     url="https://testnet-explorer.elrond.com/transactions/"+rc["tx"]
     return jsonify({"from_addr":str(rc["from"].bech32()),
-                    "tx":url})
+                    "tx":url}),201
 
 
 
@@ -95,32 +120,57 @@ def deploy(unity:str,amount:str,data:dict=None):
     else:
         dao.add_money(result["contract"],unity,result["owner"],data["public"],data["transferable"])
 
-    return jsonify(result),200
-
-
-def get_name(contract):
-    name=dao.get_name(contract)
-    if name is None:return "Contrat inconnu",404
-    log("Nom de la monnaie sur " + contract + " à " + name)
-    return jsonify({"name":name}),200
+    return jsonify(result),201
 
 
 
 
-@app.route('/api/friends/<addr>/')
-def friends(addr:str):
+
+
+@app.route('/api/infos_server/')
+def infos_server():
+    infos={
+    }
+    return jsonify(infos),200
+
+
+@app.route('/api/contacts/<addr>/')
+def get_contacts(addr:str):
     rows=dao.get_friends(addr)
-    if len(rows) == 0: return "Aucun ami",404
     rc = []
     for row in rows:
         rc.append({"firstname": row[2], "email": row[1],"address":row[0]})
     return jsonify(rc)
 
 
+@app.route('/api/find_contact/<email>/')
+def find_contact(email:str):
+    contact=dao.find_contact(email)
+    return jsonify(contact),201
+
+
+
+@app.route('/api/del_owner_contact/<email>/<owner>/',methods=["GET"])
+def del_contact(email:str,owner:str):
+    dao.del_contact(email,owner)
+    return "contact supprimé",202
+
+
+@app.route('/api/contacts/<owner>/',methods=["POST"])
+def add_contact(owner:str):
+    contact=json.loads(str(request.data,"utf-8"))
+
+    if dao.find_contact(contact["email"]) is None:
+        dao.add_contact(contact["email"],contact["email"].split("@")[0])
+        return "contact ajouté",201
+    else:
+        return "contact existant",201
+
+
 #test http://localhost:5000/api/balance/erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx/
 @app.route('/api/balance/<contract>/<addr>/')
 def getbalance(contract:str,addr:str):
-    name=get_name(contract)
+    name=dao.get_name(contract)
     if name is None:return "Pas de money correspondante", 404
 
     bc.set_contract(contract)
@@ -145,7 +195,7 @@ def new_account():
 
 
 
-@app.route('/api/moneys/<addr>')
+@app.route('/api/moneys/<addr>/')
 def getmoneys(addr:str):
     rc=[]
     for row in dao.get_moneys(addr):
@@ -174,8 +224,8 @@ def raz(password:str):
 
 @app.route('/api/name/<contract>/')
 def getname(contract:str):
-    rc=get_name(contract)
-    if rc is None:return "Pas de monnaie correspondant à ce contrat",404
+    rc=dao.get_name(contract)
+    if rc is None:return "Pas de monnaie correspondant au contrat "+contract,404
     return jsonify({"name":rc}), 200
 
 

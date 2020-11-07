@@ -1,39 +1,39 @@
 <div class="mainform">
   <br>
 
-  <table style="width: 90vw;text-align: center;">
+  <table style="width: 90vw;text-align: center;" *ngIf="hand>0">
     <tr>
-      <td *ngFor="let fr of friends">
-        <mat-icon>arrow_drop_up</mat-icon>
+      <td *ngFor="let fr of friends"
+          [title]="fr.email"
+          style="width: 15%;cursor: pointer;"
+          (click)="send_to(fr)">
+        <mat-icon>{{fr.icon}}</mat-icon><br>
+        {{fr.label}}
       </td>
     </tr>
   </table>
 
 
-
-  <button mat-raised-button mat-button class="app-button"
-              *ngIf="config.unity && solde>0"
-              (click)="router.navigate(['transfer'])">
-    Envoyer
-  </button>
-
-
-  <br><br><br>
+  <br><br>
 
   <app-account [solde]="hand"
-                   [unity]="config.unity">
+               fontsize="1.5em"
+               *ngIf="hand>0"
+               [unity]="config.unity">
   </app-account>
   <br><br>
 
   <table style="width: 90vw;text-align: center;">
     <tr>
       <td *ngFor="let bt of buttons">
-        <mat-icon>arrow_drop_up</mat-icon>
+        <mat-icon *ngIf="bt.value<=solde">arrow_drop_up</mat-icon>
       </td>
     </tr>
     <tr>
     <td *ngFor="let bt of buttons">
       <button mat-raised-button mat-button mat-icon-button
+              *ngIf="bt.value<=solde"
+              [title]="'sortir '+bt.value+' '+config.unity.toLowerCase()+' de mon wallet'"
               class="large-icon-button"
               (click)="addInHand(bt.value)">
         <span *ngIf="bt.label">{{bt.label}}</span>
@@ -45,41 +45,53 @@
 
   <br><br><br>
 
-  <div *ngIf="addr">
-    <br>
+
+    <br><br>
       <app-account [solde]="solde"
+                   fontsize="4em"
                    [unity]="config.unity">
       </app-account>
-    <br><br>
-    <br>
-    <mat-icon>arrow_drop_up</mat-icon>
-
     <br>
 
+
+
+    <br>
      <button mat-raised-button mat-button class="app-button"
-              *ngIf="config.unity && solde>0"
+              *ngIf="config.unity && !showQRCode"
               (click)="showQRCode=true">
         Recevoir
       </button>
 
+    <mat-icon *ngIf="showQRCode">arrow_drop_up</mat-icon>
     <br>
     <qrcode
       *ngIf="showQRCode"
-      [width]="100"
+      [width]="200"
       ngxClipboard
-      [cdkCopyToClipboard]="addr"
+      [cdkCopyToClipboard]="user.addr"
       (click)="informe_clipboard()"
       style="display: inline-block;"
       [elementType]="'svg'"
       [errorCorrectionLevel]="'M'"
-      [qrdata]="addr">
+      [qrdata]="user.addr">
     </qrcode>
-  </div>
+
 
 </div>
 
 <div class="bottom-bar">
   <hr>
+  <button mat-raised-button mat-button
+          class="small-button"
+          (click)="router.navigate(['contacts'])">
+    <mat-icon>person_add</mat-icon>
+  </button>
+
+  <button mat-raised-button mat-button class="small-button"
+              *ngIf="config.unity && solde>0"
+              (click)="router.navigate(['transfer'])">
+    <mat-icon>send</mat-icon>
+  </button>
 
 
   <button mat-raised-button
@@ -91,9 +103,9 @@
 
   <button mat-raised-button
           mat-button
-          class="app-button"
+          class="small-button"
           (click)="router.navigate(['settings'])">
-    <div class="bloc-bouton">Préférences</div>
+    <mat-icon>build</mat-icon>
   </button>
 
   <button mat-raised-button
@@ -103,10 +115,6 @@
     <div class="bloc-bouton">Sélectionner<br>une monnaie</div>
   </button>
 
-  <button mat-raised-button mat-button
-          class="app-button"
-          (click)="router.navigate(['contacts'])">
-    <div class="bloc-bouton">Ajouter<br>des amis</div>
-  </button>
+
 
 </div>

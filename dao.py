@@ -13,9 +13,15 @@ class DAO:
     def get_cursor(self):
         return sqlite3.connect(self.path).cursor();
 
-    def add_contact(self, owner, email, addr):
-        sql = "INSERT INTO email_addr (Owner,Address,Email) VALUES ('"+owner+"','" + addr + "','" + email + "')"
+
+
+    def add_contact(self, email, addr=""):
+        sql = "INSERT INTO Contacts (Address,Email) VALUES ('"+ addr + "','" + email + "')"
+        log("execution de "+sql)
         return self.get_cursor().executescript(sql)
+
+
+
 
     def add_money(self,address,unity,owner,_public,transferable):
         _public="1" if _public else "0"
@@ -35,18 +41,26 @@ class DAO:
 
 
     def get_friends(self, owner):
-        sql = "SELECT * FROM Contacts WHERE owner='" + owner + "'"
+        sql = "SELECT * FROM Contacts WHERE Owner='" + owner + "'"
         rows = self.get_cursor().execute(sql).fetchall()
         return rows
 
     def get_moneys(self, addr):
-        return self.get_cursor().execute("SELECT * FROM Moneys WHERE Public=TRUE or Owner='" + addr + "'").fetchall()
+        return self.get_cursor().execute("SELECT * FROM Moneys WHERE Public=1 or Owner='" + addr + "'").fetchall()
 
     def raz(self):
         c = self.get_cursor()
         c.executescript("DELETE FROM Moneys")
         c.executescript("DELETE FROM Contacts")
         return True
+
+    def find_contact(self, email):
+        rc=self.get_cursor().execute("SELECT * FROM Contacts WHERE email='" + email + "'").fetchone()
+        if rc is None:return None
+        return rc[0]
+
+    def del_contact(self, email,owner):
+        self.get_cursor().executescript("UPDATE Contacts SET Owner='' WHERE email='"+email+"' AND Owner='"+owner+"'")
 
 
 

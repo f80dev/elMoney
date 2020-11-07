@@ -1,10 +1,28 @@
+<div class="mainform">
+
+  <div>
+    <mat-form-field appearance="fill" class="app-field">
+      <mat-label>Ajouter un mail</mat-label>
+      <input matInput type="text" max="50" [(ngModel)]="email" (keypress)="add_contact($event)">
+   </mat-form-field>
+
+  </div>
 <table style="width: 90vw;">
-  <tr *ngFor="let contact of contacts">
-    <td>{{contact.firstname}}</td>
+  <tr *ngFor="let contact of user.contacts">
+    <td>{{contact.pseudo}}</td>
     <td>{{contact.email}}</td>
-    <td>
-      <mat-icon>send</mat-icon>
-      <mat-icon>cancel</mat-icon>
+    <td style="font-size: small">
+      <mat-icon (click)="del_contact(contact.email)">cancel</mat-icon>
     </td>
   </tr>
 </table>
+</div>
+<div class="bottom-bar">
+  <hr>
+   <button mat-raised-button
+          mat-button
+          class="app-button"
+          (click)="_location.back()">
+    Retour
+  </button>
+</div>

@@ -3,6 +3,7 @@ import {Location} from "@angular/common";
 import {ApiService} from "../api.service";
 import {$$, showMessage} from "../tools";
 import {Router} from "@angular/router";
+import {UserService} from "../user.service";
 
 @Component({
   selector: 'app-moneys',
@@ -14,10 +15,11 @@ export class MoneysComponent implements OnInit {
 
   constructor(public api:ApiService,
               public router:Router,
+              public user:UserService,
               public _location:Location) { }
 
   ngOnInit(): void {
-    this.api._get("moneys/").subscribe((r:any)=>{
+    this.api._get("moneys/"+this.user.addr).subscribe((r:any)=>{
       this.moneys=r;
     })
   }

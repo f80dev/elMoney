@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1604621609343,
+  "timestamp": 1604709320670,
   "index": "https://coinmaker.f80.fr/index.html",
   "assetGroups": [
     {
@@ -59,11 +59,11 @@
     "https://coinmaker.f80.fr/assets/img/tips.png": "b7832ac8a831f94cd9b656f48bc0d75a5cd587ca",
     "https://coinmaker.f80.fr/favicon.ico": "22f6a4a3bcaafafb0254e0f2fa4ceb89e505e8b2",
     "https://coinmaker.f80.fr/index.html": "4754944efe21e644766e34dc57ec101f73f0c5ac",
-    "https://coinmaker.f80.fr/main.js": "a8ff2cc8fd95b4ff84ce0ef31739bb70c13508cb",
+    "https://coinmaker.f80.fr/main.js": "ec63ede7af44fa2f61a3d12be63178de2b08da75",
     "https://coinmaker.f80.fr/manifest.webmanifest": "2497a5934fa8f56e30741f457ea21514e6ff01f6",
     "https://coinmaker.f80.fr/polyfills.js": "72ad4ccc0a3916ae4598199447cdeadd6d380570",
     "https://coinmaker.f80.fr/runtime.js": "a9aafcf49f49145093fc831efd9b8e2f6c71bb9c",
-    "https://coinmaker.f80.fr/styles.css": "d99dbd45acda36524342fceada9befcd9d1d094e"
+    "https://coinmaker.f80.fr/styles.css": "50a563249279c3a9a84fc1d66e2626c8bfcf5707"
   },
   "navigationUrls": [
     {

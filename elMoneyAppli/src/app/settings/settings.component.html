@@ -1,21 +1,21 @@
 <div class="mainform">
   <br><br>
-  Votre adresse:<br>
+  Votre adresse Elrond:<br>
     <a [href]="url_explorer" target="_blank">
-      <small>{{addr}}</small>
+      <small>{{user.addr}}</small>
     </a>
     <br>
     <br>
 
   <a [href]="fileUrl"
-     *ngIf="config.pem"
+     *ngIf="user.pem"
      download="elrond_key.pem">Télécharger ma clé</a>
 
   <br><br><br>
   ______
   <br><br><br>
   <div *ngIf="contrat">
-  Contrat utilisé<br>
+  Adresse Elrond de la monnaie<br>
     <a [href]="url_contrat" target="_blank">
       <small>{{contrat}}</small>
     </a>

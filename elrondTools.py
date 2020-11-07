@@ -11,7 +11,7 @@ from erdpy import config
 from erdpy.accounts import Account,AccountsRepository
 from erdpy.contracts import SmartContract
 from erdpy.environments import TestnetEnvironment
-import erdpy.wallet.signing as signing_tools
+
 from erdpy.transactions import Transaction
 
 from Tools import send_mail, open_html_file, base_alphabet_to_10, log
@@ -21,13 +21,13 @@ from definitions import DOMAIN_APPLI
 class ElrondNet:
     contract=None
     environment=None
-    proxy=None
+    _proxy:ElrondProxy=None
 
 
     def __init__(self,proxy="https://api-testnet.elrond.com",bank_pem="./PEM/alice.pem"):
         logging.basicConfig(level=logging.DEBUG)
         # Now, we create a environment which intermediates deployment and execution
-        self.proxy=proxy
+        self._proxy=ElrondProxy(proxy)
         self.environment = TestnetEnvironment(proxy)
         self.bank=Account(pem_file=bank_pem)
 
@@ -41,41 +41,24 @@ class ElrondNet:
         rc=self.environment.query_contract(self.contract,
                                         function="balanceOf",
                                         arguments=["0x"+user.address.hex()])
-        if rc[0] is None:return 0
+        if rc[0] is None or rc[0]=='':return 0
 
         d=json.loads(str(rc[0]).replace("'","\""))
         if "number" in d:return d["number"]
         return None
 
 
-    def transfer(self,_from:str,_to:str,amount:int):
-        user_to=None
-        if "@" in _to:
-            _d=self.create_account()
-            send_mail(open_html_file("share",{
-                "email":_to,
-                "amount":str(amount),
-                "from":"",
-                "unity":"",
-                "url_appli":DOMAIN_APPLI+"?addr="+self.contract.bech32()+"&user="+user_to.address,
-                "public_key":_d["addr"],
-                "private_key":_d["private_key_seed"],
-            }),_to=_to,subject="Transfert")
-            os.remove("./PEM/" + _d["filename"])
-            user_to=_d["account"]
-
-        user_to:Account=Account(address=_to)
-        user_from=Account(pem_file=_from)
-        user_from.sync_nonce(ElrondProxy(self.proxy))
+    def transfer(self,user_from:Account,user_to:Account,amount:int):
+        user_from.sync_nonce(self._proxy)
         rc=self.environment.execute_contract(self.contract,user_from,
                                              function="transfer",
                                              arguments=["0x"+user_to.address.hex(),amount],
                                              gas_price=config.DEFAULT_GAS_PRICE,
                                              gas_limit=50000000,
                                              value=None,
-                                             chain=config.get_chain_id(),
+                                             chain=self._proxy.get_chain_id(),
                                              version=config.get_tx_version())
-        return {"from":user_from.address,"tx":rc,"to":user_to.address}
+        return {"from":user_from.address,"tx":rc,"to":user_to.address.bech32()}
 
     def set_contract(self, contract):
         self.contract= SmartContract(address=contract)
@@ -83,7 +66,8 @@ class ElrondNet:
 
     def deploy(self,bytecode_file,pem_file,unity="RVC",amount=1000):
         user=Account(pem_file=pem_file)
-        user.sync_nonce(ElrondProxy(self.proxy))
+
+        user.sync_nonce(self._proxy)
         with open(bytecode_file,"r") as file:
             _json=file.read()
         json_bytecode=json.loads(_json)
@@ -105,7 +89,7 @@ class ElrondNet:
                 gas_price=config.DEFAULT_GAS_PRICE/1,
                 gas_limit=50000000,
                 value=0,
-                chain=config.get_chain_id(),
+                chain=self._proxy.get_chain_id(),
                 version=config.get_tx_version()
             )
         except Exception as e:
@@ -114,7 +98,7 @@ class ElrondNet:
             return {"error":500,"message":str(e.args),"link":url}
 
         #TODO: intégrer la temporisation pour événement
-        url = 'https://api-testnet.elrond.com/transaction/' + tx
+        url = self._proxy.url+'/transaction/' + tx
         log("Attente du déploiement https://testnet-explorer.elrond.com/transactions/" + tx)
         result={"data":{"transaction":{"status":"pending"}}}
         timeout=240
@@ -134,7 +118,7 @@ class ElrondNet:
                     }
         else:
             self.contract=address
-            url="https://testnet-explorer.elrond.com/transactions/"+tx
+            url=self._proxy.url+"/transactions/"+tx
             log("Déploiement du nouveau contrat réussi a l'adresse "+self.contract.bech32()+" voir transaction "+url)
             return {"link":url,"contract":address.bech32(),"owner":user.address.bech32()}
 
@@ -147,7 +131,11 @@ class ElrondNet:
         else:
             return None
 
+
+
+
     def create_account(self,fund):
+        log("Création d'un nouveau compte")
         name=str(datetime.now().timestamp()*1000)
 
         AccountsRepository("./PEM").generate_account(name)
@@ -159,23 +147,28 @@ class ElrondNet:
         _u=Account(pem_file=filename)
 
         if fund>0:
-            log("On transfere un peu d'eGold pour assurer les premiers transferts")
-            _proxy=ElrondProxy(self.proxy)
-            self.bank.sync_nonce(_proxy)
+            log("On transfere un peu d'eGold pour assurer les premiers transferts"+str(fund))
+            self.bank.sync_nonce(self._proxy)
             t=Transaction()
             t.nonce=self.bank.nonce
             t.version=config.get_tx_version()
             t.data="refund for transfert"
-            t.chainID=_proxy.get_chain_id()
+            t.chainID=self._proxy.get_chain_id()
             t.gasLimit=50000000
             t.value=str(fund)
             t.sender=self.bank.address.bech32()
             t.receiver=_u.address.bech32()
             t.gasPrice=config.DEFAULT_GAS_PRICE
+
+            log("On signe la transaction avec le compte de la banque")
             t.sign(self.bank)
-            t.send(ElrondProxy(self.proxy))
+
+            log("On envoi les fonds")
+            t.send(self._proxy)
+
 
         with open(filename, "r") as myfile:data = myfile.readlines()
+        os.remove(filename)
         return({
             "filename":filename,
             "addr":_u.address.bech32(),

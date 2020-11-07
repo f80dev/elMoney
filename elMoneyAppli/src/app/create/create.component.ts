@@ -5,6 +5,7 @@ import {showError, showMessage} from "../tools";
 import {Location} from "@angular/common";
 import {Router} from "@angular/router";
 import {ConfigService} from "../config.service";
+import {UserService} from "../user.service";
 
 @Component({
   selector: 'app-create',
@@ -22,18 +23,19 @@ export class CreateComponent implements OnInit {
 
   constructor(public api:ApiService,
               public router:Router,
+              public user:UserService,
               public config:ConfigService,
               public _location:Location,
               public toast:MatSnackBar) { }
 
   ngOnInit(): void {
-     if(!this.config.pem)this.router.navigate(["private"]);
+     if(!this.user.pem)this.router.navigate(["private"]);
   }
 
   create() {
     this.message="Déploiement de "+this.name+" en cours ...";
     let obj={
-      pem:this.config.pem,
+      pem:this.user.pem,
       owner:localStorage.getItem("attr"),
       public:this._public,
       transferable:this.transferable,

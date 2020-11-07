@@ -17,12 +17,10 @@ export class ConfigService {
   webcamsAvailable: any;
   width_screen: number;
   ready=false;
-  pem:any=null;
 
-  profils:any[]=[];
-  jobs: any[]=[];
   query_cache: any[]; //Conserve le contenu de la dernière requete
   unity: string ="";
+  infos: any={};
 
     constructor(private location: Location,
               private http: HttpClient,
@@ -64,13 +62,17 @@ export class ConfigService {
   init(func=null,func_error=null){
     $$("Initialisation de la configuration");
     this.width_screen=window.innerWidth;
-    this.pem=localStorage.getItem("pem");
+
     $$("Chargement des jobs");
     this.getConfig().then(r=>{
         this.values=r;
         this.ready=true;
-        $$("Chargement du fichier de configuration",r);
-        if(func!=null)func(this.values);
+        $$("Chargement du fichier de configuration ok",r);
+        this.api._get("infos_server").subscribe((is:any)=>{
+          this.infos=is;
+          $$("Chargement des infos serveur ok",is)
+          if(func!=null)func(this.values);
+        })
       },()=>{
         $$("Probléme de chargement de la configuration")
         if(func_error!=null)func_error();
@@ -97,7 +99,5 @@ export class ConfigService {
     //  });
   }
 
-  public raz_user() {
-    this.user={email:"",perm:this.profils[0].perm};
-  }
+
 }

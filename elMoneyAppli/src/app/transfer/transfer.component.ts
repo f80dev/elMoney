@@ -6,6 +6,7 @@ import {showError, showMessage} from "../tools";
 import {Location} from "@angular/common";
 import {toBase64String} from "@angular/compiler/src/output/source_map";
 import {ConfigService} from "../config.service";
+import {UserService} from "../user.service";
 
 @Component({
   selector: 'app-transfer',
@@ -21,12 +22,13 @@ export class TransferComponent implements OnInit {
 
    constructor(public api:ApiService,
                public config:ConfigService,
+               public user:UserService,
                public _location:Location,
                public router:Router,public toast:MatSnackBar) { }
 
 
   ngOnInit(): void {
-     if(!this.config.pem)this.router.navigate(["private"]);
+     if(!this.user.pem)this.router.navigate(["private"]);
      this.address_to=localStorage.getItem("last_to");
      this.amount=localStorage.getItem("last_amount");
      if(this.address_to){
@@ -40,7 +42,7 @@ export class TransferComponent implements OnInit {
   transfer() {
     localStorage.setItem("last_to", this.address_to);
     localStorage.setItem("last_amount", this.amount);
-    this.api._post("transfer/" + this.api.contract + "/" + this.address_to + "/" + this.amount, "", this.config.pem).subscribe((r: any) => {
+    this.api._post("transfer/" + this.api.contract + "/" + this.address_to + "/" + this.amount, "", this.user.pem).subscribe((r: any) => {
       this.message = "";
       showMessage(this, "Fond transféré");
       this._location.back();
