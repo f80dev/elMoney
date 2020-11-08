@@ -1,5 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {UserService} from "../user.service";
 
 @Component({
   selector: 'app-new-contact',
@@ -8,8 +9,11 @@ import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog
 })
 export class NewContactComponent implements OnInit {
   email: any="";
+  pseudo: any="";
+  showScanner: boolean=true;
 
   constructor(
+    public user: UserService,
     public dialog:MatDialog,
     public dialogRef: MatDialogRef<NewContactComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
@@ -19,9 +23,31 @@ export class NewContactComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  add_contact($event: KeyboardEvent) {
-    if($event.keyCode==13){
-        this.dialogRef.close({email:this.email});
+  _close(toSave=true){
+    if(toSave){
+      this.user.add_contact(this.email);
+      this.dialogRef.close({email:this.email,pseudo:this.pseudo});
+    } else {
+      this.dialogRef.close();
     }
   }
+
+  add_contact($event: KeyboardEvent) {
+    if($event.keyCode==13){
+      this._close(true);
+    }
+  }
+
+
+  refresh_pseudo(new_value: any) {
+    if(this.pseudo.length==0 && new_value.indexOf("@")>-1)
+      this.pseudo=new_value.split("@")[0].split(".")[0];
+  }
+
+
+  onflash_event($event: any) {
+    this.email=$event.data;
+    this.dialogRef.close(true);
+  }
+
 }

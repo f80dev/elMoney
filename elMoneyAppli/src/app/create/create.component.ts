@@ -35,7 +35,7 @@ export class CreateComponent implements OnInit {
   create() {
     this.message="Déploiement de "+this.name+" en cours ...";
     let obj={
-      pem:this.user.pem,
+      pem:this.user.pem["pem"],
       owner:localStorage.getItem("attr"),
       public:this._public,
       transferable:this.transferable,

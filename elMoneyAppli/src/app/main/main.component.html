@@ -1,7 +1,10 @@
 <div class="mainform">
   <br>
 
-  <table style="width: 90vw;text-align: center;" *ngIf="hand>0">
+  <div title="Les destinataires de vos envois">
+     <table
+
+    style="width: 90vw;text-align: center;">
     <tr>
       <td *ngFor="let fr of friends"
           [title]="fr.email"
@@ -12,18 +15,25 @@
       </td>
     </tr>
   </table>
+  </div>
+
 
 
   <br><br>
 
   <app-account [solde]="hand"
+               title="La somme que vous envisagez de transférer"
                fontsize="1.5em"
                *ngIf="hand>0"
                [unity]="config.unity">
   </app-account>
   <br><br>
 
-  <table style="width: 90vw;text-align: center;">
+  <div title="Augmenté la valeur à transférer en utilisant ces boutons suivant le montant que vous souhaitez atteindre">
+
+
+  <table style="width: 90vw;text-align: center;"
+          >
     <tr>
       <td *ngFor="let bt of buttons">
         <mat-icon *ngIf="bt.value<=solde">arrow_drop_up</mat-icon>
@@ -35,6 +45,7 @@
               *ngIf="bt.value<=solde"
               [title]="'sortir '+bt.value+' '+config.unity.toLowerCase()+' de mon wallet'"
               class="large-icon-button"
+              color="primary"
               (click)="addInHand(bt.value)">
         <span *ngIf="bt.label">{{bt.label}}</span>
         <span *ngIf="!bt.label">{{bt.value}}</span>
@@ -42,12 +53,17 @@
     </td>
   </tr>
   </table>
+    </div>
 
   <br><br><br>
 
 
     <br><br>
+      <mat-progress-spinner diameter="20px"
+                            *ngIf="hourglass"></mat-progress-spinner>
       <app-account [solde]="solde"
+                   title="La somme disponible dans votre wallet (de la monnaie sélectionnée)"
+                   *ngIf="!hourglass"
                    fontsize="4em"
                    [unity]="config.unity">
       </app-account>

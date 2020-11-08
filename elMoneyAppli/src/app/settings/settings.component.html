@@ -1,11 +1,23 @@
 <div class="mainform">
   <br><br>
-  Votre adresse Elrond:<br>
-    <a [href]="url_explorer" target="_blank">
-      <small>{{user.addr}}</small>
-    </a>
-    <br>
-    <br>
+
+  <app-elrond-addr label="Votre adresse Elrond"
+                    type="address"
+                   [addr]="user.addr">
+  </app-elrond-addr>
+
+
+  <br><br>
+  <button mat-raised-button mat-button
+          class="app-button"
+          (click)="router.navigate(['private'])">
+    <div class="bloc-bouton">Changer<br>de compte</div>
+  </button>
+
+  <br>
+  <br>
+  <br>
+
 
   <a [href]="fileUrl"
      *ngIf="user.pem"
@@ -14,28 +26,13 @@
   <br><br><br>
   ______
   <br><br><br>
-  <div *ngIf="contrat">
-  Adresse Elrond de la monnaie<br>
-    <a [href]="url_contrat" target="_blank">
-      <small>{{contrat}}</small>
-    </a>
 
-  </div>
+  <app-elrond-addr label="Adresse Elrond de la monnaie"
+                   [addr]="contrat"
+                   type="address"
+                   *ngIf="contrat">
+  </app-elrond-addr>
 
 
-</div>
-<div class="bottom-bar">
-  <hr>
-    <button mat-raised-button mat-button
-          class="app-button"
-          (click)="router.navigate(['private'])">
-    <div class="bloc-bouton">Changer<br>de compte</div>
-    </button>
-
-   <button mat-raised-button mat-button
-          class="app-button"
-          (click)="_location.back()">
-      Retour
-    </button>
 
 </div>

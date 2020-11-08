@@ -22,6 +22,7 @@ export class MainComponent implements OnInit {
   buttons=[
     {value:10},{value:5},{value:2},{value:1}
   ]
+  hourglass=true;
   hand:number=0;
 
   constructor(public router:Router,
@@ -45,19 +46,24 @@ export class MainComponent implements OnInit {
 
     if(this.user.addr){
       if(this.api.contract){
+        this.hourglass=true;
         this.api.balance(this.user.addr).subscribe((r:any)=>{
+          this.hourglass=false;
           this.solde=r.balance;
           this.config.unity=r.name;
         },(err)=>{
           showMessage(this,this.config.values?.messages.nomoney);
+           this.hourglass=false;
           localStorage.removeItem("contract");
           this.router.navigate(["moneys"]);
         });
       }
     } else {
       this.api._get("new_account/").subscribe((r:any)=>{
-        this.user.init(r.address)
-        this.user.pem=r.pem;
+        if(r.pem.length>0)
+          this.user.init(r.address,{pem:r.pem});
+        else
+          this.user.init(r.address,r.keys);
         this.refresh();
       })
     }
@@ -88,10 +94,18 @@ export class MainComponent implements OnInit {
 
 
   transfer(email:string){
-    $$("Demande de transfert vers "+email+" avec pem="+this.user.pem);
+    debugger
+    if(!this.user.pem){
+      showMessage(this,"Avant tout transfert vous devez vous identifier avec votre fichier PEM ou votre clé secrète");
+      this.router.navigate(["private"]);
+      return;
+    }
+
+    let pem=JSON.stringify(this.user.pem);
+    $$("Demande de transfert vers "+email+" avec pem="+pem);
       this.api._post("transfer/" + this.api.contract + "/" +  email+ "/" + this.hand+"/"+this.config.unity+"/",
         "",
-        JSON.stringify(this.user.pem)).subscribe((r: any) => {
+        pem).subscribe((r: any) => {
         showMessage(this,"Fonds transférés");
         this.hand=0;
         this.refresh();
@@ -100,14 +114,18 @@ export class MainComponent implements OnInit {
 
 
   send_to(contact: any) {
+    if(this.hand==0)return;
     if(contact.email=="new"){
       this.dialog.open(NewContactComponent, {
-        position: {left: '5vw', top: '5vh'},
-        maxWidth: 400,maxHeight: 700,
-        width: '90vw',height: '90vh',
+        position: {left: '10vw', top: '5vh'},
+        maxWidth: 450,
+        width: '80vw',height: '580px',
         data:{}
       }).afterClosed().subscribe((result:any) => {
-        this.transfer(result.email);
+        if(result){
+          this.transfer(result.email);
+          this.refresh();
+        }
       });
     }
     else {

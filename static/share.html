@@ -7,14 +7,22 @@
 <body>
     Bonjour {{email}},<br><br>
 
-    Vous avez reçu {{amount}}{{unity}} de la part de {{from}}<br>
-    Pour y accéder, ouvrir simplement
-    <a href="{{url_appli}}">{{appname}}</a><br>
+    Vous avez reçu {{amount}}{{unity}}<br><br>
+
+    Pour y accéder, ouvrez simplement l'application <a href="{{url_appli}}">{{appname}}</a><br>
     <br>
-    Si vous souhaitez transférer des '{{unity}}' vous devez utilisez le code secret suivant : {{private_key}}<br>
+    Si vous souhaitez transférer des '{{unity}}' vous devez utilisez le code secret suivant :
+    <span style="color:red;">{{private_key}}</span><br>
+    Attention, ce code doit absolument resté secret pour éviter tout vol dans votre walle
+    <br>
+    <p>
+        Grace à {{appname}} vous pouvez fabriquer votre propre monnaie et la partager avec vos proches.
+        Cela peut être une monnaie mais aussi les point d'un programme de fidélité, des pourcentages de remise
+        et plein d'autres choses.
+    </p>
 
     <br>
-    L'équipe ElMoney<br>
+    L'équipe {{appname}}<br>
 
 </body>
 </html>

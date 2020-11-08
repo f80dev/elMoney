@@ -16,7 +16,7 @@ from flask_socketio import SocketIO
 
 from Tools import base_10_to_alphabet, log, send_mail, open_html_file
 from dao import DAO
-from definitions import DOMAIN_APPLI, BYTECODE_PATH, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME
+from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, XGLD_FOR_NEWACCOUNT
 from elrondTools import ElrondNet
 
 
@@ -46,6 +46,21 @@ def event_loop(contract:str,dest:str,amount:str):
     bc.find_events(contract)
 
 
+@app.route('/api/analyse_pem/',methods=["POST"])
+def analyse_pem():
+    body=str(request.data,"utf-8")
+    body=str(base64.b64decode(body.split("base64,")[1]),"utf-8")
+    address="erd"+body.split("erd")[1].split("----")[0]
+    _to=Account(address)
+    tx=bc.transfer(bc._default_contract,bc.bank,_to,CREDIT_FOR_NEWACCOUNT)
+    sleep(5)
+
+    bc.credit(bc.bank,_to,XGLD_FOR_NEWACCOUNT)
+    sleep(5)
+    log("Transfert de la monnaie de base sur le compte "+address)
+    return jsonify({"address":address,"pem":body}),200
+
+
 
 def refresh_client(dest:str):
     send("refresh_account",dest)
@@ -63,11 +78,10 @@ def transfer(contract:str,dest:str,amount:str,unity:str):
 
     if addr_dest is None:
         log("Le destinataire n'a pas encore d'adresse elrond")
-        _dest=bc.create_account(1)
+        _dest,pem_dest=bc.create_account(XGLD_FOR_NEWACCOUNT)
         send_mail(open_html_file("share", {
             "email": dest,
             "amount": str(amount),
-            "from": "",
             "appname":APPNAME,
             "unity": unity.lower(),
             "url_appli": DOMAIN_APPLI + "?contract=" + contract + "&user=" + _dest.address.bech32(),
@@ -75,16 +89,22 @@ def transfer(contract:str,dest:str,amount:str,unity:str):
             "private_key": _dest.private_key_seed,
         }), _to=dest, subject="Transfert")
         dao.add_contact(email=dest,addr=_dest.address.bech32())
+        sleep(5)
     else:
         _dest=Account(address=addr_dest)
 
     log("Demande de transfert vers "+_dest.address.bech32()+" de "+amount)
 
     #Préparation du _from
-    if "base64" in str(request.data,"utf-8"):
+    if "BEGIN PRIVATE KEY" in str(request.data,"utf-8"):
         pem_file="./PEM/temp.pem"
-        pem_body=str(base64.b64decode(str(request.data).split("base64,")[1]),encoding="utf-8")
-        with open(pem_file, "w") as file:file.write(pem_body)
+        pem_body=json.loads(str(request.data, encoding="utf-8"))
+        #TODO: a modifier car probleme en multi-user
+        with open(pem_file, "w") as file:
+            #TODO insérer ici le decryptage de la clé par le serveur
+            file.write(pem_body["pem"])
+            file.close()
+        _from=Account(pem_file=pem_file)
     else:
         infos = json.loads(str(request.data, encoding="utf-8"))
         _from = Account(address=infos["public"])
@@ -95,9 +115,8 @@ def transfer(contract:str,dest:str,amount:str,unity:str):
     scheduler.add_job(refresh_client,id="id_"+rc["to"],args=[rc["to"]],trigger="interval",minutes=0.25,max_instances=1)
     scheduler.add_job(refresh_client,id="id_"+rc['from'].bech32(),args=[rc['from'].bech32()],trigger="interval",minutes=0.2,max_instances=1)
 
-    url="https://testnet-explorer.elrond.com/transactions/"+rc["tx"]
-    return jsonify({"from_addr":str(rc["from"].bech32()),
-                    "tx":url}),201
+    log("Transfert effectué "+str(rc))
+    return jsonify({"from_addr":str(rc["from"].bech32()),"tx":rc["explorer"]}),201
 
 
 
@@ -109,14 +128,12 @@ def deploy(unity:str,amount:str,data:dict=None):
        data = json.loads(data)
 
     if not "/PEM/" in data["pem"]:
-        if "base64" in data["pem"]: data["pem"] = data["pem"].split("base64,")[1]
-        pem_body = str(base64.b64decode(data["pem"]), encoding="utf-8")
         pem_file="./PEM/temp.pem"
-        with open(pem_file, "w") as file:file.write(pem_body)
+        with open(pem_file, "w") as file:file.write(data["pem"])
     else:
         pem_file=data["pem"]
 
-    result=bc.deploy(pem_file,unity,int(amount))
+    result=bc.deploy(Account(pem_file=pem_file),unity,int(amount))
     if "error" in result:
         return jsonify(result), 500
     else:
@@ -190,15 +207,16 @@ def getyaml(name):
 
 @app.route('/api/new_account/')
 def new_account():
-    _a=bc.create_account(1)
+    _a,pem=bc.create_account(XGLD_FOR_NEWACCOUNT)
 
     log("Création du compte " + _a.address.bech32() +". Demande de transfert de fond")
     sleep(1)
     rc=bc.transfer(bc._default_contract, bc.bank, _a, CREDIT_FOR_NEWACCOUNT)
     log("Résultat du transfert "+str(rc))
 
+    #TODO: private key a crypter
     keys = {"public": _a.address.bech32(), "private": _a.private_key_seed}
-    return jsonify({"address":_a.address.bech32(),"pem":keys}),200
+    return jsonify({"address":_a.address.bech32(),"keys":keys,"pem":pem}),200
 
 
 

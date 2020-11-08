@@ -1,6 +1,6 @@
 {
   "name": "el-money-appli",
-  "version": "0.0.30",
+  "version": "0.0.31",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -27,7 +27,9 @@
     "angularx-social-login": "^3.2.2",
     "ng-navigator-share": "^1.0.4",
     "ngx-clipboard": "^13.0.1",
+    "ngx-webcam": "^0.2.6",
     "rxjs": "~6.5.5",
+    "jsqr": "^1.2.0",
     "ngx-socket-io": "^3.0.1",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.3"

@@ -43,6 +43,9 @@ import { SidemenuComponent } from './sidemenu/sidemenu.component';
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatListModule} from "@angular/material/list";
 import { NewContactComponent } from './new-contact/new-contact.component';
+import { ElrondAddrComponent } from './elrond-addr/elrond-addr.component';
+import { ScannerComponent } from './scanner/scanner.component';
+import {WebcamModule} from "ngx-webcam";
 
 const config: SocketIoConfig = { url: environment.domain_server, options: {} };
 
@@ -67,7 +70,9 @@ const config: SocketIoConfig = { url: environment.domain_server, options: {} };
     AccountComponent,
     ContactsComponent,
     SidemenuComponent,
-    NewContactComponent
+    NewContactComponent,
+    ElrondAddrComponent,
+    ScannerComponent
   ],
   imports: [
     BrowserModule,
@@ -80,6 +85,7 @@ const config: SocketIoConfig = { url: environment.domain_server, options: {} };
     FormsModule,
     HttpClientModule,
     MatCheckboxModule,
+    WebcamModule,
     MatProgressSpinnerModule,
     AppRoutingModule,
     MatInputModule,

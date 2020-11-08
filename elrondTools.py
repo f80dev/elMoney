@@ -13,7 +13,7 @@ from erdpy.contracts import SmartContract
 from erdpy.environments import TestnetEnvironment
 
 from erdpy.transactions import Transaction
-from erdpy.wallet import generate_pair
+from erdpy.wallet import generate_pair,derive_keys
 
 from Tools import send_mail, open_html_file, base_alphabet_to_10, log
 from definitions import DOMAIN_APPLI, BYTECODE_PATH, DEFAULT_UNITY_CONTRACT, MAIN_UNITY, TOTAL_DEFAULT_UNITY
@@ -58,7 +58,7 @@ class ElrondNet:
         if os.path.exists("./PEM/bank.pem"):
             self.bank=Account(pem_file="./PEM/bank.pem")
         else:
-            self.bank=self.create_account(name="bank")
+            self.bank,pem=self.create_account(name="bank")
             log("Vous devez transférer des fonds vers la banques "+self.bank.address.bech32())
 
 
@@ -84,7 +84,7 @@ class ElrondNet:
         return True
 
     def transfer(self,_contract,user_from:Account,user_to:Account,amount:int):
-        if _contract is str:_contract=SmartContract(_contract)
+        if type(_contract)==str:_contract=SmartContract(_contract)
 
         user_from.sync_nonce(self._proxy)
         rc=self.environment.execute_contract(_contract,
@@ -97,7 +97,12 @@ class ElrondNet:
                                              chain=self._proxy.get_chain_id(),
                                              version=config.get_tx_version())
 
-        return {"from":user_from.address,"tx":rc,"to":user_to.address.bech32()}
+        return {
+            "from":user_from.address,
+            "tx":rc,
+            "explorer":"https://testnet-explorer.elrond.com/transactions/"+rc,
+            "to":user_to.address.bech32()
+        }
 
 
 
@@ -106,7 +111,7 @@ class ElrondNet:
 
 
     def deploy(self,pem_file,unity="RVC",amount=100000):
-        if pem_file is str:
+        if type(pem_file)==str:
             user=Account(pem_file=pem_file)
         else:
             user=pem_file
@@ -174,7 +179,7 @@ class ElrondNet:
             return None
 
 
-    def credit(self,_from:Account,_to:Account,amount):
+    def credit(self,_from:Account,_to:Account,amount:str):
         _from.sync_nonce(self._proxy)
         t = Transaction()
         t.nonce = _from.nonce
@@ -182,7 +187,7 @@ class ElrondNet:
         t.data = "refund for transfert"
         t.chainID = self._proxy.get_chain_id()
         t.gasLimit = 50000000
-        t.value = str(amount)
+        t.value = amount
         t.sender = _from.address.bech32()
         t.receiver = _to.address.bech32()
         t.gasPrice = config.DEFAULT_GAS_PRICE
@@ -191,47 +196,47 @@ class ElrondNet:
         t.sign(self.bank)
 
         log("On envoi les fonds")
-        t.send(self._proxy)
+        tx=t.send(self._proxy)
+        log("Fond transférer, consulter la transaction https://testnet-explorer.elrond.com/transactions/"+tx)
 
 
-    def create_account(self,fund=0,name=None):
+    def create_account(self,fund="",name=None,seed_phrase=""):
+
         log("Création d'un nouveau compte")
-        if name is None:
-            name="User"+str(datetime.now().timestamp()*1000).split(".")[0]
+        pem=""
 
-        AccountsRepository("./PEM").generate_account(name)
+        if len(seed_phrase)==0:
+            if name is None:
+                name = "User" + str(datetime.now().timestamp() * 1000).split(".")[0]
 
-        # seed, pubkey = generate_pair()
-        # address = Address(pubkey).bech32()
-        # _u=Account(address=address)
-        # _u.private_key_seed=seed.hex()
-        # self._proxy.send_transaction()
+            AccountsRepository("./PEM").generate_account(name)
+            for f in os.listdir("./PEM"):
+                if f.startswith(name):
+                    os.rename("./PEM/"+f,"./PEM/"+name+".pem")
+                    filename="./PEM/"+name+".pem"
 
+                    with open(filename, "r") as myfile: data = myfile.readlines()
+                    pem="".join(data).replace(name+":","")
+                    with open(filename, "w") as myfile:
+                        myfile.write(pem)
+                        myfile.close()
 
-        for f in os.listdir("./PEM"):
-            if f.startswith(name):
-                os.rename("./PEM/"+f,"./PEM/"+name+".pem")
-                filename="./PEM/"+name+".pem"
-                break
+                    break
+            _u=Account(pem_file=filename)
+        else:
+            seed, pubkey = derive_keys(seed_phrase)
+            address = Address(pubkey).bech32()
+            _u = Account(address=address)
+            _u.private_key_seed = seed.hex()
 
-        _u=Account(pem_file=filename)
-
-        if fund>0:
+        if len(fund)>0:
             log("On transfere un peu d'eGold pour assurer les premiers transferts"+str(fund))
-            self.credit(self.bank,_u,1)
+            self.credit(self.bank,_u,fund)
 
-        # with open(filename, "r") as myfile:data = myfile.readlines()
-        if name!="bank":os.remove(filename)
 
-        return _u
+        #if len(seed_phrase)==0 and name!="bank":os.remove(filename)
 
-        # return({
-        #     "filename":filename,
-        #     "addr":_u.address.bech32(),
-        #     "private_key_seed":_u.private_key_seed,
-        #     "pem":"".join(data),
-        #     "account":_u
-        # })
+        return _u,pem
 
 
 

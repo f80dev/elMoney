@@ -11,10 +11,7 @@ import {UserService} from "../user.service";
   styleUrls: ['./settings.component.sass']
 })
 export class SettingsComponent implements OnInit {
-  url_explorer="";
-
   fileUrl;
-  url_contrat="";
   contrat="";
 
   constructor(public router:Router,
@@ -25,8 +22,6 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.contrat=localStorage.getItem("contract");
-    this.url_explorer="https://testnet-explorer.elrond.com/address/"+this.user.addr;
-    this.url_contrat="https://testnet-explorer.elrond.com/address/"+this.contrat;
     const blob = new Blob([this.user.pem], { type: 'application/octet-stream' });
     this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(blob));
   }

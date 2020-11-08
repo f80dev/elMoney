@@ -1,5 +1,6 @@
 <mat-toolbar class="mat-elevation-z2 toolbar-app" (mousedown)="closeMenu()">
     <mat-icon
+      title="Accédez au menu principal"
       id="cmdMenu"
       (click)="drawer.toggle()"
       style="cursor: pointer;">
@@ -22,6 +23,7 @@
 
 
     <mat-icon style="font-size: x-large;cursor: pointer;"
+              title="Revenir à l'écran précédent"
               (click)="_location.back()">navigate_before</mat-icon>
 
     <!--    <mat-icon -->

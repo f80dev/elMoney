@@ -17,10 +17,12 @@ export class UserService {
 
   loadFromDevice(){
     if(localStorage.getItem("addr"))this.addr=localStorage.getItem("addr");
+    if(this.addr.length==0)return false;
+
     if(localStorage.getItem("contacts"))this.contacts=JSON.parse(localStorage.getItem("contacts"));
     if(localStorage.getItem("email"))this.email=localStorage.getItem("email");
-    if(localStorage.getItem("pem"))this.pem=localStorage.getItem("pem");
-    return(this.addr.length>0);
+    if(localStorage.getItem("pem"))this.pem=JSON.parse(localStorage.getItem("pem"));
+    return true;
   }
 
   saveOnDevice(){
@@ -28,11 +30,12 @@ export class UserService {
     localStorage.setItem("contacts",JSON.stringify(this.contacts));
     localStorage.setItem("email",this.email);
     localStorage.setItem("addr",this.addr);
-    localStorage.setItem("pem",this.pem);
+    localStorage.setItem("pem",JSON.stringify(this.pem));
   }
 
-  add_contact(email: string) {
-    let pseudo=email.split("@")[0].split(".")[0];
+  add_contact(email: string,pseudo=null) {
+    if(email.indexOf("@")==-1)return;
+    if(!pseudo)pseudo=email.split("@")[0].split(".")[0];
     for(let c of this.contacts){
       if(c.email==email)return false;
     }
@@ -47,13 +50,16 @@ export class UserService {
     }
   }
 
-  init(addr: string) {
+  init(addr: string,pem:any=null) {
+    $$("Initialisation de l'utilisateur "+addr);
     this.addr=addr;
+    this.pem=pem;
     this.saveOnDevice();
   }
 
+
+
   reset() {
-    debugger
     localStorage.removeItem("addr");
     localStorage.removeItem("contacts");
     localStorage.removeItem("email");

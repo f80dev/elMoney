@@ -34,10 +34,9 @@ export class AppComponent {
       this.api.set_contract(contract);
 
       if(!user.loadFromDevice()){
-        let addr=this.routes.snapshot.queryParamMap.get("addr");
+        let addr=this.routes.snapshot.queryParamMap.get("user");
         this.user.init(addr);
       }
-
 
       this.router.navigate(["main"]);
 
