@@ -17,13 +17,13 @@ class DAO:
 
     def add_contact(self, email, addr=""):
         sql = "INSERT INTO Contacts (Address,Email) VALUES ('"+ addr + "','" + email + "')"
-        log("execution de "+sql)
+        log("Ajout d'une correspondance email => addr : execution de "+sql)
         return self.get_cursor().executescript(sql)
 
 
 
 
-    def add_money(self,address,unity,owner,_public,transferable):
+    def add_money(self,address:str,unity:str,owner:str,_public:bool,transferable:bool):
         _public="1" if _public else "0"
         transferable="1" if transferable else "0"
 

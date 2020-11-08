@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import {ApiService} from "./api.service";
+import {environment} from "../environments/environment";
+import {$$} from "./tools";
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +11,7 @@ export class UserService {
   email:string="";
   addr:string="";
   pem:string="";
+  last_contact="";
 
   constructor(public api:ApiService) { };
 
@@ -21,6 +24,7 @@ export class UserService {
   }
 
   saveOnDevice(){
+    $$("Enregistrement de "+this.addr+" sur le device");
     localStorage.setItem("contacts",JSON.stringify(this.contacts));
     localStorage.setItem("email",this.email);
     localStorage.setItem("addr",this.addr);
@@ -54,6 +58,6 @@ export class UserService {
     localStorage.removeItem("contacts");
     localStorage.removeItem("email");
     localStorage.removeItem("pem");
-    window.location.reload();
+    window.location.href=environment.domain_appli;
   }
 }

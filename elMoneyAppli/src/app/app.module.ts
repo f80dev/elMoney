@@ -42,6 +42,7 @@ import {MatToolbarModule} from "@angular/material/toolbar";
 import { SidemenuComponent } from './sidemenu/sidemenu.component';
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatListModule} from "@angular/material/list";
+import { NewContactComponent } from './new-contact/new-contact.component';
 
 const config: SocketIoConfig = { url: environment.domain_server, options: {} };
 
@@ -65,7 +66,8 @@ const config: SocketIoConfig = { url: environment.domain_server, options: {} };
     SupportComponent,
     AccountComponent,
     ContactsComponent,
-    SidemenuComponent
+    SidemenuComponent,
+    NewContactComponent
   ],
   imports: [
     BrowserModule,

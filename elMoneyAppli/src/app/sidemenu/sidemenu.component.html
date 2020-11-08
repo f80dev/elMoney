@@ -9,6 +9,14 @@
     Wallet
   </a>
 
+  <a title="Wallet"
+     routerLink="transfer"
+     mat-list-item
+     id="cmdTransfer">
+    <mat-icon>send</mat-icon>&nbsp;
+    Transfert
+  </a>
+
   <a title="Fabriquer votre monaie"
      routerLink="moneys"
      mat-list-item
@@ -17,8 +25,8 @@
     Changer de monnaie
   </a>
 
-  <a title="Fabriquer votre monaie"
-     routerLink="contacts"
+  <a title="Accéder à vos contacts"
+     [routerLink]="['contacts']"
      mat-list-item
      id="cmdAddPerson">
     <mat-icon>person_add</mat-icon>&nbsp;

@@ -8,20 +8,23 @@ from time import sleep
 
 from erdpy.proxy import ElrondProxy
 from erdpy import config
-from erdpy.accounts import Account,AccountsRepository
+from erdpy.accounts import Account, AccountsRepository, Address
 from erdpy.contracts import SmartContract
 from erdpy.environments import TestnetEnvironment
 
 from erdpy.transactions import Transaction
+from erdpy.wallet import generate_pair
 
 from Tools import send_mail, open_html_file, base_alphabet_to_10, log
-from definitions import DOMAIN_APPLI
+from definitions import DOMAIN_APPLI, BYTECODE_PATH, DEFAULT_UNITY_CONTRACT, MAIN_UNITY, TOTAL_DEFAULT_UNITY
 
 
 class ElrondNet:
     contract=None
     environment=None
     _proxy:ElrondProxy=None
+    bank=None
+    _default_contract=None
 
 
     def __init__(self,proxy="https://api-testnet.elrond.com",bank_pem="./PEM/alice.pem"):
@@ -29,16 +32,16 @@ class ElrondNet:
         # Now, we create a environment which intermediates deployment and execution
         self._proxy=ElrondProxy(proxy)
         self.environment = TestnetEnvironment(proxy)
-        self.bank=Account(pem_file=bank_pem)
-
+        self.init_bank()
+        self.init_default_money()
 
         #Récupération de la configuration : https://api-testnet.elrond.com/network/config
 
 
 
-    def getBalance(self,addr:str):
+    def getBalance(self,contract,addr:str):
         user = Account(address=addr)
-        rc=self.environment.query_contract(self.contract,
+        rc=self.environment.query_contract(SmartContract(contract),
                                         function="balanceOf",
                                         arguments=["0x"+user.address.hex()])
         if rc[0] is None or rc[0]=='':return 0
@@ -48,9 +51,44 @@ class ElrondNet:
         return None
 
 
-    def transfer(self,user_from:Account,user_to:Account,amount:int):
+
+
+    def init_bank(self):
+        log("Initialisation de la banque")
+        if os.path.exists("./PEM/bank.pem"):
+            self.bank=Account(pem_file="./PEM/bank.pem")
+        else:
+            self.bank=self.create_account(name="bank")
+            log("Vous devez transférer des fonds vers la banques "+self.bank.address.bech32())
+
+
+
+
+
+    def init_default_money(self):
+        rc=dict()
+        if len(DEFAULT_UNITY_CONTRACT)==0:
+            if self.bank is not None:
+                rc=self.deploy(self.bank, MAIN_UNITY, TOTAL_DEFAULT_UNITY)
+                if "error" in rc:
+                    log("Impossible de déployer le contrat de la monnaie par defaut")
+                    return False
+            else:
+                log("Vous devez initialiser la bank pour créer le contrat de monnaie par défaut")
+                return False
+        else:
+            rc["contract"]=DEFAULT_UNITY_CONTRACT
+            self._default_contract=SmartContract(address=DEFAULT_UNITY_CONTRACT)
+
+        log("Contrat de la monnaie par defaut déployer à "+rc["contract"])
+        return True
+
+    def transfer(self,_contract,user_from:Account,user_to:Account,amount:int):
+        if _contract is str:_contract=SmartContract(_contract)
+
         user_from.sync_nonce(self._proxy)
-        rc=self.environment.execute_contract(self.contract,user_from,
+        rc=self.environment.execute_contract(_contract,
+                                             user_from,
                                              function="transfer",
                                              arguments=["0x"+user_to.address.hex(),amount],
                                              gas_price=config.DEFAULT_GAS_PRICE,
@@ -58,32 +96,36 @@ class ElrondNet:
                                              value=None,
                                              chain=self._proxy.get_chain_id(),
                                              version=config.get_tx_version())
+
         return {"from":user_from.address,"tx":rc,"to":user_to.address.bech32()}
+
+
 
     def set_contract(self, contract):
         self.contract= SmartContract(address=contract)
 
 
-    def deploy(self,bytecode_file,pem_file,unity="RVC",amount=1000):
-        user=Account(pem_file=pem_file)
+    def deploy(self,pem_file,unity="RVC",amount=100000):
+        if pem_file is str:
+            user=Account(pem_file=pem_file)
+        else:
+            user=pem_file
 
         user.sync_nonce(self._proxy)
-        with open(bytecode_file,"r") as file:
+        with open(BYTECODE_PATH,"r") as file:
             _json=file.read()
         json_bytecode=json.loads(_json)
 
         bytecode=json_bytecode["emitted_tx"]["data"]
         bytecode=bytecode.split("@0500")[0]
-        contract = SmartContract(bytecode=bytecode)
 
         #TODO: arguments=[hex(amount),hex(base_alphabet_to_10(unity))]
         arguments = [amount]
-        log("Déploiement du contrat "+unity+" via le compte "+user.address.bech32())
+        log("Déploiement du contrat "+unity+" via le compte https://testnet-explorer.elrond.com/address/"+user.address.bech32())
         log("Passage des arguments "+str(arguments))
-        address=""
         try:
             tx, address = self.environment.deploy_contract(
-                contract=contract,
+                contract=SmartContract(bytecode=bytecode),
                 owner=user,
                 arguments=arguments,
                 gas_price=config.DEFAULT_GAS_PRICE/1,
@@ -132,50 +174,64 @@ class ElrondNet:
             return None
 
 
+    def credit(self,_from:Account,_to:Account,amount):
+        _from.sync_nonce(self._proxy)
+        t = Transaction()
+        t.nonce = _from.nonce
+        t.version = config.get_tx_version()
+        t.data = "refund for transfert"
+        t.chainID = self._proxy.get_chain_id()
+        t.gasLimit = 50000000
+        t.value = str(amount)
+        t.sender = _from.address.bech32()
+        t.receiver = _to.address.bech32()
+        t.gasPrice = config.DEFAULT_GAS_PRICE
+
+        log("On signe la transaction avec le compte de la banque")
+        t.sign(self.bank)
+
+        log("On envoi les fonds")
+        t.send(self._proxy)
 
 
-    def create_account(self,fund):
+    def create_account(self,fund=0,name=None):
         log("Création d'un nouveau compte")
-        name=str(datetime.now().timestamp()*1000)
+        if name is None:
+            name="User"+str(datetime.now().timestamp()*1000).split(".")[0]
 
         AccountsRepository("./PEM").generate_account(name)
+
+        # seed, pubkey = generate_pair()
+        # address = Address(pubkey).bech32()
+        # _u=Account(address=address)
+        # _u.private_key_seed=seed.hex()
+        # self._proxy.send_transaction()
+
+
         for f in os.listdir("./PEM"):
             if f.startswith(name):
-                filename="./PEM/"+f
+                os.rename("./PEM/"+f,"./PEM/"+name+".pem")
+                filename="./PEM/"+name+".pem"
                 break
 
         _u=Account(pem_file=filename)
 
         if fund>0:
             log("On transfere un peu d'eGold pour assurer les premiers transferts"+str(fund))
-            self.bank.sync_nonce(self._proxy)
-            t=Transaction()
-            t.nonce=self.bank.nonce
-            t.version=config.get_tx_version()
-            t.data="refund for transfert"
-            t.chainID=self._proxy.get_chain_id()
-            t.gasLimit=50000000
-            t.value=str(fund)
-            t.sender=self.bank.address.bech32()
-            t.receiver=_u.address.bech32()
-            t.gasPrice=config.DEFAULT_GAS_PRICE
+            self.credit(self.bank,_u,1)
 
-            log("On signe la transaction avec le compte de la banque")
-            t.sign(self.bank)
+        # with open(filename, "r") as myfile:data = myfile.readlines()
+        if name!="bank":os.remove(filename)
 
-            log("On envoi les fonds")
-            t.send(self._proxy)
+        return _u
 
-
-        with open(filename, "r") as myfile:data = myfile.readlines()
-        os.remove(filename)
-        return({
-            "filename":filename,
-            "addr":_u.address.bech32(),
-            "private_key_seed":_u.private_key_seed,
-            "pem":"".join(data),
-            "account":_u
-        })
+        # return({
+        #     "filename":filename,
+        #     "addr":_u.address.bech32(),
+        #     "private_key_seed":_u.private_key_seed,
+        #     "pem":"".join(data),
+        #     "account":_u
+        # })
 
 
 
