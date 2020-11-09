@@ -87,7 +87,7 @@ def transfer(contract:str,dest:str,amount:str,unity:str):
             "url_appli": DOMAIN_APPLI + "?contract=" + contract + "&user=" + _dest.address.bech32(),
             "public_key": _dest.address.bech32(),
             "private_key": _dest.private_key_seed,
-        }), _to=dest, subject="Transfert")
+        }), _to=dest, subject="Transfert",files=[])
         dao.add_contact(email=dest,addr=_dest.address.bech32())
         sleep(5)
     else:

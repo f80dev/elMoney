@@ -35,5 +35,5 @@ COPY ./PEM $APP_HOME/PEM
 
 EXPOSE 5555
 
-CMD ["python3", "app.py","5555","ssl"]
+CMD ["python3", "app.py","5555","https://api-testnet.elrond.com","ssl"]
 

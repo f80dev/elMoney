@@ -1,7 +1,10 @@
 import smtplib
 from datetime import datetime
+from email import encoders
+from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from pathlib import Path
 
 from definitions import SMTP_SERVER, USERNAME, PASSWORD, DOMAIN_APPLI
 
@@ -84,15 +87,15 @@ def open_html_file(name:str,replace=dict(),domain_appli=DOMAIN_APPLI):
 
     body=body.replace("</head>",style+"</head>")
 
-    while "{{faq:" in body:
-        index_faq=extract(body,"{{faq:","}}")
-        faq=get_faqs(filters=index_faq,domain_appli=domain_appli,color="blue",format="html")
-        body=body.replace("{{faq:"+index_faq+"}}",faq)
+    # while "{{faq:" in body:
+    #     index_faq=extract(body,"{{faq:","}}")
+    #     faq=get_faqs(filters=index_faq,domain_appli=domain_appli,color="blue",format="html")
+    #     body=body.replace("{{faq:"+index_faq+"}}",faq)
 
     return body
 
 
-def send_mail(body:str,_to="paul.dudule@gmail.com",_from:str="ticketshare@f80.fr",subject=""):
+def send_mail(body:str,_to="paul.dudule@gmail.com",_from:str="ticketshare@f80.fr",subject="",files=[]):
     if _to is None or len(_to)==0:return None
     with smtplib.SMTP(SMTP_SERVER, 587) as server:
         server.ehlo()
@@ -108,6 +111,15 @@ def send_mail(body:str,_to="paul.dudule@gmail.com",_from:str="ticketshare@f80.fr
             msg['To'] = _to
             msg['Subject'] = subject
             msg.attach(MIMEText(body,"html"))
+
+            for path in files:
+                part = MIMEBase('application', "octet-stream")
+                with open(path, 'rb') as file:
+                    part.set_payload(file.read())
+                encoders.encode_base64(part)
+                part.add_header('Content-Disposition',
+                                'attachment; filename="{}"'.format(Path(path).name))
+                msg.attach(part)
 
             log("Send to "+_to+" <br><div style='font-size:x-small;max-height:300px>"+body+"</div>'")
             server.sendmail(msg=msg.as_string(), from_addr=_from, to_addrs=[_to])

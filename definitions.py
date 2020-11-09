@@ -5,7 +5,8 @@ IMAP_SERVER="imap.ionos.fr"
 
 APPNAME="CoinMaKer"
 
-DOMAIN_APPLI="http://localhost:4200"
+#DOMAIN_APPLI="http://localhost:4200"
+DOMAIN_APPLI="https://coinmaker.f80.fr"
 BYTECODE_PATH="./static/deploy.json"
 
 XGLD_FOR_NEWACCOUNT="100000000000000000"
