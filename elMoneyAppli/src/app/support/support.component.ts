@@ -3,6 +3,7 @@ import {ConfigService} from "../config.service";
 import {ActivatedRoute} from "@angular/router";
 import {environment} from "../../environments/environment";
 import {Location} from "@angular/common";
+import {UserService} from "../user.service";
 
 @Component({
   selector: 'app-support',
@@ -14,6 +15,8 @@ export class SupportComponent implements OnInit {
 
   constructor(
     public _location:Location,
+    public user:UserService,
+
     public routes:ActivatedRoute,
     public config:ConfigService) { }
 
@@ -22,14 +25,13 @@ export class SupportComponent implements OnInit {
   }
 
   openForum() {
-    open("https://t.me/el_money_forum");
+    if(!this.config.values)
+      open("https://t.me/coinmaker_forum");
+    else
+      open(this.config.values.support.forum);
   }
 
   restart(reset: boolean) {
-    if(reset){
-      localStorage.removeItem("addr");
-      localStorage.removeItem("contract");
-    }
-    window.location.href=environment.domain_appli;
+    this.user.reset();
   }
 }

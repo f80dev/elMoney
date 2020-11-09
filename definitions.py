@@ -9,7 +9,8 @@ APPNAME="CoinMaKer"
 DOMAIN_APPLI="https://coinmaker.f80.fr"
 BYTECODE_PATH="./static/deploy.json"
 
-XGLD_FOR_NEWACCOUNT="100000000000000000"
+#on alimente les nouveaux comptes en eGold pour leur permettre des transferts
+XGLD_FOR_NEWACCOUNT="1000000000000000000"
 
 #Description de la monnaie par defaut
 MAIN_UNITY="CMK"

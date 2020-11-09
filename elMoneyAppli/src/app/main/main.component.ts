@@ -25,6 +25,7 @@ export class MainComponent implements OnInit {
   hourglass=true;
   hand:number=0;
   showSlider: boolean=false;
+  message="";
 
   constructor(public router:Router,
               public toast:MatSnackBar,
@@ -39,11 +40,14 @@ export class MainComponent implements OnInit {
 
   refresh(){
     this.friends=[];
+    let i=6
     for(let c of this.user.contacts){
+      i=i-1;if(i<0)break;
+      if(c.pseudo.length>15)c.pseudo=c.pseudo.substr(0,14);
       this.friends.push({label:c.pseudo,icon:"person",email:c.email})
     }
 
-    this.friends.push({label:"Nouveau",icon:"person_add",email:"new"})
+    this.friends.push({label:"Destinataire",icon:"person_add",email:"new"})
 
     if(this.user.addr){
       if(this.api.contract){
@@ -95,7 +99,6 @@ export class MainComponent implements OnInit {
 
 
   transfer(email:string){
-    debugger
     if(!this.user.pem){
       showMessage(this,"Avant tout transfert vous devez vous identifier avec votre fichier PEM ou votre clé secrète");
       this.router.navigate(["private"]);
@@ -104,13 +107,18 @@ export class MainComponent implements OnInit {
 
     let pem=JSON.stringify(this.user.pem);
     $$("Demande de transfert vers "+email+" avec pem="+pem);
-      this.api._post("transfer/" + this.api.contract + "/" +  email+ "/" + this.hand+"/"+this.config.unity+"/",
+    this.message="Fonds en cours de transfert";
+    this.api._post("transfer/" + this.api.contract + "/" +  email+ "/" + this.hand+"/"+this.config.unity+"/",
         "",
         pem).subscribe((r: any) => {
-        showMessage(this,"Fonds transférés");
-        this.hand=0;
-        this.refresh();
-      });
+          this.message="";
+          showMessage(this,"Fonds transférés");
+          this.hand=0;
+          this.refresh();
+      },(err)=>{
+          this.message="";
+          showMessage(this,"Problème technique, transfert non effectué");
+    });
   }
 
 

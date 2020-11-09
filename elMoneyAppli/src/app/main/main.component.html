@@ -1,79 +1,80 @@
 <div class="mainform">
-  <br>
+  <app-hourglass [message]="message"></app-hourglass>
+  <div *ngIf="message?.length==0">
+    <div title="Les destinataires de vos envois" style="width: 100%;text-align: center;">
+      <table style="text-align: center;">
+        <tr style="width: 95%;line-height: 90%">
+          <td *ngFor="let fr of friends"
+              [title]="fr.email"
+              style="width: 15%;cursor: pointer;"
+              (click)="send_to(fr)">
 
-  <div title="Les destinataires de vos envois" style="width: 100%;text-align: center;">
-    <table style="text-align: center;">
-      <tr style="width: 95%;">
-        <td *ngFor="let fr of friends"
-            [title]="fr.email"
-            style="width: 15%;cursor: pointer;"
-            (click)="send_to(fr)">
-          <mat-icon>{{fr.icon}}</mat-icon><br>
-          {{fr.label}}
-        </td>
-      </tr>
-    </table>
-  </div>
+            <mat-icon>{{fr.icon}}</mat-icon><br>
+            <span style="font-size: small">{{fr.label}}</span>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <br>
 
-  <mat-icon>
-    arrow_drop_up
-  </mat-icon>
+    <mat-icon>
+      arrow_drop_up
+    </mat-icon>
 
-  <app-account [solde]="hand"
-               title="La somme que vous envisagez de transférer"
-               (click)="showSlider=true"
-               fontsize="1.5em"
-               [unity]="config.unity">
-  </app-account><br>
-  <small>à transférer</small>
-  <br><br>
+    <app-account [solde]="hand"
+                 title="La somme que vous envisagez de transférer"
+                 (click)="showSlider=true"
+                 fontsize="1.5em"
+                 [unity]="config.unity">
+    </app-account><br>
+    <small>à transférer</small>
+    <br><br>
 
-  <div
-    style="width:100%;text-align: center;"
-    title="Augmenté la valeur à transférer en utilisant ces boutons suivant le montant que vous souhaitez atteindre">
+    <div
+      style="width:100%;text-align: center;"
+      title="Augmenté la valeur à transférer en utilisant ces boutons suivant le montant que vous souhaitez atteindre">
 
-    <div  *ngIf="showSlider" style="width: 100%;text-align: center;">
-      <table style="display: inline-block;">
-        <tr style="width: 100%;">
-        <td style="width: 10px;font-size: x-large;text-align: right;">1</td>
-        <td style="width: 80%;">
-          <mat-slider thumbLabel
-                      color="primary"
-                      style="width: 90%;"
-                      [(ngModel)]="hand"
-                      min="1" [max]="solde">
-          </mat-slider>
-        </td>
-        <td style="width: 10px;font-size: x-large;text-align: left;">
-          {{solde}}
-        </td>
-      </tr></table>
+      <div  *ngIf="showSlider" style="width: 100%;text-align: center;">
+        <table style="display: inline-block;">
+          <tr style="width: 100%;">
+            <td style="width: 10px;font-size: x-large;text-align: right;">1</td>
+            <td style="width: 80%;">
+              <mat-slider thumbLabel
+                          color="primary"
+                          style="width: 90%;"
+                          [(ngModel)]="hand"
+                          min="1" [max]="solde">
+              </mat-slider>
+            </td>
+            <td style="width: 10px;font-size: x-large;text-align: left;">
+              {{solde}}
+            </td>
+          </tr></table>
 
+      </div>
+
+
+      <table style="width: 100%;text-align: center;"
+             *ngIf="!showSlider">
+
+        <tr>
+          <td *ngFor="let bt of buttons" style="line-height: 60%;">
+            <mat-icon  *ngIf="bt.value<=solde">arrow_drop_up</mat-icon>
+            <br>
+            <button mat-raised-button mat-button mat-icon-button
+                    *ngIf="bt.value<=solde"
+                    [title]="'sortir '+bt.value+' '+config.unity.toLowerCase()+' de mon wallet'"
+                    class="large-icon-button mat-elevation-z12"
+                    color="primary"
+                    (click)="addInHand(bt.value)">
+              <span *ngIf="bt.label">{{bt.label}}</span>
+              <span *ngIf="!bt.label">{{bt.value}}</span>
+            </button>
+          </td>
+        </tr>
+      </table>
     </div>
 
-
-    <table style="width: 100%;text-align: center;"
-           *ngIf="!showSlider">
-      <tr>
-        <td *ngFor="let bt of buttons">
-          <mat-icon *ngIf="bt.value<=solde && hand==0">arrow_drop_up</mat-icon>
-          <span *ngIf="bt.value<=solde && hand>0">+</span>
-        </td>
-      </tr>
-      <tr>
-        <td *ngFor="let bt of buttons">
-          <button mat-raised-button mat-button mat-icon-button
-                  *ngIf="bt.value<=solde"
-                  [title]="'sortir '+bt.value+' '+config.unity.toLowerCase()+' de mon wallet'"
-                  class="large-icon-button mat-elevation-z12"
-                  color="primary"
-                  (click)="addInHand(bt.value)">
-            <span *ngIf="bt.label">{{bt.label}}</span>
-            <span *ngIf="!bt.label">{{bt.value}}</span>
-          </button>
-        </td>
-      </tr>
-    </table>
   </div>
 
   <br><br>
