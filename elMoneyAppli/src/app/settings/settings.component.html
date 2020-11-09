@@ -1,13 +1,21 @@
 <div class="mainform">
   <br><br>
 
-  <app-elrond-addr label="Votre adresse Elrond"
+  <app-elrond-addr label="Journal des transactions"
                     type="address"
                    [addr]="user.addr">
   </app-elrond-addr>
 
 
   <br><br>
+
+  <a [href]="fileUrl"
+     *ngIf="user.pem"
+     download="elrond_key.pem">Télécharger ma clé</a>
+
+  <br>
+  <br>
+
   <button mat-raised-button mat-button
           class="app-button"
           (click)="router.navigate(['private'])">
@@ -21,19 +29,14 @@
   </button>
 
   <br>
-  <br>
-  <br>
 
 
-  <a [href]="fileUrl"
-     *ngIf="user.pem"
-     download="elrond_key.pem">Télécharger ma clé</a>
 
-  <br><br><br>
+  <br><br>
   ______
   <br><br><br>
 
-  <app-elrond-addr label="Adresse Elrond de la monnaie"
+  <app-elrond-addr [label]="'Transactions du \''+config.unity+'\''"
                    [addr]="contrat"
                    type="address"
                    *ngIf="contrat">

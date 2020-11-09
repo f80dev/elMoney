@@ -37,14 +37,15 @@ export class SettingsComponent implements OnInit {
     this.dialog.open(PromptComponent, {
       width: '80%',
       data: {
-        title: 'Effacer votre compte ?',
+        title: 'Effacer votre compte',
         question: 'Si vous effacer votre compte, vous perdez immédiatement l\'ensemble de votre wallet. Etes vous sûr ?',
         onlyConfirm: true,
         lbl_ok: 'Oui',
         lbl_cancel: 'Non'
       }
     }).afterClosed().subscribe((result_code) => {
-      this.user.reset();
+      if(result_code)
+        this.user.reset();
     });
 
   }

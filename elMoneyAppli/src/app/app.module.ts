@@ -46,6 +46,7 @@ import { NewContactComponent } from './new-contact/new-contact.component';
 import { ElrondAddrComponent } from './elrond-addr/elrond-addr.component';
 import { ScannerComponent } from './scanner/scanner.component';
 import {WebcamModule} from "ngx-webcam";
+import {MatSliderModule} from "@angular/material/slider";
 
 const config: SocketIoConfig = { url: environment.domain_server, options: {} };
 
@@ -96,7 +97,8 @@ const config: SocketIoConfig = { url: environment.domain_server, options: {} };
     MatSlideToggleModule,
     MatToolbarModule,
     MatSidenavModule,
-    MatListModule
+    MatListModule,
+    MatSliderModule
   ],
   providers: [
     ApiService,TransPipe,

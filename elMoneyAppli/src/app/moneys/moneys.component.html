@@ -14,16 +14,28 @@
 
   <table>
     <tr *ngFor="let m of moneys">
-      <td style="width:60vw;text-align: left;">{{m.unity}}</td>
+      <td style="width:60vw;text-align: left;">
+        {{m.unity}}
+      </td>
       <td>
-        <button mat-raised-button mat-icon-button
-        mat-button class="icon-button"
+        <button mat-button mat-icon-button
+         class="icon-button" style="background-color: transparent;"
         (click)="select(m.contract)">
         <mat-icon>checkmark</mat-icon>
-  </button>
+   </button>
+
+
+        <button mat-icon-button style="background-color: transparent;"
+                mat-button class="icon-button"
+                *ngIf="m.url?.length>0"
+                (click)="openDoc(m.url)">
+            <mat-icon>import_contacts</mat-icon>
+        </button>
+
+
         &nbsp;
         <button mat-raised-button mat-icon-button
-        mat-button class="icon-button"
+        mat-button class="icon-button" style="background-color: transparent;"
         (click)="openContrat(m.contract)">
         <mat-icon>visibility</mat-icon>
   </button>
@@ -34,6 +46,14 @@
   <div >
     &nbsp;
   </div>
+    <br><br>
+
+   <button mat-raised-button mat-button
+          class="app-button"
+          (click)="router.navigate(['create'])">
+    <div class="bloc-bouton">Fabriquer<br>votre monnaie</div>
+  </button>
+
 
 </div>
 

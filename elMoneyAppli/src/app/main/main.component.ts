@@ -24,6 +24,7 @@ export class MainComponent implements OnInit {
   ]
   hourglass=true;
   hand:number=0;
+  showSlider: boolean=false;
 
   constructor(public router:Router,
               public toast:MatSnackBar,
