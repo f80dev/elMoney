@@ -1,7 +1,9 @@
 <div class="mainform">
 
-  <h2>Enregistrer votre signature</h2>
+  <h2>S'authentifier</h2>
+  <app-hourglass [message]="message"></app-hourglass>
 
+  <div *ngIf="message.length==0">
   <input #csvInput hidden="true"
        type="file" onclick="this.value=null"
        (change)="import($event)"
@@ -10,10 +12,22 @@
   <button mat-raised-button
         mat-button class="app-button"
         (click)="csvInput.click()">
-    Signer
+    Ficher PEM
   </button>
 
   <br><br>
   <mat-checkbox [(ngModel)]="savePrivateKey">Conserver ma signature sur cet appareil</mat-checkbox>
   <mat-icon (click)="openFAQ()" style="font-size: small;cursor: pointer;">help</mat-icon>
+  </div>
+  <br><br>
+  <mat-form-field class="app-field" style="max-width: 200px;">
+      <mat-label>Profils de test</mat-label>
+      <mat-select [(ngModel)]="test_profil" (ngModelChange)="select_model($event)">
+        <mat-option *ngFor="let profil of profils" [value]="profil.value">{{profil.label}}</mat-option>
+      </mat-select>
+      <mat-hint>Utiliser un profil de test pour essayer {{config.values?.appname}}</mat-hint>
+    </mat-form-field>
+
+
+
 </div>

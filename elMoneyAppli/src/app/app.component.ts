@@ -26,6 +26,7 @@ export class AppComponent {
               public user:UserService,
               public api:ApiService){
 
+    this.appVersion=environment.appVersion;
     this.config.init(()=>{
       $$("Recherche du contrat à utiliser pour le device");
 

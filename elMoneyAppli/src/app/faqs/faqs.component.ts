@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import {ActivatedRoute} from "@angular/router";
+import {ApiService} from "../api.service";
+import {Location} from "@angular/common";
+import {ConfigService} from "../config.service";
 
 @Component({
   selector: 'app-faqs',
@@ -7,9 +11,35 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FaqsComponent implements OnInit {
 
-  constructor() { }
+  faqs:any[]=[];
 
-  ngOnInit(): void {
+  constructor(public api:ApiService,
+              public config:ConfigService,
+              public _location:Location,
+              public route:ActivatedRoute) {
+  }
+
+  ngOnInit() {
+    this.api.getfaqs().subscribe((rc:any)=>{
+      var params= this.route.snapshot.queryParamMap;
+
+      this.faqs=[];
+
+      for(let faq of rc.content) {
+        if (!params.has("open") || faq["index"].indexOf(params.get("open")) > -1) {
+          faq.visible = params.has("open");
+          if(this.config.values){
+          for(let i=0;i<5;i++){
+            faq.title=faq.title.replace("{{appname}}",this.config.values.appname);
+            faq.content=faq.content.replace("{{appname}}",this.config.values.appname);
+          }
+          }
+
+
+          this.faqs.push(faq)
+        }
+      }
+    });
   }
 
 }

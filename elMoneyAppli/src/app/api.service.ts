@@ -76,7 +76,7 @@ export class ApiService {
 
 
   getfaqs() {
-    return this.http.get(api('getyaml', 'name=faqs'));
+    return this.http.get(api('getyaml/faqs', ''));
   }
 
   balance(address_to: string) {

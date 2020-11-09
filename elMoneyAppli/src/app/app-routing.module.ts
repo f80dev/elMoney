@@ -10,6 +10,7 @@ import {SettingsComponent} from "./settings/settings.component";
 import {AboutComponent} from "./about/about.component";
 import {SupportComponent} from "./support/support.component";
 import {ContactsComponent} from "./contacts/contacts.component";
+import {FaqsComponent} from "./faqs/faqs.component";
 
 const routes: Routes = [
    { path: 'admin', component: AdminComponent},
@@ -17,6 +18,7 @@ const routes: Routes = [
    { path: 'create', component: CreateComponent},
    { path: 'private', component: PrivateComponent},
    { path: 'moneys', component: MoneysComponent},
+   { path: 'faqs', component: FaqsComponent},
    { path: 'settings', component: SettingsComponent},
    { path: 'about', component: AboutComponent},
    { path: 'support', component: SupportComponent},

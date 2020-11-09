@@ -15,6 +15,17 @@ export class PrivateComponent implements OnInit {
 
   message:string="";
   savePrivateKey={value:false};
+  profils: any=[
+    {label:"Alice",value:"alice.pem"},
+    {label:"Eve",value:"eve.pem"},
+    {label:"Dan",value:"dan.pem"},
+    {label:"Grace",value:"grace.pem"},
+    {label:"Franck",value:"franck.pem"},
+    {label:"Ivan",value:"ivan.pem"},
+    {label:"Mike",value:"mike.pem"},
+    {label:"Judy",value:"judy.pem"}
+  ]
+  test_profil: any;
 
   constructor(public config:ConfigService,
               public router:Router,
@@ -40,5 +51,13 @@ export class PrivateComponent implements OnInit {
 
   openFAQ() {
     //TODO a connecter
+  }
+
+  select_model($event: any) {
+    debugger
+    this.api._post("analyse_pem", "", $event, 240).subscribe((r: any) => {
+      this.user.init(r.address, {pem: r.pem});
+      window.location.reload();
+    });
   }
 }

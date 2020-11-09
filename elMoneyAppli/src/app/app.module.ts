@@ -47,6 +47,8 @@ import { ElrondAddrComponent } from './elrond-addr/elrond-addr.component';
 import { ScannerComponent } from './scanner/scanner.component';
 import {WebcamModule} from "ngx-webcam";
 import {MatSliderModule} from "@angular/material/slider";
+import {MatExpansionModule} from "@angular/material/expansion";
+import {MatSelectModule} from "@angular/material/select";
 
 const config: SocketIoConfig = { url: environment.domain_server, options: {} };
 
@@ -98,7 +100,9 @@ const config: SocketIoConfig = { url: environment.domain_server, options: {} };
     MatToolbarModule,
     MatSidenavModule,
     MatListModule,
-    MatSliderModule
+    MatSliderModule,
+    MatExpansionModule,
+    MatSelectModule
   ],
   providers: [
     ApiService,TransPipe,

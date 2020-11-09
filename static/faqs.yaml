@@ -1,0 +1,34 @@
+#date et version simplifie la gestion éventuelle de plusieurs versions de FAQ
+version: 1
+date: 04/09/2020
+test: http://localhost:5555/api/faqs
+
+#content va contenir le corpus des FAQ
+#chaque faq contient différent champs, pas forcément obligatoire:
+#- index (obligatoire) doit être unique, il peut être utilisé au sein de l'interface client pour directement renvoyer vers une FAQ
+#- tags va permettre de mettre en place un filtrage éventuel
+#- title contient la question de la FAQ
+#- content peut être du texte simple, de l'HTML ou directement désigner une page HTML
+#- format est optionnel et par défaut à txt, il peut être à HTML si 'content\" contient des balises
+
+content:
+  - index: coinmaker
+    title: A quoi sert {{appname}} ?
+    order: 0
+    format: html
+    content: "
+      <p>
+      CoinMaker est à la fois un wallet et un outil de fabrication de monnaie.
+      </p>
+      "
+
+  - index: price
+    title: Combien coûte l'usage de {{appname}} ?
+    order: 0
+    format: html
+    content: "
+      <p>
+      L'usage de {{appname}} est gratuit. Cependant pour créer une monnaie ou transférer il faut disposer sur le compte de quelques eGold pour
+      régler les frais de transactions du réseau
+      </p>
+      "

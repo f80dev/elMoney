@@ -49,9 +49,14 @@ def event_loop(contract:str,dest:str,amount:str):
 @app.route('/api/analyse_pem/',methods=["POST"])
 def analyse_pem():
     body=str(request.data,"utf-8")
-    body=str(base64.b64decode(body.split("base64,")[1]),"utf-8")
-    address="erd"+body.split("erd")[1].split("----")[0]
-    _to=Account(address)
+    if body.endswith(".pem"):
+        _to=Account(pem_file="./PEM/"+body)
+        address=_to.address.bech32()
+    else:
+        body=str(base64.b64decode(body.split("base64,")[1]),"utf-8")
+        address="erd"+body.split("erd")[1].split("----")[0]
+        _to=Account(address)
+
     tx=bc.transfer(bc._default_contract,bc.bank,_to,CREDIT_FOR_NEWACCOUNT)
     sleep(5)
 
@@ -107,8 +112,11 @@ def transfer(contract:str,dest:str,amount:str,unity:str):
         _from=Account(pem_file=pem_file)
     else:
         infos = json.loads(str(request.data, encoding="utf-8"))
-        _from = Account(address=infos["public"])
-        _from.private_key_seed=infos["private"]
+        if infos["pem"]:
+            _from = Account(pem_file="./PEM/"+infos["pem"])
+        else:
+            _from = Account(address=infos["public"])
+            _from.private_key_seed=infos["private"]
 
     rc=bc.transfer(contract,_from,_dest,int(amount))
 
@@ -200,7 +208,7 @@ def getbalance(contract:str,addr:str):
 
 @app.route('/api/getyaml/<name>/')
 def getyaml(name):
-    f=open("./static/"+name+".yaml","r")
+    f=open("./static/"+name+".yaml","r",encoding="utf-8")
     rc=yaml.safe_load(f.read())
     return jsonify(rc),200
 
