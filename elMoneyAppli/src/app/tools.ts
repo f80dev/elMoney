@@ -2,6 +2,7 @@ import {environment} from '../environments/environment';
 import {Router} from '@angular/router';
 
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {WebcamUtil} from "ngx-webcam";
 
 declare var EXIF: any;
 export const ADMIN_PASSWORD="hh4271";
@@ -165,6 +166,16 @@ export function now(){
 }
 
 
+
+export function initAvailableCameras(func){
+  WebcamUtil.getAvailableVideoInputs()
+    .then((mediaDevices: MediaDeviceInfo[]) => {
+      if(mediaDevices==null)
+        func(0)
+      else
+        func(mediaDevices.length);
+    });
+}
 
 
 //On cherche a produire une reference au terminal de l'utilisateur

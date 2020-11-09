@@ -8,46 +8,47 @@ import {UserService} from "../user.service";
   styleUrls: ['./new-contact.component.sass']
 })
 export class NewContactComponent implements OnInit {
-  email: any="";
-  pseudo: any="";
-  showScanner: boolean=true;
+  email: any = "";
+  pseudo: any = "";
+  showScanner: boolean = true;
 
   constructor(
     public user: UserService,
-    public dialog:MatDialog,
+    public dialog: MatDialog,
     public dialogRef: MatDialogRef<NewContactComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
 
   }
 
-  ngOnInit(): void {
-  }
-
-  _close(toSave=true){
-    if(toSave){
+  _close(toSave = true) {
+    if (toSave) {
       this.user.add_contact(this.email);
-      this.dialogRef.close({email:this.email,pseudo:this.pseudo});
+      this.dialogRef.close({email: this.email, pseudo: this.pseudo});
     } else {
       this.dialogRef.close();
     }
   }
 
   add_contact($event: KeyboardEvent) {
-    if($event.keyCode==13){
+    if ($event.keyCode == 13) {
       this._close(true);
     }
   }
 
 
   refresh_pseudo(new_value: any) {
-    if(this.pseudo.length==0 && new_value.indexOf("@")>-1)
-      this.pseudo=new_value.split("@")[0].split(".")[0];
+    if (this.pseudo.length == 0 && new_value.indexOf("@") > -1)
+      this.pseudo = new_value.split("@")[0].split(".")[0];
   }
 
 
   onflash_event($event: any) {
-    this.email=$event.data;
-    this.dialogRef.close(true);
+    this.email = $event.data;
+    this._close(true);
   }
+
+  ngOnInit(): void {
+  }
+
 
 }

@@ -4,7 +4,7 @@ import {ApiService} from "./api.service";
 import {Platform} from "@angular/cdk/platform";
 import {HttpClient} from "@angular/common/http";
 import { Location } from '@angular/common';
-import {$$} from "./tools";
+import {$$, initAvailableCameras} from "./tools";
 
 @Injectable({
   providedIn: 'root'
@@ -62,6 +62,8 @@ export class ConfigService {
   init(func=null,func_error=null){
     $$("Initialisation de la configuration");
     this.width_screen=window.innerWidth;
+
+    initAvailableCameras((res)=>{this.webcamsAvailable=res;});
 
     $$("Chargement des jobs");
     this.getConfig().then(r=>{
