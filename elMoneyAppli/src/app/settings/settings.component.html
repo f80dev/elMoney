@@ -1,5 +1,5 @@
 <div class="mainform">
-  <br><br>
+  <app-hourglass [message]="message"></app-hourglass>
 
   <app-elrond-addr label="Journal des transactions"
                     type="address"
@@ -35,6 +35,13 @@
   <br><br>
   ______
   <br><br><br>
+
+  Vous disposez de {{user.gas/1e18 | number:'1.0-3'}} eGld
+  pour réaliser les transactions
+  <br><br>
+
+
+
 
   <app-elrond-addr [label]="'Transactions du \''+config.unity+'\''"
                    [addr]="contrat"

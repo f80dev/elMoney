@@ -12,6 +12,7 @@ export class UserService {
   addr:string="";
   pem:string="";
   last_contact="";
+  gas: number=0;
 
   constructor(public api:ApiService) { };
 

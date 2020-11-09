@@ -15,7 +15,7 @@ import {NewContactComponent} from "../new-contact/new-contact.component";
   styleUrls: ['./main.component.sass']
 })
 export class MainComponent implements OnInit {
-  solde:any;
+  solde:number=0;
   url_explorer: string="";
   showQRCode: boolean=false;
   friends=[];
@@ -24,8 +24,12 @@ export class MainComponent implements OnInit {
   ]
   hourglass=true;
   hand:number=0;
-  showSlider: boolean=false;
+  showSlider: boolean=true;
   message="";
+  _max: number=0;
+  n_profils: number=0;
+  temp_max: number=0;
+  last_pseudo:string="";
 
   constructor(public router:Router,
               public toast:MatSnackBar,
@@ -34,7 +38,6 @@ export class MainComponent implements OnInit {
               public user:UserService,
               public api:ApiService,
               public config:ConfigService) {
-
   }
 
 
@@ -44,10 +47,15 @@ export class MainComponent implements OnInit {
     for(let c of this.user.contacts){
       i=i-1;if(i<0)break;
       if(c.pseudo.length>15)c.pseudo=c.pseudo.substr(0,14);
-      this.friends.push({label:c.pseudo,icon:"person",email:c.email})
+      this.friends.push(
+        { label:c.pseudo,
+          selected:false,
+          icon:"person",
+          email:c.email,
+          color:"white"
+        })
     }
-
-    this.friends.push({label:"Destinataire",icon:"person_add",email:"new"})
+    if(this.friends.length==1)this.select_friends(this.friends[0]);
 
     if(this.user.addr){
       if(this.api.contract){
@@ -55,6 +63,9 @@ export class MainComponent implements OnInit {
         this.api.balance(this.user.addr).subscribe((r:any)=>{
           this.hourglass=false;
           this.solde=r.balance;
+          this.user.gas=r.gas;
+          this._max=Number(r.balance.toString());
+          this.temp_max=this._max;
           this.config.unity=r.name;
         },(err)=>{
           showMessage(this,this.config.values?.messages.nomoney);
@@ -122,9 +133,7 @@ export class MainComponent implements OnInit {
   }
 
 
-  send_to(contact: any) {
-    if(this.hand==0)return;
-    if(contact.email=="new"){
+  add_contact(){
       this.dialog.open(NewContactComponent, {
         position: {left: '10vw', top: '5vh'},
         maxWidth: 450,
@@ -136,10 +145,49 @@ export class MainComponent implements OnInit {
           this.refresh();
         }
       });
+  }
+
+  send_to() {
+    if(this.hand==0)return;
+    for(let f of this.friends){
+      if(f.color!="transparent")
+        this.transfer(f.email);
     }
-    else {
-      this.transfer(contact.email);
+  }
+
+  update_account() {
+    this.n_profils=0;
+    for(let f of this.friends){
+      if(f.selected){
+        this.n_profils=this.n_profils+1;
+        this.last_pseudo=f.label;
+      }
     }
 
+    if(this.n_profils==0){
+      this.solde=this._max-this.hand;
+    } else {
+      this.solde=this._max-this.n_profils*this.hand;
+      if(this.solde<0){
+        this.hand=this.solde/this.n_profils;
+        this.solde=0;
+      }
+
+      this.temp_max=this._max/this.n_profils;
+    }
+
+  }
+
+  select_friends(fr: any) {
+    if(fr.color=="white"){
+      fr.color="deeppink";
+      fr.selected=true;
+    }
+    else{
+      fr.color="white";
+      fr.selected=false;
+    }
+
+    this.update_account();
   }
 }

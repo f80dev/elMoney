@@ -11,7 +11,6 @@ from erdpy import config
 from erdpy.accounts import Account, AccountsRepository, Address
 from erdpy.contracts import SmartContract
 from erdpy.environments import TestnetEnvironment
-
 from erdpy.transactions import Transaction
 from erdpy.wallet import generate_pair,derive_keys
 
@@ -38,16 +37,21 @@ class ElrondNet:
         #Récupération de la configuration : https://api-testnet.elrond.com/network/config
 
 
-
     def getBalance(self,contract,addr:str):
         user = Account(address=addr)
+
+        gas=self._proxy.get_account_balance(address=user.address)
         rc=self.environment.query_contract(SmartContract(contract),
                                         function="balanceOf",
                                         arguments=["0x"+user.address.hex()])
         if rc[0] is None or rc[0]=='':return 0
 
         d=json.loads(str(rc[0]).replace("'","\""))
-        if "number" in d:return d["number"]
+
+        if "number" in d:
+            d["gas"] = gas
+            return d
+
         return None
 
 

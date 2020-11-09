@@ -54,8 +54,9 @@ export class PrivateComponent implements OnInit {
   }
 
   select_model($event: any) {
-    debugger
+    this.message="Chargement du profil de test";
     this.api._post("analyse_pem", "", $event, 240).subscribe((r: any) => {
+      this.message="";
       this.user.init(r.address, {pem: r.pem});
       window.location.reload();
     });

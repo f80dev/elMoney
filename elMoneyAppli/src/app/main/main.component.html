@@ -2,52 +2,71 @@
   <app-hourglass [message]="message"></app-hourglass>
   <div *ngIf="message?.length==0">
     <div title="Les destinataires de vos envois" style="width: 100%;text-align: center;">
-
-
           <div *ngFor="let fr of friends"
               [title]="fr.email"
-              style="width: 75px;cursor: pointer;display: inline-block;"
-              (click)="send_to(fr)">
+              [ngStyle]="{'lineHeight':'80%','margin':'2px','padding-top':'5px','padding-bottom':'5px','width':'75px','cursor':'pointer','display':'inline-block','color':fr.color}"
+              (mousedown)="select_friends(fr)">
 
             <mat-icon>{{fr.icon}}</mat-icon><br>
             <span style="font-size: small">{{fr.label}}</span>
           </div>
 
-
     </div>
     <br>
 
-    <mat-icon>
-      arrow_drop_up
-    </mat-icon>
 
-    <app-account [solde]="hand"
-                 title="La somme que vous envisagez de transférer"
-                 (click)="showSlider=true"
-                 fontsize="1.9em"
-                 [unity]="config.unity">
-    </app-account><br>
-    <small>à transférer</small>
-    <br><br>
 
     <div
       style="width:100%;text-align: center;"
       title="Augmenté la valeur à transférer en utilisant ces boutons suivant le montant que vous souhaitez atteindre">
 
-      <div  *ngIf="showSlider" style="width: 100%;text-align: center;">
-        <table style="display: inline-block;">
+      <div *ngIf="showSlider" style="width: 100vw;text-align: center;">
+
+         <button mat-raised-button mat-button class="app-button"
+                 *ngIf="n_profils>0 && hand>0"
+          (click)="send_to()">
+            <div class="bloc-bouton" style="height:60px;">
+              <mat-icon>arrow_drop_up</mat-icon><br>
+              Envoyer {{hand*n_profils}} {{config.unity.toLowerCase()}}<br>à
+
+              <span *ngIf="n_profils>1">
+                {{n_profils}} personnes
+              </span>
+              <span *ngIf="n_profils==1">
+                {{last_pseudo}}
+              </span>
+
+            </div>
+          </button>
+
+        <button mat-raised-button mat-button class="app-button"
+                 *ngIf="hand>0"
+          (click)="add_contact()">
+            <div class="bloc-bouton" style="height:60px;">
+              <mat-icon>arrow_drop_up</mat-icon><br>
+              Envoyer {{hand}} {{config.unity.toLowerCase()}}<br>
+              directement
+            </div>
+          </button>
+
+        <div *ngIf="n_profils==0">
+         A transférer
+        </div>
+
+        <table style="display: inline-block;width:90%;">
           <tr style="width: 100%;">
             <td style="width: 10px;font-size: x-large;text-align: right;">1</td>
-            <td style="width: 80%;">
+            <td style="width:70vw;">
               <mat-slider thumbLabel
                           color="primary"
-                          style="width: 90%;"
+                          style="width: 100%;"
                           [(ngModel)]="hand"
-                          min="1" [max]="solde">
+                          (change)="update_account()"
+                          min="1" [max]="temp_max">
               </mat-slider>
             </td>
             <td style="width: 10px;font-size: x-large;text-align: left;">
-              {{solde}}
+              {{temp_max}}
             </td>
           </tr></table>
 

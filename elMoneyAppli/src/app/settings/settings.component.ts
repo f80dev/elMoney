@@ -16,6 +16,8 @@ export class SettingsComponent implements OnInit {
   fileUrl;
   contrat="";
 
+  message: string="";
+
   constructor(public router:Router,
               public user:UserService,
               public dialog:MatDialog,
