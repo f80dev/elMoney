@@ -15,11 +15,15 @@
    </mat-form-field>
   <br><br>
 
-  <app-scanner [size]="200"
+
+  <div style="width: 100%;text-align: center">
+    <app-scanner [size]="220"
                  (click)="showScanner=false"
                  *ngIf="showScanner"
                  (flash)="onflash_event($event)">
     </app-scanner>
+  </div>
+
   <br><br>
 
 <div style="text-align: right;">

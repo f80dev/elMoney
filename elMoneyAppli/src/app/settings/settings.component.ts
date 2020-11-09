@@ -4,6 +4,8 @@ import {ConfigService} from "../config.service";
 import {DomSanitizer} from "@angular/platform-browser";
 import {Location} from "@angular/common";
 import {UserService} from "../user.service";
+import {PromptComponent} from "../prompt/prompt.component";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-settings',
@@ -16,6 +18,7 @@ export class SettingsComponent implements OnInit {
 
   constructor(public router:Router,
               public user:UserService,
+              public dialog:MatDialog,
               private sanitizer: DomSanitizer,
               public _location:Location,
               public config:ConfigService) { }
@@ -27,6 +30,22 @@ export class SettingsComponent implements OnInit {
   }
 
   downloadPEM() {
+
+  }
+
+  raz_account() {
+    this.dialog.open(PromptComponent, {
+      width: '80%',
+      data: {
+        title: 'Effacer votre compte ?',
+        question: 'Si vous effacer votre compte, vous perdez immédiatement l\'ensemble de votre wallet. Etes vous sûr ?',
+        onlyConfirm: true,
+        lbl_ok: 'Oui',
+        lbl_cancel: 'Non'
+      }
+    }).afterClosed().subscribe((result_code) => {
+      this.user.reset();
+    });
 
   }
 }
