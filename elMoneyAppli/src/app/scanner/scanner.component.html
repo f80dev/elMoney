@@ -1,0 +1,11 @@
+<webcam
+  [height]="size"
+  [width]="size"
+  [trigger]="triggerObservable"
+  [allowCameraSwitch]="false"
+  [imageQuality]="0.85"
+  [captureImageData]="true"
+  imageType="image/jpeg"
+  (imageCapture)="handleImage($event)">
+</webcam>
+
