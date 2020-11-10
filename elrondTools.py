@@ -46,9 +46,11 @@ class ElrondNet:
         rc=self.environment.query_contract(SmartContract(contract),
                                         function="balanceOf",
                                         arguments=["0x"+user.address.hex()])
-        if rc[0] is None or rc[0]=='':return 0
-
-        d=json.loads(str(rc[0]).replace("'","\""))
+        if rc is None: return None
+        if rc[0] is None:
+            d={"number":0}
+        else:
+            d=json.loads(str(rc[0]).replace("'","\""))
 
         if "number" in d:
             d["gas"] = gas

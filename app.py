@@ -211,8 +211,11 @@ def getbalance(contract:str,addr:str):
 
     rc = bc.getBalance(contract,addr)
 
-    log("Balance de "+addr+" à "+str(rc)+name.lower()+" pour le contrat "+contract)
-    return jsonify({"balance":rc["number"],"gas":str(rc["gas"]),"name":name}),200
+    if rc is None:
+        return jsonify({"error":"impossible d'évaluer la balance de "}),200
+    else:
+        log("Balance de "+addr+" à "+str(rc)+name.lower()+" pour le contrat "+contract)
+        return jsonify({"balance":rc["number"],"gas":str(rc["gas"]),"name":name}),200
 
 
 @app.route('/api/getyaml/<name>/')
