@@ -1,6 +1,6 @@
 <div class="mainform">
   <app-hourglass [message]="message"></app-hourglass>
-  <div *ngIf="message?.length==0">
+  <div *ngIf="message?.length==0 && _max>0">
     <div title="Les destinataires de vos envois" style="width: 100%;text-align: center;">
           <div *ngFor="let fr of friends"
               [title]="fr.email"
@@ -19,7 +19,7 @@
       *ngIf="_max>0"
       title="Augmenté la valeur à transférer en utilisant ces boutons suivant le montant que vous souhaitez atteindre">
 
-      <div *ngIf="hand==0">Nombre de {{user.unity}} à envoyer:</div>
+      <div *ngIf="hand==0">Envoyer des {{user.unity}}</div>
 
       <div *ngIf="showSlider" style="width: 100vw;text-align: center;">
 

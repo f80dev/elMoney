@@ -39,3 +39,39 @@ content:
 
       </p>
       "
+
+  - index: send_email
+    title: Comment fonctionne l'envoi à une adresse mail ?
+    order: 1
+    format: html
+    content: "
+      <p>
+      Lorsque le destinataire est une adresse mail, {{appname}} créer une adresse Elrond pour le destinataire
+      et lui envoi sur son mail, un lien pour ouvrir l'application directement sur la monnaie reçu et sur son
+      adresse Elrond.<br>
+      La clé privée de son nouveau compte est également envoyé en fichier joint (PEM) dans le mail
+      </p>
+      "
+
+  - index: wallet_elrond
+    title: Peut on voir et manipuler les monnaies {{appname}} avec le wallet Elrond ?
+    order: 1
+    format: html
+    content: "
+      <p>
+      Non. Contrairement à Metamask ou d'autres wallet fonctionnant sur Ethereum, aucun wallet sur Elrond n'est
+      capable, pour l'instant, d'interroger les smartcontracts respectant le protocol ERC20.
+      </p>
+      "
+
+  - index: appli
+    title: Ou trouver l'application {{appname}} ?
+    order: 1
+    format: html
+    content: "
+      <p>
+      {{appname}} n'est pas une application. Elle n'est donc pas disponible dans les stores Google et Apple. En fait,
+      il s'agit d'un simple site web. Pour cette raison elle est accessible via une simple adresse internet http://coinmaker.f80.fr.<br>
+      Elle est également transmise dans les mails lorsque vous envoyer des fonds.
+      </p>
+      "

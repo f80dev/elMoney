@@ -1,28 +1,38 @@
-<div class="mainform">
+<div class="mainform" style="text-align: left;">
 
   <div>
-    <mat-form-field appearance="fill" class="app-field">
+    <mat-form-field appearance="fill" style="max-width: 250px" class="app-field">
       <mat-label>Ajouter un mail</mat-label>
       <input matInput type="text" max="50" [(ngModel)]="email" (keypress)="add_contact($event)">
+   </mat-form-field>
+
+    &nbsp;
+       <button mat-raised-button
+          mat-button
+               *ngIf="email?.length>0"
+          class="app-button"
+          (click)="add_contact({keyCode:13})">
+    Ajouter
+  </button>
+    <br>
+    <mat-form-field appearance="fill" style="max-width: 250px"
+                    *ngIf="email?.startsWith('erd')"
+                    class="app-field">
+      <mat-label>Pseudo</mat-label>
+      <input matInput type="text" max="50" [(ngModel)]="pseudo">
    </mat-form-field>
 
   </div>
 <table style="width: 90vw;">
   <tr *ngFor="let contact of user.contacts">
     <td>{{contact.pseudo}}</td>
-    <td>{{contact.email}}</td>
+    <td>
+      {{contact.email.substr(0,30)}}
+      <span *ngIf="contact.email?.length>30">...</span>
+    </td>
     <td style="font-size: small">
       <mat-icon (click)="del_contact(contact.email)">cancel</mat-icon>
     </td>
   </tr>
 </table>
-</div>
-<div class="bottom-bar">
-  <hr>
-   <button mat-raised-button
-          mat-button
-          class="app-button"
-          (click)="_location.back()">
-    Retour
-  </button>
 </div>

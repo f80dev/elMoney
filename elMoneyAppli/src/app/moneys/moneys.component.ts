@@ -12,6 +12,7 @@ import {UserService} from "../user.service";
 })
 export class MoneysComponent implements OnInit {
   moneys: any[]=[];
+  message: string="";
 
   constructor(public api:ApiService,
               public router:Router,
@@ -33,9 +34,11 @@ export class MoneysComponent implements OnInit {
   }
 
   select(addr:string){
+    this.message="Changement de monnaie";
     this.api.set_contract(addr);
     this.user.refresh_balance(()=>{
-      this._location.back();
+      this.message="";
+      this.router.navigate(["main"]);
     });
   }
 

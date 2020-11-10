@@ -71,8 +71,8 @@ export class UserService {
   }
 
   add_contact(email: string,pseudo=null) {
-    if(email.indexOf("@")==-1)return;
-    if(!pseudo)pseudo=email.split("@")[0].split(".")[0];
+    if(email.indexOf("@")==-1 && !email.startsWith("erd"))return;
+    if((!pseudo || pseudo.length==0) && email.indexOf("@")>-1)pseudo=email.split("@")[0].split(".")[0];
     for(let c of this.contacts){
       if(c.email==email)return false;
     }

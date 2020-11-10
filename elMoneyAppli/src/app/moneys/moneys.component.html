@@ -1,9 +1,10 @@
 <div class="mainform">
   <h2>Sélectionnez une monnaie</h2>
 
+  <app-hourglass [message]="message"></app-hourglass>
 
 
-  <table>
+  <table *ngIf="message?.length==0">
     <tr *ngFor="let m of moneys">
       <td style="width:60vw;text-align: left;">
         {{m.unity}}
