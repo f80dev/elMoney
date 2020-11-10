@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ApiService} from "../api.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {showError, showMessage} from "../tools";
+import {$$, showError, showMessage} from "../tools";
 import {Location} from "@angular/common";
 import {Router} from "@angular/router";
 import {ConfigService} from "../config.service";
@@ -29,18 +29,22 @@ export class CreateComponent implements OnInit {
               public toast:MatSnackBar) { }
 
   ngOnInit(): void {
-     if(!this.user.pem)this.router.navigate(["private"]);
+     if(!this.user.pem){
+       $$("Fichier PEM non disponible, il est nécéssaire d'un ajouter un");
+       this.router.navigate(["private"]);
+     }
   }
 
   create() {
     this.message="Déploiement de "+this.name+" en cours ...";
     let obj={
       pem:this.user.pem["pem"],
-      owner:localStorage.getItem("attr"),
+      owner:this.user.addr,
       public:this._public,
       transferable:this.transferable,
       url:this.url
     };
+    $$("Demande de déploiement de la monnaie "+this.name+" d'un montant initial de "+this.amount,obj);
 
     this.api._post("/deploy/"+this.name+"/"+this.amount,"",obj,240).subscribe((r:any)=>{
       this.message="";
@@ -49,6 +53,7 @@ export class CreateComponent implements OnInit {
       this._location.back();
     },(err:any)=>{
       this.message="";
+      $$("Erreur de fabrication de la monnaie",err);
       showMessage(this,err.error.message,0,()=>{
         open(err.error.link);
       },"En savoir plus");

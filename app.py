@@ -136,7 +136,7 @@ def deploy(unity:str,amount:str,data:dict=None):
        data = json.loads(data)
 
     if not "/PEM/" in data["pem"]:
-        pem_file="./PEM/temp"+str(now())+".pem"
+        pem_file="./PEM/temp"+str(now()*1000)+".pem"
         log("Fabrication d'un fichier PEM pour la signature et enregistrement sur " + pem_file)
         with open(pem_file, "w") as file:file.write(data["pem"])
     else:

@@ -26,9 +26,13 @@
 <br>
     <div style="width:200px;text-align: left;display: inline-block">
       <br><br>
-      <mat-checkbox [(ngModel)]="_public">Public</mat-checkbox>
+      <mat-checkbox [(ngModel)]="_public"
+                    title="La monnaie est visible dans la liste des monnaies disponibles">Public</mat-checkbox>
       <br><br>
-      <mat-checkbox [(ngModel)]="transferable">Transférable</mat-checkbox>
+      <mat-checkbox [(ngModel)]="transferable"
+                    title="Donner la possibilité d'envoyer la monnaie entre comptes">
+        Transférable
+      </mat-checkbox>
     </div>
 
     <br><br><br>
