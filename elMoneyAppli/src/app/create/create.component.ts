@@ -18,7 +18,7 @@ export class CreateComponent implements OnInit {
   amount: number=10000;
   url:string="";
   url_transaction: string="";
-  transferable=false;
+  transferable=true;
   _public=true;
 
   constructor(public api:ApiService,

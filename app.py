@@ -13,7 +13,7 @@ from flask import Flask, Response, request, jsonify
 from flask_cors import CORS
 from flask_socketio import SocketIO
 
-from Tools import base_10_to_alphabet, log, send_mail, open_html_file
+from Tools import base_10_to_alphabet, log, send_mail, open_html_file, now
 from dao import DAO
 from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, XGLD_FOR_NEWACCOUNT, ADMIN_SALT
 from elrondTools import ElrondNet
@@ -132,16 +132,21 @@ def deploy(unity:str,amount:str,data:dict=None):
     log("Appel du service de déploiement de contrat")
     if data is None:
        data = str(request.data, encoding="utf-8")
+       log("Les données de fabrication de la monnaie sont "+data)
        data = json.loads(data)
 
     if not "/PEM/" in data["pem"]:
-        pem_file="./PEM/temp.pem"
+        pem_file="./PEM/temp"+str(now())+".pem"
+        log("Fabrication d'un fichier PEM pour la signature et enregistrement sur " + pem_file)
         with open(pem_file, "w") as file:file.write(data["pem"])
     else:
         pem_file=data["pem"]
 
-    result=bc.deploy(Account(pem_file=pem_file),unity,int(amount))
+    owner=Account(pem_file=pem_file)
+    log("Compte propriétaire de la monnaie créé. Lancement du déploiement de "+unity)
+    result=bc.deploy(owner,unity,int(amount))
     if "error" in result:
+        log("Probléme de création de la monnaie "+str(result))
         return jsonify(result), 500
     else:
         dao.add_money(result["contract"],unity,result["owner"],data["public"],data["transferable"])
@@ -184,7 +189,9 @@ def del_contact(email:str,owner:str):
 
 @app.route('/api/contacts/<owner>/',methods=["POST"])
 def add_contact(owner:str):
-    contact=json.loads(str(request.data,"utf-8"))
+    data=str(request.data,"utf-8")
+    contact=json.loads(data)
+    log("Ajout d'un contact avec les informations "+data)
 
     if dao.find_contact(contact["email"]) is None:
         dao.add_contact(contact["email"],contact["email"].split("@")[0])
@@ -230,6 +237,7 @@ def new_account():
 
 @app.route('/api/moneys/<addr>/')
 def getmoneys(addr:str):
+    log("Récépuration de l'ensemble des monnaies pour "+addr)
     rc=[]
     for row in dao.get_moneys(addr):
         rc.append({"contract":row[0],"unity":row[1],"public":row[3],"owner":row[4]})
@@ -239,6 +247,7 @@ def getmoneys(addr:str):
 #http://localhost:5555/api/raz/hh4271
 @app.route('/api/raz/<password>/')
 def raz(password:str):
+    log("Demande d'effacement de la base")
     if password!="hh4271":return "Password incorrect",501
     if dao.raz():
         if bc.init_default_money():

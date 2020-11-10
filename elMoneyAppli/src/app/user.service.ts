@@ -36,16 +36,19 @@ export class UserService {
 
 
   refresh_balance(func=null,func_error=null){
-    $$("Refresh de la balance")
-    if(!this.addr || this.addr.length==0)return false;
+    $$("Refresh de la balance");
+    if(!this.addr || this.addr.length<10 || this.addr=="null")return false;
+
+    $$("Balance("+this.addr+")");
     this.api.balance(this.addr).subscribe((r:any)=>{
+      $$("Récupération de la balance : ",r);
           this.balance=r.balance;
           this.gas=r.gas;
           this.unity=r.name;
           if(func)func();
         },(err)=>{
+          $$("Erreur de rafraichissement ",err);
           showError(this,"problème technique");
-          //showMessage(this,this.config.values?.messages.nomoney);
           if(func_error)func_error();
         });
     return true;
