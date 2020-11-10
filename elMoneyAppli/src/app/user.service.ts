@@ -26,7 +26,11 @@ export class UserService {
 
   loadFromDevice(){
     if(localStorage.getItem("addr"))this.addr=localStorage.getItem("addr");
-    if(!this.addr || this.addr.length==0 || this.addr=="null")return false;
+    if(!this.addr || this.addr.length<10 || this.addr=="null"){
+      this.addr=null;
+      $$("Pas de compte disponible sur le device");
+      return false;
+    }
 
     if(localStorage.getItem("contacts"))this.contacts=JSON.parse(localStorage.getItem("contacts"));
     if(localStorage.getItem("email"))this.email=localStorage.getItem("email");
@@ -80,11 +84,13 @@ export class UserService {
   }
 
   init(addr: string,pem:any=null) {
+    if(!addr)return false;
     $$("Initialisation de l'utilisateur "+addr);
     this.addr=addr;
     this.pem=pem;
     this.saveOnDevice();
     this.refresh_balance();
+    return true;
   }
 
 

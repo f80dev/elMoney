@@ -39,8 +39,10 @@ class ElrondNet:
 
     def getBalance(self,contract,addr:str):
         user = Account(address=addr)
-
+        log("Fabrication du compte sur la base de "+addr+" ok. Récupération du gas")
         gas=self._proxy.get_account_balance(address=user.address)
+
+        log("Gas disponible "+str(gas))
         rc=self.environment.query_contract(SmartContract(contract),
                                         function="balanceOf",
                                         arguments=["0x"+user.address.hex()])

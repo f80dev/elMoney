@@ -204,12 +204,15 @@ def add_contact(owner:str):
 @app.route('/api/balance/<contract>/<addr>/')
 def getbalance(contract:str,addr:str):
     name=dao.get_name(contract)
-    if name is None:return "Pas de money correspondante", 404
+    if name is None:
+        return jsonify({"error":"Pas de money correspondante à l'adresse "+addr}), 200
+    else:
+        log("La monnaie correspondant à l'adresse "+addr+" est "+name)
 
     rc = bc.getBalance(contract,addr)
 
     log("Balance de "+addr+" à "+str(rc)+name.lower()+" pour le contrat "+contract)
-    return jsonify({"balance":rc["number"],"gas":rc["gas"],"name":name}),200
+    return jsonify({"balance":rc["number"],"gas":str(rc["gas"]),"name":name}),200
 
 
 @app.route('/api/getyaml/<name>/')

@@ -12,7 +12,7 @@ BYTECODE_PATH="./static/deploy.json"
 ADMIN_SALT="hh4271"
 
 #on alimente les nouveaux comptes en eGold pour leur permettre des transferts
-XGLD_FOR_NEWACCOUNT="1000000000000000000"
+XGLD_FOR_NEWACCOUNT="200000000000000000"
 
 #Description de la monnaie par defaut
 MAIN_UNITY="CMK"

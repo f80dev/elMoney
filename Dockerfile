@@ -6,7 +6,7 @@ FROM python:3.9.0-buster
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
-r
+
 RUN pip3 -v install Flask
 RUN pip3 -v install Flask-Cors
 RUN pip3 -v install pyyaml
