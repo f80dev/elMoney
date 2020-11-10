@@ -31,10 +31,14 @@ export class UserService {
       $$("Pas de compte disponible sur le device");
       return false;
     }
+    $$("Chargement de compte ok depuis le device, adresse de l'utilisateur "+this.addr);
 
     if(localStorage.getItem("contacts"))this.contacts=JSON.parse(localStorage.getItem("contacts"));
     if(localStorage.getItem("email"))this.email=localStorage.getItem("email");
     if(localStorage.getItem("pem"))this.pem=JSON.parse(localStorage.getItem("pem"));
+
+    $$("Chargement du fichier PEM=",this.pem);
+
     return true;
   }
 
