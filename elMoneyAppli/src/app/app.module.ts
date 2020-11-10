@@ -1,4 +1,3 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -78,7 +77,6 @@ const config: SocketIoConfig = { url: environment.domain_server, options: {} };
     ScannerComponent
   ],
   imports: [
-    BrowserModule,
     MatButtonModule,
     MatDialogModule,
     MatIconModule,

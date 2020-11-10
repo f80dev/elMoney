@@ -24,9 +24,19 @@ export class MoneysComponent implements OnInit {
     })
   }
 
+  delete_money(addr:string){
+    //TODO: a raccorder
+    $$("On supprime la monnaie "+addr);
+    this.api._delete("money/"+addr).subscribe(()=>{});
+    if(this.api.contract==addr)
+      localStorage.removeItem("contract");
+  }
+
   select(addr:string){
     this.api.set_contract(addr);
-    this._location.back();
+    this.user.refresh_balance(()=>{
+      this._location.back();
+    });
   }
 
   openContrat(contract: string) {

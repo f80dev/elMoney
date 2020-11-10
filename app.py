@@ -1,6 +1,5 @@
 import base64
 import json
-import os
 import ssl
 import sys
 from time import sleep
@@ -16,7 +15,7 @@ from flask_socketio import SocketIO
 
 from Tools import base_10_to_alphabet, log, send_mail, open_html_file
 from dao import DAO
-from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, XGLD_FOR_NEWACCOUNT
+from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, XGLD_FOR_NEWACCOUNT, ADMIN_SALT
 from elrondTools import ElrondNet
 
 
@@ -223,6 +222,7 @@ def new_account():
     log("Résultat du transfert "+str(rc))
 
     #TODO: private key a crypter
+
     keys = {"public": _a.address.bech32(), "private": _a.private_key_seed}
     return jsonify({"address":_a.address.bech32(),"keys":keys,"pem":pem}),200
 

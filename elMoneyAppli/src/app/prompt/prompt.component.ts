@@ -26,9 +26,11 @@ export class PromptComponent {
   showEmoji=false;
   _type="text";
 
-  constructor(
-    public dialogRef: MatDialogRef<PromptComponent>,@Inject(MAT_DIALOG_DATA) public data: DialogData) {
+  constructor(public dialogRef: MatDialogRef<PromptComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: DialogData)
+  {
     if(data.hasOwnProperty("type"))this._type=data.type;
+    if(data.onlyConfirm)data.result="yes";
   }
 
   onNoClick(): void {

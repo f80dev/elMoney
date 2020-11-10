@@ -28,7 +28,14 @@ content:
     format: html
     content: "
       <p>
-      L'usage de {{appname}} est gratuit. Cependant pour créer une monnaie ou transférer il faut disposer sur le compte de quelques eGold pour
+      L'usage de {{appname}} est gratuit. Cependant pour créer une monnaie ou faire des transferts entre compte
+      il faut disposer sur le compte de quelques eGold pour
       régler les frais de transactions du réseau
+
+      <ul>
+        <li>un transfert coûte en moyenne 0.06 eGLD</li>
+        <li>la création d'une monnaie coûte 0.05 eGLD</li>
+      </ul>
+
       </p>
       "

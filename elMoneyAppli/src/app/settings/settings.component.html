@@ -11,8 +11,9 @@
 
   <a [href]="fileUrl"
      *ngIf="user.pem"
-     download="elrond_key.pem">Télécharger ma clé</a>
-
+     download="elrond_key.pem">Télécharger ma clé privée</a>
+  <br>
+  pour pouvoir se reconnecter
   <br>
   <br>
 
@@ -36,14 +37,22 @@
   ______
   <br><br><br>
 
-  Vous disposez de {{user.gas/1e18 | number:'1.0-3'}} eGld
+  Vous disposez de {{user.gas/1e18 | number:'1.0-3'}} eGld<br>
   pour réaliser les transactions
+  <br><br>
+   <button mat-raised-button mat-button
+          class="app-button" [cdkCopyToClipboard]="user.addr" ngxClipboard
+          (click)="reload_account()">
+    <div class="bloc-bouton">Recharger<br>mon compte</div>
+  </button>
+
+  <br>
+  <br>
+  ______
   <br><br>
 
 
-
-
-  <app-elrond-addr [label]="'Transactions du \''+config.unity+'\''"
+  <app-elrond-addr [label]="'Transactions du \''+user.unity+'\''"
                    [addr]="contrat"
                    type="address"
                    *ngIf="contrat">

@@ -1,16 +1,7 @@
 <div class="mainform">
   <h2>Sélectionnez une monnaie</h2>
 
-  <div *ngIf="moneys?.length==0">
-    Aucune monnaie publique pour l'instant
-    <br><br>
-    <button mat-raised-button
-          mat-button
-          class="app-button"
-          (click)="router.navigate(['create'])">
-    <div class="bloc-bouton">Créer votre<br>monnaie</div>
-  </button>
-  </div>
+
 
   <table>
     <tr *ngFor="let m of moneys">

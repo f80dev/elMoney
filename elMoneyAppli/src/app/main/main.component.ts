@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Router} from "@angular/router";
 import {ApiService} from "../api.service";
 import {ConfigService} from "../config.service";
-import {$$, showError, showMessage, subscribe_socket} from "../tools";
+import {$$, showMessage, subscribe_socket} from "../tools";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Socket} from "ngx-socket-io";
 import {UserService} from "../user.service";
@@ -15,14 +15,13 @@ import {NewContactComponent} from "../new-contact/new-contact.component";
   styleUrls: ['./main.component.sass']
 })
 export class MainComponent implements OnInit {
-  solde:number=0;
   url_explorer: string="";
   showQRCode: boolean=false;
   friends=[];
   buttons=[
     {value:10},{value:5},{value:2},{value:1}
   ]
-  hourglass=true;
+  hourglass=false;
   hand:number=0;
   showSlider: boolean=true;
   message="";
@@ -33,11 +32,17 @@ export class MainComponent implements OnInit {
 
   constructor(public router:Router,
               public toast:MatSnackBar,
-              public socket:Socket,
               public dialog: MatDialog,
+              public socket:Socket,
               public user:UserService,
               public api:ApiService,
               public config:ConfigService) {
+    subscribe_socket(this,"refresh_account",()=>{
+      setTimeout(()=>{
+        this.refresh();
+      },200)
+
+    })
   }
 
 
@@ -55,29 +60,19 @@ export class MainComponent implements OnInit {
           color:"white"
         })
     }
-    if(this.friends.length==1)this.select_friends(this.friends[0]);
 
     if(this.user.addr){
       if(this.api.contract){
-        this.hourglass=true;
-        this.api.balance(this.user.addr).subscribe((r:any)=>{
-          this.hourglass=false;
-          this.solde=r.balance;
-          this.user.gas=r.gas;
-          this._max=Number(r.balance.toString());
+          this._max=this.user.balance;
           this.temp_max=this._max;
-          this.config.unity=r.name;
-        },(err)=>{
-          showMessage(this,this.config.values?.messages.nomoney);
-           this.hourglass=false;
-          localStorage.removeItem("contract");
-          this.router.navigate(["moneys"]);
-        });
       }
     } else {
       this.api._get("new_account/").subscribe((r:any)=>{
-        if(r.pem.length>0)
+        if(r.pem.length>0){
           this.user.init(r.address,{pem:r.pem});
+          showMessage(this,"Enregistrer votre fichier d'authentification dans un endroit sûr pour pouvoir vous reconnecter",
+            0,()=>{this.router.navigate(["settings"]);},"Enregistrer")
+        }
         else
           this.user.init(r.address,r.keys);
         this.refresh();
@@ -88,7 +83,6 @@ export class MainComponent implements OnInit {
 
 
   ngOnInit(): void {
-    subscribe_socket(this,"refresh_account",()=>{this.refresh();})
     setTimeout(()=>{
       this.refresh();
     },1500);
@@ -103,10 +97,10 @@ export class MainComponent implements OnInit {
 
 
 
-  addInHand(value: number) {
-    this.hand=this.hand+value;
-    this.solde=this.solde-value;
-  }
+  // addInHand(value: number) {
+  //   this.hand=this.hand+value;
+  //   this.solde=this.solde-value;
+  // }
 
 
   transfer(email:string){
@@ -119,11 +113,12 @@ export class MainComponent implements OnInit {
     let pem=JSON.stringify(this.user.pem);
     $$("Demande de transfert vers "+email+" avec pem="+pem);
     this.message="Fonds en cours de transfert";
-    this.api._post("transfer/" + this.api.contract + "/" +  email+ "/" + this.hand+"/"+this.config.unity+"/",
+    this.api._post("transfer/" + this.api.contract + "/" +  email+ "/" + this.hand+"/"+this.user.unity+"/",
         "",
         pem).subscribe((r: any) => {
           this.message="";
           showMessage(this,"Fonds transférés");
+          this.user.balance=this.user.balance-this.hand;
           this.hand=0;
           this.refresh();
       },(err)=>{
@@ -137,7 +132,7 @@ export class MainComponent implements OnInit {
       this.dialog.open(NewContactComponent, {
         position: {left: '10vw', top: '5vh'},
         maxWidth: 450,
-        width: '80vw',height: '580px',
+        width: '80vw',height: '600px',
         data:{}
       }).afterClosed().subscribe((result:any) => {
         if(result){
@@ -156,6 +151,7 @@ export class MainComponent implements OnInit {
   }
 
   update_account() {
+    if(!this)return false;
     this.n_profils=0;
     for(let f of this.friends){
       if(f.selected){
@@ -165,15 +161,12 @@ export class MainComponent implements OnInit {
     }
 
     if(this.n_profils==0){
-      this.solde=this._max-this.hand;
+      this._max=this.user.balance;
     } else {
-      this.solde=this._max-this.n_profils*this.hand;
-      if(this.solde<0){
-        this.hand=this.solde/this.n_profils;
-        this.solde=0;
+      this._max=this.user.balance/this.n_profils;
+      if(this.hand>this._max){
+        this.hand=this._max;
       }
-
-      this.temp_max=this._max/this.n_profils;
     }
 
   }

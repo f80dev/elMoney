@@ -1,12 +1,12 @@
 <div style="overflow: hidden;">
-<h2>Envoyer directement à </h2>
+<h2>Envoyer directement</h2>
 
     <mat-form-field appearance="fill" class="app-field">
       <mat-label>Ajouter un mail</mat-label>
       <input matInput type="text" max="50" [(ngModel)]="email"
              (ngModelChange)="refresh_pseudo($event)"
              (keypress)="add_contact($event)">
-   </mat-form-field>
+    </mat-form-field>
   <br>
   <mat-form-field appearance="fill" class="app-field">
       <mat-label>Pseudo</mat-label>
@@ -18,6 +18,7 @@
 
   <div style="width: 100%;text-align: center">
     <app-scanner [size]="220"
+                 autofocus
                  (click)="showScanner=false"
                  *ngIf="showScanner"
                  (flash)="onflash_event($event)">

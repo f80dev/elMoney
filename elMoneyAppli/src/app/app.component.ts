@@ -28,18 +28,27 @@ export class AppComponent {
 
     this.appVersion=environment.appVersion;
     this.config.init(()=>{
-      $$("Recherche du contrat à utiliser pour le device");
 
+      $$("Recherche du contrat à utiliser pour le device");
       let contract=this.routes.snapshot.queryParamMap.get("contract");
       if(!contract)contract=localStorage.getItem("contract");
-      this.api.set_contract(contract);
 
       if(!user.loadFromDevice()){
         let addr=this.routes.snapshot.queryParamMap.get("user");
         this.user.init(addr);
       }
 
-      this.router.navigate(["main"]);
+      if(this.api.set_contract(contract)){
+        this.user.refresh_balance(()=>{
+          this.router.navigate(["main"]);
+        },()=>{
+          this.router.navigate(["moneys"]);
+        });
+
+      } else {
+        this.router.navigate(["moneys"]);
+      }
+
 
     },()=>{
       this.router.navigate(["support"],{queryParams:{message:"Problème grave de connexion"}});

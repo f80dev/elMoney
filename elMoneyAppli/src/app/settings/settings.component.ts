@@ -6,6 +6,9 @@ import {Location} from "@angular/common";
 import {UserService} from "../user.service";
 import {PromptComponent} from "../prompt/prompt.component";
 import {MatDialog} from "@angular/material/dialog";
+import {showMessage} from "../tools";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {ApiService} from "../api.service";
 
 @Component({
   selector: 'app-settings',
@@ -21,19 +24,18 @@ export class SettingsComponent implements OnInit {
   constructor(public router:Router,
               public user:UserService,
               public dialog:MatDialog,
+              public toast:MatSnackBar,
               private sanitizer: DomSanitizer,
+              public api:ApiService,
               public _location:Location,
               public config:ConfigService) { }
 
   ngOnInit(): void {
-    this.contrat=localStorage.getItem("contract");
-    const blob = new Blob([this.user.pem], { type: 'application/octet-stream' });
+    let obj:any=this.user.pem;
+    const blob = new Blob([obj.pem], { type: 'text/plain' });
     this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(blob));
   }
 
-  downloadPEM() {
-
-  }
 
   raz_account() {
     this.dialog.open(PromptComponent, {
@@ -46,9 +48,16 @@ export class SettingsComponent implements OnInit {
         lbl_cancel: 'Non'
       }
     }).afterClosed().subscribe((result_code) => {
-      if(result_code)
+      if(result_code=="yes")
         this.user.reset();
     });
 
+  }
+
+  reload_account() {
+    showMessage(this,"Votre adresse est dans le presse papier, vous pouvez l'utiliser pour le prestataire de paiement");
+    setTimeout(()=>{
+      open("https://buy.moonpay.io/?currencyCode=EGLD&amp;colorCode=%231B46C2&amp;showAllCurrencies=false&amp;enabledPaymentMethods=credit_debit_card,sepa_bank_transfer,gbp_bank_transfer,apple_pay");
+    },1000);
   }
 }

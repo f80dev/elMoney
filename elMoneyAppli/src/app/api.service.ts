@@ -90,6 +90,10 @@ export class ApiService {
       $$("Changement de contract : "+contract);
       localStorage.setItem("contract",contract);
       this.contract=contract;
+      return(true);
+    } else {
+      $$("Aucune monnaie sélectionné");
+      return false;
     }
   }
 }

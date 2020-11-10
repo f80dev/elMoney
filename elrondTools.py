@@ -91,6 +91,7 @@ class ElrondNet:
         if type(_contract)==str:_contract=SmartContract(_contract)
 
         user_from.sync_nonce(self._proxy)
+        user_from.nonce=user_from.nonce+1
         rc=self.environment.execute_contract(_contract,
                                              user_from,
                                              function="transfer",
