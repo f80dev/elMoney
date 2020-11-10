@@ -49,8 +49,10 @@ export class CreateComponent implements OnInit {
     this.api._post("/deploy/"+this.name+"/"+this.amount,"",obj,240).subscribe((r:any)=>{
       this.message="";
       this.api.set_contract(r.contract);
-      showMessage(this,"Votre monnaie est maintenant disponible");
-      this._location.back();
+      this.user.refresh_balance(()=>{
+        showMessage(this,"Votre monnaie est maintenant disponible");
+        this._location.back();
+      });
     },(err:any)=>{
       this.message="";
       $$("Erreur de fabrication de la monnaie",err);

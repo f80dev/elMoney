@@ -135,12 +135,12 @@ def deploy(unity:str,amount:str,data:dict=None):
        log("Les données de fabrication de la monnaie sont "+data)
        data = json.loads(data)
 
-    if not "/PEM/" in data["pem"]:
+    if not ".pem" in data["pem"]:
         pem_file="./PEM/temp"+str(now()*1000)+".pem"
         log("Fabrication d'un fichier PEM pour la signature et enregistrement sur " + pem_file)
         with open(pem_file, "w") as file:file.write(data["pem"])
     else:
-        pem_file=data["pem"]
+        pem_file="./PEM/"+data["pem"]
 
     owner=Account(pem_file=pem_file)
     log("Compte propriétaire de la monnaie créé. Lancement du déploiement de "+unity)
@@ -150,6 +150,8 @@ def deploy(unity:str,amount:str,data:dict=None):
         return jsonify(result), 500
     else:
         dao.add_money(result["contract"],unity,result["owner"],data["public"],data["transferable"])
+
+    #scheduler.add_job(refresh_client, id="id_" + owner, args=[owner], trigger="interval", minutes=0.15,max_instances=1)
 
     return jsonify(result),201
 
