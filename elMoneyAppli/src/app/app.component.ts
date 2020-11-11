@@ -30,28 +30,18 @@ export class AppComponent {
     this.config.init(()=>{
 
       $$("Recherche du contrat à utiliser pour le device");
-      let contract=this.routes.snapshot.queryParamMap.get("contract");
-      if(!contract)contract=localStorage.getItem("contract");
+      this.api.init_contract(this.routes.snapshot.queryParamMap.get("contract"))
 
-      if(!user.loadFromDevice()){
-        let addr=this.routes.snapshot.queryParamMap.get("user");
-        if(!this.user.init(addr))
-          this.router.navigate(["main"]);
-      }
-
-      if(this.api.set_contract(contract)){
-        this.user.refresh_balance(()=>{
-          this.router.navigate(["main"]);
-        },()=>{
-          this.router.navigate(["moneys"]);
-        });
-
-      } else {
-        this.router.navigate(["moneys"]);
-      }
-
+      $$("Initialisation de l'utilisateur")
+      //TODO: a remettre showMessage(this, "Sauvegarder votre clé privée dans un endroit sûr",5000, () => {this.router.navigate(["settings"]);}, "Enregistrer")
+      let addr=this.routes.snapshot.queryParamMap.get("user");
+      this.user.init(addr,JSON.parse(localStorage.getItem("pem")),
+        (r)=> {this.router.navigate(["main"]);},
+        (err)=>{this.router.navigate(["moneys"]);}
+        );
 
     },()=>{
+      $$("!Probléme d'initialisation de la configuration");
       this.router.navigate(["support"],{queryParams:{message:"Problème grave de connexion"}});
     });
   }

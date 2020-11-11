@@ -57,10 +57,10 @@ def analyse_pem():
         _to=Account(address)
 
     tx=bc.transfer(bc._default_contract,bc.bank,_to,CREDIT_FOR_NEWACCOUNT)
-    sleep(5)
+    sleep(3)
 
     bc.credit(bc.bank,_to,XGLD_FOR_NEWACCOUNT)
-    sleep(5)
+    sleep(3)
     log("Transfert de la monnaie de base sur le compte "+address)
     return jsonify({"address":address,"pem":body}),200
 
@@ -118,22 +118,29 @@ def transfer(contract:str,dest:str,amount:str,unity:str):
             _from.private_key_seed=infos["private"]
 
     rc=bc.transfer(contract,_from,_dest,int(amount))
-
-    scheduler.add_job(refresh_client,id="id_"+rc["to"],args=[rc["to"]],trigger="interval",minutes=0.25,max_instances=1)
-    scheduler.add_job(refresh_client,id="id_"+rc['from'].bech32(),args=[rc['from'].bech32()],trigger="interval",minutes=0.2,max_instances=1)
-
-    log("Transfert effectué "+str(rc))
-    return jsonify({"from_addr":str(rc["from"].bech32()),"tx":rc["explorer"]}),201
+    if not "error" in rc:
+        scheduler.add_job(refresh_client,id="id_"+rc["to"],args=[rc["to"]],trigger="interval",minutes=0.25,max_instances=1)
+        scheduler.add_job(refresh_client,id="id_"+rc['from'].bech32(),args=[rc['from'].bech32()],trigger="interval",minutes=0.2,max_instances=1)
+        log("Transfert effectué "+str(rc))
+        return jsonify({"from_addr":str(rc["from"].bech32()),"tx":rc["explorer"]}),201
+    else:
+        return jsonify(rc),500
 
 
 
 @app.route('/api/deploy/<unity>/<amount>/',methods=["POST"])
 def deploy(unity:str,amount:str,data:dict=None):
-    log("Appel du service de déploiement de contrat")
+    log("Appel du service de déploiement de contrat pour "+unity)
+
+
     if data is None:
        data = str(request.data, encoding="utf-8")
        log("Les données de fabrication de la monnaie sont "+data)
        data = json.loads(data)
+
+    log("Vérification de l'unicité du nom")
+    if data["public"] and not dao.get_money_by_name(unity) is None:
+        return jsonify({"message": "Cette monnaie 'public' existe déjà"}), 500
 
     if not ".pem" in data["pem"]:
         pem_file="./PEM/temp"+str(now()*1000)+".pem"
@@ -153,7 +160,7 @@ def deploy(unity:str,amount:str,data:dict=None):
 
     #scheduler.add_job(refresh_client, id="id_" + owner, args=[owner], trigger="interval", minutes=0.15,max_instances=1)
 
-    return jsonify(result),201
+    return jsonify(result),200
 
 
 

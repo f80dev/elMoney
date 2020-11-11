@@ -1,6 +1,12 @@
 <div class="mainform">
   <app-hourglass [message]="message"></app-hourglass>
-  <div *ngIf="message?.length==0 && _max>0">
+
+  <div *ngIf="user.gas<config.values?.min_gas_to_transfer && _max>0">
+    Vous n'avez probablement plus assez de gas pour effectuer des transfert.<br>
+    <a routerLink="settings">Recharger votre compte</a>
+  </div>
+
+  <div *ngIf="message?.length==0 && _max>0 && user.gas>config.values?.min_gas_to_transfer">
     <div title="Les destinataires de vos envois" style="width: 100%;text-align: center;">
           <div *ngFor="let fr of friends"
               [title]="fr.email"
@@ -22,7 +28,6 @@
       <div *ngIf="hand==0">Envoyer des {{user.unity}}</div>
 
       <div *ngIf="showSlider" style="width: 100vw;text-align: center;">
-
 
          <button mat-raised-button mat-button class="app-button"
                  *ngIf="n_profils>0 && hand>0"

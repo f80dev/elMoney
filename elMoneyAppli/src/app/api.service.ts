@@ -96,4 +96,9 @@ export class ApiService {
       return false;
     }
   }
+
+  init_contract(contract: string) {
+    if(!contract)contract=localStorage.getItem("contract");
+    return this.set_contract(contract);
+  }
 }

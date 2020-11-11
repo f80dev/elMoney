@@ -43,21 +43,31 @@ export class UserService {
   }
 
 
+
+
+
   refresh_balance(func=null,func_error=null){
-    $$("Refresh de la balance");
-    if(!this.addr || this.addr.length<10 || this.addr=="null")return false;
+    if(!this.addr || this.addr.length<10 || this.addr=="null"){
+      $$("Refresh de la balance annulé pour address non conforme");
+      return false;
+    }
 
     $$("Balance("+this.addr+")");
     this.api.balance(this.addr).subscribe((r:any)=>{
       $$("Récupération de la balance : ",r);
-          this.balance=r.balance;
-          this.gas=r.gas;
+      if(r.hasOwnProperty("error")){
+        func_error(r);
+      } else {
+        this.balance=r.balance;
+          this.gas=Number(r.gas);
           this.unity=r.name;
-          if(func)func();
+          if(func)func(r);
+      }
         },(err)=>{
-          $$("Erreur de rafraichissement ",err);
-          showError(this,"problème technique");
-          if(func_error)func_error();
+          $$("!Erreur de récupération de la balance pour "+this.addr);
+          this.balance=0;
+          this.unity="";
+          if(func_error)func_error(err.error);
         });
     return true;
   }
@@ -87,14 +97,37 @@ export class UserService {
     }
   }
 
-  init(addr: string,pem:any=null) {
-    if(!addr)return false;
-    $$("Initialisation de l'utilisateur "+addr);
-    this.addr=addr;
-    this.pem=pem;
-    this.saveOnDevice();
-    this.refresh_balance();
-    return true;
+
+  create_new_account(func,func_error){
+    $$("Création d'un nouveau compte");
+    this.api._get("new_account/").subscribe((r:any)=> {
+      if (r.pem.length > 0) {
+        $$("Initialisation du userService avec le fichier PEM correct");
+        func(r)
+      }
+    },(err)=>{
+      func_error(err);
+      $$("!Impossible de créer le compte");
+    });
+  }
+
+
+  init(addr: string,pem:any=null,func=null,func_error=null) {
+    $$("Initialisation de l'utilisateur avec ",addr);
+    if(!addr)addr=localStorage.getItem("addr");
+    if(!addr) {
+      this.create_new_account((r)=>{
+        this.init(r.address, {pem:r.pem},func,func_error);},
+        ()=>{$$("Probleme de fabrication du nouveau compte")});
+    } else {
+      $$("Initialisation de l'utilisateur à l'adresse ",addr);
+
+      this.addr=addr;
+      this.pem=pem;
+      this.saveOnDevice();
+      this.refresh_balance(func,func_error);
+    }
+
   }
 
 

@@ -6,6 +6,9 @@
                    [addr]="user.addr">
   </app-elrond-addr>
 
+  <br>
+  ______
+
 
   <br><br>
 
@@ -14,8 +17,8 @@
      download="elrond_key.pem">Télécharger ma clé privée</a>
   <br>
   pour pouvoir se reconnecter
-  <br>
-  <br>
+
+  <br><br>
 
   <button mat-raised-button mat-button
           class="app-button"
@@ -48,15 +51,19 @@
 
   <br>
   <br>
+
+  <div *ngIf="api.contract">
   ______
   <br><br>
 
-
-  <app-elrond-addr [label]="'Transactions du \''+user.unity+'\''"
-                   [addr]="contrat"
-                   type="address"
-                   *ngIf="contrat">
+  <app-elrond-addr [label]="'Transactions sur \''+user.unity+'\''"
+                   [addr]="api.contract"
+                   type="address">
   </app-elrond-addr>
+
+  </div>
+
+
 
 
 

@@ -1,6 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {UserService} from "../user.service";
+import {$$, showMessage} from "../tools";
 
 @Component({
   selector: 'app-new-contact',
@@ -22,6 +23,9 @@ export class NewContactComponent implements OnInit {
 
   _close(toSave = true) {
     if (toSave) {
+      if(this.user.addr==this.email){
+        this.dialogRef.close({"error":"Impossible de s'envoyer des fonds à soit même"});
+      }
       this.user.add_contact(this.email);
       this.dialogRef.close({email: this.email, pseudo: this.pseudo});
     } else {

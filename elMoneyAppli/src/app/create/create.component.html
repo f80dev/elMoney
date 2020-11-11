@@ -4,7 +4,12 @@
   <h2 *ngIf="message?.length==0">Créer votre monnaie</h2>
   <app-hourglass [message]="message"></app-hourglass>
 
-  <div *ngIf="message?.length==0">
+  <div *ngIf="user.gas<config.values?.min_gas_to_create">
+    Vous n'avez probablement plus assez de gas pour fabriquer une monnaie.<br>
+    <a routerLink="settings">Recharger mon compte</a>
+  </div>
+
+  <div *ngIf="message?.length==0 && user.gas>config.values.min_gas_to_create">
 
 
   <div *ngIf="url_transaction?.length>0">

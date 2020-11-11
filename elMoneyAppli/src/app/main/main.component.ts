@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {AfterContentInit, AfterViewInit, Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {ApiService} from "../api.service";
 import {ConfigService} from "../config.service";
@@ -14,7 +14,7 @@ import {NewContactComponent} from "../new-contact/new-contact.component";
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.sass']
 })
-export class MainComponent implements OnInit {
+export class MainComponent implements AfterContentInit {
   url_explorer: string="";
   showQRCode: boolean=false;
   friends=[];
@@ -46,11 +46,19 @@ export class MainComponent implements OnInit {
   }
 
 
+
+  ngAfterContentInit(): void {
+    this.refresh();
+  }
+
+
+
   refresh(){
     this.friends=[];
     let i=6
     for(let c of this.user.contacts){
       i=i-1;if(i<0)break;
+      if(!c.pseudo)c.pseudo="";
       if(c.pseudo.length>15)c.pseudo=c.pseudo.substr(0,14);
       this.friends.push(
         { label:c.pseudo,
@@ -61,32 +69,15 @@ export class MainComponent implements OnInit {
         })
     }
 
-    if(this.user.addr){
-      if(this.api.contract){
-          this._max=this.user.balance;
-          this.temp_max=this._max;
-      }
-    } else {
-      this.api._get("new_account/").subscribe((r:any)=>{
-        if(r.pem.length>0){
-          this.user.init(r.address,{pem:r.pem});
-          showMessage(this,"Enregistrer votre fichier d'authentification dans un endroit sûr pour pouvoir vous reconnecter",
-            0,()=>{this.router.navigate(["settings"]);},"Enregistrer")
-        }
-        else
-          this.user.init(r.address,r.keys);
-        this.refresh();
-      })
+    if(this.api.contract){
+        this._max=this.user.balance;
+        this.temp_max=this._max;
     }
+
   }
 
 
 
-  ngOnInit(): void {
-    setTimeout(()=>{
-      this.refresh();
-    },1500);
-  }
 
 
 
@@ -101,6 +92,7 @@ export class MainComponent implements OnInit {
   //   this.hand=this.hand+value;
   //   this.solde=this.solde-value;
   // }
+
 
 
   transfer(email:string){
@@ -151,7 +143,6 @@ export class MainComponent implements OnInit {
   }
 
   update_account() {
-    if(!this)return false;
     this.n_profils=0;
     for(let f of this.friends){
       if(f.selected){

@@ -92,6 +92,9 @@ class ElrondNet:
         return True
 
     def transfer(self,_contract,user_from:Account,user_to:Account,amount:int):
+        if user_from.address.bech32()==user_to.address.bech32():
+            return {"error":"Impossible de s'envoyer des fonds à soi-même"}
+
         if type(_contract)==str:_contract=SmartContract(_contract)
 
         user_from.sync_nonce(self._proxy)

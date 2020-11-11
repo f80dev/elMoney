@@ -62,6 +62,9 @@ class DAO:
     def del_contact(self, email,owner):
         self.get_cursor().executescript("UPDATE Contacts SET Owner='' WHERE email='"+email+"' AND Owner='"+owner+"'")
 
+    def get_money_by_name(self,unity):
+        return self.get_cursor().execute("SELECT * FROM Moneys WHERE Public=1 and Unity='" + unity + "'").fetchone()
+
 
 
 

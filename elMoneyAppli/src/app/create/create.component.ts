@@ -56,9 +56,7 @@ export class CreateComponent implements OnInit {
     },(err:any)=>{
       this.message="";
       $$("Erreur de fabrication de la monnaie",err);
-      showMessage(this,err.error.message,0,()=>{
-        open(err.error.link);
-      },"En savoir plus");
+      showMessage(this,err.error.message);
     });
   }
 }

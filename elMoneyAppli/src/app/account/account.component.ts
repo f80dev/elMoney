@@ -18,7 +18,8 @@ export class AccountComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.onchange.emit(changes.solde.currentValue);
+    if(changes.solde)
+      this.onchange.emit(changes.solde.currentValue);
   }
 
 }

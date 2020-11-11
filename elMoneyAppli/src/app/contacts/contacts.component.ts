@@ -32,7 +32,6 @@ export class ContactsComponent implements OnInit {
       this.user.add_contact(this.email,this.pseudo);
       if(this.routes.snapshot.queryParamMap.has("onlyNew")){
         this.user.last_contact=$event.currentTarget["value"];
-
       }
     }
   }

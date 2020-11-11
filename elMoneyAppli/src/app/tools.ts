@@ -251,7 +251,7 @@ export function subscribe_socket(vm:any,event_name:string,func=null){
     });
   } else {
     $$("Impossibilité d'installer la socket pour "+event_name);
-    debugger;
+
   }
 }
 
