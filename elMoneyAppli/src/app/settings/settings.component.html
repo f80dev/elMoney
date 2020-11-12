@@ -1,14 +1,6 @@
 <div class="mainform">
   <app-hourglass [message]="message"></app-hourglass>
 
-  <app-elrond-addr label="Journal des transactions"
-                    type="address"
-                   [addr]="user.addr">
-  </app-elrond-addr>
-
-  <br>
-  ______
-
 
   <br><br>
 
@@ -54,8 +46,15 @@
 
   <div *ngIf="api.contract">
   ______
-  <br><br>
+  <br><br><br>
 
+
+     <app-elrond-addr label="Transactions du compte"
+                    type="address"
+                   [addr]="user.addr">
+  </app-elrond-addr>
+
+  <br><br>
   <app-elrond-addr [label]="'Transactions sur \''+user.unity+'\''"
                    [addr]="api.contract"
                    type="address">

@@ -11,6 +11,7 @@ import {UserService} from "../user.service";
   styleUrls: ['./admin.component.sass']
 })
 export class AdminComponent implements OnInit {
+  bank: any;
 
 
    constructor(public api:ApiService,
@@ -20,6 +21,9 @@ export class AdminComponent implements OnInit {
 
 
   ngOnInit(): void {
+     this.api._get("bank_infos").subscribe((r:any)=>{
+      this.bank=r;
+     })
   }
 
 

@@ -89,15 +89,13 @@ def transfer(contract:str,dest:str,amount:str,unity:str):
             "appname":APPNAME,
             "unity": unity.lower(),
             "url_appli": DOMAIN_APPLI + "?contract=" + contract + "&user=" + _dest.address.bech32(),
-            "public_key": _dest.address.bech32(),
-            "private_key": _dest.private_key_seed,
         }), _to=dest, subject="Transfert",files=[])
         dao.add_contact(email=dest,addr=_dest.address.bech32())
         sleep(5)
     else:
         _dest=Account(address=addr_dest)
 
-    log("Demande de transfert vers "+_dest.address.bech32()+" de "+amount)
+    log("Demande de transfert vers "+_dest.address.bech32()+" de "+amount+" "+unity)
 
     #Préparation du _from
     if "BEGIN PRIVATE KEY" in str(request.data,"utf-8"):
@@ -117,13 +115,16 @@ def transfer(contract:str,dest:str,amount:str,unity:str):
             _from = Account(address=infos["public"])
             _from.private_key_seed=infos["private"]
 
+    log("Appel du smartcontract")
     rc=bc.transfer(contract,_from,_dest,int(amount))
+
     if not "error" in rc:
+        log("Transfert effectué " + str(rc) + " programmation du rafraichissement des comptes")
         scheduler.add_job(refresh_client,id="id_"+rc["to"],args=[rc["to"]],trigger="interval",minutes=0.25,max_instances=1)
         scheduler.add_job(refresh_client,id="id_"+rc['from'].bech32(),args=[rc['from'].bech32()],trigger="interval",minutes=0.2,max_instances=1)
-        log("Transfert effectué "+str(rc))
         return jsonify({"from_addr":str(rc["from"].bech32()),"tx":rc["explorer"]}),201
     else:
+        log("Erreur lors du transfert "+str(rc))
         return jsonify(rc),500
 
 
@@ -234,13 +235,21 @@ def getyaml(name):
     return jsonify(rc),200
 
 
+@app.route('/api/bank_infos/')
+def bank_infos():
+    rc={"address":bc.bank.address.bech32()}
+    return jsonify(rc),200
+
+
+
 @app.route('/api/new_account/')
 def new_account():
     _a,pem=bc.create_account(XGLD_FOR_NEWACCOUNT)
 
-    log("Création du compte " + _a.address.bech32() +". Demande de transfert de fond")
-    sleep(1)
+    log("Création du compte " + _a.address.bech32() +". Demande de transfert de la monnaie par defaut")
+    sleep(3)
     rc=bc.transfer(bc._default_contract, bc.bank, _a, CREDIT_FOR_NEWACCOUNT)
+    sleep(3)
     log("Résultat du transfert "+str(rc))
 
     #TODO: private key a crypter

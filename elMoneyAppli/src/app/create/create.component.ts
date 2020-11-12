@@ -36,7 +36,7 @@ export class CreateComponent implements OnInit {
   }
 
   create() {
-    this.message="Déploiement de "+this.name+" en cours ...";
+    this.message="Déploiement du "+this.name+" en cours ...";
     let obj={
       pem:this.user.pem["pem"],
       owner:this.user.addr,

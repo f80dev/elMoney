@@ -124,7 +124,7 @@ export class MainComponent implements AfterContentInit {
       this.dialog.open(NewContactComponent, {
         position: {left: '10vw', top: '5vh'},
         maxWidth: 450,
-        width: '80vw',height: '600px',
+        width: '80vw',height: '620px',
         data:{}
       }).afterClosed().subscribe((result:any) => {
         if(result){

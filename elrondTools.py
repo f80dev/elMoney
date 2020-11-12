@@ -91,7 +91,18 @@ class ElrondNet:
         log("Contrat de la monnaie par defaut déployer à "+rc["contract"])
         return True
 
+
+
+
     def transfer(self,_contract,user_from:Account,user_to:Account,amount:int):
+        """
+
+        :param _contract:
+        :param user_from:
+        :param user_to:
+        :param amount:
+        :return:
+        """
         if user_from.address.bech32()==user_to.address.bech32():
             return {"error":"Impossible de s'envoyer des fonds à soi-même"}
 
@@ -99,7 +110,8 @@ class ElrondNet:
 
         user_from.sync_nonce(self._proxy)
         user_from.nonce=user_from.nonce+1
-        rc=self.environment.execute_contract(_contract,
+        try:
+            rc=self.environment.execute_contract(_contract,
                                              user_from,
                                              function="transfer",
                                              arguments=["0x"+user_to.address.hex(),amount],
@@ -109,12 +121,14 @@ class ElrondNet:
                                              chain=self._proxy.get_chain_id(),
                                              version=config.get_tx_version())
 
-        return {
-            "from":user_from.address,
-            "tx":rc,
-            "explorer":"https://testnet-explorer.elrond.com/transactions/"+rc,
-            "to":user_to.address.bech32()
-        }
+            return {
+                "from":user_from.address,
+                "tx":rc,
+                "explorer":"https://testnet-explorer.elrond.com/transactions/"+rc,
+                "to":user_to.address.bech32()
+            }
+        except Exception as inst:
+            return {"error":str(inst.args)}
 
 
 
@@ -207,13 +221,25 @@ class ElrondNet:
         log("On signe la transaction avec le compte de la banque")
         t.sign(self.bank)
 
-        log("On envoi les fonds")
-        tx=t.send(self._proxy)
-        log("Fond transférer, consulter la transaction https://testnet-explorer.elrond.com/transactions/"+tx)
+        try:
+            log("On envoi les fonds")
+            tx=t.send(self._proxy)
+            log("Fond transférer, consulter la transaction https://testnet-explorer.elrond.com/transactions/"+tx)
+            return tx
+        except:
+            return None
+
+
 
 
     def create_account(self,fund="",name=None,seed_phrase=""):
+        """
 
+        :param fund:
+        :param name:
+        :param seed_phrase:
+        :return:
+        """
         log("Création d'un nouveau compte")
         pem=""
 
@@ -243,8 +269,8 @@ class ElrondNet:
 
         if len(fund)>0:
             log("On transfere un peu d'eGold pour assurer les premiers transferts"+str(fund))
-            self.credit(self.bank,_u,fund)
-
+            tx=self.credit(self.bank,_u,fund)
+            if tx is None:log("Le compte "+_u.address.bech32()+" n'a pas recu d'eGld pour les transactions")
 
         #if len(seed_phrase)==0 and name!="bank":os.remove(filename)
 
