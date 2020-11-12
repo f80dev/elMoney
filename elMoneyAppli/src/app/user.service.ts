@@ -112,11 +112,13 @@ export class UserService {
   }
 
 
-  init(addr: string,pem:any=null,func=null,func_error=null) {
+  init(addr: string,pem:any=null,func=null,func_error=null,vm=null) {
     $$("Initialisation de l'utilisateur avec ",addr);
     if(!addr)addr=localStorage.getItem("addr");
     if(!addr) {
+      if(vm)vm.message="Ouverture d'un nouveau compte";
       this.create_new_account((r)=>{
+        if(vm)vm.message="";
         this.init(r.address, {pem:r.pem},func,func_error);},
         ()=>{$$("Probleme de fabrication du nouveau compte")});
     } else {

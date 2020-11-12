@@ -247,10 +247,11 @@ def new_account():
     _a,pem=bc.create_account(XGLD_FOR_NEWACCOUNT)
 
     log("Création du compte " + _a.address.bech32() +". Demande de transfert de la monnaie par defaut")
-    sleep(3)
+
     rc=bc.transfer(bc._default_contract, bc.bank, _a, CREDIT_FOR_NEWACCOUNT)
-    sleep(3)
-    log("Résultat du transfert "+str(rc))
+    t=bc.wait_transaction(rc["tx"], not_equal="pending",timeout=5)
+
+    log("Résultat du transfert "+str(t))
 
     #TODO: private key a crypter
 

@@ -40,8 +40,9 @@
     </mat-drawer>
 
     <mat-drawer-content style="overflow: scroll">
-      <div class="sidenav-content"
+      <div class="sidenav-content" style="height: 90vh;text-align: center;"
            (mousedown)="closeMenu()">
+        <app-hourglass [message]="message"></app-hourglass>
         <router-outlet style="width:100%;" *ngIf="message.length==0" ></router-outlet>
       </div>
     </mat-drawer-content>

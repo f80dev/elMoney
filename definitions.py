@@ -12,10 +12,12 @@ BYTECODE_PATH="./static/deploy.json"
 ADMIN_SALT="hh4271"
 
 #on alimente les nouveaux comptes en eGold pour leur permettre des transferts
-XGLD_FOR_NEWACCOUNT="200000000000000000"
+XGLD_FOR_NEWACCOUNT="400000000000000000"
 
 #Description de la monnaie par defaut
 MAIN_UNITY="CMK"
-DEFAULT_UNITY_CONTRACT="erd1qqqqqqqqqqqqqpgqupzm8l9g7j3x6x9n350xjakgqjrx5crn9e3s4jw2df"
+DEFAULT_UNITY_CONTRACT="erd1qqqqqqqqqqqqqpgqmj48qte5xwu8vayzcch4hzmwpa4quymt9e3spugldl"
 TOTAL_DEFAULT_UNITY=1000000
-CREDIT_FOR_NEWACCOUNT=100
+CREDIT_FOR_NEWACCOUNT=50
+
+TRANSACTION_EXPLORER="https://testnet-explorer.elrond.com/transactions/"

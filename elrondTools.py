@@ -15,7 +15,8 @@ from erdpy.transactions import Transaction
 from erdpy.wallet import generate_pair,derive_keys
 
 from Tools import send_mail, open_html_file, base_alphabet_to_10, log
-from definitions import DOMAIN_APPLI, BYTECODE_PATH, DEFAULT_UNITY_CONTRACT, MAIN_UNITY, TOTAL_DEFAULT_UNITY
+from definitions import DOMAIN_APPLI, BYTECODE_PATH, DEFAULT_UNITY_CONTRACT, MAIN_UNITY, TOTAL_DEFAULT_UNITY, \
+    TRANSACTION_EXPLORER
 
 
 class ElrondNet:
@@ -160,7 +161,7 @@ class ElrondNet:
                 owner=user,
                 arguments=arguments,
                 gas_price=config.DEFAULT_GAS_PRICE/1,
-                gas_limit=50000000,
+                gas_limit=500000000,
                 value=0,
                 chain=self._proxy.get_chain_id(),
                 version=config.get_tx_version()
@@ -171,18 +172,9 @@ class ElrondNet:
             return {"error":500,"message":str(e.args),"link":url}
 
         #TODO: intégrer la temporisation pour événement
-        url = self._proxy.url+'/transaction/' + tx
-        log("Attente du déploiement https://testnet-explorer.elrond.com/transactions/" + tx)
-        result={"data":{"transaction":{"status":"pending"}}}
-        timeout=240
-        while result["data"]["transaction"]["status"]=="pending" and timeout>0:
-            sleep(3)
-            with urllib.request.urlopen(url) as response:
-                result = json.loads(response.read())
-            timeout=timeout-3
+        t=self.wait_transaction(tx,not_equal="pending")
 
-
-        if result["data"]["transaction"]["status"]=="pending":
+        if t["status"]=="pending":
             log("Echec de déploiement, timeout")
             return {"error":600,
                     "message":"timeout",
@@ -191,9 +183,8 @@ class ElrondNet:
                     }
         else:
             self.contract=address
-            url=self._proxy.url+"/transactions/"+tx
-            log("Déploiement du nouveau contrat réussi a l'adresse "+self.contract.bech32()+" voir transaction "+url)
-            return {"link":url,"contract":address.bech32(),"owner":user.address.bech32()}
+            log("Déploiement du nouveau contrat réussi a l'adresse "+self.contract.bech32()+" voir transaction "+TRANSACTION_EXPLORER+tx)
+            return {"link":TRANSACTION_EXPLORER+tx,"contract":address.bech32(),"owner":user.address.bech32()}
 
 
     def getName(self):
@@ -224,10 +215,34 @@ class ElrondNet:
         try:
             log("On envoi les fonds")
             tx=t.send(self._proxy)
-            log("Fond transférer, consulter la transaction https://testnet-explorer.elrond.com/transactions/"+tx)
+            self.wait_transaction(tx,not_equal="pending")
+            log("Fond transférer, consulter la transaction "+TRANSACTION_EXPLORER+tx)
             return tx
         except:
             return None
+
+
+    def wait_transaction(self, tx,field="status",equal="",not_equal="",timeout=30,interval=2):
+        """
+        Attent qu'une transaction prenne un certain statut
+        :param tx:
+        :param field:
+        :param equal:
+        :param not_equal:
+        :param timeout:
+        :param interval:
+        :return:
+        """
+        log("Attente jusqu'a "+str(interval*timeout)+" secs synchrone de la transaction "+TRANSACTION_EXPLORER+tx)
+        while timeout>0:
+            sleep(interval)
+            rc=self._proxy.get_transaction(tx_hash=tx)
+            if len(equal)>0 and rc[field]==equal:break
+            if len(not_equal) > 0 and rc[field] != not_equal: break
+            timeout=timeout-1
+
+        if timeout<=0:log("Echec de la transaction "+TRANSACTION_EXPLORER+tx)
+        return rc
 
 
 

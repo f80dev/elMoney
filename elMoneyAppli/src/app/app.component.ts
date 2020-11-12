@@ -37,7 +37,8 @@ export class AppComponent {
       let addr=this.routes.snapshot.queryParamMap.get("user");
       this.user.init(addr,JSON.parse(localStorage.getItem("pem")),
         (r)=> {this.router.navigate(["main"]);},
-        (err)=>{this.router.navigate(["moneys"]);}
+        (err)=>{this.router.navigate(["moneys"]);},
+        this
         );
 
     },()=>{
