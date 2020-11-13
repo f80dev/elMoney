@@ -42,7 +42,7 @@ export class TransferComponent implements OnInit {
   transfer() {
     localStorage.setItem("last_to", this.address_to);
     localStorage.setItem("last_amount", this.amount);
-    this.api._post("transfer/" + this.api.contract + "/" + this.address_to + "/" + this.amount, "", this.user.pem).subscribe((r: any) => {
+    this.api._post("transfer/" + this.api.contract + "/" + this.address_to + "/" + this.amount, "", this.user.pem,180).subscribe((r: any) => {
       this.message = "";
       showMessage(this, "Fond transféré, il vous reste "+r["account"]+"€ pour les transactions",4000);
       this._location.back();

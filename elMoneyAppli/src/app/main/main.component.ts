@@ -107,7 +107,7 @@ export class MainComponent implements AfterContentInit {
     this.message=this.hand+" "+this.user.unity+" en cours de transfert vers "+email;
     this.api._post("transfer/" + this.api.contract + "/" +  email+ "/" + this.hand+"/"+this.user.unity+"/",
         "",
-        pem).subscribe((r: any) => {
+        pem,180).subscribe((r: any) => {
           this.message="";
           showMessage(this, "Fond transféré, il vous reste "+r["account"]+"€ pour les transactions",4000);
           this.user.balance=this.user.balance-this.hand;
