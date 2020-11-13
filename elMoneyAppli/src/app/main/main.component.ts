@@ -104,12 +104,12 @@ export class MainComponent implements AfterContentInit {
 
     let pem=JSON.stringify(this.user.pem);
     $$("Demande de transfert vers "+email+" avec pem="+pem);
-    this.message="Fonds en cours de transfert";
+    this.message=this.hand+" "+this.user.unity+" en cours de transfert vers "+email;
     this.api._post("transfer/" + this.api.contract + "/" +  email+ "/" + this.hand+"/"+this.user.unity+"/",
         "",
         pem).subscribe((r: any) => {
           this.message="";
-          showMessage(this,"Fonds transférés");
+          showMessage(this, "Fond transféré, il vous reste "+r["account"]+"€ pour les transactions",4000);
           this.user.balance=this.user.balance-this.hand;
           this.hand=0;
           this.refresh();

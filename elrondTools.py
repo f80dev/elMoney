@@ -18,6 +18,9 @@ from Tools import send_mail, open_html_file, base_alphabet_to_10, log
 from definitions import DOMAIN_APPLI, BYTECODE_PATH, DEFAULT_UNITY_CONTRACT, MAIN_UNITY, TOTAL_DEFAULT_UNITY, \
     TRANSACTION_EXPLORER
 
+def toFiat(crypto,fiat=8):
+    return (int(crypto)/1e18)*fiat
+
 
 class ElrondNet:
     contract=None
@@ -53,9 +56,13 @@ class ElrondNet:
 
         log("Gas disponible "+str(gas))
         _contract=SmartContract(contract)
-        rc=self.environment.query_contract(_contract,
-                                        function="balanceOf",
-                                        arguments=["0x"+user.address.hex()])
+        try:
+            rc=self.environment.query_contract(_contract,
+                                            function="balanceOf",
+                                            arguments=["0x"+user.address.hex()])
+        except:
+            rc=None
+
         if rc is None: return None
         if rc[0] is None:
             d={"number":0}
@@ -104,7 +111,7 @@ class ElrondNet:
         user_from.sync_nonce(self._proxy)
         log("Transfert "+user_from.address.hex()+" -> "+user_to.address.hex()+" de "+str(amount)+" via le contrat "+_contract.address.bech32())
         try:
-            rc=self.environment.execute_contract(_contract,
+            tx=self.environment.execute_contract(_contract,
                                              user_from,
                                              function="transfer",
                                              arguments=["0x"+user_to.address.hex(),amount],
@@ -114,10 +121,15 @@ class ElrondNet:
                                              chain=self._proxy.get_chain_id(),
                                              version=config.get_tx_version())
 
+            tr=self.wait_transaction(tx,"status",not_equal="pending")
+            infos=self._proxy.get_account_balance(user_from.address)
+
             return {
                 "from":user_from.address,
-                "tx":rc,
-                "explorer":"https://testnet-explorer.elrond.com/transactions/"+rc,
+                "tx":tx,
+                "price":toFiat(tr["gasLimit"]),
+                "account":toFiat(infos),
+                "explorer":TRANSACTION_EXPLORER+tx,
                 "to":user_to.address.bech32()
             }
         except Exception as inst:

@@ -150,7 +150,7 @@ def transfer(contract:str,dest:str,amount:str,unity:str):
         log("Transfert effectué " + str(rc) + " programmation du rafraichissement des comptes")
         scheduler.add_job(refresh_client,id="id_"+rc["to"],args=[rc["to"]],trigger="interval",minutes=0.25,max_instances=1)
         scheduler.add_job(refresh_client,id="id_"+rc['from'].bech32(),args=[rc['from'].bech32()],trigger="interval",minutes=0.2,max_instances=1)
-        return jsonify({"from_addr":str(rc["from"].bech32()),"tx":rc["explorer"]}),201
+        return jsonify(rc),200
     else:
         log("Erreur lors du transfert "+str(rc))
         return jsonify(rc),500
@@ -300,8 +300,7 @@ def raz(password:str):
     log("Demande d'effacement de la base")
     if password!="hh4271":return "Password incorrect",501
     if dao.raz():
-        if bc.init_default_money():
-            dao.add_money(app.config["cmk"], MAIN_UNITY, bc.bank.address.bech32(), True, True,MAIN_URL)
+        dao.add_money(app.config["cmk"], MAIN_UNITY, bc.bank.address.bech32(), True, True,MAIN_URL)
 
     return jsonify({"message":"Effacement terminé"}),200
 
