@@ -23,13 +23,13 @@ class DAO:
 
 
 
-    def add_money(self,address:str,unity:str,owner:str,_public:bool,transferable:bool):
+    def add_money(self,address:str,unity:str,owner:str,_public:bool,transferable:bool,url=""):
         _public="1" if _public else "0"
         transferable="1" if transferable else "0"
 
         now=str(datetime.now().timestamp()*1000)
-        sql = "INSERT INTO Moneys (Address,Unity,dtCreate,Owner,Public,Transferable) " \
-              "VALUES ('" + address + "','" + unity + "'," + now + ",'" + owner + "'," + _public + "," + transferable + ")"
+        sql = "INSERT INTO Moneys (Address,Unity,dtCreate,Owner,Public,Transferable,Url) " \
+              "VALUES ('" + address + "','" + unity + "'," + now + ",'" + owner + "'," + _public + "," + transferable + ",'"+url+"')"
         log("Execution de la requete : " + sql)
         return self.get_cursor().executescript(sql)
 

@@ -24,27 +24,36 @@ class ElrondNet:
     environment=None
     _proxy:ElrondProxy=None
     bank=None
-    _default_contract=None
-
 
     def __init__(self,proxy="https://api-testnet.elrond.com",bank_pem="./PEM/alice.pem"):
+        """
+        Initialisation du proxy
+        :param proxy:
+        :param bank_pem:
+        """
+        log("Initialisation de l'environnement "+proxy)
         logging.basicConfig(level=logging.DEBUG)
-        # Now, we create a environment which intermediates deployment and execution
-        self._proxy=ElrondProxy(proxy)
-        self.environment = TestnetEnvironment(proxy)
-        self.init_bank()
-        self.init_default_money()
 
-        #Récupération de la configuration : https://api-testnet.elrond.com/network/config
+        self._proxy=ElrondProxy(proxy)
+
+        log("On utilise le testnet, la production n'étant pas encore disponible")
+        self.environment = TestnetEnvironment(proxy)
+
+        self.init_bank()
+
+        log("Initialisation terminée")
+
+
 
 
     def getBalance(self,contract,addr:str):
         user = Account(address=addr)
-        log("Fabrication du compte sur la base de "+addr+" ok. Récupération du gas")
+        log("Ouverture du compte "+addr+" ok. Récupération du gas")
         gas=self._proxy.get_account_balance(address=user.address)
 
         log("Gas disponible "+str(gas))
-        rc=self.environment.query_contract(SmartContract(contract),
+        _contract=SmartContract(contract)
+        rc=self.environment.query_contract(_contract,
                                         function="balanceOf",
                                         arguments=["0x"+user.address.hex()])
         if rc is None: return None
@@ -63,34 +72,17 @@ class ElrondNet:
 
 
     def init_bank(self):
-        log("Initialisation de la banque")
         if os.path.exists("./PEM/bank.pem"):
             self.bank=Account(pem_file="./PEM/bank.pem")
         else:
             self.bank,pem=self.create_account(name="bank")
             log("Vous devez transférer des fonds vers la banques "+self.bank.address.bech32())
 
-
-
-
-
-    def init_default_money(self):
-        rc=dict()
-        if len(DEFAULT_UNITY_CONTRACT)==0:
-            if self.bank is not None:
-                rc=self.deploy(self.bank, MAIN_UNITY, TOTAL_DEFAULT_UNITY)
-                if "error" in rc:
-                    log("Impossible de déployer le contrat de la monnaie par defaut")
-                    return False
-            else:
-                log("Vous devez initialiser la bank pour créer le contrat de monnaie par défaut")
-                return False
-        else:
-            rc["contract"]=DEFAULT_UNITY_CONTRACT
-            self._default_contract=SmartContract(address=DEFAULT_UNITY_CONTRACT)
-
-        log("Contrat de la monnaie par defaut déployer à "+rc["contract"])
+        log("Initialisation de la banque à l'adresse "+self.bank.address.bech32())
         return True
+
+
+
 
 
 
@@ -110,7 +102,7 @@ class ElrondNet:
         if type(_contract)==str:_contract=SmartContract(_contract)
 
         user_from.sync_nonce(self._proxy)
-        user_from.nonce=user_from.nonce+1
+        log("Transfert "+user_from.address.hex()+" -> "+user_to.address.hex()+" de "+str(amount)+" via le contrat "+_contract.address.bech32())
         try:
             rc=self.environment.execute_contract(_contract,
                                              user_from,
@@ -133,11 +125,14 @@ class ElrondNet:
 
 
 
-    def set_contract(self, contract):
-        self.contract= SmartContract(address=contract)
-
-
-    def deploy(self,pem_file,unity="RVC",amount=100000):
+    def deploy(self,pem_file,unity="RVC",amount=100000,gas_limit=80000000):
+        """
+        Déployer une nouvelle monnaie
+        :param pem_file: signature du propriétaire de la monnaie
+        :param unity: nom court de la monnaie
+        :param amount: montant de départ
+        :return:
+        """
         if type(pem_file)==str:
             user=Account(pem_file=pem_file)
         else:
@@ -161,7 +156,7 @@ class ElrondNet:
                 owner=user,
                 arguments=arguments,
                 gas_price=config.DEFAULT_GAS_PRICE/1,
-                gas_limit=500000000,
+                gas_limit=gas_limit,
                 value=0,
                 chain=self._proxy.get_chain_id(),
                 version=config.get_tx_version()
@@ -182,18 +177,21 @@ class ElrondNet:
                     "addr": address.bech32()
                     }
         else:
-            self.contract=address
-            log("Déploiement du nouveau contrat réussi a l'adresse "+self.contract.bech32()+" voir transaction "+TRANSACTION_EXPLORER+tx)
+            log("Déploiement du nouveau contrat réussi voir transaction "+TRANSACTION_EXPLORER+tx)
             return {"link":TRANSACTION_EXPLORER+tx,"contract":address.bech32(),"owner":user.address.bech32()}
 
 
-    def getName(self):
-        lst=self.environment.query_contract(self.contract,"name")
+
+
+    def getName(self,contract):
+        lst=self.environment.query_contract(contract,"name")
         if len(lst)>0:
             obj=lst[0]
             return obj.number
         else:
             return None
+
+
 
 
     def credit(self,_from:Account,_to:Account,amount:str):
@@ -233,6 +231,7 @@ class ElrondNet:
         :param interval:
         :return:
         """
+        rc=dict()
         log("Attente jusqu'a "+str(interval*timeout)+" secs synchrone de la transaction "+TRANSACTION_EXPLORER+tx)
         while timeout>0:
             sleep(interval)
@@ -241,7 +240,7 @@ class ElrondNet:
             if len(not_equal) > 0 and rc[field] != not_equal: break
             timeout=timeout-1
 
-        if timeout<=0:log("Echec de la transaction "+TRANSACTION_EXPLORER+tx)
+        if timeout<=0:log("Timeout de "+TRANSACTION_EXPLORER+tx+" "+field+" est a "+str(rc[field]))
         return rc
 
 

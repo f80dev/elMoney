@@ -1,5 +1,6 @@
 import base64
 import json
+import os
 import ssl
 import sys
 from time import sleep
@@ -13,30 +14,57 @@ from flask import Flask, Response, request, jsonify
 from flask_cors import CORS
 from flask_socketio import SocketIO
 
-from Tools import base_10_to_alphabet, log, send_mail, open_html_file, now
+from Tools import  log, send_mail, open_html_file, now, send
+from apiTools import create_app
+
 from dao import DAO
-from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, XGLD_FOR_NEWACCOUNT, ADMIN_SALT
+from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, XGLD_FOR_NEWACCOUNT, ADMIN_SALT, \
+    MAIN_URL, DEFAULT_UNITY_CONTRACT, TOTAL_DEFAULT_UNITY
 from elrondTools import ElrondNet
 
 
-#Initialisation des instances principales statics
-app = Flask(__name__)
-CORS(app)
 
-bc=None
-socketio = SocketIO(app, cors_allowed_origins="*", logger=False,ping_interval=50)
 scheduler = BackgroundScheduler()
+
+
+
+
+
+
+
+
+
+def init_cmk(bc,dao):
+    """
+    :return: l'adresse de la monnaie par defaut
+    """
+    cmk=DEFAULT_UNITY_CONTRACT
+    if bc.bank is None:
+        log("Vous devez initialiser la bank pour créer le contrat de monnaie par défaut")
+        return False
+
+    if len(cmk) == 0:
+        log("Pas de monnaie dans la configuration, on en créé une")
+        rc=bc.deploy(bc.bank, MAIN_UNITY, TOTAL_DEFAULT_UNITY)
+        if "error" in rc:
+            log("Impossible de déployer le contrat de la monnaie par defaut")
+            return None
+
+        cmk=rc["contract"]
+
+    if dao.get_name(cmk) is None:
+        dao.add_money(cmk,"CMK",bc.bank.address.bech32(),True,True,MAIN_URL)
+
+    log("Contrat de la monnaie par defaut déployer à "+cmk)
+    return cmk
+
+
+
+
+
+bc = ElrondNet(proxy=sys.argv[2])
 dao=DAO("./elmoney")
-
-
-
-def send(event_name: str, dest, message: str = "", param: dict = {}):
-    if not type(dest)==list:dest=[dest]
-    for d in dest:
-        body = dict({'to': d, 'message': message, 'param': param})
-        rc = socketio.emit(event_name, body, broadcast=True)
-        log("WebSocket.send de " + event_name + " à " + d);
-    return rc
+app, socketio = create_app(init_cmk(bc,dao))
 
 
 
@@ -56,7 +84,7 @@ def analyse_pem():
         address="erd"+body.split("erd")[1].split("----")[0]
         _to=Account(address)
 
-    tx=bc.transfer(bc._default_contract,bc.bank,_to,CREDIT_FOR_NEWACCOUNT)
+    tx=bc.transfer(bc.contract,bc.bank,_to,CREDIT_FOR_NEWACCOUNT)
     sleep(3)
 
     bc.credit(bc.bank,_to,XGLD_FOR_NEWACCOUNT)
@@ -67,7 +95,7 @@ def analyse_pem():
 
 
 def refresh_client(dest:str):
-    send("refresh_account",dest)
+    send(socketio,"refresh_account",dest)
     scheduler.remove_job("id_"+dest)
 
 
@@ -89,7 +117,7 @@ def transfer(contract:str,dest:str,amount:str,unity:str):
             "appname":APPNAME,
             "unity": unity.lower(),
             "url_appli": DOMAIN_APPLI + "?contract=" + contract + "&user=" + _dest.address.bech32(),
-        }), _to=dest, subject="Transfert",files=[])
+        }), _to=dest, subject="Transfert",attach=pem_dest)
         dao.add_contact(email=dest,addr=_dest.address.bech32())
         sleep(5)
     else:
@@ -133,7 +161,6 @@ def transfer(contract:str,dest:str,amount:str,unity:str):
 def deploy(unity:str,amount:str,data:dict=None):
     log("Appel du service de déploiement de contrat pour "+unity)
 
-
     if data is None:
        data = str(request.data, encoding="utf-8")
        log("Les données de fabrication de la monnaie sont "+data)
@@ -157,7 +184,7 @@ def deploy(unity:str,amount:str,data:dict=None):
         log("Probléme de création de la monnaie "+str(result))
         return jsonify(result), 500
     else:
-        dao.add_money(result["contract"],unity,result["owner"],data["public"],data["transferable"])
+        dao.add_money(result["contract"],unity,result["owner"],data["public"],data["transferable"],data["url"])
 
     #scheduler.add_job(refresh_client, id="id_" + owner, args=[owner], trigger="interval", minutes=0.15,max_instances=1)
 
@@ -165,12 +192,16 @@ def deploy(unity:str,amount:str,data:dict=None):
 
 
 
-
-
-
-@app.route('/api/infos_server/')
-def infos_server():
+#http://localhost:5555/api/server_config/
+@app.route('/api/server_config/')
+def server_config():
+    bank_balance=bc.getBalance(app.config["cmk"],bc.bank.address.bech32())
     infos={
+        "bank_addr":bc.bank.address.bech32(),
+        "bank_cmk":bank_balance["number"],
+        "bank_gas": bank_balance["gas"],
+        "default_money":app.config["cmk"],
+        "proxy":bc._proxy.url
     }
     return jsonify(infos),200
 
@@ -235,12 +266,6 @@ def getyaml(name):
     return jsonify(rc),200
 
 
-@app.route('/api/bank_infos/')
-def bank_infos():
-    rc={"address":bc.bank.address.bech32()}
-    return jsonify(rc),200
-
-
 
 @app.route('/api/new_account/')
 def new_account():
@@ -248,7 +273,7 @@ def new_account():
 
     log("Création du compte " + _a.address.bech32() +". Demande de transfert de la monnaie par defaut")
 
-    rc=bc.transfer(bc._default_contract, bc.bank, _a, CREDIT_FOR_NEWACCOUNT)
+    rc=bc.transfer(app.config["cmk"], bc.bank, _a, CREDIT_FOR_NEWACCOUNT)
     t=bc.wait_transaction(rc["tx"], not_equal="pending",timeout=5)
 
     log("Résultat du transfert "+str(t))
@@ -265,7 +290,7 @@ def getmoneys(addr:str):
     log("Récépuration de l'ensemble des monnaies pour "+addr)
     rc=[]
     for row in dao.get_moneys(addr):
-        rc.append({"contract":row[0],"unity":row[1],"public":row[3],"owner":row[4]})
+        rc.append({"contract":row[0],"unity":row[1],"public":row[3],"owner":row[4],"url":row[5]})
     return jsonify(rc)
 
 
@@ -276,7 +301,7 @@ def raz(password:str):
     if password!="hh4271":return "Password incorrect",501
     if dao.raz():
         if bc.init_default_money():
-            dao.add_money(bc._default_contract.address.bech32(), MAIN_UNITY, bc.bank.address.bech32(), True, True)
+            dao.add_money(app.config["cmk"], MAIN_UNITY, bc.bank.address.bech32(), True, True,MAIN_URL)
 
     return jsonify({"message":"Effacement terminé"}),200
 
@@ -294,30 +319,23 @@ def getname(contract:str):
 
 
 
-
 if __name__ == '__main__':
-    _port=5555
-    if len(sys.argv)>1:
-        _port = sys.argv[1]
 
-    if len(sys.argv)>2:
-        # bc=ElrondNet(proxy="http://172.26.244.241:7950")
-        #bc = ElrondNet(proxy="http://161.97.75.165:7950")
-        bc=ElrondNet(proxy=sys.argv[2])
-    else:
-        bc=ElrondNet()
+    # bc=ElrondNet(proxy="http://172.26.244.241:7950")
+    # bc = ElrondNet(proxy="http://161.97.75.165:7950")
 
-    log("Connexion sur le réseau elrond "+bc.environment.url)
+    _port=sys.argv[1]
     scheduler.start()
 
     if "debug" in sys.argv:
-        app.run(host="0.0.0.0", port=_port, debug=True)
+        socketio.run(app,host="0.0.0.0", port=_port, debug=True)
     else:
         if "ssl" in sys.argv:
             context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
             context.load_cert_chain("/certs/fullchain.pem", "/certs/privkey.pem")
-            app.run(host="0.0.0.0", port=_port, debug=False, ssl_context=context)
+            socketio.run(app,host="0.0.0.0",  port=_port,debug=False, ssl_context=context)
+
         else:
-            app.run(host="0.0.0.0", port=_port, debug=False)
+            socketio.run(app,host="0.0.0.0",  port=_port,debug=False)
 
 

@@ -43,10 +43,10 @@ export class MoneysComponent implements OnInit {
   }
 
   openContrat(contract: string) {
-    open("https://testnet-explorer.elrond.com/transactions/"+contract);
+    open("https://testnet-explorer.elrond.com/address/"+contract);
   }
 
   openDoc(url: any) {
-    open(url,"_blank");
+    if(url.length>0)open(url,"_blank");
   }
 }

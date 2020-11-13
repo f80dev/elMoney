@@ -95,7 +95,20 @@ def open_html_file(name:str,replace=dict(),domain_appli=DOMAIN_APPLI):
     return body
 
 
-def send_mail(body:str,_to="paul.dudule@gmail.com",_from:str="ticketshare@f80.fr",subject="",files=[]):
+
+
+def send(socketio,event_name: str, dest, message: str = "", param: dict = {}):
+    if not type(dest)==list:dest=[dest]
+    for d in dest:
+        body = dict({'to': d, 'message': message, 'param': param})
+        rc = socketio.emit(event_name, body, broadcast=True)
+        log("WebSocket.send de " + event_name + " à " + d);
+    return rc
+
+
+
+
+def send_mail(body:str,_to="paul.dudule@gmail.com",_from:str="ticketshare@f80.fr",subject="",attach=None):
     if _to is None or len(_to)==0:return None
     with smtplib.SMTP(SMTP_SERVER, 587) as server:
         server.ehlo()
@@ -112,13 +125,11 @@ def send_mail(body:str,_to="paul.dudule@gmail.com",_from:str="ticketshare@f80.fr
             msg['Subject'] = subject
             msg.attach(MIMEText(body,"html"))
 
-            for path in files:
+            if not attach is None:
                 part = MIMEBase('application', "octet-stream")
-                with open(path, 'rb') as file:
-                    part.set_payload(file.read())
+                part.set_payload(attach)
                 encoders.encode_base64(part)
-                part.add_header('Content-Disposition',
-                                'attachment; filename="{}"'.format(Path(path).name))
+                part.add_header('Content-Disposition',"attachment",filename="yourkey.pem")
                 msg.attach(part)
 
             log("Send to "+_to+" <br><div style='font-size:x-small;max-height:300px>"+body+"</div>'")

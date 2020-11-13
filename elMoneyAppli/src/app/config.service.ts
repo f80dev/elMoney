@@ -20,7 +20,7 @@ export class ConfigService {
 
   query_cache: any[]; //Conserve le contenu de la dernière requete
   unity: string ="";
-  infos: any={};
+  server: any={bank:""};
 
     constructor(private location: Location,
               private http: HttpClient,
@@ -70,8 +70,10 @@ export class ConfigService {
         this.values=r;
         this.ready=true;
         $$("Chargement du fichier de configuration ok",r);
-        this.api._get("infos_server").subscribe((is:any)=>{
-          this.infos=is;
+
+        this.api._get("server_config").subscribe((is:any)=>{
+
+          this.server=is;
           $$("Chargement des infos serveur ok",is)
           if(func!=null)func(this.values);
         })
