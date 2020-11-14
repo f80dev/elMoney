@@ -75,3 +75,16 @@ content:
       Elle est également transmise dans les mails lorsque vous envoyer des fonds.
       </p>
       "
+      
+  - index: futur
+    title: Quelles sont les prochaines évolutions de CoinMaker ?
+    order: 3
+    format: html
+    content: "
+      <p>
+      CoinMaKer va continuer de se développer pour intégrer notamment 
+      La tokenisation de document (via la technologie des NFT)
+      </p>
+      "
+      
+      
