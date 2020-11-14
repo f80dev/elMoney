@@ -9,7 +9,7 @@
     <a routerLink="settings">Recharger mon compte</a>
   </div>
 
-  <div *ngIf="message?.length==0 && user.gas>config.values.min_gas_to_create">
+  <div *ngIf="message?.length==0 && user.gas>config.values?.min_gas_to_create">
 
 
   <div *ngIf="url_transaction?.length>0">

@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="elMoney" uuid="124c1172-f7d6-42d2-9d09-69ce562d31a1">
-      <driver-ref>sqlite.xerial</driver-ref>
+    <data-source source="LOCAL" name="User Data Source -" uuid="8204680f-5f01-46cd-a705-90d50106c4b5">
       <synchronize>true</synchronize>
-      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:C:\Users\hhoareau\PycharmProjects\elMoney\elmoney</jdbc-url>
+      <configured-by-url>true</configured-by-url>
+      <jdbc-driver>java.sql.Driver</jdbc-driver>
+    </data-source>
+    <data-source source="LOCAL" name="cloud" uuid="6af7f90d-84e8-476d-b4de-6434a6c140f2">
+      <driver-ref>mongo</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.dbschema.MongoJdbcDriver</jdbc-driver>
+      <jdbc-url>mongodb://kerberus-44xyy.gcp.mongodb.net:27017/coinmaker</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="server" uuid="b3f66d80-f717-4aa3-bc43-f392f840887e">
+      <driver-ref>mongo</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.dbschema.MongoJdbcDriver</jdbc-driver>
+      <jdbc-url>mongodb://server.f80.fr:27017/coinmaker</jdbc-url>
     </data-source>
   </component>
 </project>

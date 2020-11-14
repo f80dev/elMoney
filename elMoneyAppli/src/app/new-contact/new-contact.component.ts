@@ -2,6 +2,7 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {UserService} from "../user.service";
 import {$$, showMessage} from "../tools";
+import {ConfigService} from "../config.service";
 
 @Component({
   selector: 'app-new-contact',
@@ -16,9 +17,10 @@ export class NewContactComponent implements OnInit {
   constructor(
     public user: UserService,
     public dialog: MatDialog,
+    public config:ConfigService,
     public dialogRef: MatDialogRef<NewContactComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
-
+    this.showScanner=this.config.webcamsAvailable>0;
   }
 
   _close(toSave = true) {
@@ -53,6 +55,5 @@ export class NewContactComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
 
 }

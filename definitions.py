@@ -12,13 +12,22 @@ BYTECODE_PATH="./static/deploy.json"
 ADMIN_SALT="hh4271"
 
 #on alimente les nouveaux comptes en eGold pour leur permettre des transferts
-XGLD_FOR_NEWACCOUNT="400000000000000000"
+XGLD_FOR_NEWACCOUNT="500000000000000000"
+
 
 #Description de la monnaie par defaut
 MAIN_UNITY="CMK"
 MAIN_URL="https://coinmaker.f80.fr/assets/cmk.html"
-DEFAULT_UNITY_CONTRACT="erd1qqqqqqqqqqqqqpgq4vxtupr3eututyz3u60s0rp97467j8gk9e3s4y4pcg"
+DEFAULT_UNITY_CONTRACT=""
 TOTAL_DEFAULT_UNITY=1000000
 CREDIT_FOR_NEWACCOUNT=75
 
+
 TRANSACTION_EXPLORER="https://testnet-explorer.elrond.com/transactions/"
+
+
+DB_SERVERS=dict({
+    "local":"mongodb://127.0.0.1:27017",
+    "server":"mongodb://admin:hh4271@server.f80.fr:27017",
+    "cloud":"mongodb+srv://admin:hh4271!!@kerberus-44xyy.gcp.mongodb.net/test"
+})

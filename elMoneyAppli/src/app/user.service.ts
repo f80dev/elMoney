@@ -22,10 +22,11 @@ export class UserService {
               public socket:Socket,
               public config:ConfigService) {
     subscribe_socket(this,"refresh_account",()=>{this.refresh_balance();})
+    if(localStorage.getItem("contacts"))this.contacts=JSON.parse(localStorage.getItem("contacts"));
   };
 
   loadFromDevice(){
-    if(localStorage.getItem("addr"))this.addr=localStorage.getItem("addr");
+    if(!this.addr)this.addr=localStorage.getItem("addr");
     if(!this.addr || this.addr.length<10 || this.addr=="null"){
       this.addr=null;
       $$("Pas de compte disponible sur le device");
@@ -34,15 +35,12 @@ export class UserService {
     $$("Chargement de compte ok depuis le device, adresse de l'utilisateur "+this.addr);
 
     if(localStorage.getItem("contacts"))this.contacts=JSON.parse(localStorage.getItem("contacts"));
-    if(localStorage.getItem("email"))this.email=localStorage.getItem("email");
     if(localStorage.getItem("pem"))this.pem=JSON.parse(localStorage.getItem("pem"));
 
     $$("Chargement du fichier PEM=",this.pem);
 
     return true;
   }
-
-
 
 
 
@@ -56,7 +54,7 @@ export class UserService {
     this.api.balance(this.addr).subscribe((r:any)=>{
       $$("Récupération de la balance : ",r);
       if(r.hasOwnProperty("error")){
-        func_error(r);
+        if(func_error)func_error(r);
       } else {
         this.balance=r.balance;
           this.gas=Number(r.gas);
@@ -117,7 +115,7 @@ export class UserService {
     $$("Initialisation de l'utilisateur avec ",addr);
     if(!addr)addr=localStorage.getItem("addr");
     if(!addr) {
-      if(vm)vm.message="Ouverture d'un nouveau compte";
+      if(vm)vm.message="Ouverture de votre compte";
       this.create_new_account((r)=>{
         if(vm)vm.message="";
         this.init(r.address, {pem:r.pem},func,func_error);},
@@ -141,5 +139,11 @@ export class UserService {
     localStorage.removeItem("email");
     localStorage.removeItem("pem");
     window.location.href=environment.domain_appli;
+  }
+
+  get_gas() {
+    this.api._get("gas/"+this.addr).subscribe((r:any)=>{
+       this.gas=r;
+     })
   }
 }

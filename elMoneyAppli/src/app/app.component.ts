@@ -28,7 +28,6 @@ export class AppComponent {
 
     this.appVersion=environment.appVersion;
     this.config.init(()=>{
-
       $$("Recherche du contrat à utiliser pour le device");
       this.api.init_contract(this.routes.snapshot.queryParamMap.get("contract"))
 

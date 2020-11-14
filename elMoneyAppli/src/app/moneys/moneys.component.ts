@@ -4,6 +4,7 @@ import {ApiService} from "../api.service";
 import {$$, showMessage} from "../tools";
 import {Router} from "@angular/router";
 import {UserService} from "../user.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-moneys',
@@ -16,6 +17,7 @@ export class MoneysComponent implements OnInit {
 
   constructor(public api:ApiService,
               public router:Router,
+              public toast:MatSnackBar,
               public user:UserService,
               public _location:Location) { }
 
@@ -33,12 +35,15 @@ export class MoneysComponent implements OnInit {
       localStorage.removeItem("contract");
   }
 
-  select(addr:string){
+  select(_m:any){
     this.message="Changement de monnaie";
-    this.api.set_contract(addr);
+    this.api.set_contract(_m.addr);
     this.user.refresh_balance(()=>{
       this.message="";
       this.router.navigate(["main"]);
+    },()=>{
+      this.message="";
+      showMessage(this,"Problème technique, sélectionner une autre monnaie");
     });
   }
 

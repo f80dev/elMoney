@@ -33,6 +33,7 @@ export class CreateComponent implements OnInit {
        $$("Fichier PEM non disponible, il est nécéssaire d'un ajouter un");
        this.router.navigate(["private"]);
      }
+     this.user.get_gas();
   }
 
   create() {
@@ -52,6 +53,8 @@ export class CreateComponent implements OnInit {
       this.user.refresh_balance(()=>{
         showMessage(this,"Votre monnaie est maintenant disponible");
         this._location.back();
+      },()=>{
+        showError(this);
       });
     },(err:any)=>{
       this.message="";

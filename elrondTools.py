@@ -57,10 +57,13 @@ class ElrondNet:
         log("Gas disponible "+str(gas))
         _contract=SmartContract(contract)
         try:
-            rc=self.environment.query_contract(_contract,
-                                            function="balanceOf",
-                                            arguments=["0x"+user.address.hex()])
-        except:
+            rc=self.environment.query_contract(
+                _contract,
+                function="balanceOf",
+                arguments=["0x"+user.address.hex()]
+            )
+        except Exception as inst:
+            log("Exception à l'interrogation du contrat : "+str(inst.args))
             rc=None
 
         if rc is None: return None
@@ -125,7 +128,7 @@ class ElrondNet:
             infos=self._proxy.get_account_balance(user_from.address)
 
             return {
-                "from":user_from.address,
+                "from":user_from.address.bech32(),
                 "tx":tx,
                 "price":toFiat(tr["gasLimit"]),
                 "account":toFiat(infos),

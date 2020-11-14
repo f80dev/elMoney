@@ -1,7 +1,7 @@
 <div style="overflow: hidden;">
-<h2>Envoyer directement</h2>
+    <h2>Destinataire</h2>
 
-    <mat-form-field appearance="fill" class="app-field">
+    <mat-form-field appearance="fill" class="app-field" color="accent">
       <mat-label>Mail ou adresse Elrond du destinataire</mat-label>
       <input matInput type="text" max="50" [(ngModel)]="email"
              (ngModelChange)="refresh_pseudo($event)"
@@ -16,17 +16,16 @@
   <br><br>
 
 
-  <div style="width: 100%;text-align: center">
+  <div style="width: 100%;text-align: center" *ngIf="showScanner">
     <small>Pointez le QRCode d'un wallet Elrond pour déclencher l'envoie</small><br>
     <app-scanner [size]="220"
                  autofocus
                  (click)="showScanner=false"
-                 *ngIf="showScanner"
                  (flash)="onflash_event($event)">
     </app-scanner>
+    <br><br>
   </div>
 
-  <br><br>
 
 <div style="text-align: right;">
   <hr>

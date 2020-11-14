@@ -8,6 +8,7 @@ from time import sleep
 from apscheduler.schedulers.background import BackgroundScheduler
 
 import yaml
+from bson import json_util
 from erdpy.accounts import Account
 
 from flask import Flask, Response, request, jsonify
@@ -38,10 +39,16 @@ def init_cmk(bc,dao):
     """
     :return: l'adresse de la monnaie par defaut
     """
-    cmk=DEFAULT_UNITY_CONTRACT
     if bc.bank is None:
         log("Vous devez initialiser la bank pour créer le contrat de monnaie par défaut")
         return False
+
+    _m=dao.get_money_by_name("CMK")
+    if _m is None:
+        cmk=DEFAULT_UNITY_CONTRACT
+    else:
+        cmk=_m["addr"]
+
 
     if len(cmk) == 0:
         log("Pas de monnaie dans la configuration, on en créé une")
@@ -52,8 +59,8 @@ def init_cmk(bc,dao):
 
         cmk=rc["contract"]
 
-    if dao.get_name(cmk) is None:
-        dao.add_money(cmk,"CMK",bc.bank.address.bech32(),True,True,MAIN_URL)
+    if dao.get_money_by_address(cmk) is None:
+        dao.add_money(cmk,MAIN_UNITY,bc.bank.address.bech32(),True,True,MAIN_URL)
 
     log("Contrat de la monnaie par defaut déployer à "+cmk)
     return cmk
@@ -63,7 +70,7 @@ def init_cmk(bc,dao):
 
 
 bc = ElrondNet(proxy=sys.argv[2])
-dao=DAO("./elmoney")
+dao=DAO("server")
 app, socketio = create_app(init_cmk(bc,dao))
 
 
@@ -103,8 +110,10 @@ def refresh_client(dest:str):
 #test http://localhost:5000/api/transfer
 @app.route('/api/transfer/<contract>/<dest>/<amount>/<unity>/',methods=["POST"])
 def transfer(contract:str,dest:str,amount:str,unity:str):
+    addr_dest=None
     if "@" in dest:
-        addr_dest=dao.find_contact(dest)
+        _u=dao.find_contact(dest)
+        if not _u is None: addr_dest=_u["addr"]
     else:
         addr_dest=dest
 
@@ -119,7 +128,6 @@ def transfer(contract:str,dest:str,amount:str,unity:str):
             "url_appli": DOMAIN_APPLI + "?contract=" + contract + "&user=" + _dest.address.bech32(),
         }), _to=dest, subject="Transfert",attach=pem_dest)
         dao.add_contact(email=dest,addr=_dest.address.bech32())
-        sleep(5)
     else:
         _dest=Account(address=addr_dest)
 
@@ -149,7 +157,7 @@ def transfer(contract:str,dest:str,amount:str,unity:str):
     if not "error" in rc:
         log("Transfert effectué " + str(rc) + " programmation du rafraichissement des comptes")
         scheduler.add_job(refresh_client,id="id_"+rc["to"],args=[rc["to"]],trigger="interval",minutes=0.2,max_instances=1)
-        scheduler.add_job(refresh_client,id="id_"+rc['from'].bech32(),args=[rc['from'].bech32()],trigger="interval",minutes=0.1,max_instances=1)
+        scheduler.add_job(refresh_client,id="id_"+rc['from'],args=[rc['from']],trigger="interval",minutes=0.1,max_instances=1)
         return jsonify(rc),200
     else:
         log("Erreur lors du transfert "+str(rc))
@@ -222,12 +230,6 @@ def find_contact(email:str):
 
 
 
-@app.route('/api/del_owner_contact/<email>/<owner>/',methods=["GET"])
-def del_contact(email:str,owner:str):
-    dao.del_contact(email,owner)
-    return "contact supprimé",202
-
-
 @app.route('/api/contacts/<owner>/',methods=["POST"])
 def add_contact(owner:str):
     data=str(request.data,"utf-8")
@@ -241,14 +243,17 @@ def add_contact(owner:str):
         return "contact existant",201
 
 
-#test http://localhost:5000/api/balance/erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx/
+
+
+#test http://localhost:5555/api/balance/erd1qqqqqqqqqqqqqpgqqvtq3xx0pgnehaynt6flzp8hyc0ckahf9e3se00ejh/erd1jgffp69cxeqqzvrv3u96da6lqwx5d6d6e7j9uau3dv84e34vwq4q3gzjxl/
 @app.route('/api/balance/<contract>/<addr>/')
 def getbalance(contract:str,addr:str):
-    name=dao.get_name(contract)
-    if name is None:
+    _m=dao.get_money_by_address(contract)
+    if _m is None:
         return jsonify({"error":"Pas de money correspondante à l'adresse "+addr}), 200
-    else:
-        log("La monnaie correspondant à l'adresse "+addr+" est "+name)
+
+    name=_m["unity"]
+    log("La monnaie correspondant à l'adresse "+addr+" est "+name)
 
     rc = bc.getBalance(contract,addr)
 
@@ -257,6 +262,15 @@ def getbalance(contract:str,addr:str):
     else:
         log("Balance de "+addr+" à "+str(rc)+name.lower()+" pour le contrat "+contract)
         return jsonify({"balance":rc["number"],"gas":str(rc["gas"]),"name":name}),200
+
+
+
+@app.route('/api/gas/<addr>/')
+def get_gas(addr:str):
+    _a=Account(address=addr)
+    gas = bc._proxy.get_account_balance(address=_a.address)
+    return str(gas)
+
 
 
 @app.route('/api/getyaml/<name>/')
@@ -286,12 +300,11 @@ def new_account():
 
 
 @app.route('/api/moneys/<addr>/')
-def getmoneys(addr:str):
+@app.route('/api/moneys/')
+def getmoneys(addr:str=""):
     log("Récépuration de l'ensemble des monnaies pour "+addr)
-    rc=[]
-    for row in dao.get_moneys(addr):
-        rc.append({"contract":row[0],"unity":row[1],"public":row[3],"owner":row[4],"url":row[5]})
-    return jsonify(rc)
+    return json_util.dumps(dao.get_moneys(addr))
+
 
 
 #http://localhost:5555/api/raz/hh4271
@@ -310,9 +323,9 @@ def raz(password:str):
 
 @app.route('/api/name/<contract>/')
 def getname(contract:str):
-    rc=dao.get_name(contract)
+    rc=dao.get_money_by_name(contract)
     if rc is None:return "Pas de monnaie correspondant au contrat "+contract,404
-    return jsonify({"name":rc}), 200
+    return jsonify({"name":rc["name"]}), 200
 
 
 

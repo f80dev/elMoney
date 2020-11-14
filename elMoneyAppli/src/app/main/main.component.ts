@@ -14,7 +14,7 @@ import {NewContactComponent} from "../new-contact/new-contact.component";
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.sass']
 })
-export class MainComponent implements AfterContentInit {
+export class MainComponent implements OnInit {
   url_explorer: string="";
   showQRCode: boolean=false;
   friends=[];
@@ -22,7 +22,7 @@ export class MainComponent implements AfterContentInit {
     {value:10},{value:5},{value:2},{value:1}
   ]
   hourglass=false;
-  hand:number=0;
+  hand:number=-1;
   showSlider: boolean=true;
   message="";
   _max: number=0;
@@ -38,19 +38,9 @@ export class MainComponent implements AfterContentInit {
               public api:ApiService,
               public config:ConfigService) {
     subscribe_socket(this,"refresh_account",()=>{
-      setTimeout(()=>{
-        this.refresh();
-      },200)
-
-    })
+      setTimeout(()=>{this.refresh();},200)
+    });
   }
-
-
-
-  ngAfterContentInit(): void {
-    this.refresh();
-  }
-
 
 
   refresh(){
@@ -60,24 +50,21 @@ export class MainComponent implements AfterContentInit {
       i=i-1;if(i<0)break;
       if(!c.pseudo)c.pseudo="";
       if(c.pseudo.length>15)c.pseudo=c.pseudo.substr(0,14);
-      this.friends.push(
-        { label:c.pseudo,
-          selected:false,
-          icon:"person",
-          email:c.email,
-          color:"white"
-        })
+      this.friends.push({
+        label:c.pseudo,
+        selected:false,
+        icon:"person",
+        email:c.email,
+        color:"white"
+      })
     }
 
     if(this.api.contract){
         this._max=this.user.balance;
+        if(this.hand<0)this.hand=Math.round(this._max/10);
         this.temp_max=this._max;
     }
-
   }
-
-
-
 
 
 
@@ -86,12 +73,6 @@ export class MainComponent implements AfterContentInit {
     showMessage(this,"Adresse dans le presse papier")
   }
 
-
-
-  // addInHand(value: number) {
-  //   this.hand=this.hand+value;
-  //   this.solde=this.solde-value;
-  // }
 
 
 
@@ -104,7 +85,7 @@ export class MainComponent implements AfterContentInit {
 
     let pem=JSON.stringify(this.user.pem);
     $$("Demande de transfert vers "+email+" avec pem="+pem);
-    this.message=this.hand+" "+this.user.unity+" en cours de transfert vers "+email;
+    this.message=this.hand+" "+this.user.unity+" en cours de transfert à "+email;
     this.api._post("transfer/" + this.api.contract + "/" +  email+ "/" + this.hand+"/"+this.user.unity+"/",
         "",
         pem,180).subscribe((r: any) => {
@@ -121,10 +102,12 @@ export class MainComponent implements AfterContentInit {
 
 
   add_contact(){
+    let height='620px';
+    if(this.config.webcamsAvailable==0)height="350px";
       this.dialog.open(NewContactComponent, {
         position: {left: '10vw', top: '5vh'},
         maxWidth: 450,
-        width: '80vw',height: '620px',
+        width: '80vw',height: height,
         data:{}
       }).afterClosed().subscribe((result:any) => {
         if(result){
@@ -141,6 +124,8 @@ export class MainComponent implements AfterContentInit {
         this.transfer(f.email);
     }
   }
+
+
 
   update_account() {
     this.n_profils=0;
@@ -174,4 +159,9 @@ export class MainComponent implements AfterContentInit {
 
     this.update_account();
   }
+
+  ngOnInit(): void {
+    this.refresh();
+  }
 }
+
