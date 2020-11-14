@@ -9,5 +9,10 @@ de développement d'Elrond, à savoir :
  - la création de compte et la gestion des clés depuis le serveur
 
 
-#Installation du contrat
-le contrat est déployé par le projet à l'adresse 
+#Architecture
+L'architecture de la solution repose sur 
+- une base de données MongoDB pour stocker la liste des monnaies disponible)
+- un serveur REST dialoguant avec le front end, la blocchaine et la base de données. Hébergé
+- un client web développé sur Angular, compatible avec tout type de terminaux
+
+
