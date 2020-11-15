@@ -108,7 +108,7 @@ def send(socketio,event_name: str, dest, message: str = "", param: dict = {}):
 
 
 
-def send_mail(body:str,_to="paul.dudule@gmail.com",_from:str="ticketshare@f80.fr",subject="",attach=None):
+def send_mail(body:str,_to="paul.dudule@gmail.com",_from:str="reply@f80.fr",subject="",attach=None):
     if _to is None or len(_to)==0:return None
     with smtplib.SMTP(SMTP_SERVER, 587) as server:
         server.ehlo()

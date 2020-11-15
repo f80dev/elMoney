@@ -16,10 +16,11 @@
   </button>
 
   <br><br>
-  <mat-checkbox [(ngModel)]="savePrivateKey">Conserver ma signature sur cet appareil</mat-checkbox>
+  <mat-checkbox [(ngModel)]="savePrivateKey">Conserver ma clé privée sur cet appareil</mat-checkbox>
   <mat-icon (click)="openFAQ()" style="font-size: small;cursor: pointer;">help</mat-icon>
   </div>
   <br><br>
+  <app-tuto label="Il est possible d'utiliser des comptes pour tester cette application. En revanche plusieurs personnes pouvant utiliser les mêmes comptes, il est possible que le comportement soit parfois imprevisible"></app-tuto>
   <mat-form-field class="app-field" style="max-width: 200px;">
       <mat-label>Profils de test</mat-label>
       <mat-select [(ngModel)]="test_profil" (ngModelChange)="select_model($event)">

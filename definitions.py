@@ -25,6 +25,7 @@ CREDIT_FOR_NEWACCOUNT=75
 
 TRANSACTION_EXPLORER="https://testnet-explorer.elrond.com/transactions/"
 
+SIGNATURE="CoinMaker<br><a href='ttps://t.me/coinmaker_forum'>Support</a>"
 
 DB_SERVERS=dict({
     "local":"mongodb://127.0.0.1:27017",

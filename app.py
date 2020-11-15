@@ -21,7 +21,7 @@ from apiTools import create_app
 
 from dao import DAO
 from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, XGLD_FOR_NEWACCOUNT, ADMIN_SALT, \
-    MAIN_URL, DEFAULT_UNITY_CONTRACT, TOTAL_DEFAULT_UNITY
+    MAIN_URL, DEFAULT_UNITY_CONTRACT, TOTAL_DEFAULT_UNITY, SIGNATURE
 from elrondTools import ElrondNet
 
 
@@ -92,11 +92,11 @@ def analyse_pem():
         address="erd"+body.split("erd")[1].split("----")[0]
         _to=Account(address)
 
-    tx=bc.transfer(bc.contract,bc.bank,_to,CREDIT_FOR_NEWACCOUNT)
-    sleep(3)
-
+    _cmk=dao.get_money_by_name(MAIN_UNITY)
+    tx=bc.transfer(_cmk["addr"],bc.bank,_to,CREDIT_FOR_NEWACCOUNT)
     bc.credit(bc.bank,_to,XGLD_FOR_NEWACCOUNT)
     sleep(3)
+
     log("Transfert de la monnaie de base sur le compte "+address)
     return jsonify({"address":address,"pem":body}),200
 
@@ -127,6 +127,7 @@ def transfer(contract:str,dest:str,amount:str,unity:str):
             "appname":APPNAME,
             "unity": unity.lower(),
             "url_appli": DOMAIN_APPLI + "?contract=" + contract + "&user=" + _dest.address.bech32(),
+            "signature": SIGNATURE
         }), _to=dest, subject="Transfert",attach=pem_dest)
         dao.add_contact(email=dest,addr=_dest.address.bech32())
     else:
@@ -199,7 +200,8 @@ def deploy(unity:str,amount:str,data:dict=None):
             "appname":APPNAME,
             "link":result["link"],
             "bill":result["cost"],
-            "amount":str(amount)
+            "amount":str(amount),
+            "signature":SIGNATURE,
         }),_to=data["email"],subject="Confirmation de création du "+unity)
         dao.add_money(result["contract"],unity,result["owner"],data["public"],data["transferable"],data["url"])
 
