@@ -20,7 +20,7 @@ export class TutoComponent implements OnInit {
   @Input("duration") duration=0;
   @Input("background") background="";
   @Input('if') _if=true;
-  @Input('image') image: string="";
+  @Input('image') image: string="./assets/img/tips.png";
   @Input('main_button') labelButton: string="Continuez";
   @Input('icon') icon:string="";
   @Input('color') color:string="white";
@@ -36,6 +36,7 @@ export class TutoComponent implements OnInit {
   code:string="";
 
   refresh(){
+
     this.text=brand_text(this.text,this.config);
     this.title=brand_text(this.title,this.config);
 

@@ -20,6 +20,7 @@ export class CreateComponent implements OnInit {
   url_transaction: string="";
   transferable=true;
   _public=true;
+  email_confirm: string="";
 
   constructor(public api:ApiService,
               public router:Router,
@@ -37,13 +38,20 @@ export class CreateComponent implements OnInit {
   }
 
   create() {
+
+    if(this.email_confirm==""){
+      showMessage(this,"Vous devez indiquer un email pour recevoir la confirmation");
+      return;
+    }
+
     this.message="Déploiement du "+this.name+" en cours ...";
     let obj={
       pem:this.user.pem["pem"],
       owner:this.user.addr,
       public:this._public,
       transferable:this.transferable,
-      url:this.url
+      url:this.url,
+      email:this.email_confirm
     };
     $$("Demande de déploiement de la monnaie "+this.name+" d'un montant initial de "+this.amount,obj);
 

@@ -188,12 +188,18 @@ class ElrondNet:
             log("Echec de déploiement, timeout")
             return {"error":600,
                     "message":"timeout",
+                    "cost": toFiat(gas_limit,1),
                     "link": "https://testnet-explorer.elrond.com/transactions/" + tx,
                     "addr": address.bech32()
                     }
         else:
             log("Déploiement du nouveau contrat réussi voir transaction "+TRANSACTION_EXPLORER+tx)
-            return {"link":TRANSACTION_EXPLORER+tx,"contract":address.bech32(),"owner":user.address.bech32()}
+            return {
+                "link":TRANSACTION_EXPLORER+tx,
+                "cost": toFiat(gas_limit, 1),
+                "contract":address.bech32(),
+                "owner":user.address.bech32()
+            }
 
 
 

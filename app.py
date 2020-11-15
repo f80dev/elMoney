@@ -10,6 +10,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import yaml
 from bson import json_util
 from erdpy.accounts import Account
+from erdpy.contracts import SmartContract
 
 from flask import Flask, Response, request, jsonify
 from flask_cors import CORS
@@ -192,9 +193,15 @@ def deploy(unity:str,amount:str,data:dict=None):
         log("Probléme de création de la monnaie "+str(result))
         return jsonify(result), 500
     else:
+        send_mail(open_html_file("money",{
+            "contract":result["contract"],
+            "unity":unity,
+            "appname":APPNAME,
+            "link":result["link"],
+            "bill":result["cost"],
+            "amount":str(amount)
+        }),_to=data["email"],subject="Confirmation de création du "+unity)
         dao.add_money(result["contract"],unity,result["owner"],data["public"],data["transferable"],data["url"])
-
-    #scheduler.add_job(refresh_client, id="id_" + owner, args=[owner], trigger="interval", minutes=0.15,max_instances=1)
 
     return jsonify(result),200
 
@@ -281,21 +288,25 @@ def getyaml(name):
 
 
 
+@app.route('/api/new_account/<wait>/')
 @app.route('/api/new_account/')
-def new_account():
+def new_account(wait="true"):
     _a,pem=bc.create_account(XGLD_FOR_NEWACCOUNT)
 
     log("Création du compte " + _a.address.bech32() +". Demande de transfert de la monnaie par defaut")
 
     rc=bc.transfer(app.config["cmk"], bc.bank, _a, CREDIT_FOR_NEWACCOUNT)
-    t=bc.wait_transaction(rc["tx"], not_equal="pending",timeout=5)
+    if wait=="true":
+        t=bc.wait_transaction(rc["tx"], not_equal="pending",timeout=5)
+        log("Résultat du transfert " + str(t))
 
-    log("Résultat du transfert "+str(t))
 
     #TODO: private key a crypter
 
+    cmk:dict=dao.get_money_by_name(MAIN_UNITY)
+
     keys = {"public": _a.address.bech32(), "private": _a.private_key_seed}
-    return jsonify({"address":_a.address.bech32(),"keys":keys,"pem":pem}),200
+    return jsonify({"address":_a.address.bech32(),"keys":keys,"pem":pem,"default_money":cmk["addr"]}),200
 
 
 

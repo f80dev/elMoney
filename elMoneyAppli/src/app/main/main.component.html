@@ -1,5 +1,8 @@
 <div class="mainform">
 
+  <app-tuto label="Bienvenue dans CoinMaKer. Cet écran va vous permettre de consulter votre solde de CMK (la monnaie par defaut de l'application), d'en envoyez et d'en recevoir. D'autres options sont disponibles dans le menu latéral">
+
+  </app-tuto>
 
   <div *ngIf="user.gas<config.values?.min_gas_to_transfer && _max>0">
     Vous n'avez probablement plus assez de gas pour effectuer des transfert.<br>

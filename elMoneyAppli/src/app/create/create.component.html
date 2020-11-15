@@ -1,7 +1,7 @@
 <div class="mainform">
-  <br><br>
-  <app-tuto label="Pour créer une nouvelle monnaie il vous suffit d'indiquer son nom en 3 ou 4 lettres et d'indique le nombre de pieces total en circulation"></app-tuto>
+  <br>
   <h2 *ngIf="message?.length==0">Créer votre monnaie</h2>
+  <app-tuto label="Pour créer une nouvelle monnaie il vous suffit d'indiquer son nom en quelques lettres et d'indiquer le nombre total de pieces en circulation"></app-tuto>
   <app-hourglass [message]="message"></app-hourglass>
 
   <div *ngIf="user.gas<config.values?.min_gas_to_create">
@@ -29,20 +29,32 @@
     <input matInput type="number" min="0" [(ngModel)]="amount">
    </mat-form-field>
 <br>
-    <div style="width:200px;text-align: left;display: inline-block">
-      <br><br>
-      <mat-checkbox [(ngModel)]="_public"
-                    title="La monnaie est visible dans la liste des monnaies disponibles">Public</mat-checkbox>
-      <br><br>
-      <mat-checkbox [(ngModel)]="transferable"
-                    title="Donner la possibilité d'envoyer la monnaie entre comptes">
-        Transférable
-      </mat-checkbox>
-    </div>
+<!--TODO a retablir une fois disponible-->
+    <!--    <div style="width:200px;text-align: left;display: inline-block">-->
+<!--      <br><br>-->
+<!--      <mat-checkbox [(ngModel)]="_public"-->
+<!--                    title="La monnaie est visible dans la liste des monnaies disponibles">Public</mat-checkbox>-->
+<!--      <br><br>-->
+<!--      <mat-checkbox [(ngModel)]="transferable"-->
+<!--                    title="Donner la possibilité d'envoyer la monnaie entre comptes">-->
+<!--        Transférable-->
+<!--      </mat-checkbox>-->
+<!--    </div>-->
 
-    <br><br><br>
+    <br><br>
 
-     <mat-form-field appearance="fill" class="app-field" style="max-width: 320px">
+
+
+    <mat-form-field appearance="fill" class="app-field" style="max-width: 320px">
+    <mat-label>Votre mail pour recevoir la confirmation</mat-label>
+    <input matInput type="text" maxlength="200" [(ngModel)]="email_confirm">
+     <mat-hint>Des infos sur votre monnaie vous seront immédiatement envoyées après la création de celle-ci</mat-hint>
+   </mat-form-field>
+    <br><br>
+
+
+
+      <mat-form-field appearance="fill" class="app-field" style="max-width: 320px">
     <mat-label>Lien internet associé (optionnel)</mat-label>
     <input matInput type="text" maxlength="200" [(ngModel)]="url">
      <mat-hint>Renvoi vers la documentation / promotion de votre monnaie</mat-hint>
