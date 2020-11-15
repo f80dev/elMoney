@@ -14,7 +14,7 @@ import {UserService} from "../user.service";
 })
 export class CreateComponent implements OnInit {
   message: string="";
-  name: string="RV";
+  name: string="";
   amount: number=10000;
   url:string="";
   url_transaction: string="";

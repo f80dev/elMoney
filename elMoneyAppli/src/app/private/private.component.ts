@@ -46,25 +46,11 @@ export class PrivateComponent implements OnInit {
     reader.onload = () => {
       this.message = "Changement de compte";
       this.api._post("analyse_pem", "", reader.result.toString(), 240).subscribe((r: any) => {
-        debugger
         if (this.user.addr != r.address) {
-          this.dialog.open(PromptComponent, {
-            width: '80%',
-            data: {
-              title: 'Changement de compte',
-              question: 'Cette clé ne correspond pas à votre compte, changer de compte ?',
-              onlyConfirm: true,
-              lbl_ok: 'Oui',
-              lbl_cancel: 'Non'
-            }
-          }).afterClosed().subscribe((result_code) => {
-            if (result_code == "yes") {
-              this.user.init(r.address, {pem: r.pem});
-              window.location.reload();
-            }
-          });
+          this.confirm_new(r);
         } else {
           this.user.init(r.address, {pem: r.pem});
+          this._location.back();
         }
       },(err)=>{
         showError(this,err);
@@ -77,16 +63,31 @@ export class PrivateComponent implements OnInit {
     //TODO a connecter
   }
 
+  confirm_new(r:any){
+    this.message="";
+    this.dialog.open(PromptComponent, {
+            width: '80%',
+            data: {
+              title: 'Changement de compte',
+              question: "Cette clé ne correspond pas à votre compte, changer de compte (assurez vous d'avoir sauvegardé la clé du compte actuel ?)",
+              onlyConfirm: true,
+              lbl_ok: 'Oui',
+              lbl_cancel: 'Non'
+            }
+          }).afterClosed().subscribe((result_code) => {
+            if (result_code == "yes") {
+              this.user.init(r.address, {pem: r.pem});
+              window.location.reload();
+            }
+          });
+  }
+
   select_model($event: any) {
     this.message="Chargement du profil de test";
     this.api._post("analyse_pem", "", $event, 240).subscribe((r: any) => {
-      this.message="";
-      this.user.init(r.address, {pem: r.pem},()=>{
-        window.location.reload();
+      this.confirm_new(r);
       },()=>{
         showMessage(this,"Probléme technique de changement de profil");
       });
-
-    });
   }
 }

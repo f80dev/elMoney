@@ -1,7 +1,6 @@
 import json
 import logging
 import os
-import urllib
 from datetime import datetime
 
 from time import sleep
@@ -14,21 +13,32 @@ from erdpy.environments import TestnetEnvironment
 from erdpy.transactions import Transaction
 from erdpy.wallet import generate_pair,derive_keys
 
-from Tools import send_mail, open_html_file, base_alphabet_to_10, log
-from definitions import DOMAIN_APPLI, BYTECODE_PATH, DEFAULT_UNITY_CONTRACT, MAIN_UNITY, TOTAL_DEFAULT_UNITY, \
-    TRANSACTION_EXPLORER
+from Tools import log
+from definitions import BYTECODE_PATH, TRANSACTION_EXPLORER
+
 
 def toFiat(crypto,fiat=8):
+    """
+    Conversion du gas en monnaie ou egld
+    :param crypto:
+    :param fiat:
+    :return:
+    """
     return (int(crypto)/1e18)*fiat
 
 
+
 class ElrondNet:
+    """
+    classe symbolisant la blocchaine
+    """
     contract=None
     environment=None
     _proxy:ElrondProxy=None
     bank=None
 
-    def __init__(self,proxy="https://api-testnet.elrond.com",bank_pem="./PEM/alice.pem"):
+
+    def __init__(self,proxy="https://api-testnet.elrond.com"):
         """
         Initialisation du proxy
         :param proxy:
@@ -82,8 +92,16 @@ class ElrondNet:
 
 
     def init_bank(self):
-        if os.path.exists("./PEM/bank.pem"):
-            self.bank=Account(pem_file="./PEM/bank.pem")
+        """
+        La bank va distribuer des egold pour permettre aux utilisateurs de pouvoir faire
+        les premiers transfert gratuitement
+        c'est elle qui recevra également le cout de fabrication d'une monnaie
+
+        L'objectif est d'initialiser la propriété bank
+        :return:
+        """
+        if os.path.exists("PEM/bank.pem"):
+            self.bank=Account(pem_file="PEM/bank.pem")
         else:
             self.bank,pem=self.create_account(name="bank")
             log("Vous devez transférer des fonds vers la banques "+self.bank.address.bech32())
@@ -99,7 +117,7 @@ class ElrondNet:
 
     def transfer(self,_contract,user_from:Account,user_to:Account,amount:int):
         """
-
+        Appel la fonction transfer du smart contrat, correpondant à un transfert de fond
         :param _contract:
         :param user_from:
         :param user_to:
@@ -142,7 +160,7 @@ class ElrondNet:
 
     def deploy(self,pem_file,unity="RVC",amount=100000,gas_limit=80000000):
         """
-        Déployer une nouvelle monnaie
+        Déployer une nouvelle monnaie, donc un conrat ERC20
         :param pem_file: signature du propriétaire de la monnaie
         :param unity: nom court de la monnaie
         :param amount: montant de départ
@@ -205,6 +223,12 @@ class ElrondNet:
 
 
     def getName(self,contract):
+        """
+        Pour l'instant cette fonction ne marche pas.
+        A terme elle permet de récupérer le nom de la monnaie (et donc se passer d'une base de données)
+        :param contract:
+        :return:
+        """
         lst=self.environment.query_contract(contract,"name")
         if len(lst)>0:
             obj=lst[0]
@@ -216,6 +240,13 @@ class ElrondNet:
 
 
     def credit(self,_from:Account,_to:Account,amount:str):
+        """
+        transfert des egold à un contrat
+        :param _from:
+        :param _to:
+        :param amount:
+        :return:
+        """
         _from.sync_nonce(self._proxy)
         t = Transaction()
         t.nonce = _from.nonce

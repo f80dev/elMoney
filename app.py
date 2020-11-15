@@ -1,20 +1,17 @@
 import base64
 import json
-import os
 import ssl
 import sys
-from time import sleep
+
 
 from apscheduler.schedulers.background import BackgroundScheduler
 
 import yaml
 from bson import json_util
 from erdpy.accounts import Account
-from erdpy.contracts import SmartContract
 
-from flask import Flask, Response, request, jsonify
-from flask_cors import CORS
-from flask_socketio import SocketIO
+from flask import  Response, request, jsonify
+
 
 from Tools import  log, send_mail, open_html_file, now, send
 from apiTools import create_app
@@ -27,11 +24,6 @@ from elrondTools import ElrondNet
 
 
 scheduler = BackgroundScheduler()
-
-
-
-
-
 
 
 
@@ -84,6 +76,8 @@ def event_loop(contract:str,dest:str,amount:str):
 @app.route('/api/analyse_pem/',methods=["POST"])
 def analyse_pem():
     body=str(request.data,"utf-8")
+    log("Analyse du fichier PEM " + body)
+
     if body.endswith(".pem"):
         _to=Account(pem_file="./PEM/"+body)
         address=_to.address.bech32()
@@ -93,11 +87,7 @@ def analyse_pem():
         _to=Account(address)
 
     _cmk=dao.get_money_by_name(MAIN_UNITY)
-    tx=bc.transfer(_cmk["addr"],bc.bank,_to,CREDIT_FOR_NEWACCOUNT)
-    bc.credit(bc.bank,_to,XGLD_FOR_NEWACCOUNT)
-    sleep(3)
 
-    log("Transfert de la monnaie de base sur le compte "+address)
     return jsonify({"address":address,"pem":body}),200
 
 
@@ -212,15 +202,24 @@ def deploy(unity:str,amount:str,data:dict=None):
 #http://localhost:5555/api/server_config/
 @app.route('/api/server_config/')
 def server_config():
-    bank_balance=bc.getBalance(app.config["cmk"],bc.bank.address.bech32())
-    infos={
-        "bank_addr":bc.bank.address.bech32(),
-        "bank_cmk":bank_balance["number"],
-        "bank_gas": bank_balance["gas"],
-        "default_money":app.config["cmk"],
-        "proxy":bc._proxy.url
-    }
-    return jsonify(infos),200
+    _cmk=dao.get_money_by_name(MAIN_UNITY)
+    if _cmk is None:
+        _cmk=app.config["cmk"]
+    else:
+        _cmk = _cmk["addr"]
+    bank_balance=bc.getBalance(_cmk,bc.bank.address.bech32())
+    if not bank_balance is None:
+        infos={
+            "bank_addr":bc.bank.address.bech32(),
+            "bank_cmk":bank_balance["number"],
+            "bank_gas": bank_balance["gas"],
+            "default_money":app.config["cmk"],
+            "proxy":bc._proxy.url
+        }
+        return jsonify(infos),200
+    else:
+        return Response("Probleme avec la bank",500)
+
 
 
 @app.route('/api/contacts/<addr>/')
@@ -325,9 +324,7 @@ def getmoneys(addr:str=""):
 def raz(password:str):
     log("Demande d'effacement de la base")
     if password!="hh4271":return "Password incorrect",501
-    if dao.raz():
-        dao.add_money(app.config["cmk"], MAIN_UNITY, bc.bank.address.bech32(), True, True,MAIN_URL)
-
+    dao.raz()
     return jsonify({"message":"Effacement terminé"}),200
 
 
