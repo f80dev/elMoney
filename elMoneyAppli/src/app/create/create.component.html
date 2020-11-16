@@ -64,6 +64,7 @@
   <br><br><br>
   <button mat-raised-button  color="primary"
         mat-button class="large-button"
+          [disabled]="name?.length==0"
         (click)="create()">
     Publier votre monnaie !
   </button>

@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1605479528738,
+  "timestamp": 1605537014082,
   "index": "https://coinmaker.f80.fr/index.html",
   "assetGroups": [
     {
@@ -30,6 +30,8 @@
       },
       "urls": [
         "https://coinmaker.f80.fr/assets/cmk.html",
+        "https://coinmaker.f80.fr/assets/coin.png",
+        "https://coinmaker.f80.fr/assets/icons/coin.png",
         "https://coinmaker.f80.fr/assets/icons/icon-128x128.png",
         "https://coinmaker.f80.fr/assets/icons/icon-144x144.png",
         "https://coinmaker.f80.fr/assets/icons/icon-152x152.png",
@@ -41,8 +43,12 @@
         "https://coinmaker.f80.fr/assets/img/LinkedIn.png",
         "https://coinmaker.f80.fr/assets/img/anonymous.png",
         "https://coinmaker.f80.fr/assets/img/coin.png",
+        "https://coinmaker.f80.fr/assets/img/elrond.png",
+        "https://coinmaker.f80.fr/assets/img/hammer.png",
         "https://coinmaker.f80.fr/assets/img/moneys.jpg",
-        "https://coinmaker.f80.fr/assets/img/tips.png"
+        "https://coinmaker.f80.fr/assets/img/tips.png",
+        "https://coinmaker.f80.fr/assets/img/work.png",
+        "https://coinmaker.f80.fr/assets/logo coinmaker.svg"
       ],
       "patterns": []
     }
@@ -50,22 +56,28 @@
   "dataGroups": [],
   "hashTable": {
     "https://coinmaker.f80.fr/assets/cmk.html": "56c3b028aa5fb6c6ce8033e7fb13d98b8ed8d423",
-    "https://coinmaker.f80.fr/assets/icons/icon-128x128.png": "dae3b6ed49bdaf4327b92531d4b5b4a5d30c7532",
+    "https://coinmaker.f80.fr/assets/coin.png": "9b5eb5e2fbadf0386fd6925a9e3b1b73fbfeafbc",
+    "https://coinmaker.f80.fr/assets/icons/coin.png": "9b5eb5e2fbadf0386fd6925a9e3b1b73fbfeafbc",
+    "https://coinmaker.f80.fr/assets/icons/icon-128x128.png": "9981a8f161082e9e60cd3ad7f7f2a74b6f6d6690",
     "https://coinmaker.f80.fr/assets/icons/icon-144x144.png": "b0bd89982e08f9bd2b642928f5391915b74799a7",
     "https://coinmaker.f80.fr/assets/icons/icon-152x152.png": "7479a9477815dfd9668d60f8b3b2fba709b91310",
     "https://coinmaker.f80.fr/assets/icons/icon-192x192.png": "1abd80d431a237a853ce38147d8c63752f10933b",
     "https://coinmaker.f80.fr/assets/icons/icon-384x384.png": "329749cd6393768d3131ed6304c136b1ca05f2fd",
-    "https://coinmaker.f80.fr/assets/icons/icon-512x512.png": "559d9c4318b45a1f2b10596bbb4c960fe521dbcc",
-    "https://coinmaker.f80.fr/assets/icons/icon-72x72.png": "c457e56089a36952cd67156f9996bc4ce54a5ed9",
-    "https://coinmaker.f80.fr/assets/icons/icon-96x96.png": "3914125a4b445bf111c5627875fc190f560daa41",
+    "https://coinmaker.f80.fr/assets/icons/icon-512x512.png": "b2e9d2693de52d19321d6d8b3dbea223e131b343",
+    "https://coinmaker.f80.fr/assets/icons/icon-72x72.png": "70eb9e67c7ad207d26896f781b10219824db2f7e",
+    "https://coinmaker.f80.fr/assets/icons/icon-96x96.png": "2de9dcc756f083da58b2dfb4a47919791529c97b",
     "https://coinmaker.f80.fr/assets/img/LinkedIn.png": "dec770e0a226b15021d0b80154aa18841097a46e",
     "https://coinmaker.f80.fr/assets/img/anonymous.png": "c015f4d0bf7c81184706a840cfabef65c3f4e0c4",
     "https://coinmaker.f80.fr/assets/img/coin.png": "a4a110b9c6a43e94039a1605e7f55eb837ad1052",
+    "https://coinmaker.f80.fr/assets/img/elrond.png": "aac2fd8bf932909c7f908af75ebf3ba755e7535d",
+    "https://coinmaker.f80.fr/assets/img/hammer.png": "e9b7dc8d51d8b0c07e786d4fccc2ca2191253f19",
     "https://coinmaker.f80.fr/assets/img/moneys.jpg": "7da26d41d3b0241798f3421ebd96eae92132b27a",
     "https://coinmaker.f80.fr/assets/img/tips.png": "b7832ac8a831f94cd9b656f48bc0d75a5cd587ca",
+    "https://coinmaker.f80.fr/assets/img/work.png": "817016b0bb4190f9715aae75cfab36a952359d53",
+    "https://coinmaker.f80.fr/assets/logo coinmaker.svg": "7570bbf5d0cd79cdd7036b738632a641e0b3a850",
     "https://coinmaker.f80.fr/favicon.ico": "22f6a4a3bcaafafb0254e0f2fa4ceb89e505e8b2",
     "https://coinmaker.f80.fr/index.html": "3183649f3e132199c8d7ee2b39ee0aad56ba89e3",
-    "https://coinmaker.f80.fr/main.js": "d2632dc14c8771d26303ece3d8a5402941726d7b",
+    "https://coinmaker.f80.fr/main.js": "49899fcafbb2790fc7ab119e41c390f46c6145f5",
     "https://coinmaker.f80.fr/manifest.webmanifest": "5243db78a9a3156cbab406fd1b0e91be46b833b5",
     "https://coinmaker.f80.fr/polyfills.js": "72ad4ccc0a3916ae4598199447cdeadd6d380570",
     "https://coinmaker.f80.fr/runtime.js": "a9aafcf49f49145093fc831efd9b8e2f6c71bb9c",

@@ -23,6 +23,7 @@
         &nbsp;
         <button mat-raised-button mat-icon-button
                 mat-button class="icon-button" style="background-color: transparent;"
+                *ngIf="config.server?.proxy?.indexOf('explorer')>-1"
                 (click)="openContrat(m.contract)">
           <mat-icon>import_contacts</mat-icon>
         </button>
@@ -47,7 +48,7 @@
   <br><br>
 
   <button mat-raised-button mat-button
-          class="app-button"
+          class="app-button" color="primary"
           (click)="router.navigate(['create'])">
     <div class="bloc-bouton">Fabriquer<br>votre monnaie</div>
   </button>

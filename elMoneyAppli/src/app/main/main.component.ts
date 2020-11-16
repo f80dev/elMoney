@@ -90,7 +90,7 @@ export class MainComponent implements OnInit {
         "",
         pem,180).subscribe((r: any) => {
           this.message="";
-          showMessage(this, "Fond transféré, il vous reste "+r["account"]+"€ pour les transactions",4000);
+          showMessage(this, "Fond transféré, il vous reste "+r["account"]+" xeGld pour les transactions",4000);
           this.user.balance=this.user.balance-this.hand;
           this.hand=0;
           this.refresh();

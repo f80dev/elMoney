@@ -5,6 +5,7 @@ import {$$, showMessage} from "../tools";
 import {Router} from "@angular/router";
 import {UserService} from "../user.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {ConfigService} from "../config.service";
 
 @Component({
   selector: 'app-moneys',
@@ -17,6 +18,7 @@ export class MoneysComponent implements OnInit {
 
   constructor(public api:ApiService,
               public router:Router,
+              public config:ConfigService,
               public toast:MatSnackBar,
               public user:UserService,
               public _location:Location) { }

@@ -1,21 +1,23 @@
 <div class="mainform">
   <app-hourglass [message]="message"></app-hourglass>
 
+  <app-tuto label="Si besoin, télécharger votre clé privée et conserver là en lieu sûr pour effecture les transferts et la création de nouvelle monnaie"></app-tuto>
 
-  <br><br>
+  <br>
 
   <a [href]="fileUrl"
      *ngIf="user.pem"
      download="elrond_key.pem">Télécharger ma clé privée</a>
   <br>
-  pour pouvoir se reconnecter
+  pour s'authentifier lors des transferts et création de monnaie
 
+  <br>
   <br><br>
 
   <button mat-raised-button mat-button
           class="app-button"
           (click)="router.navigate(['private'])">
-    <div class="bloc-bouton">Changer<br>de compte</div>
+    <div class="bloc-bouton">Utiliser ma<br>clé privée</div>
   </button>
   &nbsp;
   <button mat-raised-button mat-button

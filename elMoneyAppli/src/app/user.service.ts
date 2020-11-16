@@ -116,7 +116,7 @@ export class UserService {
     $$("Initialisation de l'utilisateur avec ",addr);
     if(!addr)addr=localStorage.getItem("addr");
     if(!addr) {
-      if(vm)vm.message="Ouverture de votre compte";
+      if(vm)vm.message="Ouverture de votre compte sur la chaine Elrond";
       this.create_new_account((r)=>{
         if(vm)vm.message="";
         this.init(r.address, {pem:r.pem},func,func_error);},

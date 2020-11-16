@@ -58,6 +58,14 @@ class ElrondNet:
 
 
 
+    def getExplorer(self,tx):
+        url=TRANSACTION_EXPLORER+tx
+        if "explorer" in self._proxy.url:
+            return url
+        else:
+            return tx
+
+
 
     def getBalance(self,contract,addr:str):
         user = Account(address=addr)
@@ -150,7 +158,7 @@ class ElrondNet:
                 "tx":tx,
                 "price":toFiat(tr["gasLimit"]),
                 "account":toFiat(infos),
-                "explorer":TRANSACTION_EXPLORER+tx,
+                "explorer":self.getExplorer(tx),
                 "to":user_to.address.bech32()
             }
         except Exception as inst:
@@ -207,13 +215,13 @@ class ElrondNet:
             return {"error":600,
                     "message":"timeout",
                     "cost": toFiat(gas_limit,1),
-                    "link": "https://testnet-explorer.elrond.com/transactions/" + tx,
+                    "link": self.getExplorer(tx),
                     "addr": address.bech32()
                     }
         else:
-            log("Déploiement du nouveau contrat réussi voir transaction "+TRANSACTION_EXPLORER+tx)
+            log("Déploiement du nouveau contrat réussi voir transaction "+self.getExplorer(tx))
             return {
-                "link":TRANSACTION_EXPLORER+tx,
+                "link":self.getExplorer(tx),
                 "cost": toFiat(gas_limit, 1),
                 "contract":address.bech32(),
                 "owner":user.address.bech32()
@@ -266,7 +274,7 @@ class ElrondNet:
             log("On envoi les fonds")
             tx=t.send(self._proxy)
             self.wait_transaction(tx,not_equal="pending")
-            log("Fond transférer, consulter la transaction "+TRANSACTION_EXPLORER+tx)
+            log("Fond transférer, consulter la transaction "+self.getExplorer(tx))
             return tx
         except:
             return None
@@ -284,7 +292,7 @@ class ElrondNet:
         :return:
         """
         rc=dict()
-        log("Attente jusqu'a "+str(interval*timeout)+" secs synchrone de la transaction "+TRANSACTION_EXPLORER+tx)
+        log("Attente jusqu'a "+str(interval*timeout)+" secs synchrone de la transaction "+self.getExplorer(tx))
         while timeout>0:
             sleep(interval)
             rc=self._proxy.get_transaction(tx_hash=tx)
@@ -292,7 +300,7 @@ class ElrondNet:
             if len(not_equal) > 0 and rc[field] != not_equal: break
             timeout=timeout-1
 
-        if timeout<=0:log("Timeout de "+TRANSACTION_EXPLORER+tx+" "+field+" est a "+str(rc[field]))
+        if timeout<=0:log("Timeout de "+self.getExplorer(tx)+" "+field+" est a "+str(rc[field]))
         return rc
 
 

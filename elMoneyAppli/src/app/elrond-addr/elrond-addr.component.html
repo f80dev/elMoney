@@ -1,5 +1,14 @@
 <div style="display: inline-block">
-  <a [href]="url" target="_blank" [title]="addr">
+
+  <a *ngIf="url?.startsWith('http')" [href]="url" target="_blank" [title]="addr">
       <small>{{label}}</small>
   </a>
+
+  <div style="font-size: small;"
+       ngxClipboard [cdkCopyToClipboard]="url"
+        *ngIf="!url?.startsWith('http')">
+    {{label}}:<br>
+    {{url.substr(0,20)+'...'}}
+  </div>
+
 </div>

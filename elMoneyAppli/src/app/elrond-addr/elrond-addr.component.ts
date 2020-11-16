@@ -1,4 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
+import {ConfigService} from "../config.service";
 
 @Component({
   selector: 'app-elrond-addr',
@@ -12,10 +13,13 @@ export class ElrondAddrComponent implements OnInit {
   url: string="";
 
 
-  constructor() { }
+  constructor(public config:ConfigService) { }
 
   ngOnInit(): void {
-    this.url="https://testnet-explorer.elrond.com/"+this._type+"/"+this.addr;
+    if(this.config.server.proxy.indexOf("explorer")>-1)
+      this.url="https://testnet-explorer.elrond.com/"+this._type+"/"+this.addr;
+    else
+      this.url=this.addr;
   }
 
 }
