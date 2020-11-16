@@ -36,7 +36,7 @@ def init_cmk(bc,dao):
         log("Vous devez initialiser la bank pour créer le contrat de monnaie par défaut")
         return False
 
-    _m=dao.get_money_by_name(MAIN_UNITY)
+    _m=dao.get_money_by_name(MAIN_UNITY,bc._proxy.url)
     if not _m is None:
         cmk=_m["addr"]
         _cmk=bc.getBalance(cmk,bc.bank)
@@ -56,7 +56,7 @@ def init_cmk(bc,dao):
         cmk=rc["contract"]
 
     if dao.get_money_by_address(cmk) is None:
-        dao.add_money(cmk,MAIN_UNITY,bc.bank.address.bech32(),True,True,MAIN_URL)
+        dao.add_money(cmk,MAIN_UNITY,bc.bank.address.bech32(),True,True,MAIN_URL,bc._proxy.url)
 
     log("Contrat de la monnaie par defaut déployer à "+cmk)
     return cmk
@@ -89,7 +89,7 @@ def analyse_pem():
         address="erd"+body.split("erd")[1].split("----")[0]
         _to=Account(address)
 
-    _cmk=dao.get_money_by_name(MAIN_UNITY)
+    _cmk=dao.get_money_by_name(MAIN_UNITY,bc._proxy.url)
 
     return jsonify({"address":address,"pem":body}),200
 
@@ -182,7 +182,7 @@ def deploy(unity:str,amount:str,data:dict=None):
        data = json.loads(data)
 
     log("Vérification de l'unicité du nom")
-    if data["public"] and not dao.get_money_by_name(unity) is None:
+    if data["public"] and not dao.get_money_by_name(unity,bc._proxy.url) is None:
         return jsonify({"message": "Cette monnaie 'public' existe déjà"}), 500
 
     if not ".pem" in data["pem"]:
@@ -209,7 +209,7 @@ def deploy(unity:str,amount:str,data:dict=None):
             "amount":str(amount),
             "signature":SIGNATURE,
         }),_to=data["email"],subject="Confirmation de création du "+unity)
-        dao.add_money(result["contract"],unity,result["owner"],data["public"],data["transferable"],data["url"])
+        dao.add_money(result["contract"],unity,result["owner"],data["public"],data["transferable"],data["url"],bc._proxy.url)
 
     return jsonify(result),200
 
@@ -220,7 +220,7 @@ def deploy(unity:str,amount:str,data:dict=None):
 def server_config():
     log("Récupération de la configuration du server avec la bank "+bc.bank.address.bech32())
 
-    _cmk=dao.get_money_by_name(MAIN_UNITY)
+    _cmk=dao.get_money_by_name(MAIN_UNITY,bc._proxy.url)
     if _cmk is None:
         _cmk=app.config["cmk"]
         log("Pas de monnaie disponible, on charge celle du fichier de config " + str(_cmk))
@@ -328,7 +328,7 @@ def new_account(wait="true"):
 
     #TODO: private key a crypter
 
-    cmk:dict=dao.get_money_by_name(MAIN_UNITY)
+    cmk:dict=dao.get_money_by_name(MAIN_UNITY,bc._proxy.url)
 
     keys = {"public": _a.address.bech32(), "private": _a.private_key_seed}
     return jsonify({"address":_a.address.bech32(),"keys":keys,"pem":pem,"default_money":cmk["addr"]}),200
@@ -339,7 +339,7 @@ def new_account(wait="true"):
 @app.route('/api/moneys/')
 def getmoneys(addr:str=""):
     log("Récépuration de l'ensemble des monnaies pour "+addr)
-    return json_util.dumps(dao.get_moneys(addr))
+    return json_util.dumps(dao.get_moneys(addr,bc._proxy.url))
 
 
 
@@ -348,7 +348,8 @@ def getmoneys(addr:str=""):
 def raz(password:str):
     log("Demande d'effacement de la base")
     if password!="hh4271":return "Password incorrect",501
-    dao.raz()
+    if dao.raz(bc._proxy.url):
+        init_cmk(bc,dao)
     return jsonify({"message":"Effacement terminé"}),200
 
 
@@ -357,7 +358,7 @@ def raz(password:str):
 
 @app.route('/api/name/<contract>/')
 def getname(contract:str):
-    rc=dao.get_money_by_name(contract)
+    rc=dao.get_money_by_name(contract,bc._proxy.url)
     if rc is None:return "Pas de monnaie correspondant au contrat "+contract,404
     return jsonify({"name":rc["name"]}), 200
 

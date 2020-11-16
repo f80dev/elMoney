@@ -1,9 +1,17 @@
 <div class="mainform">
-  <button mat-raised-button
-        mat-button class="app-button"
-        (click)="raz()">
-    Raz
-  </button>
+
+   <mat-form-field appearance="fill" class="app-field" style="max-width: 150px" *ngIf="password!='hh4271'">
+    <mat-label>Admin password</mat-label>
+    <input matInput type="text" maxlength="6" [(ngModel)]="password">
+   </mat-form-field>
+  &nbsp;&nbsp;
+  <div *ngIf="password=='hh4271'">
+    <button mat-raised-button
+          mat-button class="app-button"
+          (click)="raz()">
+      Raz
+    </button>
+  </div>
   <br><br>
 
   <app-elrond-addr [addr]="config.server?.bank_addr" type="address"
@@ -20,5 +28,6 @@
 
   <br><br>
   Proxy : {{config.server?.proxy}}
+  </div>
 
-</div>
+

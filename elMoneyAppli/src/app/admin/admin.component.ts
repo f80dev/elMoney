@@ -12,6 +12,7 @@ import {ConfigService} from "../config.service";
   styleUrls: ['./admin.component.sass']
 })
 export class AdminComponent implements OnInit {
+  password: any="";
 
 
 

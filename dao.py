@@ -21,7 +21,7 @@ class DAO:
         return rc
 
 
-    def add_money(self,address:str,unity:str,owner:str,_public:bool,transferable:bool,url=""):
+    def add_money(self,address:str,unity:str,owner:str,_public:bool,transferable:bool,url="",proxy=""):
         now=str(datetime.now().timestamp()*1000000)
         _money={
             "addr":address,
@@ -30,7 +30,8 @@ class DAO:
             "public":_public,
             "transferable":transferable,
             "url":url,
-            "dtCreate":now
+            "dtCreate":now,
+            "proxy":proxy
         }
         return self.db["moneys"].replace_one(filter={"addr": address}, replacement=_money, upsert=True)
 
@@ -39,19 +40,19 @@ class DAO:
     def get_money_by_address(self, contract):
         return self.db["moneys"].find_one(filter={"addr":contract})
 
-    def get_money_by_name(self, unity):
-        return self.db["moneys"].find_one(filter={"unity":unity})
+    def get_money_by_name(self, unity,proxy):
+        return self.db["moneys"].find_one(filter={"unity":unity,"proxy":proxy})
 
 
 
-    def get_moneys(self, addr):
+    def get_moneys(self, addr,proxy):
         #TODO: ajouter l'owner
-        rc=list(self.db["moneys"].find(filter={"public": True}))
+        rc=list(self.db["moneys"].find(filter={"public": True,"proxy":proxy}))
         return rc
 
 
-    def raz(self):
-        self.db["moneys"].drop()
+    def raz(self,proxy):
+        self.db["moneys"].remove({"proxy":proxy})
         self.db["contacts"].drop()
         return True
 
