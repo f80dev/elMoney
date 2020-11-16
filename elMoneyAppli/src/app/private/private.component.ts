@@ -25,7 +25,7 @@ export class PrivateComponent implements OnInit {
     {label:"Grace",value:"grace.pem"},
     {label:"Franck",value:"franck.pem"},
     {label:"Ivan",value:"ivan.pem"},
-    {label:"Mike",value:"mike.pem"},
+    {label:"Mallory",value:"mallory.pem"},
     {label:"Judy",value:"judy.pem"}
   ]
   test_profil: any;
