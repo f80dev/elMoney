@@ -18,7 +18,7 @@ XGLD_FOR_NEWACCOUNT="500000000000000000"
 #Description de la monnaie par defaut
 MAIN_UNITY="CMK"
 MAIN_URL="https://coinmaker.f80.fr/assets/cmk.html"
-DEFAULT_UNITY_CONTRACT="erd1qqqqqqqqqqqqqpgq6h5vwx3y77m2lf7p4hf5lev8twd9ml98a4sqk78hty"
+DEFAULT_UNITY_CONTRACT=""
 TOTAL_DEFAULT_UNITY=1000000
 CREDIT_FOR_NEWACCOUNT=75
 

@@ -11,7 +11,7 @@ from dao import DAO
 from definitions import DOMAIN_APPLI
 
 
-def create_app(cmk=""):
+def create_app(cmk):
     """
     Initialisation de l'instance de serveur d'API
     :param test_config:
@@ -19,6 +19,11 @@ def create_app(cmk=""):
     :param db_server:
     :return:
     """
+
+    if cmk is None:
+        log("Aucune monnaie par defaut, On en lance pas le server")
+        return None
+
     app = Flask(__name__, static_folder="static", instance_relative_config=True)
     app.app_context().push()
 

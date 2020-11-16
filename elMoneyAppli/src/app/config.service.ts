@@ -72,7 +72,6 @@ export class ConfigService {
         $$("Chargement du fichier de configuration ok",r);
 
         this.api._get("server_config").subscribe((is:any)=>{
-
           this.server=is;
           $$("Chargement des infos serveur ok",is)
           if(func!=null)func(this.values);

@@ -68,8 +68,12 @@ class ElrondNet:
 
 
     def getBalance(self,contract,addr:str):
-        user = Account(address=addr)
-        log("Ouverture du compte "+addr+" ok. Récupération du gas")
+        if type(addr)==str:
+            user = Account(address=addr)
+        else:
+            user=addr
+
+        log("Ouverture du compte " + user.address.bech32() + " ok. Récupération du gas")
         gas=self._proxy.get_account_balance(address=user.address)
 
         log("Gas disponible "+str(gas))
@@ -108,8 +112,10 @@ class ElrondNet:
         L'objectif est d'initialiser la propriété bank
         :return:
         """
+        log("Initialisation de la bank")
         if os.path.exists("PEM/bank.pem"):
-            self.bank=Account(pem_file="PEM/bank.pem")
+            log("On utilise le fichier bank.pem")
+            self.bank=Account(pem_file="./PEM/bank.pem")
         else:
             self.bank,pem=self.create_account(name="bank")
             log("Vous devez transférer des fonds vers la banques "+self.bank.address.bech32())

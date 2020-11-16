@@ -1,7 +1,8 @@
 FROM python:3.9.0-buster
 
 #fabrication: docker build -t f80hub/elmoney . & docker push f80hub/elmoney:latest
-#installation: docker rm -f elmoney && docker pull f80hub/elmoney:latest && docker run --restart=always -v /root/certs:/certs -p 5555:5555 --name elmoney -d f80hub/elmoney:latest
+#installation: docker rm -f elmoney && docker pull f80hub/elmoney:latest
+#démarrage : docker rm -f elmoney && docker run --restart=always -v /root/certs:/certs -p 5555:5555 --name elmoney -d f80hub/elmoney:latest python3 app.py 5555 "http://161.97.75.165:7590" ssl
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -36,4 +37,5 @@ COPY ./PEM $APP_HOME/PEM
 EXPOSE 5555
 
 #CMD ["python3", "app.py","5555","https://api-testnet.elrond.com","ssl"]
-CMD ["python3", "app.py","5555","http://161.97.75.165:7590","ssl"]
+#CMD ["python3", "app.py","5555","http://161.97.75.165:7590","ssl"]
+CMD ["python3", "app.py","5555","https://api-testnet.elrond.com","ssl"]

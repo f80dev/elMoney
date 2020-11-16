@@ -36,12 +36,15 @@ def init_cmk(bc,dao):
         log("Vous devez initialiser la bank pour créer le contrat de monnaie par défaut")
         return False
 
-    _m=dao.get_money_by_name("CMK")
-    if _m is None:
-        cmk=DEFAULT_UNITY_CONTRACT
-    else:
+    _m=dao.get_money_by_name(MAIN_UNITY)
+    if not _m is None:
         cmk=_m["addr"]
-
+        _cmk=bc.getBalance(cmk,bc.bank)
+        if _cmk is None:
+            log("Le contrat de "+MAIN_UNITY+" n'est pas valable")
+            cmk=""
+    else:
+        cmk = ""
 
     if len(cmk) == 0:
         log("Pas de monnaie dans la configuration, on en créé une")
@@ -215,11 +218,15 @@ def deploy(unity:str,amount:str,data:dict=None):
 #http://localhost:5555/api/server_config/
 @app.route('/api/server_config/')
 def server_config():
+    log("Récupération de la configuration du server avec la bank "+bc.bank.address.bech32())
+
     _cmk=dao.get_money_by_name(MAIN_UNITY)
     if _cmk is None:
         _cmk=app.config["cmk"]
+        log("Pas de monnaie disponible, on charge celle du fichier de config " + str(_cmk))
     else:
         _cmk = _cmk["addr"]
+
     bank_balance=bc.getBalance(_cmk,bc.bank.address.bech32())
     if not bank_balance is None:
         infos={
@@ -231,6 +238,7 @@ def server_config():
         }
         return jsonify(infos),200
     else:
+        log("Impossible de récupérer la balance de la banque")
         return Response("Probleme avec la bank",500)
 
 
