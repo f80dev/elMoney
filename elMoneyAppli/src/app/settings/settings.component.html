@@ -8,8 +8,11 @@
   <a [href]="fileUrl"
      *ngIf="user.pem"
      download="elrond_key.pem">Télécharger ma clé privée</a>
-  <br>
-  pour s'authentifier lors des transferts et création de monnaie
+  <br><br>
+  <small>
+    pour s'authentifier lors des transferts<br>et création de monnaie
+  </small>
+
 
   <br>
   <br><br>
@@ -17,7 +20,7 @@
   <button mat-raised-button mat-button
           class="app-button"
           (click)="router.navigate(['private'])">
-    <div class="bloc-bouton">Utiliser ma<br>clé privée</div>
+    <div class="bloc-bouton">Utiliser une<br>clé privée</div>
   </button>
   &nbsp;
   <button mat-raised-button mat-button

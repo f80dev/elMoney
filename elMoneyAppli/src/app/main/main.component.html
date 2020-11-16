@@ -11,7 +11,7 @@
 
   <div *ngIf="user.gas<config.values?.min_gas_to_transfer && _max>0">
     Vous n'avez probablement plus assez de gas pour effectuer des transfert.<br>
-    <a routerLink="settings">Recharger votre compte</a>
+    <span style="cursor: pointer;color:deeppink;" (click)="router.navigate(['settings'])">Recharger votre compte</span>
   </div>
 
   <app-hourglass [message]="message" style="margin-top: 20px;"></app-hourglass>
@@ -141,7 +141,11 @@
       [errorCorrectionLevel]="'M'"
       [qrdata]="user.addr">
     </qrcode><br>
-    <small>Flashez pour recevoir des '{{user.unity}}'</small>
+    <small>
+      Flashez pour recevoir des '{{user.unity}}'<br>
+      ou cliquer sur le code bar pour récupérer votre adresse
+    </small>
+
   </div>
 
   <div    *ngIf="!showQRCode">

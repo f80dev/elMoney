@@ -6,7 +6,7 @@
 
   <div *ngIf="user.gas<config.values?.min_gas_to_create">
     Vous n'avez probablement plus assez de gas pour fabriquer une monnaie.<br>
-    <a routerLink="settings">Recharger mon compte</a>
+    <span style="cursor: pointer;color:deeppink;" (click)="router.navigate(['settings'])">Recharger votre compte</span>
   </div>
 
   <div *ngIf="message?.length==0 && user.gas>config.values?.min_gas_to_create">

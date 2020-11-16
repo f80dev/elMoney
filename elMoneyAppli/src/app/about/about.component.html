@@ -10,8 +10,10 @@
       <br>
       <br>
     </div>
-    <small>Version:</small>
-    <br>{{appVersion}}<br><br>
+    <div (click)="checkVersion()">
+      <small>Version:</small>
+      <br>{{appVersion}}<br><br>
+    </div>
     _______
 
     <br><br>
@@ -50,23 +52,25 @@
     <div style="width: 100%;text-align: center;font-size: medium;">
 
     <button class="icon-button" mat-icon-button mat-raised-button
+            *ngIf="config.values.support?.email?.length>0"
             (click)="openMail(config.values.support?.email)">
         <mat-icon>mail</mat-icon>
     </button>
 
     &nbsp;
     <button class="icon-button" mat-icon-button mat-raised-button
-            (click)="openFrame(config.values.support?.forum)">
+            (click)="openForm(config.values.support?.forum)">
       <mat-icon class="big-icon">persons</mat-icon>
     </button>
     &nbsp;
     <button class="icon-button"
             mat-icon-button mat-raised-button
-            (click)="openFrame(config.values.support?.faq)">
+            (click)="router.navigate(['faqs'])">
       <mat-icon >help</mat-icon>
     </button>
 &nbsp;
     <button class="icon-button" mat-icon-button mat-raised-button
+            *ngIf="config.values.support?.website?.length>0"
             (click)="openFrame(config.values.support?.website)"
            >
       <mat-icon >home</mat-icon>

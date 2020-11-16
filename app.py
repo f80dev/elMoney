@@ -18,7 +18,7 @@ from apiTools import create_app
 
 from dao import DAO
 from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, XGLD_FOR_NEWACCOUNT, ADMIN_SALT, \
-    MAIN_URL, DEFAULT_UNITY_CONTRACT, TOTAL_DEFAULT_UNITY, SIGNATURE
+    MAIN_URL, DEFAULT_UNITY_CONTRACT, TOTAL_DEFAULT_UNITY, SIGNATURE, MAIN_DEVISE
 from elrondTools import ElrondNet
 
 
@@ -95,6 +95,18 @@ def analyse_pem():
 def refresh_client(dest:str):
     send(socketio,"refresh_account",dest)
     scheduler.remove_job("id_"+dest)
+
+
+
+
+@app.route('/api/refund/<dest>/',methods=["GET"])
+def refund(dest:str):
+    _dest=Account(dest)
+    if bc.credit(bc.bank,_dest,XGLD_FOR_NEWACCOUNT):
+        account=bc._proxy.get_account_balance(_dest.address)
+        return jsonify({"gas":account}),200
+    else:
+        return Response("probleme de rechargement",500)
 
 
 
@@ -188,6 +200,7 @@ def deploy(unity:str,amount:str,data:dict=None):
             "contract":result["contract"],
             "unity":unity,
             "appname":APPNAME,
+            "devise":MAIN_DEVISE,
             "link":result["link"],
             "bill":result["cost"],
             "amount":str(amount),

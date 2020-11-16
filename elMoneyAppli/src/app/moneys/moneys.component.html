@@ -7,7 +7,6 @@
 
   <app-hourglass [message]="message"></app-hourglass>
 
-
   <table *ngIf="message?.length==0" style="width: 100%;">
     <tr *ngFor="let m of moneys">
       <td style="max-width:200px;text-align: center;font-size: large;">
@@ -49,6 +48,7 @@
 
   <button mat-raised-button mat-button
           class="app-button" color="primary"
+          *ngIf="message?.length==0"
           (click)="router.navigate(['create'])">
     <div class="bloc-bouton">Fabriquer<br>votre monnaie</div>
   </button>

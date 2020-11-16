@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {ConfigService} from "../config.service";
 import {environment} from "../../environments/environment";
 import {Location} from "@angular/common";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-about',
@@ -13,7 +14,9 @@ export class AboutComponent implements OnInit {
 
 
 
-  constructor(public config:ConfigService,public _location:Location) {
+  constructor(public config:ConfigService,
+              public router:Router,
+              public _location:Location) {
     this.appVersion=environment.appVersion;
   }
 
@@ -26,5 +29,13 @@ export class AboutComponent implements OnInit {
 
   openMail(url: string) {
     open(url);
+  }
+
+  checkVersion() {
+    window.location.reload();
+  }
+
+  openForm(url: any) {
+    open(url,"Support");
   }
 }

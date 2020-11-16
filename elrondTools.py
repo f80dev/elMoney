@@ -85,7 +85,7 @@ class ElrondNet:
             rc=None
 
         if rc is None: return None
-        if rc[0] is None:
+        if rc[0] is None or rc[0]=="":
             d={"number":0}
         else:
             d=json.loads(str(rc[0]).replace("'","\""))
@@ -196,7 +196,7 @@ class ElrondNet:
                 contract=SmartContract(bytecode=bytecode),
                 owner=user,
                 arguments=arguments,
-                gas_price=config.DEFAULT_GAS_PRICE/1,
+                gas_price=config.DEFAULT_GAS_PRICE,
                 gas_limit=gas_limit,
                 value=0,
                 chain=self._proxy.get_chain_id(),
@@ -214,7 +214,7 @@ class ElrondNet:
             log("Echec de déploiement, timeout")
             return {"error":600,
                     "message":"timeout",
-                    "cost": toFiat(gas_limit,1),
+                    "cost": toFiat(gas_limit*config.DEFAULT_GAS_PRICE,1),
                     "link": self.getExplorer(tx),
                     "addr": address.bech32()
                     }
@@ -222,7 +222,7 @@ class ElrondNet:
             log("Déploiement du nouveau contrat réussi voir transaction "+self.getExplorer(tx))
             return {
                 "link":self.getExplorer(tx),
-                "cost": toFiat(gas_limit, 1),
+                "cost": toFiat(gas_limit*config.DEFAULT_GAS_PRICE,1),
                 "contract":address.bech32(),
                 "owner":user.address.bech32()
             }
@@ -259,7 +259,7 @@ class ElrondNet:
         t = Transaction()
         t.nonce = _from.nonce
         t.version = config.get_tx_version()
-        t.data = "refund for transfert"
+        t.data = "refund"
         t.chainID = self._proxy.get_chain_id()
         t.gasLimit = 50000000
         t.value = amount
