@@ -48,6 +48,7 @@ import {WebcamModule} from "ngx-webcam";
 import {MatSliderModule} from "@angular/material/slider";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatSelectModule} from "@angular/material/select";
+import { ImporterComponent } from './importer/importer.component';
 
 const config: SocketIoConfig = { url: environment.domain_server, options: {} };
 
@@ -74,7 +75,8 @@ const config: SocketIoConfig = { url: environment.domain_server, options: {} };
     SidemenuComponent,
     NewContactComponent,
     ElrondAddrComponent,
-    ScannerComponent
+    ScannerComponent,
+    ImporterComponent
   ],
     imports: [
         MatButtonModule,

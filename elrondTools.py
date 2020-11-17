@@ -38,7 +38,7 @@ class ElrondNet:
     bank=None
 
 
-    def __init__(self,proxy="https://api-testnet.elrond.com"):
+    def __init__(self,proxy="https://testnet-api.elrond.com"):
         """
         Initialisation du proxy
         :param proxy:

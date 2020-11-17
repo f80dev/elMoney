@@ -24,7 +24,7 @@ Le serveur CoinMaker est hébergé dans un container Docker. Il peut être exéc
 
 Il peut se connecter à différente blocchaine suivant l'adresse indiquer au proxy erdpy :
 - Testnet : 
-<pre>docker rm -f elmoney && docker run --restart=always -v /root/certs:/certs -p 5555:5555 --name elmoney -d f80hub/elmoney:latest python3 app.py 5555 "https://api-testnet.elrond.com" ssl</pre>
+<pre>docker rm -f elmoney && docker run --restart=always -v /root/certs:/certs -p 5555:5555 --name elmoney -d f80hub/elmoney:latest python3 app.py 5555 "https://testnet-api.elrond.com" ssl</pre>
 
 - Testnet local : 
 <pre>docker rm -f elmoney && docker run --restart=always -v /root/certs:/certs -p 5555:5555 --name elmoney -d f80hub/elmoney:latest python3 app.py 5555 "http://161.97.75.165:7950" ssl</pre>

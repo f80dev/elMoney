@@ -5,6 +5,7 @@ import {showError, showMessage} from "../tools";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {UserService} from "../user.service";
 import {ConfigService} from "../config.service";
+import {environment} from "../../environments/environment";
 
 @Component({
   selector: 'app-admin',
@@ -14,8 +15,6 @@ import {ConfigService} from "../config.service";
 export class AdminComponent implements OnInit {
   password: any="";
 
-
-
    constructor(public api:ApiService,
                public toast:MatSnackBar,
                public config:ConfigService,
@@ -24,7 +23,9 @@ export class AdminComponent implements OnInit {
 
 
   ngOnInit(): void {
-
+   if(!environment.production){
+     this.password="hh4271";
+   }
   }
 
 
