@@ -10,7 +10,6 @@ from definitions import DB_SERVERS
 class DAO:
     db:any
 
-
     def __init__(self,domain:str="cloud"):
         self.db: pymongo.mongo_client = pymongo.MongoClient(DB_SERVERS[domain])["coinmaker"]
 
@@ -23,6 +22,7 @@ class DAO:
 
     def add_money(self,address:str,unity:str,owner:str,_public:bool,transferable:bool,url="",proxy=""):
         now=str(datetime.now().timestamp()*1000000)
+        if not self.get_money_by_name(unity,proxy) is None:return None
         _money={
             "addr":address,
             "unity":unity,
@@ -58,5 +58,8 @@ class DAO:
 
     def find_contact(self, email):
         return self.db["contacts"].find_one({"email":email})
+
+    def del_contract(self, unity, proxy):
+        self.db["moneys"].remove({"unity":unity,"proxy": proxy})
 
 

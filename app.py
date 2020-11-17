@@ -40,7 +40,7 @@ def init_cmk(bc,dao):
     if not _m is None:
         cmk=_m["addr"]
         _cmk=bc.getBalance(cmk,bc.bank)
-        if _cmk is None:
+        if "error" in _cmk:
             log("Le contrat de "+MAIN_UNITY+" n'est pas valable")
             cmk=""
     else:
@@ -228,7 +228,7 @@ def server_config():
         _cmk = _cmk["addr"]
 
     bank_balance=bc.getBalance(_cmk,bc.bank.address.bech32())
-    if not bank_balance is None:
+    if not "error" in bank_balance:
         infos={
             "bank_addr":bc.bank.address.bech32(),
             "bank_cmk":bank_balance["number"],
@@ -238,6 +238,9 @@ def server_config():
         }
         return jsonify(infos),200
     else:
+        if "contract not found" in bank_balance["error"]:
+            dao.del_contract(MAIN_UNITY,bc._proxy.url)
+
         log("Impossible de récupérer la balance de la banque")
         return Response("Probleme avec la bank",500)
 
