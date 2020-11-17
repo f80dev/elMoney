@@ -16,7 +16,7 @@ export class ElrondAddrComponent implements OnInit {
   constructor(public config:ConfigService) { }
 
   ngOnInit(): void {
-    if(this.config.server.proxy.indexOf("explorer")>-1)
+    if(this.config.server.proxy && this.config.server.proxy.indexOf("explorer")>-1)
       this.url="https://testnet-explorer.elrond.com/"+this._type+"/"+this.addr;
     else
       this.url=this.addr;

@@ -1,6 +1,8 @@
 <div class="mainform">
 
-   <mat-form-field appearance="fill" class="app-field" style="max-width: 150px" *ngIf="password!='hh4271'">
+   <mat-form-field appearance="fill" class="app-field"
+                   style="max-width: 150px"
+                   *ngIf="password!='hh4271'">
     <mat-label>Admin password</mat-label>
     <input matInput type="text" maxlength="6" [(ngModel)]="password">
    </mat-form-field>

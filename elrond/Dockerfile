@@ -5,6 +5,7 @@ FROM ubuntu:groovy
 #fabrication de l'image pour X86: docker build -t f80hub/elrond-testnet . & docker push f80hub/elrond-testnet:latest
 #déploiement : docker rm -f elrond-testnet && docker pull f80hub/elrond-testnet:latest
 #execution : docker rm -f elrond-testnet && docker run --name elrond-testnet -p 7950:7950 -ti f80hub/elrond-testnet
+#ligne de commande : docker rm -f elrond-testnet && docker run --name elrond-testnet -p 7950:7950 -ti f80hub/elrond-testnet bash
 
 #FROM arm32v7/ubuntu
 #fabrication ARM: docker build -t f80hub/elrond-testnet-arm . & docker push f80hub/elrond-testnet-arm:latest
@@ -35,5 +36,8 @@ EXPOSE 7950
 
 RUN echo "~/elrondsdk/erdpy testnet config\n~/elrondsdk/erdpy testnet start\n" > ~/sandbox/testnet.sh
 RUN chmod +x /home/erd/sandbox/testnet.sh
+
+COPY . /home/erd/sandbox
+COPY ./PEM /home/erd/sandbox/PEM
 
 CMD ["bash","/home/erd/sandbox/testnet.sh"]

@@ -29,7 +29,7 @@ export class AdminComponent implements OnInit {
 
 
   raz() {
-    this.api._get("raz/hh4271/").subscribe(()=>{
+    this.api._get("raz/"+this.password+"/").subscribe(()=>{
       showMessage(this,"Base effacée");
       this.user.reset();
     });

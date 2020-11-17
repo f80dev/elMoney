@@ -2,17 +2,17 @@
   <h2>Sélectionnez une monnaie</h2>
 
   <app-tuto
-            style="text-align: left;"
+            style="text-align: left;display: inline-block;max-width: 600px;"
             label="Plusieurs monnaies sont disponibles. Sélectionnez celle que vous souhaitez utiliser. Vous pourrez changer à n'importe quel moment"></app-tuto>
 
   <app-hourglass [message]="message"></app-hourglass>
 
-  <table *ngIf="message?.length==0" style="width: 100%;">
-    <tr *ngFor="let m of moneys">
-      <td style="max-width:200px;text-align: center;font-size: large;">
+  <table *ngIf="message?.length==0" style="display: inline-block;">
+    <tr *ngFor="let m of moneys" style="width: 90vw;">
+      <td style="max-width:300px;text-align: center;font-size: large;width: 40%;">
         <strong>{{m.unity}}</strong>
       </td>
-      <td style="text-align: left;width: 60%;">
+      <td style="text-align: right;width: 60%;">
         <button mat-button mat-raised-button
                 class="app-button" style="background-color: transparent;"
                 (click)="select(m)">

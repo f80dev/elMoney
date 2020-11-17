@@ -40,7 +40,7 @@ export class ConfigService {
       if(!this.user)return false;
       if(!this.user.perm)return false;
       for(let p of perms.split(" ")){
-        if(this.user.perm.indexOf(p)==-1){
+        if(!this.user.perm || this.user.perm.indexOf(p)==-1){
           return false;
         }
       }
