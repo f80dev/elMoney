@@ -10,8 +10,8 @@ from definitions import DB_SERVERS
 class DAO:
     db:any
 
-    def __init__(self,domain:str="cloud"):
-        self.db: pymongo.mongo_client = pymongo.MongoClient(DB_SERVERS[domain])["coinmaker"]
+    def __init__(self,domain:str="cloud",dbname="coinmaker"):
+        self.db: pymongo.mongo_client = pymongo.MongoClient(DB_SERVERS[domain])[dbname]
 
 
     def add_contact(self, email, addr=""):

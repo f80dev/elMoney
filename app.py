@@ -18,7 +18,7 @@ from apiTools import create_app
 
 from dao import DAO
 from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, XGLD_FOR_NEWACCOUNT, ADMIN_SALT, \
-    MAIN_URL, DEFAULT_UNITY_CONTRACT, TOTAL_DEFAULT_UNITY, SIGNATURE, MAIN_DEVISE
+    MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, MAIN_DEVISE
 from elrondTools import ElrondNet
 
 
@@ -63,10 +63,13 @@ def init_cmk(bc,dao):
 
 
 
-
+#Paramétres en ligne de commande
+#1=port du serveur
+#2=adresse du proxy de la blockchain
+#3=nom de la base de données
 
 bc = ElrondNet(proxy=sys.argv[2])
-dao=DAO("server")
+dao=DAO("server",sys.argv[3])
 app, socketio = create_app(init_cmk(bc,dao))
 
 

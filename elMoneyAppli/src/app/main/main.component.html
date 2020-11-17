@@ -8,6 +8,11 @@
   </app-tuto>
 
 
+  <app-tuto [if]="friends?.length>1"
+            label="Vous pouvez envoyer des fonds à plusieurs personnes en une seul fois en faisant une sélection multiple dans vos contacts">
+  </app-tuto>
+
+
 
   <div *ngIf="user.gas<config.values?.min_gas_to_transfer && _max>0">
     Vous n'avez probablement plus assez de gas pour effectuer des transfert.<br>
@@ -141,11 +146,9 @@
       [errorCorrectionLevel]="'M'"
       [qrdata]="user.addr">
     </qrcode><br>
-    <small>
-      Flashez pour recevoir des '{{user.unity}}'<br>
-      ou cliquer sur le QRcode pour récupérer votre adresse<br>
-      dans le presse papier
-    </small>
+
+    <app-tuto label="Flashez pour recevoir des fonds ou cliquer sur le QRcode pour récupérer votre adresse dans le presse papier"
+              [if]="showQRCode"></app-tuto>
 
   </div>
 

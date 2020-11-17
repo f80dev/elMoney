@@ -6,7 +6,7 @@ import { version } from '../../package.json';
 
 export const environment = {
   production: false,
-  domain_server: "http://localhost:5555",
+  domain_server: "http://localhost:6660",
   config_file:"config",
   domain_appli: "http://localhost:4200",
   appVersion: version,
