@@ -1,0 +1,1 @@
+docker rm -f elrond-testnet && docker run --name elrond-testnet -p 7950:7950 -v /home/erd/sandbox/:\Users\hhoareau\PycharmProjects\elMoney\elrond -ti f80hub/elrond-testnet bash
