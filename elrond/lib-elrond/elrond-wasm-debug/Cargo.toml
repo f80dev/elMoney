@@ -1,0 +1,22 @@
+[package]
+name = "elrond-wasm-debug"
+version = "0.9.7"
+edition = "2018"
+
+authors = ["Andrei Marinica <andrei.marinica@elrond.com>", "Elrond Network<contact@elrond.com>"]
+license = "GPL-3.0-only"
+readme = "README.md"
+repository = "https://github.com/ElrondNetwork/elrond-wasm-rs"
+homepage = "https://elrond.com/"
+documentation = "https://docs.elrond.com/"
+description = "Elrond WebAssembly smart contract API debugging mocks and utils"
+keywords = ["elrond", "blockchain", "contract", "debug"]
+categories = ["cryptography::cryptocurrencies", "development-tools::debugging"]
+
+[dependencies]
+elrond-wasm = { version = "0.9.7", path = "../elrond-wasm" }
+mandos = { version = "0.3.0", path = "../mandos" }
+num-bigint = "0.3"
+num-traits = "0.2"
+hex = "0.4"
+sha3 = "0.8.2"

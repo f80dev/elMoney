@@ -1,0 +1,20 @@
+[package]
+name = "elrond-wasm-node"
+version = "0.9.7"
+edition = "2018"
+
+authors = ["Andrei Marinica <andrei.marinica@elrond.com>", "Elrond Network<contact@elrond.com>"]
+license = "GPL-3.0-only"
+readme = "README.md"
+repository = "https://github.com/ElrondNetwork/elrond-wasm-rs"
+homepage = "https://elrond.com/"
+documentation = "https://docs.elrond.com/"
+description = "Elrond WebAssembly VM API wrapper"
+keywords = ["elrond", "wasm", "webassembly", "blockchain", "contract"]
+categories = ["no-std", "wasm", "cryptography::cryptocurrencies", "development-tools::ffi"]
+
+[features]
+small-int-ei = []
+
+[dependencies]
+elrond-wasm = { version = "0.9.7", path = "../elrond-wasm" }
