@@ -1,1 +1,34 @@
-<p>importer works!</p>
+<div class="mainform">
+
+
+  <app-hourglass [message]="message"></app-hourglass>
+<input #csvInput hidden="true"
+       type="file" onclick="this.value=null"
+       (change)="import($event)"
+       accept=".csv"/>
+
+<button mat-raised-button
+        mat-button class="app-button"
+        (click)="csvInput.click()">
+  Importer un fichier
+</button>
+
+<br><br>
+
+
+   <mat-form-field appearance="fill" class="app-field">
+    <mat-label>Signature</mat-label>
+    <input matInput type="text" maxlength="6" [(ngModel)]="signature">
+     <mat-hint>Saisisser un identifiant : mail, numéro de sécurité sociale, passeport</mat-hint>
+   </mat-form-field>
+
+
+  <br><br>
+  <button mat-raised-button  color="primary"
+        mat-button class="large-button"
+          [disabled]="signature?.length==0"
+        (click)="tokenizer()">
+    Publier
+  </button>
+
+</div>

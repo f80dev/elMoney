@@ -68,8 +68,8 @@ export class PrivateComponent implements OnInit {
     this.dialog.open(PromptComponent, {
             width: '80%',
             data: {
-              title: 'Changement de compte',
-              question: "Cette clé ne correspond pas à votre compte, changer de compte (assurez vous d'avoir sauvegardé la clé du compte actuel ?)",
+              title: 'Changement de compte ???',
+              question: "Cette clé ne correspond pas à votre compte actuel, changer de compte (assurez vous d'avoir sauvegardé la clé du compte actuel) ?",
               onlyConfirm: true,
               lbl_ok: 'Oui',
               lbl_cancel: 'Non'

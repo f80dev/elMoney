@@ -86,7 +86,7 @@ class ElrondNet:
             )
         except Exception as inst:
             log("Exception à l'interrogation du contrat : "+str(inst.args))
-            return {"error":str(inst.args)}
+            return {"error":str(inst.args),"number":0,"gas":gas}
 
 
         if rc[0] is None or rc[0]=="":

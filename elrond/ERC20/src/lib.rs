@@ -15,9 +15,9 @@ pub trait SimpleErc20Token {
 
     #[view(getName)]
     #[storage_get("name")]
-    fn get_name(&self) -> BigUint;
+    fn get_name(&self) -> String;
     #[storage_set("name")]
-    fn set_name(&self, name: &BigUint);
+    fn set_name(&self, name: &String);
 
     /// Gets the balance of the specified address.
     /// 
@@ -51,11 +51,14 @@ pub trait SimpleErc20Token {
     /// Constructor, is called immediately after the contract is created
     /// Will set the fixed global token supply and give all the supply to the creator.
     #[init]
-    fn init(&self, total_supply: &BigUint) {
+    fn init(&self, total_supply: &BigUint, name: &String) {
         let creator = self.get_caller();
 
         // save total supply
         self.set_total_supply(total_supply);
+
+        //save name
+        self.set_name(name);
 
 
         // deployer initially receives the total supply

@@ -11,6 +11,7 @@ import {AboutComponent} from "./about/about.component";
 import {SupportComponent} from "./support/support.component";
 import {ContactsComponent} from "./contacts/contacts.component";
 import {FaqsComponent} from "./faqs/faqs.component";
+import {ImporterComponent} from "./importer/importer.component";
 
 const routes: Routes = [
    { path: 'admin', component: AdminComponent},
@@ -21,6 +22,7 @@ const routes: Routes = [
    { path: 'faqs', component: FaqsComponent},
    { path: 'settings', component: SettingsComponent},
    { path: 'about', component: AboutComponent},
+    { path: 'importer', component: ImporterComponent},
    { path: 'support', component: SupportComponent},
     { path: 'main', component: MainComponent},
       { path: 'contacts', component: ContactsComponent},
