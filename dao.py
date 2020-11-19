@@ -60,6 +60,6 @@ class DAO:
         return self.db["contacts"].find_one({"email":email})
 
     def del_contract(self, unity, proxy):
-        self.db["moneys"].remove({"unity":unity,"proxy": proxy})
+        self.db["moneys"].remove({"addr":unity,"proxy": proxy})
 
 

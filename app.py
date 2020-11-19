@@ -258,6 +258,12 @@ def get_contacts(addr:str):
     return jsonify(rc)
 
 
+@app.route('/api/money/<addr>/',methods=['DELETE'])
+def del_contacts(addr:str):
+    dao.del_contract(addr,bc._proxy.url)
+    return jsonify({"message":"monnaie dé"})
+
+
 
 
 

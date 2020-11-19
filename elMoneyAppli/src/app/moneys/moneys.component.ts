@@ -6,6 +6,9 @@ import {Router} from "@angular/router";
 import {UserService} from "../user.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ConfigService} from "../config.service";
+import {NewContactComponent} from "../new-contact/new-contact.component";
+import {MatDialog} from "@angular/material/dialog";
+import {PromptComponent} from "../prompt/prompt.component";
 
 @Component({
   selector: 'app-moneys',
@@ -18,23 +21,40 @@ export class MoneysComponent implements OnInit {
 
   constructor(public api:ApiService,
               public router:Router,
+              public dialog:MatDialog,
               public config:ConfigService,
               public toast:MatSnackBar,
               public user:UserService,
               public _location:Location) { }
 
+
+
   ngOnInit(): void {
+    this.refresh();
+  }
+
+  refresh(){
     this.api._get("moneys/"+this.user.addr).subscribe((r:any)=>{
       this.moneys=r;
     })
   }
 
   delete_money(addr:string){
-    //TODO: a raccorder
     $$("On supprime la monnaie "+addr);
-    this.api._delete("money/"+addr).subscribe(()=>{});
-    if(this.api.contract==addr)
-      localStorage.removeItem("contract");
+     this.dialog.open(PromptComponent, {
+      data: {
+        title: 'Déréférencer une monnaie',
+        question: 'La monnaie restera utilisable mais ne sera plus visible dans la liste des monnaies disponibles. Etes vous sûr ?',
+        onlyConfirm: true,
+        lbl_ok: 'Oui',
+        lbl_cancel: 'Non'
+      }}).afterClosed().subscribe((result:any) => {
+        if(result){
+          this.api._delete("money/"+addr).subscribe(()=>{
+            this.refresh();
+          });
+        }
+      });
   }
 
   select(_m:any){
