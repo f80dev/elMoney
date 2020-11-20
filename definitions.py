@@ -22,7 +22,8 @@ DEFAULT_UNITY_CONTRACT=""
 TOTAL_DEFAULT_UNITY=1000000
 CREDIT_FOR_NEWACCOUNT=75
 
-TRANSACTION_EXPLORER="https://testnet-explorer.elrond.com/transactions/"
+TESTNET_EXPLORER="https://testnet-explorer.elrond.com/"
+TRANSACTION_EXPLORER=TESTNET_EXPLORER+"transactions/"
 
 SIGNATURE="<br><br>CoinMaker<br><a href='https://t.me/coinmaker_forum'>Le forum des utilisateurs</a>"
 

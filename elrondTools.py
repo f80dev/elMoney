@@ -194,8 +194,8 @@ class ElrondNet:
         bytecode=bytecode.split("@0500")[0]
 
         #TODO: arguments=[hex(amount),hex(base_alphabet_to_10(unity))]
-        arguments = [amount]
-        log("Déploiement du contrat "+unity+" via le compte https://testnet-explorer.elrond.com/address/"+user.address.bech32())
+        arguments = [amount,unity.encode().hex()]
+        log("Déploiement du contrat "+unity+" via le compte "+TRANSACTION_EXPLORER+"accounts/"+user.address.bech32())
         log("Passage des arguments "+str(arguments))
         try:
             tx, address = self.environment.deploy_contract(
@@ -243,10 +243,11 @@ class ElrondNet:
         :param contract:
         :return:
         """
-        lst=self.environment.query_contract(contract,"name")
+        lst=self.environment.query_contract(SmartContract(address=contract),"nameOf")
         if len(lst)>0:
-            obj=lst[0]
-            return obj.number
+            val=str(lst[0].number)
+            name=bytes.fromhex(val).decode("utf-8")
+            return name
         else:
             return None
 

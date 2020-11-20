@@ -36,6 +36,5 @@ COPY ./PEM $APP_HOME/PEM
 
 EXPOSE 5555
 
-#CMD ["python3", "app.py","5555","https://testnet-api.elrond.com","ssl"]
-#CMD ["python3", "app.py","5555","http://161.97.75.165:7590","ssl"]
-CMD ["python3", "app.py","5555","https://testnet-api.elrond.com","ssl"]
+#CMD ["python3", "app.py","5555","http://161.97.75.165:7590","coinmaker-test","ssl"]
+CMD ["python3", "app.py","5555","https://testnet-api.elrond.com","coinmaker","ssl"]

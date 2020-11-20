@@ -18,7 +18,7 @@ from apiTools import create_app
 
 from dao import DAO
 from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, XGLD_FOR_NEWACCOUNT, ADMIN_SALT, \
-    MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, MAIN_DEVISE
+    MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, MAIN_DEVISE, TRANSACTION_EXPLORER, TESTNET_EXPLORER
 from elrondTools import ElrondNet
 
 
@@ -304,7 +304,7 @@ def getbalance(contract:str,addr:str):
     if rc is None:
         return jsonify({"error":"impossible d'évaluer la balance de "}),200
     else:
-        log("Balance de "+addr+" à "+str(rc)+name.lower()+" pour le contrat "+contract)
+        log("Balance de "+addr+" à "+str(rc)+name.lower()+" pour le contrat "+TESTNET_EXPLORER+"accounts/"+contract)
         return jsonify({"balance":rc["number"],"gas":str(rc["gas"]),"name":name}),200
 
 
@@ -367,12 +367,12 @@ def raz(password:str):
 
 
 
-
+#http://localhost:6660/api/name/erd1qqqqqqqqqqqqqpgqmfgwk0rh2mq5ta5dmznqxrdfx7w5n8kf9vmsy2snym/
 @app.route('/api/name/<contract>/')
 def getname(contract:str):
-    rc=dao.get_money_by_name(contract,bc._proxy.url)
+    rc=bc.getName(contract)
     if rc is None:return "Pas de monnaie correspondant au contrat "+contract,404
-    return jsonify({"name":rc["name"]}), 200
+    return jsonify({"name":rc}), 200
 
 
 
