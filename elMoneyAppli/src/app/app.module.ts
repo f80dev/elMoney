@@ -49,6 +49,7 @@ import {MatSliderModule} from "@angular/material/slider";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatSelectModule} from "@angular/material/select";
 import { ImporterComponent } from './importer/importer.component';
+import { NftStoreComponent } from './nft-store/nft-store.component';
 
 const config: SocketIoConfig = { url: environment.domain_server, options: {} };
 
@@ -76,7 +77,8 @@ const config: SocketIoConfig = { url: environment.domain_server, options: {} };
     NewContactComponent,
     ElrondAddrComponent,
     ScannerComponent,
-    ImporterComponent
+    ImporterComponent,
+    NftStoreComponent
   ],
     imports: [
         MatButtonModule,

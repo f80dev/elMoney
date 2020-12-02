@@ -7,7 +7,8 @@ APPNAME="CoinMaKer"
 
 #DOMAIN_APPLI="http://localhost:4200"
 DOMAIN_APPLI="https://coinmaker.f80.fr"
-BYTECODE_PATH="./static/deploy.json"
+ERC20_BYTECODE_PATH="./static/deploy-erc20.json"
+NFT_BYTECODE_PATH="./static/deploy-nft.json"
 
 ADMIN_SALT="hh4271"
 
@@ -34,3 +35,5 @@ DB_SERVERS=dict({
 })
 
 MAIN_DEVISE="xEGld"
+
+NFT_CONTRACT="erd1qqqqqqqqqqqqqpgqj8krxrwp50lnv2cndd4z3m58zuq6jykkd8sswapzt9"

@@ -9,6 +9,7 @@
 
 <button mat-raised-button
         mat-button class="app-button"
+        *ngIf="file=='vide'"
         (click)="csvInput.click()">
   Importer un fichier
 </button>
@@ -22,11 +23,26 @@
      <mat-hint>Saisisser un identifiant : mail, numéro de sécurité sociale, passeport</mat-hint>
    </mat-form-field>
 
+  <br>
+   <mat-form-field appearance="fill" class="app-field" style="max-width: 200px">
+    <mat-label>Combien d'exemplaire</mat-label>
+    <input matInput type="number" min="1" max="1000" [(ngModel)]="count">
+   </mat-form-field>
+
+  &nbsp;
+  <mat-form-field appearance="fill" class="app-field" style="max-width: 200px">
+    <mat-label>Prix</mat-label>
+    <input matInput type="number" [(ngModel)]="price">
+    <span matSuffix>xeGld</span>
+   </mat-form-field>
+
+
+
 
   <br><br>
   <button mat-raised-button  color="primary"
         mat-button class="large-button"
-          [disabled]="signature?.length==0"
+          [disabled]="signature?.length==0 && file.length>0"
         (click)="tokenizer()">
     Publier
   </button>

@@ -2,7 +2,6 @@
 Interface avec la base de données
 """
 from datetime import datetime
-
 import pymongo
 from definitions import DB_SERVERS
 
@@ -56,10 +55,20 @@ class DAO:
         self.db["contacts"].drop()
         return True
 
+
     def find_contact(self, email):
         return self.db["contacts"].find_one({"email":email})
+
 
     def del_contract(self, unity, proxy):
         self.db["moneys"].remove({"addr":unity,"proxy": proxy})
 
 
+    def add_nft(self, contract,owner):
+        return self.db["nfts"].replace_one(filter={"contract": contract}, replacement={"contract":contract,"owner":owner}, upsert=True)
+
+    def get_nfts(self):
+        return self.db["nfts"].find()
+
+    def get_nftcontract_by_owner(self,addr):
+        return self.db["nfts"].find_one({"owner":addr})

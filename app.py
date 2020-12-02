@@ -18,7 +18,8 @@ from apiTools import create_app
 
 from dao import DAO
 from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, XGLD_FOR_NEWACCOUNT, ADMIN_SALT, \
-    MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, MAIN_DEVISE, TRANSACTION_EXPLORER, TESTNET_EXPLORER
+    MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, MAIN_DEVISE, TRANSACTION_EXPLORER, TESTNET_EXPLORER, \
+    ERC20_BYTECODE_PATH, NFT_BYTECODE_PATH, NFT_CONTRACT
 from elrondTools import ElrondNet
 
 
@@ -175,9 +176,72 @@ def transfer(contract:str,dest:str,amount:str,unity:str):
 
 
 
+def get_pem_file(data):
+    """
+    Fabrique ou recupere un pemfile
+    :param data:
+    :return:
+    """
+    if not ".pem" in data["pem"]:
+        rc="./PEM/temp"+str(now()*1000)+".pem"
+        log("Fabrication d'un fichier PEM pour la signature et enregistrement sur " + rc)
+        with open(rc, "w") as file:file.write(data["pem"])
+    else:
+        rc="./PEM/"+data["pem"]
+    return rc
+
+
+
+
+#http://localhost:6660/api/nfts/
+@app.route('/api/nfts/',methods=["GET"])
+def nfts():
+    rc=[]
+    for uri in bc.get_uris(NFT_CONTRACT):
+        rc.append(uri)
+    return jsonify(rc),200
+
+
+#http://localhost:6660/api/test/
+@app.route('/api/test/',methods=["GET"])
+def test():
+    rc=bc.query(NFT_CONTRACT,"totalMinted")
+    return jsonify(rc),200
+
+
+
+#http://localhost:5555/api/mint/
+@app.route('/api/mint/<count>/',methods=["POST"])
+def mint(count:str,data:dict=None):
+    log("Appel du service de déploiement de contrat NFT")
+
+    if data is None:
+        data = str(request.data, encoding="utf-8")
+        log("Les données de fabrication sont " + data)
+        data = json.loads(data)
+
+    owner = Account(pem_file=get_pem_file(data))
+    uri=data["signature"]
+
+    result=bc.mint(NFT_CONTRACT,owner,[int(count), "0x"+owner.address.hex(),"0x"+uri.encode().hex(),data["price"]])
+    return jsonify({"tx":result}), 200
+
+
+
+
+
+@app.route('/api/owner_of/<contract>/<token>/',methods=["GET"])
+def owner_of(contract,token):
+    rc=bc.owner_of(contract,token)
+    return jsonify(rc),200
+
+
+
+
+
 @app.route('/api/deploy/<unity>/<amount>/',methods=["POST"])
 def deploy(unity:str,amount:str,data:dict=None):
-    log("Appel du service de déploiement de contrat pour "+unity)
+    log("Appel du service de déploiement de contrat ERC20 pour "+unity)
 
     if data is None:
        data = str(request.data, encoding="utf-8")
@@ -188,16 +252,11 @@ def deploy(unity:str,amount:str,data:dict=None):
     if data["public"] and not dao.get_money_by_name(unity,bc._proxy.url) is None:
         return jsonify({"message": "Cette monnaie 'public' existe déjà"}), 500
 
-    if not ".pem" in data["pem"]:
-        pem_file="./PEM/temp"+str(now()*1000)+".pem"
-        log("Fabrication d'un fichier PEM pour la signature et enregistrement sur " + pem_file)
-        with open(pem_file, "w") as file:file.write(data["pem"])
-    else:
-        pem_file="./PEM/"+data["pem"]
+    pem_file=get_pem_file(data)
 
     owner=Account(pem_file=pem_file)
     log("Compte propriétaire de la monnaie créé. Lancement du déploiement de "+unity)
-    result=bc.deploy(owner,unity,int(amount))
+    result=bc.deploy(owner,[int(amount), unity.encode().hex()],ERC20_BYTECODE_PATH)
     if "error" in result:
         log("Probléme de création de la monnaie "+str(result))
         return jsonify(result), 500

@@ -14,7 +14,7 @@ from erdpy.transactions import Transaction
 from erdpy.wallet import generate_pair,derive_keys
 
 from Tools import log
-from definitions import BYTECODE_PATH, TRANSACTION_EXPLORER
+from definitions import TRANSACTION_EXPLORER
 
 
 def toFiat(crypto,fiat=8):
@@ -60,7 +60,7 @@ class ElrondNet:
 
     def getExplorer(self,tx):
         url=TRANSACTION_EXPLORER+tx
-        if "explorer" in self._proxy.url:
+        if "elrond.com" in self._proxy.url:
             return url
         else:
             return tx
@@ -172,7 +172,10 @@ class ElrondNet:
 
 
 
-    def deploy(self,pem_file,unity="RVC",amount=100000,gas_limit=80000000):
+
+
+
+    def deploy(self,pem_file,arguments,bytecode_file,gas_limit=80000000):
         """
         Déployer une nouvelle monnaie, donc un conrat ERC20
         :param pem_file: signature du propriétaire de la monnaie
@@ -180,22 +183,23 @@ class ElrondNet:
         :param amount: montant de départ
         :return:
         """
+        log("Préparation du owner du contrat")
+        user = pem_file
         if type(pem_file)==str:
             user=Account(pem_file=pem_file)
-        else:
-            user=pem_file
-
         user.sync_nonce(self._proxy)
-        with open(BYTECODE_PATH,"r") as file:
-            _json=file.read()
+
+
+
+        with open(bytecode_file,"r") as file: _json=file.read()
         json_bytecode=json.loads(_json)
 
         bytecode=json_bytecode["emitted_tx"]["data"]
         bytecode=bytecode.split("@0500")[0]
 
         #TODO: arguments=[hex(amount),hex(base_alphabet_to_10(unity))]
-        arguments = [amount,unity.encode().hex()]
-        log("Déploiement du contrat "+unity+" via le compte "+TRANSACTION_EXPLORER+"accounts/"+user.address.bech32())
+
+        log("Déploiement du contrat "+str(arguments)+" via le compte "+TRANSACTION_EXPLORER+"accounts/"+user.address.bech32())
         log("Passage des arguments "+str(arguments))
         try:
             tx, address = self.environment.deploy_contract(
@@ -356,6 +360,75 @@ class ElrondNet:
         #if len(seed_phrase)==0 and name!="bank":os.remove(filename)
 
         return _u,pem
+
+
+
+
+
+    def query(self,_contract,function_name,arguments=None,isnumber=True):
+        if type(_contract)==str:
+            _contract=SmartContract(_contract)
+
+        try:
+            if arguments is None:
+                d = self.environment.query_contract(_contract, function_name)
+            else:
+                d=self.environment.query_contract(_contract, function_name,arguments)
+        except Exception as inst:
+            log("Impossible d'executer "+function_name+"("+str(arguments)+") : "+str(inst.args))
+            return None
+
+        if len(d)>0:
+            if isnumber:
+                return d[0].number
+            else:
+                val = d[0].hex
+                return bytes.fromhex(val).decode("utf-8")
+        else:
+            return None
+
+
+
+    def owner_of(self, contract,token):
+        lst = self.query(SmartContract(address=contract), "tokenOwner",arguments=[token])
+        return lst
+
+
+
+    def get_uris(self, contract):
+        _contract=SmartContract(contract)
+        rc = list()
+        n_token=self.query(_contract, "totalMinted")
+
+        if not n_token is None:
+            for i in range(n_token):
+                price = self.query(_contract, "tokenPrice", arguments=[i], isnumber=False)
+                uri = self.query(_contract, "tokenURI", arguments=[i],isnumber=False)
+                rc.append({"token":i,"uri":uri,"price":price})
+
+        return rc
+
+
+    def mint(self, contract, user_from,arguments):
+        log("Minage avec "+str(arguments))
+        user_from.sync_nonce(self._proxy)
+        tx = self.environment.execute_contract(SmartContract(contract),
+                                               user_from,
+                                               function="mint",
+                                               arguments=arguments,
+                                               gas_price=config.DEFAULT_GAS_PRICE,
+                                               gas_limit=80000000,
+                                               value=0,
+                                               chain=self._proxy.get_chain_id(),
+                                               version=config.get_tx_version())
+
+        tr = self.wait_transaction(tx, "status", not_equal="pending")
+        return tx
+
+
+
+
+
 
 
 

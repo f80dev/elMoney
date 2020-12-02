@@ -1,4 +1,4 @@
-#Déployer le testnet elrond sur serveur linuex
+#Utiliser ERDPY depuis windows
 #directement inspiré de https://github.com/erdDEVcode/erdnet/blob/master/Dockerfile
 
 FROM ubuntu:groovy
