@@ -1,3 +1,9 @@
 <div *ngFor="let nft of nfts">
-  {{nft.uri}}<br>
+  {{nft.uri}} pour {{nft.price}}
+  &nbsp;
+  <button mat-raised-button
+        mat-button class="app-button"
+        (click)="buy(nft)">
+    Acheter
+  </button>
 </div>

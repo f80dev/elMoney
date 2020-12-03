@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ApiService} from "../api.service";
+import {showMessage} from "../tools";
+import {UserService} from "../user.service";
 
 @Component({
   selector: 'app-nft-store',
@@ -9,7 +11,7 @@ import {ApiService} from "../api.service";
 export class NftStoreComponent implements OnInit {
   nfts: any[]=[];
 
-  constructor(public api:ApiService) {
+  constructor(public api:ApiService,public user:UserService) {
 
   }
 
@@ -20,6 +22,12 @@ export class NftStoreComponent implements OnInit {
   refresh() {
     this.api._get("nfts").subscribe((r:any)=>{
       this.nfts=r;
+    })
+  }
+
+  buy(nft: any) {
+    this.api._post("buy_nft/"+nft.token_id+"/","",this.user.pem).subscribe(()=>{
+      showMessage(this,"En cours d'achat");
     })
   }
 }

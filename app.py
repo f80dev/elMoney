@@ -17,9 +17,9 @@ from Tools import  log, send_mail, open_html_file, now, send
 from apiTools import create_app
 
 from dao import DAO
-from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, XGLD_FOR_NEWACCOUNT, ADMIN_SALT, \
-    MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, MAIN_DEVISE, TRANSACTION_EXPLORER, TESTNET_EXPLORER, \
-    ERC20_BYTECODE_PATH, NFT_BYTECODE_PATH, NFT_CONTRACT
+from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, XGLD_FOR_NEWACCOUNT, \
+    MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, MAIN_DEVISE,  TESTNET_EXPLORER, \
+    ERC20_BYTECODE_PATH,  NFT_CONTRACT, NFT_ADMIN
 from elrondTools import ElrondNet
 
 
@@ -182,12 +182,17 @@ def get_pem_file(data):
     :param data:
     :return:
     """
-    if not ".pem" in data["pem"]:
-        rc="./PEM/temp"+str(now()*1000)+".pem"
-        log("Fabrication d'un fichier PEM pour la signature et enregistrement sur " + rc)
-        with open(rc, "w") as file:file.write(data["pem"])
+    if not "pem" in data:
+        rc="./PEM/admin.pem"
     else:
-        rc="./PEM/"+data["pem"]
+        if not ".pem" in data["pem"]:
+            rc="./PEM/temp"+str(now()*1000)+".pem"
+            log("Fabrication d'un fichier PEM pour la signature et enregistrement sur " + rc)
+            with open(rc, "w") as file:file.write(data["pem"])
+        else:
+            rc="./PEM/"+data["pem"]
+
+
     return rc
 
 
@@ -202,11 +207,24 @@ def nfts():
     return jsonify(rc),200
 
 
+@app.route('/api/buy_nft/<token_id>/',methods=["POST"])
+def buy_nft(token_id,data:dict=None):
+    if data is None:
+       data = json.loads(str(request.data, encoding="utf-8"))
+
+    pem_file=get_pem_file(data)
+    rc=bc.nft_buy(NFT_CONTRACT,pem_file,token_id)
+    return jsonify(rc)
+
+
 #http://localhost:6660/api/test/
 @app.route('/api/test/',methods=["GET"])
 def test():
-    rc=bc.query(NFT_CONTRACT,"totalMinted")
-    return jsonify(rc),200
+    n_tokens=bc.query(NFT_CONTRACT,"totalMinted")
+    rc=bc.query(NFT_CONTRACT,"getToken",[2],isnumber=False)
+    price=int.from_bytes(rc[4:9],byteorder="big",signed=False)
+    uri=str(rc[13:],"utf-8")
+    return jsonify(uri),200
 
 
 
@@ -223,7 +241,9 @@ def mint(count:str,data:dict=None):
     owner = Account(pem_file=get_pem_file(data))
     uri=data["signature"]
 
-    result=bc.mint(NFT_CONTRACT,owner,[int(count), "0x"+owner.address.hex(),"0x"+uri.encode().hex(),data["price"]])
+    nft_contract_owner=Account(pem_file="./PEM/"+NFT_ADMIN+".pem")
+
+    result=bc.mint(NFT_CONTRACT,nft_contract_owner,[int(count), "0x"+owner.address.hex(),"0x"+uri.encode().hex(),data["price"]])
     return jsonify({"tx":result}), 200
 
 

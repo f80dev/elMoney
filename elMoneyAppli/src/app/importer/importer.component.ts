@@ -46,7 +46,9 @@ export class ImporterComponent implements OnInit {
       signature:this.signature,
       price:this.price,
     };
+    this.message="Enregistrement dans la blockchain";
     this.api._post("mint/"+this.count,"",obj).subscribe(()=>{
+      this.message="";
       showMessage(this,"Fichier tokeniser");
     })
   }

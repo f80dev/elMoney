@@ -1,3 +1,4 @@
+import base64
 import json
 import logging
 import os
@@ -370,20 +371,19 @@ class ElrondNet:
             _contract=SmartContract(_contract)
 
         try:
-            if arguments is None:
-                d = self.environment.query_contract(_contract, function_name)
-            else:
-                d=self.environment.query_contract(_contract, function_name,arguments)
+            d=self.environment.query_contract(_contract, function_name,arguments)
         except Exception as inst:
-            log("Impossible d'executer "+function_name+"("+str(arguments)+") : "+str(inst.args))
+            log("Impossible d'executer "+function_name+"("+str(arguments)+") -> ")
+            log(str(inst.args))
             return None
 
         if len(d)>0:
             if isnumber:
                 return d[0].number
             else:
-                val = d[0].hex
-                return bytes.fromhex(val).decode("utf-8")
+                val = d[0].base64
+                rc=base64.b64decode(val)
+                return rc
         else:
             return None
 
@@ -402,9 +402,14 @@ class ElrondNet:
 
         if not n_token is None:
             for i in range(n_token):
-                price = self.query(_contract, "tokenPrice", arguments=[i], isnumber=False)
-                uri = self.query(_contract, "tokenURI", arguments=[i],isnumber=False)
-                rc.append({"token":i,"uri":uri,"price":price})
+                log("Analyse du token "+str(i))
+                token = self.query(_contract, "getToken", arguments=[i], isnumber=False)
+                for k in range(len(token)-1,0,-1):
+                    if token[k]==0 and k>3:
+                        price=int.from_bytes(token[0:k-3], byteorder="big", signed=False)
+                        uri=str(token[k+2:],"utf-8")
+                        rc.append({"token_id":i,"uri":uri,"price":price})
+                        break
 
         return rc
 
@@ -424,6 +429,24 @@ class ElrondNet:
 
         tr = self.wait_transaction(tx, "status", not_equal="pending")
         return tx
+
+
+    def nft_buy(self, contract, pem_file, token_id):
+        user_from=Account(pem_file=pem_file)
+        user_from.sync_nonce(self._proxy)
+        tx = self.environment.execute_contract(SmartContract(contract),
+                                               user_from,
+                                               function="buy",
+                                               arguments=[token_id],
+                                               gas_price=config.DEFAULT_GAS_PRICE,
+                                               gas_limit=80000000,
+                                               value=0,
+                                               chain=self._proxy.get_chain_id(),
+                                               version=config.get_tx_version())
+
+        tr = self.wait_transaction(tx, "status", not_equal="pending")
+        return tx
+
 
 
 
