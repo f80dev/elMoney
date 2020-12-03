@@ -207,6 +207,21 @@ def nfts():
     return jsonify(rc),200
 
 
+
+
+#http://localhost:6660/api/test/
+@app.route('/api/test/',methods=["GET"])
+def test():
+    n_tokens=bc.query(NFT_CONTRACT,"totalMinted")
+    rc=bc.query(NFT_CONTRACT,"getToken",[0],isnumber=False)
+    price=int.from_bytes(rc[0:7],byteorder="big",signed=True)
+    uri=str(rc[7:len(rc)-1],"utf-8")
+    state=int.from_bytes(rc[len(rc)-1:len(rc)],byteorder="big",signed=False)
+
+    return jsonify(uri),200
+
+
+
 @app.route('/api/buy_nft/<token_id>/',methods=["POST"])
 def buy_nft(token_id,data:dict=None):
     if data is None:
@@ -216,15 +231,6 @@ def buy_nft(token_id,data:dict=None):
     rc=bc.nft_buy(NFT_CONTRACT,pem_file,token_id)
     return jsonify(rc)
 
-
-#http://localhost:6660/api/test/
-@app.route('/api/test/',methods=["GET"])
-def test():
-    n_tokens=bc.query(NFT_CONTRACT,"totalMinted")
-    rc=bc.query(NFT_CONTRACT,"getToken",[2],isnumber=False)
-    price=int.from_bytes(rc[4:9],byteorder="big",signed=False)
-    uri=str(rc[13:],"utf-8")
-    return jsonify(uri),200
 
 
 

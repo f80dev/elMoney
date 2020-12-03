@@ -401,15 +401,14 @@ class ElrondNet:
         n_token=self.query(_contract, "totalMinted")
 
         if not n_token is None:
-            for i in range(n_token):
+            for i in range(0,n_token):
                 log("Analyse du token "+str(i))
                 token = self.query(_contract, "getToken", arguments=[i], isnumber=False)
-                for k in range(len(token)-1,0,-1):
-                    if token[k]==0 and k>3:
-                        price=int.from_bytes(token[0:k-3], byteorder="big", signed=False)
-                        uri=str(token[k+2:],"utf-8")
-                        rc.append({"token_id":i,"uri":uri,"price":price})
-                        break
+
+                price=int.from_bytes(token[0:7], byteorder="big", signed=False)
+                uri=str(token[8:len(token)-1],"utf-8")
+                state = int.from_bytes(token[len(token)-1:len(token)], byteorder="big", signed=False)
+                rc.append({"token_id":i,"uri":uri,"price":price,"state":state})
 
         return rc
 

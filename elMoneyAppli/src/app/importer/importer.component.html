@@ -1,50 +1,53 @@
 <div class="mainform">
 
-
+  <h2>Mettre en vente vos token</h2><br>
   <app-hourglass [message]="message"></app-hourglass>
-<input #csvInput hidden="true"
-       type="file" onclick="this.value=null"
-       (change)="import($event)"
-       accept=".csv"/>
 
-<button mat-raised-button
-        mat-button class="app-button"
-        *ngIf="file=='vide'"
-        (click)="csvInput.click()">
-  Importer un fichier
-</button>
+  <div *ngIf="message.length==0">
+      <input #csvInput hidden="true"
+         type="file" onclick="this.value=null"
+         (change)="import($event)"
+         accept=".csv"/>
 
-<br><br>
+  <button mat-raised-button
+          mat-button class="app-button"
+          *ngIf="file=='vide'"
+          (click)="csvInput.click()">
+    Importer un fichier
+  </button>
+
+  <br><br>
 
 
-   <mat-form-field appearance="fill" class="app-field">
+  <mat-form-field appearance="fill" class="app-field">
     <mat-label>Signature</mat-label>
-    <input matInput type="text" maxlength="6" [(ngModel)]="signature">
-     <mat-hint>Saisisser un identifiant : mail, numéro de sécurité sociale, passeport</mat-hint>
-   </mat-form-field>
+    <input matInput type="text" maxlength="20" [(ngModel)]="signature">
+    <mat-hint>Saisisser un identifiant : mail, numéro de sécurité sociale, passeport</mat-hint>
+  </mat-form-field>
 
   <br>
-   <mat-form-field appearance="fill" class="app-field" style="max-width: 200px">
+  <mat-form-field appearance="fill" class="app-field" style="max-width: 200px">
     <mat-label>Combien d'exemplaire</mat-label>
     <input matInput type="number" min="1" max="1000" [(ngModel)]="count">
-   </mat-form-field>
+  </mat-form-field>
 
   &nbsp;
   <mat-form-field appearance="fill" class="app-field" style="max-width: 200px">
     <mat-label>Prix</mat-label>
     <input matInput type="number" [(ngModel)]="price">
     <span matSuffix>xeGld</span>
-   </mat-form-field>
+  </mat-form-field>
 
 
 
 
   <br><br>
   <button mat-raised-button  color="primary"
-        mat-button class="large-button"
+          mat-button class="large-button"
           [disabled]="signature?.length==0 && file.length>0"
-        (click)="tokenizer()">
+          (click)="tokenizer()">
     Publier
   </button>
+  </div>
 
 </div>

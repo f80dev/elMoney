@@ -1,9 +1,29 @@
-<div *ngFor="let nft of nfts">
-  {{nft.uri}} pour {{nft.price}}
-  &nbsp;
-  <button mat-raised-button
-        mat-button class="app-button"
-        (click)="buy(nft)">
-    Acheter
-  </button>
+<div class="mainform">
+  <app-hourglass [message]="message"></app-hourglass>
+
+  <div *ngIf="nfts.length==0 && message.length==0">
+    Aucun article à vendre pour l'instant<br><br>
+
+    <button mat-raised-button
+                mat-button class="app-button"
+                (click)="router.navigate(['importer'])">
+          Vendez le votre
+        </button>
+
+  </div>
+
+  <table *ngIf="message.length==0 && nfts.length>0" class="mat-elevation-z4" style="display: inline-block;width:80%;padding:5px;">
+    <tr *ngFor="let nft of nfts" style="width: 100%;">
+      <td>
+        {{nft.uri}} pour {{nft.price}}
+      </td>
+      <td style="text-align: right;">
+        <button mat-raised-button
+                mat-button class="app-button"
+                (click)="buy(nft)">
+          Acheter
+        </button>
+      </td>
+    </tr>
+  </table>
 </div>

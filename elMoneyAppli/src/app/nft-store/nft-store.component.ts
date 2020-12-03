@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {ApiService} from "../api.service";
 import {showMessage} from "../tools";
 import {UserService} from "../user.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-nft-store',
@@ -10,8 +12,12 @@ import {UserService} from "../user.service";
 })
 export class NftStoreComponent implements OnInit {
   nfts: any[]=[];
+  message="";
 
-  constructor(public api:ApiService,public user:UserService) {
+  constructor(public api:ApiService,
+              public toast:MatSnackBar,
+              public router:Router,
+              public user:UserService) {
 
   }
 
@@ -20,8 +26,13 @@ export class NftStoreComponent implements OnInit {
   }
 
   refresh() {
+    this.message="Remplissage de la boutique ...";
     this.api._get("nfts").subscribe((r:any)=>{
-      this.nfts=r;
+      this.message="";
+      this.nfts=[];
+      for(let item of r){
+        if(item.state==0)this.nfts.push(item);
+      }
     })
   }
 
