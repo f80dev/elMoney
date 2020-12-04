@@ -23,13 +23,22 @@
                    label="Transactions du CMK"></app-elrond-addr>
   <br>
   <br><br>
+
   <h2>Réserves de la banque</h2>
   CMK: {{config.server?.bank_cmk}}<br>
   eGLD: {{config.server?.bank_gas/1e18}}
 
+  <br><br>
+  <h2>Contrat des NFTs</h2>
+  <app-elrond-addr [addr]="config.server?.nft_contract"
+                   label="Transactions du contrat"
+                   type="address">
+  </app-elrond-addr>
+
 
   <br><br>
   Proxy : {{config.server?.proxy}}
+
   </div>
 
 

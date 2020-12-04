@@ -1,28 +1,47 @@
 <div class="mainform">
   <app-hourglass [message]="message"></app-hourglass>
 
+  <div>
+    Vous avez {{user.gas/1e18 | number:'1.0-3'}} xEgld
+    <br><br>
+  </div>
+
   <div *ngIf="nfts.length==0 && message.length==0">
     Aucun article à vendre pour l'instant<br><br>
 
     <button mat-raised-button
-                mat-button class="app-button"
-                (click)="router.navigate(['importer'])">
-          Vendez le votre
-        </button>
+            mat-button class="app-button"
+            (click)="router.navigate(['importer'])">
+      Vendez le votre
+    </button>
 
   </div>
 
-  <table *ngIf="message.length==0 && nfts.length>0" class="mat-elevation-z4" style="display: inline-block;width:80%;padding:5px;">
+  <table *ngIf="message.length==0 && nfts.length>0" class="mat-elevation-z4" style="display: inline-block;width:80%;padding:15px;">
     <tr *ngFor="let nft of nfts" style="width: 100%;">
-      <td>
-        {{nft.uri}} pour {{nft.price}}
+      <td style="text-align: left;width:70%;min-width: 200px;">
+        <strong>{{nft.uri}}</strong><br>
+        pour {{nft.price}} xEGld
+        <br>
       </td>
-      <td style="text-align: right;">
-        <button mat-raised-button
-                mat-button class="app-button"
-                (click)="buy(nft)">
-          Acheter
-        </button>
+      <td style="text-align: right;width:100px;">
+        <div *ngIf="nft.message?.length==0">
+          <button mat-icon-button
+                  *ngIf="nft.owner!=user.addr"
+                  class="icon-button"
+                  (click)="buy(nft)">
+            <mat-icon>shop</mat-icon>
+          </button>
+          <button mat-icon-button
+                  *ngIf="nft.owner==user.addr" class="icon-button"
+                  (click)="cancel_buy(nft)">
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </div>
+        <div *ngIf="nft.message?.length>0">
+          <app-hourglass [message]="nft.message" fontsize="small"></app-hourglass>
+        </div>
+
       </td>
     </tr>
   </table>

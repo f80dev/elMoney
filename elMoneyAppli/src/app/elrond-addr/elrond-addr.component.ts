@@ -8,7 +8,7 @@ import {ConfigService} from "../config.service";
 })
 export class ElrondAddrComponent implements OnInit {
   @Input("addr") addr: any;
-  @Input("label") label="";
+  @Input("label") label="Explorer";
   @Input("type") _type="contract";
   url: string="";
 
@@ -16,7 +16,7 @@ export class ElrondAddrComponent implements OnInit {
   constructor(public config:ConfigService) { }
 
   ngOnInit(): void {
-    if(this.config.server.proxy && this.config.server.proxy.indexOf("explorer")>-1)
+    if(this.config.server.proxy && this.config.server.proxy.indexOf("testnet")>-1)
       this.url="https://testnet-explorer.elrond.com/"+this._type+"/"+this.addr;
     else
       this.url=this.addr;

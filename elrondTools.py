@@ -398,17 +398,32 @@ class ElrondNet:
     def get_uris(self, contract):
         _contract=SmartContract(contract)
         rc = list()
-        n_token=self.query(_contract, "totalMinted")
+        tokens = self.query(_contract, "tokens", arguments=[0xAA,0xFF],isnumber=False)
 
-        if not n_token is None:
-            for i in range(0,n_token):
-                log("Analyse du token "+str(i))
-                token = self.query(_contract, "getToken", arguments=[i], isnumber=False)
+        if not tokens is None:
+            tokens=tokens.hex()
+            i=0
+            for token in tokens.split("ffffffff"):
+                if len(token)>10:
+                    hexprice = token.split("aaaaaaaa")[0];
+                    i = 0
+                    while hexprice[i] == "0": i = i + 1
+                    if len(hexprice)>i+2:
+                        price = int(hexprice[i + 2:], 16)/1e18
+                    else:
+                        price=0
 
-                price=int.from_bytes(token[0:7], byteorder="big", signed=False)
-                uri=str(token[8:len(token)-1],"utf-8")
-                state = int.from_bytes(token[len(token)-1:len(token)], byteorder="big", signed=False)
-                rc.append({"token_id":i,"uri":uri,"price":price,"state":state})
+                    token = token.split("aaaaaaaa")[1]
+
+                    _u=SmartContract(address=token[0:64])
+                    addr =_u.address.bech32()
+
+                    state = int(token[64:66], 16)
+                    uri = str(bytearray.fromhex(token[66:len(token)]), "utf-8")
+
+                    rc.append({"token_id": i, "uri": uri, "price": price, "state": state,"owner":addr})
+                    i=i+1
+
 
         return rc
 
@@ -430,7 +445,8 @@ class ElrondNet:
         return tx
 
 
-    def nft_buy(self, contract, pem_file, token_id):
+    def nft_buy(self, contract, pem_file, token_id,price):
+        value=int(1e18*price)
         user_from=Account(pem_file=pem_file)
         user_from.sync_nonce(self._proxy)
         tx = self.environment.execute_contract(SmartContract(contract),
@@ -439,7 +455,7 @@ class ElrondNet:
                                                arguments=[token_id],
                                                gas_price=config.DEFAULT_GAS_PRICE,
                                                gas_limit=80000000,
-                                               value=0,
+                                               value=value,
                                                chain=self._proxy.get_chain_id(),
                                                version=config.get_tx_version())
 

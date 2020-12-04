@@ -37,7 +37,7 @@
   ______
   <br><br><br>
 
-  Vous disposez de {{user.gas/1e18 | number:'1.0-3'}} eGld<br>
+  Vous disposez de {{user.gas/1e18 | number:'1.0-3'}} xEgld<br>
   pour réaliser les transactions
   <br><br>
    <button mat-raised-button mat-button
@@ -54,10 +54,10 @@
   <br><br><br>
 
 
-     <app-elrond-addr label="Transactions du compte"
+      <app-elrond-addr label="Transactions du compte"
                     type="address"
                    [addr]="user.addr">
-  </app-elrond-addr>
+      </app-elrond-addr>
 
   <br><br>
   <app-elrond-addr [label]="'Transactions sur \''+user.unity+'\''"

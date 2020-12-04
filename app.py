@@ -212,23 +212,33 @@ def nfts():
 #http://localhost:6660/api/test/
 @app.route('/api/test/',methods=["GET"])
 def test():
-    n_tokens=bc.query(NFT_CONTRACT,"totalMinted")
-    rc=bc.query(NFT_CONTRACT,"getToken",[0],isnumber=False)
-    price=int.from_bytes(rc[0:7],byteorder="big",signed=True)
-    uri=str(rc[7:len(rc)-1],"utf-8")
-    state=int.from_bytes(rc[len(rc)-1:len(rc)],byteorder="big",signed=False)
+    tokens=bc.query(NFT_CONTRACT,"tokens",[0xAA,0xFF],isnumber=False).hex()
+    rc=[]
+    for token in tokens.split("ffffffff"):
+        if len(token)>0:
+            hexprice=token.split("aaaaaaaa")[0];
+            i=0
+            while hexprice[i]=="0": i=i+1
+            price=int(hexprice[i+2:],16)
 
-    return jsonify(uri),200
+            token=token.split("aaaaaaaa")[1]
+            addr="0x"+token[0:64]
+            state = int(token[64:66],16)
+            uri=str(bytearray.fromhex(token[66:len(token)]),"utf-8")
+            rc.append({"price":price})
+
+    return jsonify(rc),200
 
 
 
-@app.route('/api/buy_nft/<token_id>/',methods=["POST"])
-def buy_nft(token_id,data:dict=None):
+
+@app.route('/api/buy_nft/<token_id>/<price>/',methods=["POST"])
+def buy_nft(token_id,price,data:dict=None):
     if data is None:
        data = json.loads(str(request.data, encoding="utf-8"))
 
     pem_file=get_pem_file(data)
-    rc=bc.nft_buy(NFT_CONTRACT,pem_file,token_id)
+    rc=bc.nft_buy(NFT_CONTRACT,pem_file,token_id,float(price))
     return jsonify(rc)
 
 
@@ -249,7 +259,9 @@ def mint(count:str,data:dict=None):
 
     nft_contract_owner=Account(pem_file="./PEM/"+NFT_ADMIN+".pem")
 
-    result=bc.mint(NFT_CONTRACT,nft_contract_owner,[int(count), "0x"+owner.address.hex(),"0x"+uri.encode().hex(),data["price"]])
+    price=int(float(data["price"])*1e18)
+    arguments=[int(count), "0x"+owner.address.hex(),"0x"+uri.encode().hex(),price]
+    result=bc.mint(NFT_CONTRACT,nft_contract_owner,arguments)
     return jsonify({"tx":result}), 200
 
 
@@ -322,7 +334,8 @@ def server_config():
             "bank_cmk":bank_balance["number"],
             "bank_gas": bank_balance["gas"],
             "default_money":app.config["cmk"],
-            "proxy":bc._proxy.url
+            "proxy":bc._proxy.url,
+            "nft_contract":NFT_CONTRACT
         }
         return jsonify(infos),200
     else:

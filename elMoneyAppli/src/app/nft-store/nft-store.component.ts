@@ -25,20 +25,37 @@ export class NftStoreComponent implements OnInit {
     this.refresh();
   }
 
-  refresh() {
-    this.message="Remplissage de la boutique ...";
+  refresh(withMessage=true) {
+    if(withMessage)this.message="Remplissage de la boutique ...";
     this.api._get("nfts").subscribe((r:any)=>{
       this.message="";
       this.nfts=[];
       for(let item of r){
+        item.message="";
         if(item.state==0)this.nfts.push(item);
       }
     })
   }
 
+
+
   buy(nft: any) {
-    this.api._post("buy_nft/"+nft.token_id+"/","",this.user.pem).subscribe(()=>{
+    nft.message="En cours d'achat";
+    let price=nft.price;
+    this.api._post("buy_nft/"+nft.token_id+"/"+price,"",this.user.pem).subscribe(()=>{
+      nft.message="";
       showMessage(this,"En cours d'achat");
-    })
+      this.refresh(false);
+    },()=>{
+      nft.message="";
+      showMessage(this,"Achat annulé");
+    });
+  }
+
+  cancel_buy(nft: any) {
+    this.api._post("state_nft/"+nft.token_id+"/1","",this.user.pem).subscribe(()=>{
+      showMessage(this,"En cours d'achat");
+      this.refresh(false);
+    });
   }
 }
