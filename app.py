@@ -207,6 +207,16 @@ def nfts():
     return jsonify(rc),200
 
 
+@app.route('/api/open_nft/<token_id>/',methods=["POST"])
+def open_nft(token_id:str,data:dict=None):
+    if data is None:
+        data = json.loads(str(request.data, encoding="utf-8"))
+
+    pem_file = get_pem_file(data)
+    rc = bc.nft_open(NFT_CONTRACT, pem_file, token_id)
+    return jsonify(rc)
+
+
 
 
 #http://localhost:6660/api/test/
@@ -255,12 +265,13 @@ def mint(count:str,data:dict=None):
         data = json.loads(data)
 
     owner = Account(pem_file=get_pem_file(data))
-    uri=data["signature"]
-
     nft_contract_owner=Account(pem_file="./PEM/"+NFT_ADMIN+".pem")
+    uri=data["signature"]
+    secret=data["secret"]
+    price = int(float(data["price"]) * 1e18)
+    #TODO: ajouter ici un encodage du secret dont la clé est connu par le contrat
 
-    price=int(float(data["price"])*1e18)
-    arguments=[int(count), "0x"+owner.address.hex(),"0x"+uri.encode().hex(),price]
+    arguments=[int(count), "0x"+owner.address.hex(),"0x"+uri.encode().hex(),"0x"+secret.encode().hex(),price]
     result=bc.mint(NFT_CONTRACT,nft_contract_owner,arguments)
     return jsonify({"tx":result}), 200
 

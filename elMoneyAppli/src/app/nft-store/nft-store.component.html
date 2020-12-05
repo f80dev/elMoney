@@ -32,11 +32,19 @@
                   (click)="buy(nft)">
             <mat-icon>shop</mat-icon>
           </button>
+          <div *ngIf="nft.owner==user.addr">
           <button mat-icon-button
-                  *ngIf="nft.owner==user.addr" class="icon-button"
+                  class="icon-button"
                   (click)="cancel_buy(nft)">
             <mat-icon>cancel</mat-icon>
           </button>
+            <button mat-icon-button
+                  class="icon-button"
+                  (click)="open(nft)">
+            <mat-icon>unarchive</mat-icon>
+          </button>
+          </div>
+
         </div>
         <div *ngIf="nft.message?.length>0">
           <app-hourglass [message]="nft.message" fontsize="small"></app-hourglass>

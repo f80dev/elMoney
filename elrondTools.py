@@ -419,7 +419,10 @@ class ElrondNet:
                     addr =_u.address.bech32()
 
                     state = int(token[64:66], 16)
-                    uri = str(bytearray.fromhex(token[66:len(token)]), "utf-8")
+                    try:
+                        uri = str(bytearray.fromhex(token[66:]), "utf-8")
+                    except:
+                        uri=""
 
                     rc.append({"token_id": i, "uri": uri, "price": price, "state": state,"owner":addr})
                     i=i+1
@@ -461,6 +464,24 @@ class ElrondNet:
 
         tr = self.wait_transaction(tx, "status", not_equal="pending")
         return tx
+
+
+    def nft_open(self, contract, pem_file, token_id):
+        user_from = Account(pem_file=pem_file)
+        user_from.sync_nonce(self._proxy)
+        tx = self.environment.execute_contract(SmartContract(contract),
+                                               user_from,
+                                               function="open",
+                                               arguments=[token_id],
+                                               gas_price=config.DEFAULT_GAS_PRICE,
+                                               gas_limit=80000000,
+                                               value=0,
+                                               chain=self._proxy.get_chain_id(),
+                                               version=config.get_tx_version())
+
+        tr = self.wait_transaction(tx, "status", not_equal="pending")
+        return tx
+
 
 
 

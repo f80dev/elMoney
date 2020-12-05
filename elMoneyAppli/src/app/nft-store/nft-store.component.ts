@@ -58,4 +58,10 @@ export class NftStoreComponent implements OnInit {
       this.refresh(false);
     });
   }
+
+  open(nft: any) {
+    this.api._post("open_nft/"+nft.token_id+"/","",this.user.pem).subscribe((r:any)=>{
+      debugger;
+    });
+  }
 }

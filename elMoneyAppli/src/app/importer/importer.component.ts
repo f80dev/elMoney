@@ -14,10 +14,11 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 export class ImporterComponent implements OnInit {
 
   message: string="";
-  signature: any="masignature";
   file:string="vide";
   count: any=1;
+  secret: any="monsecret";
   price: any=0;
+  uri: any="montoken";
 
   constructor(public api:ApiService,
               public user:UserService,
@@ -43,7 +44,8 @@ export class ImporterComponent implements OnInit {
       pem:this.user.pem["pem"],
       owner:this.user.addr,
       file:this.file,
-      signature:this.signature,
+      signature:this.uri,
+      secret:this.secret,
       price:this.price,
     };
     this.message="Enregistrement dans la blockchain";

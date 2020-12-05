@@ -20,9 +20,17 @@
 
 
   <mat-form-field appearance="fill" class="app-field">
-    <mat-label>Signature</mat-label>
-    <input matInput type="text" maxlength="20" [(ngModel)]="signature">
+    <mat-label>Présentation du token</mat-label>
+    <input matInput type="text" maxlength="20" [(ngModel)]="uri">
     <mat-hint>Saisisser un identifiant : mail, numéro de sécurité sociale, passeport</mat-hint>
+  </mat-form-field>
+
+    <br>
+
+    <mat-form-field appearance="fill" class="app-field">
+    <mat-label>Secret à embarquer dans le token</mat-label>
+    <input matInput type="text" maxlength="20" [(ngModel)]="secret">
+    <mat-hint>un mot de passe, une adresse internet qui ne sera accessible qu'au propriétaire</mat-hint>
   </mat-form-field>
 
   <br>
