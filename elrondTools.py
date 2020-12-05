@@ -477,7 +477,7 @@ class ElrondNet:
         tx = self.environment.execute_contract(SmartContract(contract),
                                                user_from,
                                                function="open",
-                                               arguments=[token_id],
+                                               arguments=[int(token_id)],
                                                gas_price=config.DEFAULT_GAS_PRICE,
                                                gas_limit=80000000,
                                                value=0,

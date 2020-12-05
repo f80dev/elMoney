@@ -61,6 +61,7 @@ export class NftStoreComponent implements OnInit {
   }
 
   open(nft: any) {
+    debugger
     this.api._post("open_nft/"+nft.token_id+"/","",this.user.pem).subscribe((r:any)=>{
       nft.open=r.response;
     });
