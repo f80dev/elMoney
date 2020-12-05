@@ -213,8 +213,10 @@ def open_nft(token_id:str,data:dict=None):
         data = json.loads(str(request.data, encoding="utf-8"))
 
     pem_file = get_pem_file(data)
-    rc = bc.nft_open(NFT_CONTRACT, pem_file, token_id)
-    return jsonify(rc)
+    tx = bc.nft_open(NFT_CONTRACT, pem_file, token_id)
+    rc=str(base64.b64decode(tx["scResults"][0]["data"]))[3:]
+    rc=str(bytearray.fromhex(rc[0:len(rc)-1]),"utf-8")
+    return jsonify({"response":rc,"cost":0})
 
 
 

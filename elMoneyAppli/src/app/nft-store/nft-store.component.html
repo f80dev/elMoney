@@ -25,7 +25,7 @@
         <br>
       </td>
       <td style="text-align: right;width:100px;">
-        <div *ngIf="nft.message?.length==0">
+        <div *ngIf="nft.message?.length==0 && nft.open?.length==0">
           <button mat-icon-button
                   *ngIf="nft.owner!=user.addr"
                   class="icon-button"
@@ -48,6 +48,9 @@
         </div>
         <div *ngIf="nft.message?.length>0">
           <app-hourglass [message]="nft.message" fontsize="small"></app-hourglass>
+        </div>
+        <div *ngIf="nft.open?.length>0">
+          <strong>{{nft.open}}</strong>
         </div>
 
       </td>

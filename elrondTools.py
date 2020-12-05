@@ -2,6 +2,7 @@ import base64
 import json
 import logging
 import os
+import urllib
 from datetime import datetime
 
 from time import sleep
@@ -292,7 +293,7 @@ class ElrondNet:
             return None
 
 
-    def wait_transaction(self, tx,field="status",equal="",not_equal="",timeout=30,interval=2):
+    def wait_transaction(self, tx,field="status",equal="",not_equal="",timeout=30,interval=4):
         """
         Attent qu'une transaction prenne un certain statut
         :param tx:
@@ -311,6 +312,10 @@ class ElrondNet:
             if len(equal)>0 and rc[field]==equal:break
             if len(not_equal) > 0 and rc[field] != not_equal: break
             timeout=timeout-1
+
+        with urllib.request.urlopen(self._proxy.url+'/transactions/'+tx) as response:
+            txt = response.read()
+        rc=json.loads(txt)
 
         if timeout<=0:log("Timeout de "+self.getExplorer(tx)+" "+field+" est a "+str(rc[field]))
         return rc
@@ -480,7 +485,7 @@ class ElrondNet:
                                                version=config.get_tx_version())
 
         tr = self.wait_transaction(tx, "status", not_equal="pending")
-        return tx
+        return tr
 
 
 
