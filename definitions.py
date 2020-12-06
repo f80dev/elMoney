@@ -36,5 +36,5 @@ DB_SERVERS=dict({
 
 MAIN_DEVISE="xEGld"
 
-NFT_CONTRACT="erd1qqqqqqqqqqqqqpgquqhj79xfk85megcwuaxhjzsnr6adpjvrd8ssh30tnf"
+NFT_CONTRACT="erd1qqqqqqqqqqqqqpgqvjdxmqxgqdm678ln7tlcdt5mjdr5p2mud8ss4dxr57"
 NFT_ADMIN="admin"

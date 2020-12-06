@@ -22,7 +22,7 @@
       <td style="text-align: left;width:70%;min-width: 200px;">
         <strong>{{nft.uri}}</strong><br>
         pour {{nft.price}} xEGld
-        <br>
+        <br><br>
       </td>
       <td style="text-align: right;width:100px;">
         <div *ngIf="nft.message?.length==0 && nft.open?.length==0">
@@ -33,16 +33,16 @@
             <mat-icon>shop</mat-icon>
           </button>
           <div *ngIf="nft.owner==user.addr">
-          <button mat-icon-button
-                  class="icon-button"
-                  (click)="cancel_buy(nft)">
-            <mat-icon>cancel</mat-icon>
-          </button>
             <button mat-icon-button
-                  class="icon-button"
-                  (click)="open(nft)">
-            <mat-icon>unarchive</mat-icon>
-          </button>
+                    class="icon-button"
+                    (click)="cancel_buy(nft)">
+              <mat-icon>cancel</mat-icon>
+            </button>
+            <button mat-icon-button
+                    class="icon-button"
+                    (click)="open(nft)">
+              <mat-icon>unarchive</mat-icon>
+            </button>
           </div>
 
         </div>
@@ -51,6 +51,11 @@
         </div>
         <div *ngIf="nft.open?.length>0">
           <strong>{{nft.open}}</strong>
+          <button mat-icon-button
+                  class="icon-button"
+                  (click)="nft.open=''">
+            <mat-icon>visibility_off</mat-icon>
+          </button>
         </div>
 
       </td>

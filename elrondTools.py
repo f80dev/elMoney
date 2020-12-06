@@ -407,7 +407,7 @@ class ElrondNet:
 
         if not tokens is None:
             tokens=tokens.hex()
-            i=0
+            index=0
             for token in tokens.split("ffffffff"):
                 if len(token)>10:
                     hexprice = token.split("aaaaaaaa")[0];
@@ -429,8 +429,8 @@ class ElrondNet:
                     except:
                         uri=""
 
-                    rc.append({"token_id": i, "uri": uri, "price": price, "state": state,"owner":addr})
-                    i=i+1
+                    rc.append({"token_id": index, "uri": uri, "price": price, "state": state,"owner":addr})
+                    index=index+1
 
 
         return rc
