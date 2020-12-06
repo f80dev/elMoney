@@ -207,6 +207,8 @@ def nfts():
     return jsonify(rc),200
 
 
+
+
 @app.route('/api/open_nft/<token_id>/',methods=["POST"])
 def open_nft(token_id:str,data:dict=None):
     if data is None:

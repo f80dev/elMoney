@@ -33,7 +33,7 @@ export class NftStoreComponent implements OnInit {
       for(let item of r){
         item.message="";
         item.open="";
-        if(item.state==0)this.nfts.push(item);
+        if(item.state==0 || item.owner==this.user.addr)this.nfts.push(item);
       }
     })
   }
@@ -61,8 +61,9 @@ export class NftStoreComponent implements OnInit {
   }
 
   open(nft: any) {
-    debugger
+    nft.message="En cours d'ouverture";
     this.api._post("open_nft/"+nft.token_id+"/","",this.user.pem).subscribe((r:any)=>{
+      nft.message="";
       nft.open=r.response;
     });
   }
