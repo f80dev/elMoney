@@ -19,6 +19,7 @@ export class ImporterComponent implements OnInit {
   secret: any="monsecret";
   price: any=0;
   uri: any="montoken";
+  cost=0;
 
   constructor(public api:ApiService,
               public user:UserService,
@@ -26,6 +27,11 @@ export class ImporterComponent implements OnInit {
               public router:Router) { }
 
   ngOnInit(): void {
+    this.api._get("evalprice/"+this.user.addr+"/kjfdkljgklfdjgklfdjklgfdlk/0/").subscribe((r:any)=>{
+      if(!r.hasOwnProperty("error")){
+        this.cost=r.txGasUnits;
+      }
+    })
   }
 
    import(fileInputEvent: any) {

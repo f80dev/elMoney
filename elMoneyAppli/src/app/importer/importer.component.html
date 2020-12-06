@@ -9,35 +9,37 @@
          (change)="import($event)"
          accept=".csv"/>
 
-  <button mat-raised-button
-          mat-button class="app-button"
-          *ngIf="file=='vide'"
-          (click)="csvInput.click()">
-    Importer un fichier
-  </button>
+<!--  <button mat-raised-button-->
+<!--          mat-button class="app-button"-->
+<!--          *ngIf="file=='vide'"-->
+<!--          (click)="csvInput.click()">-->
+<!--    Importer un fichier-->
+<!--  </button>-->
 
-  <br><br>
+<!--  <br><br>-->
 
 
   <mat-form-field appearance="fill" class="app-field">
     <mat-label>Présentation du token</mat-label>
-    <input matInput type="text" maxlength="20" [(ngModel)]="uri">
-    <mat-hint>Saisisser un identifiant : mail, numéro de sécurité sociale, passeport</mat-hint>
+    <input matInput type="text" maxlength="200" [(ngModel)]="uri">
+    <mat-hint>Présenter votre token en quelques mots pour le store</mat-hint>
   </mat-form-field>
 
     <br>
 
     <mat-form-field appearance="fill" class="app-field">
     <mat-label>Secret à embarquer dans le token</mat-label>
-    <input matInput type="text" maxlength="20" [(ngModel)]="secret">
+    <input matInput type="text" maxlength="200" [(ngModel)]="secret">
     <mat-hint>un mot de passe, une adresse internet qui ne sera accessible qu'au propriétaire</mat-hint>
   </mat-form-field>
 
-  <br>
+  <br><br>
+
   <mat-form-field appearance="fill" class="app-field" style="max-width: 200px">
     <mat-label>Combien d'exemplaire</mat-label>
     <input matInput type="number" min="1" max="1000" [(ngModel)]="count">
   </mat-form-field>
+
 
   &nbsp;
   <mat-form-field appearance="fill" class="app-field" style="max-width: 200px">
@@ -52,7 +54,7 @@
   <br><br>
   <button mat-raised-button  color="primary"
           mat-button class="large-button"
-          [disabled]="signature?.length==0 && file.length>0"
+          [disabled]="uri?.length==0 && file.length>0"
           (click)="tokenizer()">
     Publier
   </button>

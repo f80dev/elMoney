@@ -3,9 +3,11 @@ import json
 import logging
 import os
 import urllib
+import requests as rq
 from datetime import datetime
 
 from time import sleep
+from urllib import parse
 
 from erdpy.proxy import ElrondProxy
 from erdpy import config
@@ -432,11 +434,33 @@ class ElrondNet:
                     rc.append({"token_id": index, "uri": uri, "price": price, "state": state,"owner":addr})
                     index=index+1
 
-
         return rc
 
 
+    def evalprice(self,sender_addr,receiver_addr,value=0,data="exemplededata"):
+        body={
+            "version":config.get_tx_version(),
+            "chainID":self._proxy.get_chain_id(),
+            "value":value,
+            "sender":sender_addr,
+            "receiver":receiver_addr,
+            "data":data
+        }
+
+        r=rq.post(self._proxy.url+"/transaction/cost",data=body)
+        rc=json.loads(r.text)
+        return rc
+
+
+
     def mint(self, contract, user_from,arguments):
+        """
+        Fabriquer un NFT
+        :param contract:
+        :param user_from:
+        :param arguments:
+        :return:
+        """
         log("Minage avec "+str(arguments))
         user_from.sync_nonce(self._proxy)
         tx = self.environment.execute_contract(SmartContract(contract),

@@ -197,6 +197,14 @@ def get_pem_file(data):
 
 
 
+#http://localhost:6660/api/nfts/
+@app.route('/api/evalprice/<sender>/<data>/<value>/',methods=["GET"])
+def evalprice(sender,data="",value=0):
+    rc=bc.evalprice(sender,NFT_CONTRACT,value,data)
+    return jsonify(rc)
+
+
+
 
 #http://localhost:6660/api/nfts/
 @app.route('/api/nfts/',methods=["GET"])
