@@ -40,6 +40,12 @@ class DAO:
         return self.db["moneys"].find_one(filter={"addr":contract})
 
     def get_money_by_name(self, unity,proxy):
+        """
+        Récupération du contrat par le nom
+        :param unity:
+        :param proxy:
+        :return:
+        """
         return self.db["moneys"].find_one(filter={"unity":unity,"proxy":proxy})
 
 
