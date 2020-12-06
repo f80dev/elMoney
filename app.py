@@ -205,6 +205,17 @@ def evalprice(sender,data="",value=0):
 
 
 
+@app.route('/api/burn/<token_id>/',methods=["GET"])
+def burn(token_id,data:dict=None):
+    if data is None:
+        data = json.loads(str(request.data, encoding="utf-8"))
+
+    pem_file = get_pem_file(data)
+    rc=bc.burn(pem_file,token_id)
+    return jsonify(rc)
+
+
+
 
 #http://localhost:6660/api/nfts/
 @app.route('/api/nfts/',methods=["GET"])

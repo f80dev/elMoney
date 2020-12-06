@@ -3,7 +3,7 @@ import {ApiService} from "../api.service";
 import {showMessage} from "../tools";
 import {UserService} from "../user.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-nft-store',
@@ -13,8 +13,10 @@ import {Router} from "@angular/router";
 export class NftStoreComponent implements OnInit {
   nfts: any[]=[];
   message="";
+  perso_only: any={value:true};
 
   constructor(public api:ApiService,
+              public routes:ActivatedRoute,
               public toast:MatSnackBar,
               public router:Router,
               public user:UserService) {
@@ -22,6 +24,8 @@ export class NftStoreComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if(this.routes.snapshot.queryParamMap.has("perso_only"))
+      this.perso_only.value=this.routes.snapshot.queryParamMap.get("perso_only")
     this.refresh();
   }
 
@@ -33,8 +37,13 @@ export class NftStoreComponent implements OnInit {
       for(let item of r){
         item.message="";
         item.open="";
-        if(item.state==0 || item.owner==this.user.addr)
-          this.nfts.push(item);
+        if(this.perso_only){
+          if(item.owner==this.user.addr)
+            this.nfts.push(item);
+        } else {
+          if(item.state==0 || item.owner==this.user.addr)
+            this.nfts.push(item);
+        }
       }
     })
   }

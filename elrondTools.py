@@ -373,16 +373,22 @@ class ElrondNet:
 
 
 
-    def query(self,_contract,function_name,arguments=None,isnumber=True):
+    def query(self,_contract,function_name,arguments=None,isnumber=True,n_try=3):
         if type(_contract)==str:
             _contract=SmartContract(_contract)
 
-        try:
-            d=self.environment.query_contract(_contract, function_name,arguments)
-        except Exception as inst:
-            log("Impossible d'executer "+function_name+"("+str(arguments)+") -> ")
-            log(str(inst.args))
-            return None
+        d = None
+        for i in range(n_try):
+            try:
+                d=self.environment.query_contract(_contract, function_name,arguments)
+                break
+            except Exception as inst:
+                sleep(3)
+                log("Essai "+str(i)+" Impossible d'executer "+function_name+"("+str(arguments)+") -> ")
+                log(str(inst.args))
+
+        if d is None: return None
+
 
         if len(d)>0:
             if isnumber:
@@ -510,6 +516,24 @@ class ElrondNet:
 
         tr = self.wait_transaction(tx, "status", not_equal="pending")
         return tr
+
+
+    def burn(self, contract,sender, token_id):
+        user_from = Account(pem_file=sender)
+        user_from.sync_nonce(self._proxy)
+        tx = self.environment.execute_contract(SmartContract(contract),
+                                               user_from,
+                                               function="burn",
+                                               arguments=[int(token_id)],
+                                               gas_price=config.DEFAULT_GAS_PRICE,
+                                               gas_limit=80000000,
+                                               value=0,
+                                               chain=self._proxy.get_chain_id(),
+                                               version=config.get_tx_version())
+
+        tr = self.wait_transaction(tx, "status", not_equal="pending")
+        return tr
+
 
 
 
