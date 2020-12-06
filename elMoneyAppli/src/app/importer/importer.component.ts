@@ -27,11 +27,11 @@ export class ImporterComponent implements OnInit {
               public router:Router) { }
 
   ngOnInit(): void {
-    this.api._get("evalprice/"+this.user.addr+"/kjfdkljgklfdjgklfdjklgfdlk/0/").subscribe((r:any)=>{
-      if(!r.hasOwnProperty("error")){
-        this.cost=r.txGasUnits;
-      }
-    })
+    // this.api._get("evalprice/"+this.user.addr+"/kjfdkljgklfdjgklfdjklgfdlk/0/").subscribe((r:any)=>{
+    //   if(!r.hasOwnProperty("error")){
+    //     this.cost=r.txGasUnits;
+    //   }
+    // })
   }
 
    import(fileInputEvent: any) {

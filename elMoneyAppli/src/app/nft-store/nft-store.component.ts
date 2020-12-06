@@ -33,7 +33,8 @@ export class NftStoreComponent implements OnInit {
       for(let item of r){
         item.message="";
         item.open="";
-        if(item.state==0 || item.owner==this.user.addr)this.nfts.push(item);
+        if(item.state==0 || item.owner==this.user.addr)
+          this.nfts.push(item);
       }
     })
   }
