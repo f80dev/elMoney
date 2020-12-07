@@ -65,7 +65,10 @@ export class UserService {
           $$("!Erreur de récupération de la balance pour "+this.addr);
           this.balance=0;
           this.unity="";
-          if(func_error)func_error(err.error);
+          if(func_error)
+            func_error(err.error);
+          else
+            func();
         });
     return true;
   }

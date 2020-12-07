@@ -9,21 +9,21 @@
   <div *ngIf="nfts.length==0 && message.length==0">
     Aucun token disponible pour l'instant
     &nbsp;<mat-icon style="font-size: small;" (click)="refresh()">refresh</mat-icon>
-    <br><br>
-
+    <br>
     <button mat-raised-button
             mat-button class="app-button"
             (click)="router.navigate(['importer'])">
       Vendez le votre
     </button>
-
   </div>
 
-  <div *ngIf="nfts.length>0">
-    <mat-checkbox [(ngModel)]="perso_only" (click)="refresh(false)">Uniquement les miens</mat-checkbox>
-    <br><br>
+  <br>
+  <mat-checkbox [(ngModel)]="perso_only" (click)="refresh(false)">Uniquement les miens</mat-checkbox>
+  <br>
 
-    <table *ngIf="message.length==0" class="mat-elevation-z4" style="margin-left:5%;width:90%;padding:5px;">
+
+  <div *ngIf="nfts.length>0" style="margin: 5px;padding:5px;" class="mat-elevation-z4">
+    <table *ngIf="message.length==0"  style="margin-left:5%;width:90%;padding:5px;">
     <tr *ngFor="let nft of nfts" style="width: 100%;">
       <td style="text-align: left;width:60%;min-width: 200px;">
         <strong>{{nft.uri}}</strong><br>
@@ -62,7 +62,7 @@
             <button mat-icon-button
                     *ngIf="nft.state==1"
                     class="icon-button"
-                    (click)="setstate(nft,1,'mise en vente')">
+                    (click)="setstate(nft,0,'mise en vente')">
               <mat-icon>checkmark</mat-icon>
             </button>
             <button mat-icon-button

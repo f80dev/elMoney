@@ -65,6 +65,7 @@ export class SettingsComponent implements OnInit {
       this.message="Rechargement en cours";
       this.api._get("refund/"+this.user.addr).subscribe((r:any)=>{
         this.message="";
+        showMessage(this,"Compte rechargé");
         if(r)
           this.user.gas=r.gas;
       },(err)=>{

@@ -24,8 +24,10 @@ export class NftStoreComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if(this.routes.snapshot.queryParamMap.has("perso_only"))
-      this.perso_only.value=this.routes.snapshot.queryParamMap.get("perso_only")
+    if(this.routes.snapshot.queryParamMap.has("only_perso")){
+      this.perso_only=(this.routes.snapshot.queryParamMap.get("only_perso")=="true")
+    }
+
     this.refresh();
   }
 
@@ -76,13 +78,15 @@ export class NftStoreComponent implements OnInit {
     this.api._post("open_nft/"+nft.token_id+"/","",this.user.pem).subscribe((r:any)=>{
       nft.message="";
       nft.open=r.response;
+      showMessage(this,"Coût de la transaction: "+r.cost);
+      this.user.refresh_balance(()=>{this.refresh(false);});
     });
   }
 
   burn(nft: any) {
     this.api._post("burn/"+nft.token_id+"/","",this.user.pem).subscribe((r:any)=>{
       nft.message="En cours de destruction";
-      this.refresh(false);
+      this.user.refresh_balance(()=>{this.refresh(false);});
     });
   }
 }

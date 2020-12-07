@@ -238,7 +238,7 @@ def open_nft(token_id:str,data:dict=None):
     rc=str(base64.b64decode(tx["scResults"][0]["data"]))[3:]
     if "@" in rc:rc=rc.split("@")[1]
     rc=str(bytearray.fromhex(rc[0:len(rc)-1]),"utf-8")
-    return jsonify({"response":rc,"cost":0})
+    return jsonify({"response":rc,"cost":tx["cost"]})
 
 
 @app.route('/api/state_nft/<token_id>/<state>/',methods=["POST"])
@@ -248,6 +248,8 @@ def state_nft(token_id:str,state:str,data:dict=None):
 
     pem_file = get_pem_file(data)
     tx = bc.set_state(NFT_CONTRACT, pem_file, token_id,state)
+    send(socketio,"refresh_nft")
+    return jsonify(tx),200
 
 
 
