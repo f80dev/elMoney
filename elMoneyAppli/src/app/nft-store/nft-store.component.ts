@@ -45,7 +45,7 @@ export class NftStoreComponent implements OnInit {
             this.nfts.push(item);
         }
       }
-    })
+    });
   }
 
 
@@ -63,9 +63,10 @@ export class NftStoreComponent implements OnInit {
     });
   }
 
-  cancel_buy(nft: any) {
-    this.api._post("state_nft/"+nft.token_id+"/1","",this.user.pem).subscribe(()=>{
-      showMessage(this,"En cours d'achat");
+  setstate(nft: any,new_state,message) {
+    nft.message=message;
+    this.api._post("state_nft/"+nft.token_id+"/"+new_state,"",this.user.pem).subscribe(()=>{
+      nft.message="";
       this.refresh(false);
     });
   }
@@ -75,6 +76,13 @@ export class NftStoreComponent implements OnInit {
     this.api._post("open_nft/"+nft.token_id+"/","",this.user.pem).subscribe((r:any)=>{
       nft.message="";
       nft.open=r.response;
+    });
+  }
+
+  burn(nft: any) {
+    this.api._post("burn/"+nft.token_id+"/","",this.user.pem).subscribe((r:any)=>{
+      nft.message="En cours de destruction";
+      this.refresh(false);
     });
   }
 }

@@ -241,6 +241,15 @@ def open_nft(token_id:str,data:dict=None):
     return jsonify({"response":rc,"cost":0})
 
 
+@app.route('/api/state_nft/<token_id>/<state>/',methods=["POST"])
+def state_nft(token_id:str,state:str,data:dict=None):
+    if data is None:
+        data = json.loads(str(request.data, encoding="utf-8"))
+
+    pem_file = get_pem_file(data)
+    tx = bc.set_state(NFT_CONTRACT, pem_file, token_id,state)
+
+
 
 
 #http://localhost:6660/api/test/

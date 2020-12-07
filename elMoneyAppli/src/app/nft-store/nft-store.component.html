@@ -1,7 +1,7 @@
 <div class="mainform">
   <app-hourglass [message]="message"></app-hourglass>
 
-  <div>
+  <div *ngIf="message.length==0">
     Vous avez {{user.gas/1e18 | number:'1.0-3'}} xEgld
     <br><br>
   </div>
@@ -47,16 +47,22 @@
             <mat-icon>shop</mat-icon>
           </button>
           <div *ngIf="nft.owner==user.addr">
-            <button mat-icon-button
+            <button mat-icon-button mat-flat-button
                     *ngIf="nft.state==0"
                     class="icon-button"
-                    (click)="cancel_buy(nft)">
+                    (click)="setstate(nft,1,'retirer de la vente')">
               <mat-icon>cancel</mat-icon>
+            </button>
+            <button mat-icon-button mat-flat-button
+                    *ngIf="nft.state==1 && nft.owner!=user.addr"
+                    class="icon-button"
+                    (click)="burn(nft)">
+              <mat-icon>delete</mat-icon>
             </button>
             <button mat-icon-button
                     *ngIf="nft.state==1"
                     class="icon-button"
-                    (click)="cancel_buy(nft)">
+                    (click)="setstate(nft,1,'mise en vente')">
               <mat-icon>checkmark</mat-icon>
             </button>
             <button mat-icon-button

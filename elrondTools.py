@@ -318,6 +318,7 @@ class ElrondNet:
         with urllib.request.urlopen(self._proxy.url+'/transactions/'+tx) as response:
             txt = response.read()
         rc=json.loads(txt)
+        rc["cost"]=(rc["gasPrice"]*rc["gasUsed"])/1e18
 
         if timeout<=0:log("Timeout de "+self.getExplorer(tx)+" "+field+" est a "+str(rc[field]))
         return rc
@@ -525,6 +526,23 @@ class ElrondNet:
                                                user_from,
                                                function="burn",
                                                arguments=[int(token_id)],
+                                               gas_price=config.DEFAULT_GAS_PRICE,
+                                               gas_limit=80000000,
+                                               value=0,
+                                               chain=self._proxy.get_chain_id(),
+                                               version=config.get_tx_version())
+
+        tr = self.wait_transaction(tx, "status", not_equal="pending")
+        return tr
+
+
+    def set_state(self, contract, pem_file, token_id, state):
+        user_from = Account(pem_file=pem_file)
+        user_from.sync_nonce(self._proxy)
+        tx = self.environment.execute_contract(SmartContract(contract),
+                                               user_from,
+                                               function="setstate",
+                                               arguments=[int(token_id),int(state)],
                                                gas_price=config.DEFAULT_GAS_PRICE,
                                                gas_limit=80000000,
                                                value=0,
