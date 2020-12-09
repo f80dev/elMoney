@@ -3,6 +3,7 @@ import {ActivatedRoute} from "@angular/router";
 import {ApiService} from "../api.service";
 import {Location} from "@angular/common";
 import {ConfigService} from "../config.service";
+import {checkConfig} from "../tools";
 
 @Component({
   selector: 'app-faqs',
@@ -20,6 +21,7 @@ export class FaqsComponent implements OnInit {
   }
 
   ngOnInit() {
+    checkConfig(this);
     this.api.getfaqs().subscribe((rc:any)=>{
       var params= this.route.snapshot.queryParamMap;
 

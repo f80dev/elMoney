@@ -3,6 +3,7 @@ import {ConfigService} from "../config.service";
 import {environment} from "../../environments/environment";
 import {Location} from "@angular/common";
 import {Router} from "@angular/router";
+import {checkConfig} from "../tools";
 
 @Component({
   selector: 'app-about',
@@ -21,6 +22,7 @@ export class AboutComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    checkConfig(this);
   }
 
   openFrame(forum: any) {

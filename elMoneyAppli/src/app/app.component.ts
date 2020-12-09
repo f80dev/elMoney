@@ -27,7 +27,9 @@ export class AppComponent {
               public api:ApiService){
 
     this.appVersion=environment.appVersion;
+    this.message="Connexion";
     this.config.init(()=>{
+      this.message="";
       $$("Recherche du contrat à utiliser pour le device");
       this.api.init_contract(this.routes.snapshot.queryParamMap.get("contract"))
 
@@ -39,8 +41,8 @@ export class AppComponent {
         (err)=>{this.router.navigate(["moneys"]);},
         this
         );
-
-    },()=>{
+      },()=>{
+      this.message="";
       $$("!Probléme d'initialisation de la configuration");
       this.router.navigate(["support"],{queryParams:{message:"Problème grave de connexion"}});
     });

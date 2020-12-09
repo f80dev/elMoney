@@ -16,12 +16,13 @@ export class SupportComponent implements OnInit {
   constructor(
     public _location:Location,
     public user:UserService,
-
     public routes:ActivatedRoute,
     public config:ConfigService) { }
 
+
   ngOnInit(): void {
     this.message=this.routes.snapshot.queryParamMap.get("message");
+    this._location.replaceState("./support");
   }
 
   openForum() {

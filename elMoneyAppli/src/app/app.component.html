@@ -4,7 +4,7 @@
             [subtitle]="'Fabriquez vos propres monnaies !<br><small>alpha version '+appVersion+'</small>'"
             background="./assets/img/moneys.jpg"></app-tuto>
 
-<mat-toolbar class="mat-elevation-z2 toolbar-app" (mousedown)="closeMenu()">
+<mat-toolbar class="mat-elevation-z2 toolbar-app" (mousedown)="closeMenu()" *ngIf="message?.length==0">
     <mat-icon
       title="Accédez au menu principal"
       id="cmdMenu"
