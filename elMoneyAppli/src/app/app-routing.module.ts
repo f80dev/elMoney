@@ -13,6 +13,7 @@ import {ContactsComponent} from "./contacts/contacts.component";
 import {FaqsComponent} from "./faqs/faqs.component";
 import {ImporterComponent} from "./importer/importer.component";
 import {NftStoreComponent} from "./nft-store/nft-store.component";
+import {FaucetComponent} from "./faucet/faucet.component";
 
 const routes: Routes = [
    { path: 'admin', component: AdminComponent},
@@ -25,6 +26,7 @@ const routes: Routes = [
    { path: 'about', component: AboutComponent},
     { path: 'importer', component: ImporterComponent},
     { path: 'store', component: NftStoreComponent},
+   { path: 'faucet', component: FaucetComponent},
    { path: 'support', component: SupportComponent},
     { path: 'main', component: MainComponent},
       { path: 'contacts', component: ContactsComponent},

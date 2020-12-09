@@ -15,6 +15,7 @@ export class HourglassComponent implements OnInit {
   @Input("faq") faq="";
   @Input("fontsize") fontsize="medium";
   @Output('cancel') oncancel: EventEmitter<any>=new EventEmitter();
+  @Input("marginTop") marginTop="0px";
 
   constructor(public router:Router) { }
 

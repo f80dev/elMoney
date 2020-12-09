@@ -24,7 +24,6 @@
     </span>
     <span style="font-size: xx-small">({{appVersion}})</span>
 
-
     &nbsp;
     <span class="fill-remaining-space"></span>
 
@@ -48,7 +47,7 @@
     <mat-drawer-content style="overflow: scroll">
       <div class="sidenav-content" style="height: 90vh;text-align: center;"
            (mousedown)="closeMenu()">
-        <app-hourglass [message]="message"></app-hourglass>
+        <app-hourglass marginTop="40px" fontsize="large" [diameter]="40" [message]="message"></app-hourglass>
         <router-outlet style="width:100%;" *ngIf="message.length==0" ></router-outlet>
       </div>
     </mat-drawer-content>

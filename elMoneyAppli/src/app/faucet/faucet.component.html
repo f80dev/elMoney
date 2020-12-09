@@ -1,0 +1,55 @@
+<div class="mainform">
+  <app-hourglass [message]="message"></app-hourglass>
+  <div style="width: 80%;">
+    <app-tuto [if]="user.gas/1e18<1"
+              label="Pour réaliser des transferts de monnaies, des achats ou transfert de tokens, vous devez posséder quelques eGold pour les frais de fonctionnement"></app-tuto>
+  </div>
+  <br>
+
+  <div style="line-height: 180%">
+    Vous disposez de<br>
+    <span style="font-size: xx-large">
+      {{user.gas/1e18 | number:'1.0-2'}}
+    </span>xEgld
+    <br>
+    pour vos transactions
+  </div>
+
+
+
+
+  <br><br>
+  <button mat-raised-button mat-button
+          *ngIf="message?.length==0"
+          class="app-button" [cdkCopyToClipboard]="user.addr" ngxClipboard
+          (click)="reload_account()">
+    <div class="bloc-bouton">Recharger<br>mon compte</div>
+  </button>
+
+  <br><br>
+  <br>
+  <qrcode
+    [width]="150"
+    ngxClipboard
+    [cdkCopyToClipboard]="user.addr"
+    (click)="informe_clipboard()"
+    style="display: inline-block;"
+    [elementType]="'svg'"
+    [errorCorrectionLevel]="'M'"
+    [qrdata]="user.addr">
+  </qrcode>
+  <br>
+  <small>Flasher pour transférer des eGld</small>
+  <br>
+
+
+  <br>
+  ______
+  <br> <br> <br>
+
+  <app-elrond-addr label="Journal de transactions"
+                   type="address"
+                   [addr]="user.addr">
+  </app-elrond-addr>
+
+</div>

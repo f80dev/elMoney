@@ -1,6 +1,6 @@
 <div class="mainform">
 
-  <h2>Mettre en vente vos token</h2><br>
+  <h2>Fabriquer vos tokens</h2><br>
   <app-hourglass [message]="message"></app-hourglass>
 
   <div *ngIf="message.length==0">
@@ -39,9 +39,7 @@
     <mat-label>Combien d'exemplaire</mat-label>
     <input matInput type="number" min="1" max="1000" [(ngModel)]="count">
   </mat-form-field>
-
-
-  &nbsp;
+    &nbsp;
   <mat-form-field appearance="fill" class="app-field" style="max-width: 200px">
     <mat-label>Prix</mat-label>
     <input matInput type="number" [(ngModel)]="price">

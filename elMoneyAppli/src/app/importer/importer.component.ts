@@ -58,7 +58,9 @@ export class ImporterComponent implements OnInit {
     this.api._post("mint/"+this.count,"",obj).subscribe(()=>{
       this.message="";
       showMessage(this,"Fichier tokeniser");
-      this.router.navigate(["store"],{queryParams:{perso_only:true}});
+      this.user.refresh_balance(()=>{
+        this.router.navigate(["store"],{queryParams:{perso_only:true}});
+      })
     })
   }
 }

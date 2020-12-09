@@ -282,6 +282,7 @@ def buy_nft(token_id,price,data:dict=None):
 
     pem_file=get_pem_file(data)
     rc=bc.nft_buy(NFT_CONTRACT,pem_file,token_id,float(price))
+    send(socketio,"refresh_nft")
     return jsonify(rc)
 
 
@@ -470,7 +471,9 @@ def getyaml(name):
 @app.route('/api/new_account/<wait>/')
 @app.route('/api/new_account/')
 def new_account(wait="true"):
-    _a,pem=bc.create_account(XGLD_FOR_NEWACCOUNT)
+    factor = ""
+    if not "elrond.com" in bc._proxy.url: factor = "0"
+    _a,pem=bc.create_account(XGLD_FOR_NEWACCOUNT+factor)
 
     log("Création du compte " + _a.address.bech32() +". Demande de transfert de la monnaie par defaut")
 

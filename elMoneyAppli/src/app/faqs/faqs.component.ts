@@ -31,12 +31,11 @@ export class FaqsComponent implements OnInit {
         if (!params.has("open") || faq["index"].indexOf(params.get("open")) > -1) {
           faq.visible = params.has("open");
           if(this.config.values){
-          for(let i=0;i<5;i++){
-            faq.title=faq.title.replace("{{appname}}",this.config.values.appname);
-            faq.content=faq.content.replace("{{appname}}",this.config.values.appname);
+            for(let i=0;i<5;i++){
+              faq.title=faq.title.replace("{{appname}}",this.config.values.appname);
+              faq.content=faq.content.replace("{{appname}}",this.config.values.appname);
+            }
           }
-          }
-
 
           this.faqs.push(faq)
         }

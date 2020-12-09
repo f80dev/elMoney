@@ -368,10 +368,11 @@ export function showMessage(vm:any,s:string="",duration=2000,func=null,label_but
     //Affichage en mode toaster
     var toaster:MatSnackBar=vm.toast || vm.snackBar || vm.toaster;
     if(toaster!=null){
-      if(duration==0)
-        toaster.open(s,label_button).onAction().subscribe(()=>{
-          if(func!=null)func();
+      if(func){
+        toaster.open(s,label_button,{duration:duration}).onAction().subscribe(()=>{
+          func();
         });
+      }
       else
         toaster.open(s,"",{duration:duration});
     }

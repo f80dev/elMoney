@@ -97,7 +97,7 @@ def open_html_file(name:str,replace=dict(),domain_appli=DOMAIN_APPLI):
 
 
 
-def send(socketio,event_name: str, dest="all", message: str = "", param: dict = {}):
+def send(socketio,event_name: str, dest="*", message: str = "", param: dict = {}):
     if not type(dest)==list:dest=[dest]
     for d in dest:
         body = dict({'to': d, 'message': message, 'param': param})

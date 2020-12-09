@@ -54,23 +54,5 @@ export class SettingsComponent implements OnInit {
 
   }
 
-  reload_account() {
-    if(this.config.server.proxy && this.config.server.proxy=="https://api.elrond.com"){
-      showMessage(this,"Votre adresse est dans le presse papier, vous pouvez l'utiliser pour le prestataire de paiement");
-      setTimeout(()=>{
-        open("https://buy.moonpay.io/?currencyCode=EGLD&amp;colorCode=%231B46C2&amp;showAllCurrencies=false&amp;enabledPaymentMethods=credit_debit_card,sepa_bank_transfer,gbp_bank_transfer,apple_pay");
-      },1000);
-    }
-    else {
-      this.message="Rechargement en cours";
-      this.api._get("refund/"+this.user.addr).subscribe((r:any)=>{
-        this.message="";
-        showMessage(this,"Compte rechargé");
-        if(r)
-          this.user.gas=r.gas;
-      },(err)=>{
-        showError(this,err)
-      });
-    }
-  }
+
 }

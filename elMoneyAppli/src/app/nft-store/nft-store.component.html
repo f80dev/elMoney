@@ -21,70 +21,71 @@
   <mat-checkbox [(ngModel)]="perso_only" (click)="refresh(false)">Uniquement les miens</mat-checkbox>
   <br>
 
+  <div *ngIf="nfts.length>0" style="margin: 5px;padding:5px;" class="wrap-list" >
+    <mat-card class="app-card" *ngFor="let nft of nfts">
+      <mat-card-header>
+        <img mat-card-avatar src="./assets/icons/gift.png" class="image-icon">
+        <mat-card-title>
+              {{nft.uri}}
+        </mat-card-title>
+        <mat-card-subtitle>
+           <small>{{nft.price}} xEGld</small>
+        </mat-card-subtitle>
+      </mat-card-header>
+  <!--    <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">-->
+      <mat-card-content>
+          <div *ngIf="nft.message?.length>0">
+            <app-hourglass [message]="nft.message" fontsize="small"></app-hourglass>
+          </div>
+          <div *ngIf="nft.open?.length>0">
+            <strong>{{nft.open}}</strong>
+          </div>
+      </mat-card-content>
+      <mat-card-actions class="app-card-action">
+          <div *ngIf="nft.message?.length==0 && nft.open?.length==0">
+            <button t-raised-button mat-button class="app-button"
+                    *ngIf="nft.owner!=user.addr"
+                    (click)="buy(nft)">
+             Acheter
+            </button>
+            <div *ngIf="nft.owner==user.addr">
+              <button mat-raised-button mat-button
+                      color="primary"
+                      *ngIf="nft.state==1"
+                      class="app-button"
+                      (click)="open(nft)">
+               Ouvrir
+              </button>
+              <button mat-icon-button mat-flat-button
+                      *ngIf="nft.state==0"
+                      class="icon-button"
+                      (click)="setstate(nft,1,'retirer de la vente')">
+                <mat-icon>remove_shopping_cart</mat-icon>
+              </button>
+              <button mat-icon-button mat-flat-button
+                      *ngIf="nft.state==1 && nft.owner!=user.addr"
+                      class="icon-button"
+                      (click)="burn(nft)">
+                <mat-icon>delete</mat-icon>
+              </button>
+              <button mat-raised-button mat-button class="app-button"
+                      *ngIf="nft.state==1"
+                      (click)="setstate(nft,0,'mise en vente')">
+                Vendre
+              </button>
+            </div>
 
-  <div *ngIf="nfts.length>0" style="margin: 5px;padding:5px;" class="mat-elevation-z4">
-    <table *ngIf="message.length==0"  style="margin-left:5%;width:90%;padding:5px;">
-    <tr *ngFor="let nft of nfts" style="width: 100%;">
-      <td style="text-align: left;width:60%;min-width: 200px;">
-        <strong>{{nft.uri}}</strong><br>
-        pour {{nft.price}} xEGld
-        <br><br>
-      </td>
-      <td style="width: 20%;">
-        <div *ngIf="nft.message?.length>0">
-          <app-hourglass [message]="nft.message" fontsize="small"></app-hourglass>
-        </div>
-        <div *ngIf="nft.open?.length>0">
-          <strong>{{nft.open}}</strong>
-        </div>
-      </td>
-      <td style="text-align: right;width:100px;">
-        <div *ngIf="nft.message?.length==0 && nft.open?.length==0">
-          <button mat-icon-button
-                  *ngIf="nft.owner!=user.addr"
-                  class="icon-button"
-                  (click)="buy(nft)">
-            <mat-icon>shop</mat-icon>
-          </button>
-          <div *ngIf="nft.owner==user.addr">
-            <button mat-icon-button mat-flat-button
-                    *ngIf="nft.state==0"
-                    class="icon-button"
-                    (click)="setstate(nft,1,'retirer de la vente')">
-              <mat-icon>cancel</mat-icon>
-            </button>
-            <button mat-icon-button mat-flat-button
-                    *ngIf="nft.state==1 && nft.owner!=user.addr"
-                    class="icon-button"
-                    (click)="burn(nft)">
-              <mat-icon>delete</mat-icon>
-            </button>
-            <button mat-icon-button
-                    *ngIf="nft.state==1"
-                    class="icon-button"
-                    (click)="setstate(nft,0,'mise en vente')">
-              <mat-icon>checkmark</mat-icon>
-            </button>
-            <button mat-icon-button
-                    class="icon-button"
-                    (click)="open(nft)">
-              <mat-icon>unarchive</mat-icon>
-            </button>
           </div>
 
-        </div>
-
-        <div *ngIf="nft.open?.length>0">
-          <button mat-icon-button
-                  class="icon-button"
-                  (click)="nft.open=''">
-            <mat-icon>visibility_off</mat-icon>
-          </button>
-        </div>
-
-      </td>
-    </tr>
-  </table>
+          <div *ngIf="nft.open?.length>0">
+            <button mat-icon-button
+                    class="icon-button"
+                    (click)="nft.open=''">
+              <mat-icon>visibility_off</mat-icon>
+            </button>
+          </div>
+      </mat-card-actions>
+    </mat-card>
   </div>
 
 </div>

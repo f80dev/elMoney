@@ -169,7 +169,7 @@ class ElrondNet:
                 "from":user_from.address.bech32(),
                 "price":toFiat(tr["gasLimit"]),
                 "account":toFiat(infos),
-                "explorer":self.getExplorer(tr["hash"]),
+                "explorer":self.getExplorer(tr["blockHash"],"address"),
                 "to":user_to.address.bech32()
             }
         except Exception as inst:
@@ -472,6 +472,7 @@ class ElrondNet:
                     rc.append({"token_id": index, "uri": uri, "price": price, "state": state,"owner":addr})
                     index=index+1
 
+        rc=sorted(rc,key=lambda i: i["token_id"],reverse=True)
         return rc
 
 

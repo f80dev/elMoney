@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import {ApiService} from "../api.service";
-import {showMessage} from "../tools";
+import {showMessage, subscribe_socket} from "../tools";
 import {UserService} from "../user.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ActivatedRoute, Router} from "@angular/router";
+import {Socket} from "ngx-socket-io";
 
 @Component({
   selector: 'app-nft-store',
@@ -18,9 +19,12 @@ export class NftStoreComponent implements OnInit {
   constructor(public api:ApiService,
               public routes:ActivatedRoute,
               public toast:MatSnackBar,
+               public socket:Socket,
               public router:Router,
               public user:UserService) {
-
+     subscribe_socket(this,"refresh_nft",()=>{
+      setTimeout(()=>{this.refresh(false);},200)
+    });
   }
 
   ngOnInit(): void {
@@ -53,12 +57,19 @@ export class NftStoreComponent implements OnInit {
 
 
   buy(nft: any) {
+    if(nft.price>this.user.gas/1e18){
+      showMessage(this,"Votre solde est insuffisant",5000,()=>{
+        this.router.navigate(["faucet"]);
+      },"Recharger ?");
+      return false;
+    }
+
     nft.message="En cours d'achat";
     let price=nft.price;
     this.api._post("buy_nft/"+nft.token_id+"/"+price,"",this.user.pem).subscribe(()=>{
       nft.message="";
       showMessage(this,"En cours d'achat");
-      this.refresh(false);
+      this.user.refresh_balance(()=>{});
     },()=>{
       nft.message="";
       showMessage(this,"Achat annulé");
@@ -69,7 +80,7 @@ export class NftStoreComponent implements OnInit {
     nft.message=message;
     this.api._post("state_nft/"+nft.token_id+"/"+new_state,"",this.user.pem).subscribe(()=>{
       nft.message="";
-      this.refresh(false);
+      this.user.refresh_balance(()=>{this.refresh(false);});
     });
   }
 

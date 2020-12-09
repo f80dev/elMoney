@@ -50,6 +50,8 @@ import {MatExpansionModule} from "@angular/material/expansion";
 import {MatSelectModule} from "@angular/material/select";
 import { ImporterComponent } from './importer/importer.component';
 import { NftStoreComponent } from './nft-store/nft-store.component';
+import {MatCardModule} from "@angular/material/card";
+import { FaucetComponent } from './faucet/faucet.component';
 
 const config: SocketIoConfig = { url: environment.domain_server, options: {} };
 
@@ -78,7 +80,8 @@ const config: SocketIoConfig = { url: environment.domain_server, options: {} };
     ElrondAddrComponent,
     ScannerComponent,
     ImporterComponent,
-    NftStoreComponent
+    NftStoreComponent,
+    FaucetComponent
   ],
     imports: [
         MatButtonModule,
@@ -105,7 +108,8 @@ const config: SocketIoConfig = { url: environment.domain_server, options: {} };
         MatSliderModule,
         MatExpansionModule,
         MatSelectModule,
-        ClipboardModule
+        ClipboardModule,
+        MatCardModule
     ],
   providers: [
     ApiService,TransPipe,
