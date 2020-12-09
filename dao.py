@@ -32,7 +32,7 @@ class DAO:
             "dtCreate":now,
             "proxy":proxy
         }
-        return self.db["moneys"].replace_one(filter={"addr": address}, replacement=_money, upsert=True)
+        return self.db["moneys"].replace_one(filter={"unity": unity}, replacement=_money, upsert=True)
 
 
 
@@ -67,7 +67,8 @@ class DAO:
 
 
     def del_contract(self, unity, proxy):
-        self.db["moneys"].remove({"addr":unity,"proxy": proxy})
+        rc=self.db["moneys"].remove({"unity":unity,"proxy": proxy})
+        pass
 
 
     def add_nft(self, contract,owner):

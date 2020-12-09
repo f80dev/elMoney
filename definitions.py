@@ -19,12 +19,14 @@ XGLD_FOR_NEWACCOUNT="500000000000000000"
 #Description de la monnaie par defaut
 MAIN_UNITY="CMK"
 MAIN_URL="https://coinmaker.f80.fr/assets/cmk.html"
-DEFAULT_UNITY_CONTRACT=""
 TOTAL_DEFAULT_UNITY=1000000
 CREDIT_FOR_NEWACCOUNT=75
+DEFAULT_CMK_CONTRACT="erd1qqqqqqqqqqqqqpgq50mdxq2fful0ylnm0qye54lml9n85hp0d8ssgqjved"
 
-TESTNET_EXPLORER="https://testnet-explorer.elrond.com/"
-TRANSACTION_EXPLORER=TESTNET_EXPLORER+"transactions/"
+
+
+TESTNET_EXPLORER="https://testnet-explorer.elrond.com"
+TRANSACTION_EXPLORER=TESTNET_EXPLORER
 
 SIGNATURE="<br><br>CoinMaker<br><a href='https://t.me/coinmaker_forum'>Le forum des utilisateurs</a>"
 
@@ -36,5 +38,10 @@ DB_SERVERS=dict({
 
 MAIN_DEVISE="xEGld"
 
-NFT_CONTRACT="erd1qqqqqqqqqqqqqpgqfx6ndl75schd9y4ulkhj2vq26j93kgued8ssd9pv42"
+
+
+#NFT pour le testnet officiel
+#NFT_CONTRACT="erd1qqqqqqqqqqqqqpgqfx6ndl75schd9y4ulkhj2vq26j93kgued8ssd9pv42"
+
+NFT_CONTRACT="erd1qqqqqqqqqqqqqpgq9j6hzapx7lxzqy9nklcyg0w2sfqdd76zd8sscwxfy8"
 NFT_ADMIN="admin"

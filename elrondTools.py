@@ -17,7 +17,7 @@ from erdpy.environments import TestnetEnvironment
 from erdpy.transactions import Transaction
 from erdpy.wallet import generate_pair,derive_keys
 
-from Tools import log
+from Tools import log, base_alphabet_to_10
 from definitions import TRANSACTION_EXPLORER
 
 
@@ -40,6 +40,7 @@ class ElrondNet:
     environment=None
     _proxy:ElrondProxy=None
     bank=None
+    chain_id=None
 
 
     def __init__(self,proxy="https://testnet-api.elrond.com"):
@@ -52,6 +53,7 @@ class ElrondNet:
         logging.basicConfig(level=logging.DEBUG)
 
         self._proxy=ElrondProxy(proxy)
+        self.chain_id=self._proxy.get_chain_id()
 
         log("On utilise le testnet, la production n'étant pas encore disponible")
         self.environment = TestnetEnvironment(proxy)
@@ -61,13 +63,22 @@ class ElrondNet:
         log("Initialisation terminée")
 
 
+    def check_contract(self,contrat_addr):
+        _ctr=SmartContract(address=contrat_addr)
+        _dt=_ctr.metadata
+        if _dt is None:
+            return False
+        else:
+            return True
 
-    def getExplorer(self,tx):
-        url=TRANSACTION_EXPLORER+tx
+
+    def getExplorer(self,tx,type="transactions"):
+        url=TRANSACTION_EXPLORER+"/"+type+"/"+tx
         if "elrond.com" in self._proxy.url:
             return url
         else:
-            return tx
+            type=type.replace("transactions","transaction")
+            return self._proxy.url+"/"+type+"/"+tx
 
 
 
@@ -84,7 +95,7 @@ class ElrondNet:
         _contract=SmartContract(contract)
         try:
             rc=self.environment.query_contract(
-                _contract,
+                contract=_contract,
                 function="balanceOf",
                 arguments=["0x"+user.address.hex()]
             )
@@ -124,7 +135,7 @@ class ElrondNet:
             self.bank,pem=self.create_account(name="bank")
             log("Vous devez transférer des fonds vers la banques "+self.bank.address.bech32())
 
-        log("Initialisation de la banque à l'adresse "+self.bank.address.bech32())
+        log("Initialisation de la banque à l'adresse "+self.getExplorer(self.bank.address.bech32(),"address"))
         return True
 
 
@@ -145,30 +156,20 @@ class ElrondNet:
         if user_from.address.bech32()==user_to.address.bech32():
             return {"error":"Impossible de s'envoyer des fonds à soi-même"}
 
-        if type(_contract)==str:_contract=SmartContract(_contract)
-
-        user_from.sync_nonce(self._proxy)
-        log("Transfert "+user_from.address.hex()+" -> "+user_to.address.hex()+" de "+str(amount)+" via le contrat "+_contract.address.bech32())
+        log("Transfert "+user_from.address.hex()+" -> "+user_to.address.hex()+" de "+str(amount)+" via le contrat "+_contract)
         try:
-            tx=self.environment.execute_contract(_contract,
-                                             user_from,
-                                             function="transfer",
-                                             arguments=["0x"+user_to.address.hex(),amount],
-                                             gas_price=config.DEFAULT_GAS_PRICE,
-                                             gas_limit=50000000,
-                                             value=None,
-                                             chain=self._proxy.get_chain_id(),
-                                             version=config.get_tx_version())
+            tr=self.execute(_contract,user_from,
+                            function="transfer",
+                            arguments=["0x"+user_to.address.hex(),amount]
+                            )
 
-            tr=self.wait_transaction(tx,"status",not_equal="pending")
             infos=self._proxy.get_account_balance(user_from.address)
 
             return {
                 "from":user_from.address.bech32(),
-                "tx":tx,
                 "price":toFiat(tr["gasLimit"]),
                 "account":toFiat(infos),
-                "explorer":self.getExplorer(tx),
+                "explorer":self.getExplorer(tr["hash"]),
                 "to":user_to.address.bech32()
             }
         except Exception as inst:
@@ -179,7 +180,7 @@ class ElrondNet:
 
 
 
-    def deploy(self,pem_file,arguments,bytecode_file,gas_limit=80000000):
+    def deploy(self,pem_file,unity,bytecode_file,amount,gas_limit=80000000):
         """
         Déployer une nouvelle monnaie, donc un conrat ERC20
         :param pem_file: signature du propriétaire de la monnaie
@@ -193,17 +194,15 @@ class ElrondNet:
             user=Account(pem_file=pem_file)
         user.sync_nonce(self._proxy)
 
-
-
         with open(bytecode_file,"r") as file: _json=file.read()
         json_bytecode=json.loads(_json)
 
         bytecode=json_bytecode["emitted_tx"]["data"]
-        bytecode=bytecode.split("@0500")[0]
+        bytecode=bytecode.split("@0500@0100")[0]
 
-        #TODO: arguments=[hex(amount),hex(base_alphabet_to_10(unity))]
+        arguments=[str(amount),hex(base_alphabet_to_10(unity))]
 
-        log("Déploiement du contrat "+str(arguments)+" via le compte "+TRANSACTION_EXPLORER+"accounts/"+user.address.bech32())
+        log("Déploiement du contrat "+str(arguments)+" via le compte "+self.getExplorer(user.address.bech32(),"address"))
         log("Passage des arguments "+str(arguments))
         try:
             tx, address = self.environment.deploy_contract(
@@ -216,10 +215,10 @@ class ElrondNet:
                 chain=self._proxy.get_chain_id(),
                 version=config.get_tx_version()
             )
-        except Exception as e:
-            url = 'https://testnet-explorer.elrond.com/'+user.address.bech32()
+        except Exception as inst:
+            url = self.getExplorer(user.address.bech32(),"address")
             log("Echec de déploiement "+url)
-            return {"error":500,"message":str(e.args),"link":url}
+            return {"error":500,"message":str(inst.args),"link":url}
 
         #TODO: intégrer la temporisation pour événement
         t=self.wait_transaction(tx,not_equal="pending")
@@ -238,6 +237,7 @@ class ElrondNet:
                 "link":self.getExplorer(tx),
                 "cost": toFiat(gas_limit*config.DEFAULT_GAS_PRICE,1),
                 "contract":address.bech32(),
+                "contract_hex":address.hex(),
                 "owner":user.address.bech32()
             }
 
@@ -291,7 +291,7 @@ class ElrondNet:
             self.wait_transaction(tx,not_equal="pending")
             log("Fond transférer, consulter la transaction "+self.getExplorer(tx))
             return tx
-        except:
+        except Exception as inst:
             return None
 
 
@@ -308,6 +308,7 @@ class ElrondNet:
         """
         rc=dict()
         log("Attente jusqu'a "+str(interval*timeout)+" secs synchrone de la transaction "+self.getExplorer(tx))
+        rc=None
         while timeout>0:
             sleep(interval)
             rc=self._proxy.get_transaction(tx_hash=tx)
@@ -315,11 +316,15 @@ class ElrondNet:
             if len(not_equal) > 0 and rc[field] != not_equal: break
             timeout=timeout-1
 
-        with urllib.request.urlopen(self._proxy.url+'/transactions/'+tx) as response:
-            txt = response.read()
-        rc=json.loads(txt)
-        rc["cost"]=(rc["gasPrice"]*rc["gasUsed"])/1e18
+        if "elrond.com" in self._proxy.url:
+            with urllib.request.urlopen(self._proxy.url+'/transactions/'+tx) as response:
+                txt = response.read()
+            rc=json.loads(txt)
+            rc["cost"] = (rc["gasPrice"] * rc["gasUsed"]) / 1e18
+        else:
+            rc["cost"]=0
 
+        log("Transaction executé "+str(rc))
         if timeout<=0:log("Timeout de "+self.getExplorer(tx)+" "+field+" est a "+str(rc[field]))
         return rc
 
@@ -372,11 +377,37 @@ class ElrondNet:
 
 
 
+    def execute(self,_contract,_user,function,arguments=[],value=None):
+        if type(_contract) == str: _contract = SmartContract(_contract)
+        if type(_user)==str:
+            if ".pem" in _user:
+                _user=Account(pem_file=_user)
+            else:
+                _user=Account(address=_user)
+
+        _user.sync_nonce(self._proxy)
+        try:
+            tx = self.environment.execute_contract(_contract,_user,
+                                                   function=function,
+                                                   arguments=arguments,
+                                                   gas_price=config.DEFAULT_GAS_PRICE,
+                                                   gas_limit=80000000,
+                                                   value=value,
+                                                   chain=self.chain_id,
+                                                   version=config.get_tx_version()
+                                                   )
+        except Exception as inst:
+            log("Impossible d'executer "+function+" "+str(inst.args))
+            return None
+
+        tr = self.wait_transaction(tx, "status", not_equal="pending")
+        return tr
+
+
 
 
     def query(self,_contract,function_name,arguments=None,isnumber=True,n_try=3):
-        if type(_contract)==str:
-            _contract=SmartContract(_contract)
+        if type(_contract)==str: _contract=SmartContract(_contract)
 
         d = None
         for i in range(n_try):
@@ -469,88 +500,44 @@ class ElrondNet:
         :return:
         """
         log("Minage avec "+str(arguments))
-        user_from.sync_nonce(self._proxy)
-        tx = self.environment.execute_contract(SmartContract(contract),
-                                               user_from,
-                                               function="mint",
-                                               arguments=arguments,
-                                               gas_price=config.DEFAULT_GAS_PRICE,
-                                               gas_limit=80000000,
-                                               value=0,
-                                               chain=self._proxy.get_chain_id(),
-                                               version=config.get_tx_version())
-
-        tr = self.wait_transaction(tx, "status", not_equal="pending")
+        tx=self.execute(contract,user_from,"mint",arguments)
         return tx
 
 
     def nft_buy(self, contract, pem_file, token_id,price):
         value=int(1e18*price)
-        user_from=Account(pem_file=pem_file)
-        user_from.sync_nonce(self._proxy)
-        tx = self.environment.execute_contract(SmartContract(contract),
-                                               user_from,
+        tr = self.execute(contract,pem_file,
                                                function="buy",
                                                arguments=[token_id],
-                                               gas_price=config.DEFAULT_GAS_PRICE,
-                                               gas_limit=80000000,
-                                               value=value,
-                                               chain=self._proxy.get_chain_id(),
-                                               version=config.get_tx_version())
+                                               value=value)
 
-        tr = self.wait_transaction(tx, "status", not_equal="pending")
-        return tx
+        return tr
 
 
     def nft_open(self, contract, pem_file, token_id):
-        user_from = Account(pem_file=pem_file)
-        user_from.sync_nonce(self._proxy)
-        tx = self.environment.execute_contract(SmartContract(contract),
-                                               user_from,
-                                               function="open",
-                                               arguments=[int(token_id)],
-                                               gas_price=config.DEFAULT_GAS_PRICE,
-                                               gas_limit=80000000,
-                                               value=0,
-                                               chain=self._proxy.get_chain_id(),
-                                               version=config.get_tx_version())
-
-        tr = self.wait_transaction(tx, "status", not_equal="pending")
+        tr = self.execute(contract,pem_file,
+                            function="open",
+                            arguments=[int(token_id)],
+                            value=0
+                          )
         return tr
 
 
     def burn(self, contract,sender, token_id):
-        user_from = Account(pem_file=sender)
-        user_from.sync_nonce(self._proxy)
-        tx = self.environment.execute_contract(SmartContract(contract),
-                                               user_from,
-                                               function="burn",
-                                               arguments=[int(token_id)],
-                                               gas_price=config.DEFAULT_GAS_PRICE,
-                                               gas_limit=80000000,
-                                               value=0,
-                                               chain=self._proxy.get_chain_id(),
-                                               version=config.get_tx_version())
-
-        tr = self.wait_transaction(tx, "status", not_equal="pending")
+        tr = self.execute(contract,sender,
+                            function="burn",
+                            arguments=[int(token_id)]
+                          )
         return tr
 
 
     def set_state(self, contract, pem_file, token_id, state):
-        user_from = Account(pem_file=pem_file)
-        user_from.sync_nonce(self._proxy)
-        tx = self.environment.execute_contract(SmartContract(contract),
-                                               user_from,
-                                               function="setstate",
-                                               arguments=[int(token_id),int(state)],
-                                               gas_price=config.DEFAULT_GAS_PRICE,
-                                               gas_limit=80000000,
-                                               value=0,
-                                               chain=self._proxy.get_chain_id(),
-                                               version=config.get_tx_version())
+        tx = self.execute(contract,pem_file,
+                            function="setstate",
+                            arguments=[int(token_id),int(state)],
+                          )
 
-        tr = self.wait_transaction(tx, "status", not_equal="pending")
-        return tr
+        return tx
 
 
 

@@ -18,8 +18,8 @@ from apiTools import create_app
 
 from dao import DAO
 from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, XGLD_FOR_NEWACCOUNT, \
-    MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, MAIN_DEVISE,  TESTNET_EXPLORER, \
-    ERC20_BYTECODE_PATH,  NFT_CONTRACT, NFT_ADMIN
+    MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, MAIN_DEVISE, TESTNET_EXPLORER, \
+    ERC20_BYTECODE_PATH, NFT_CONTRACT, NFT_ADMIN, DEFAULT_CMK_CONTRACT
 from elrondTools import ElrondNet
 
 
@@ -48,11 +48,15 @@ def init_cmk(bc,dao):
         cmk = ""
 
     if len(cmk) == 0:
-        log("Pas de monnaie dans la configuration, on en créé une")
-        rc=bc.deploy(bc.bank, MAIN_UNITY, TOTAL_DEFAULT_UNITY)
-        if "error" in rc:
-            log("Impossible de déployer le contrat de la monnaie par defaut")
-            return None
+        if len(DEFAULT_CMK_CONTRACT)==0:
+            log("Pas de monnaie dans la configuration, on en créé une")
+            rc=bc.deploy(bc.bank, MAIN_UNITY, ERC20_BYTECODE_PATH,TOTAL_DEFAULT_UNITY)
+            if "error" in rc:
+                log("Impossible de déployer le contrat de la monnaie par defaut")
+                return None
+        else:
+            rc={"contract":DEFAULT_CMK_CONTRACT}
+
 
         cmk=rc["contract"]
 
@@ -109,7 +113,12 @@ def refresh_client(dest:str):
 @app.route('/api/refund/<dest>/',methods=["GET"])
 def refund(dest:str):
     _dest=Account(dest)
-    if bc.credit(bc.bank,_dest,XGLD_FOR_NEWACCOUNT):
+    if not "elrond" in bc._proxy.url:
+        amount=XGLD_FOR_NEWACCOUNT+"0"
+    else:
+        amount=XGLD_FOR_NEWACCOUNT
+
+    if bc.credit(bc.bank,_dest,amount):
         account=bc._proxy.get_account_balance(_dest.address)
         return jsonify({"gas":account}),200
     else:
@@ -235,9 +244,12 @@ def open_nft(token_id:str,data:dict=None):
 
     pem_file = get_pem_file(data)
     tx = bc.nft_open(NFT_CONTRACT, pem_file, token_id)
-    rc=str(base64.b64decode(tx["scResults"][0]["data"]))[3:]
-    if "@" in rc:rc=rc.split("@")[1]
-    rc=str(bytearray.fromhex(rc[0:len(rc)-1]),"utf-8")
+    if "scResults" in tx:
+        rc=str(base64.b64decode(tx["scResults"][0]["data"]))[3:]
+        if "@" in rc:rc=rc.split("@")[1]
+        rc=str(bytearray.fromhex(rc[0:len(rc)-1]),"utf-8")
+    else:
+        rc="Impossible d'ouvrir le token"
     return jsonify({"response":rc,"cost":tx["cost"]})
 
 
@@ -257,21 +269,7 @@ def state_nft(token_id:str,state:str,data:dict=None):
 #http://localhost:6660/api/test/
 @app.route('/api/test/',methods=["GET"])
 def test():
-    tokens=bc.query(NFT_CONTRACT,"tokens",[0xAA,0xFF],isnumber=False).hex()
-    rc=[]
-    for token in tokens.split("ffffffff"):
-        if len(token)>0:
-            hexprice=token.split("aaaaaaaa")[0];
-            i=0
-            while hexprice[i]=="0": i=i+1
-            price=int(hexprice[i+2:],16)
-
-            token=token.split("aaaaaaaa")[1]
-            addr="0x"+token[0:64]
-            state = int(token[64:66],16)
-            uri=str(bytearray.fromhex(token[66:len(token)]),"utf-8")
-            rc.append({"price":price})
-
+    rc=bc.check_contract(NFT_CONTRACT)
     return jsonify(rc),200
 
 
@@ -340,7 +338,7 @@ def deploy(unity:str,amount:str,data:dict=None):
 
     owner=Account(pem_file=pem_file)
     log("Compte propriétaire de la monnaie créé. Lancement du déploiement de "+unity)
-    result=bc.deploy(owner,[int(amount), unity.encode().hex()],ERC20_BYTECODE_PATH)
+    result=bc.deploy(owner,unity,ERC20_BYTECODE_PATH,amount)
     if "error" in result:
         log("Probléme de création de la monnaie "+str(result))
         return jsonify(result), 500
@@ -448,7 +446,7 @@ def getbalance(contract:str,addr:str):
     if rc is None:
         return jsonify({"error":"impossible d'évaluer la balance de "}),200
     else:
-        log("Balance de "+addr+" à "+str(rc)+name.lower()+" pour le contrat "+TESTNET_EXPLORER+"accounts/"+contract)
+        log("Balance de "+addr+" à "+str(rc)+name.lower()+" pour le contrat "+bc.getExplorer(contract,"address"))
         return jsonify({"balance":rc["number"],"gas":str(rc["gas"]),"name":name}),200
 
 
@@ -523,10 +521,6 @@ def getname(contract:str):
 
 
 if __name__ == '__main__':
-
-    # bc=ElrondNet(proxy="http://172.26.244.241:7950")
-    # bc = ElrondNet(proxy="http://161.97.75.165:7950")
-
     _port=sys.argv[1]
     scheduler.start()
 
