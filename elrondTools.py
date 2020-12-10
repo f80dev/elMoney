@@ -322,7 +322,7 @@ class ElrondNet:
             rc=json.loads(txt)
             rc["cost"] = (rc["gasPrice"] * rc["gasUsed"]) / 1e18
         else:
-            rc["cost"]=0
+            rc["cost"]=rc["gasPrice"]*rc["gasLimit"]/1e18
 
         log("Transaction executé "+str(rc))
         if timeout<=0:log("Timeout de "+self.getExplorer(tx)+" "+field+" est a "+str(rc[field]))
@@ -491,7 +491,6 @@ class ElrondNet:
         return rc
 
 
-
     def mint(self, contract, user_from,arguments):
         """
         Fabriquer un NFT
@@ -524,7 +523,7 @@ class ElrondNet:
         return tr
 
 
-    def burn(self, contract,sender, token_id):
+    def burn(self, contract,sender,token_id):
         tr = self.execute(contract,sender,
                             function="burn",
                             arguments=[int(token_id)]

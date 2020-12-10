@@ -1,5 +1,6 @@
 import base64
 import json
+import os
 import ssl
 import sys
 
@@ -185,6 +186,8 @@ def transfer(contract:str,dest:str,amount:str,unity:str):
 
 
 
+
+
 def get_pem_file(data):
     """
     Fabrique ou recupere un pemfile
@@ -201,7 +204,6 @@ def get_pem_file(data):
         else:
             rc="./PEM/"+data["pem"]
 
-
     return rc
 
 
@@ -214,13 +216,15 @@ def evalprice(sender,data="",value=0):
 
 
 
-@app.route('/api/burn/<token_id>/',methods=["GET"])
+@app.route('/api/burn/<token_id>/',methods=["POST"])
 def burn(token_id,data:dict=None):
     if data is None:
         data = json.loads(str(request.data, encoding="utf-8"))
 
-    pem_file = get_pem_file(data)
-    rc=bc.burn(pem_file,token_id)
+    pem_file=get_pem_file(data)
+    rc=bc.burn(NFT_CONTRACT,pem_file,token_id)
+    os.remove(pem_file)
+
     return jsonify(rc)
 
 
@@ -244,6 +248,8 @@ def open_nft(token_id:str,data:dict=None):
 
     pem_file = get_pem_file(data)
     tx = bc.nft_open(NFT_CONTRACT, pem_file, token_id)
+    os.remove(pem_file)
+
     if "scResults" in tx:
         rc=str(base64.b64decode(tx["scResults"][0]["data"]))[3:]
         if "@" in rc:rc=rc.split("@")[1]
@@ -260,6 +266,8 @@ def state_nft(token_id:str,state:str,data:dict=None):
 
     pem_file = get_pem_file(data)
     tx = bc.set_state(NFT_CONTRACT, pem_file, token_id,state)
+    os.remove(pem_file)
+
     send(socketio,"refresh_nft")
     return jsonify(tx),200
 
@@ -283,6 +291,8 @@ def buy_nft(token_id,price,data:dict=None):
     pem_file=get_pem_file(data)
     rc=bc.nft_buy(NFT_CONTRACT,pem_file,token_id,float(price))
     send(socketio,"refresh_nft")
+    send(socketio,"refresh_balance",rc["sender"])
+    send(socketio, "refresh_balance", rc["receiver"])
     return jsonify(rc)
 
 
@@ -307,7 +317,7 @@ def mint(count:str,data:dict=None):
 
     arguments=[int(count), "0x"+owner.address.hex(),"0x"+uri.encode().hex(),"0x"+secret.encode().hex(),price]
     result=bc.mint(NFT_CONTRACT,nft_contract_owner,arguments)
-    return jsonify({"tx":result}), 200
+    return jsonify(result), 200
 
 
 

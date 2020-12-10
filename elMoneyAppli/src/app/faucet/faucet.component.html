@@ -20,7 +20,7 @@
 
   <br><br>
   <button mat-raised-button mat-button
-          *ngIf="message?.length==0"
+          *ngIf="message?.length==0" color="primary"
           class="app-button" [cdkCopyToClipboard]="user.addr" ngxClipboard
           (click)="reload_account()">
     <div class="bloc-bouton">Recharger<br>mon compte</div>

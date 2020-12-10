@@ -13,6 +13,8 @@ export class ApiService {
   token: string = null;
   token_expires: Date;
   contract: string=environment.default_contract;
+  connectionStatus: boolean=true;
+
 
   constructor(public http: HttpClient) {
     this.token = localStorage.getItem('token');

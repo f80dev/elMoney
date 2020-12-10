@@ -1,6 +1,19 @@
 
 <mat-nav-list>
 
+  <br>
+
+  <div style="width: 100%;text-align: center;">
+    <mat-icon style="cursor: pointer;" (click)="router.navigate(['faucet'])">forward</mat-icon>&nbsp;&nbsp;
+    <span style="font-size: xx-large;">{{user.gas/1e18 | number:'1.0-3'}}</span>&nbsp;
+    <small>xEgld</small>
+  </div>
+
+  <br>
+  <hr>
+  <br>
+
+
   <a title="Wallet"
      routerLink="main"
      mat-list-item

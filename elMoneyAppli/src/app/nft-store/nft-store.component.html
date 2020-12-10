@@ -1,28 +1,23 @@
 <div class="mainform">
   <app-hourglass [message]="message"></app-hourglass>
 
-  <div *ngIf="message.length==0">
-    Vous avez {{user.gas/1e18 | number:'1.0-3'}} xEgld
-    <br><br>
-  </div>
-
   <div *ngIf="nfts.length==0 && message.length==0">
     Aucun token disponible pour l'instant
     &nbsp;<mat-icon style="font-size: small;" (click)="refresh()">refresh</mat-icon>
-    <br>
+    <br><br><br>
     <button mat-raised-button
             mat-button class="app-button"
             (click)="router.navigate(['importer'])">
       Vendez le votre
     </button>
+    <br><br>
   </div>
 
-  <br>
   <mat-checkbox [(ngModel)]="perso_only" (click)="refresh(false)">Uniquement les miens</mat-checkbox>
   <br>
 
   <div *ngIf="nfts.length>0" style="margin: 5px;padding:5px;" class="wrap-list" >
-    <mat-card class="app-card" *ngFor="let nft of nfts">
+    <mat-card class="app-card" style="width:250px" *ngFor="let nft of nfts">
       <mat-card-header>
         <img mat-card-avatar src="./assets/icons/gift.png" class="image-icon">
         <mat-card-title>
@@ -62,16 +57,17 @@
                       (click)="setstate(nft,1,'retirer de la vente')">
                 <mat-icon>remove_shopping_cart</mat-icon>
               </button>
-              <button mat-icon-button mat-flat-button
-                      *ngIf="nft.state==1 && nft.owner!=user.addr"
-                      class="icon-button"
-                      (click)="burn(nft)">
-                <mat-icon>delete</mat-icon>
-              </button>
+
               <button mat-raised-button mat-button class="app-button"
                       *ngIf="nft.state==1"
                       (click)="setstate(nft,0,'mise en vente')">
                 Vendre
+              </button>
+              <button mat-icon-button mat-flat-button
+                      *ngIf="nft.state==1 && nft.owner==user.addr"
+                      class="icon-button"
+                      (click)="burn(nft)">
+                <mat-icon>delete</mat-icon>
               </button>
             </div>
 

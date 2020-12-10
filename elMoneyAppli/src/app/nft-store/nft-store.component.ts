@@ -19,7 +19,7 @@ export class NftStoreComponent implements OnInit {
   constructor(public api:ApiService,
               public routes:ActivatedRoute,
               public toast:MatSnackBar,
-               public socket:Socket,
+              public socket:Socket,
               public router:Router,
               public user:UserService) {
      subscribe_socket(this,"refresh_nft",()=>{
@@ -66,9 +66,9 @@ export class NftStoreComponent implements OnInit {
 
     nft.message="En cours d'achat";
     let price=nft.price;
-    this.api._post("buy_nft/"+nft.token_id+"/"+price,"",this.user.pem).subscribe(()=>{
+    this.api._post("buy_nft/"+nft.token_id+"/"+price,"",this.user.pem).subscribe((r:any)=>{
       nft.message="";
-      showMessage(this,"En cours d'achat");
+      showMessage(this,"Achat du token pour "+(nft.price+r.cost)+" xEgld");
       this.user.refresh_balance(()=>{});
     },()=>{
       nft.message="";
@@ -78,8 +78,9 @@ export class NftStoreComponent implements OnInit {
 
   setstate(nft: any,new_state,message) {
     nft.message=message;
-    this.api._post("state_nft/"+nft.token_id+"/"+new_state,"",this.user.pem).subscribe(()=>{
+    this.api._post("state_nft/"+nft.token_id+"/"+new_state,"",this.user.pem).subscribe((r:any)=>{
       nft.message="";
+      showMessage(this,"Frais de transaction "+(r.cost)+" xEgld");
       this.user.refresh_balance(()=>{this.refresh(false);});
     });
   }
@@ -95,8 +96,9 @@ export class NftStoreComponent implements OnInit {
   }
 
   burn(nft: any) {
+    nft.message="En cours de destruction";
     this.api._post("burn/"+nft.token_id+"/","",this.user.pem).subscribe((r:any)=>{
-      nft.message="En cours de destruction";
+      nft.message="";
       this.user.refresh_balance(()=>{this.refresh(false);});
     });
   }

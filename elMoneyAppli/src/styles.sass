@@ -1,11 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
 
 .mainform
-  width: 98vw
   margin-left: 1vw
   margin-top: 1vh
   text-align: center
-  height: 90vh
+  min-height: 90vh
   overflow: hidden
 
 .app-button
@@ -61,12 +60,23 @@ h2
 
 html
   background-color: #545454
+  overflow: scroll
+  overflow-x: hidden
+
+::-webkit-scrollbar
+    width: 0px
+    background: transparent
+
+::-webkit-scrollbar-thumb
+    background: #FF0000
+
 
 p, div
   color: white
 
 body
-  margin: 5px
+  margin: 0px
+
 
 
 .app-field
