@@ -17,6 +17,7 @@ export class NftStoreComponent implements OnInit {
   message = "";
   perso_only = false;
   mined_only = false;
+  transac_cost=environment.transac_cost;
 
   constructor(public api: ApiService,
               public routes: ActivatedRoute,
@@ -52,14 +53,8 @@ export class NftStoreComponent implements OnInit {
       for (let item of r) {
         item.message = "";
         item.open = "";
-        if (this.perso_only) {
-          if (item.owner == this.user.addr)
-            this.nfts.push(item);
-        } else {
-          if (item.state == 0 || item.owner == this.user.addr)
-            this.nfts.push(item);
+        this.nfts.push(item);
         }
-      }
     });
   }
 
@@ -89,7 +84,9 @@ export class NftStoreComponent implements OnInit {
     nft.message = message;
     this.api._post("state_nft/" + nft.token_id + "/" + new_state, "", this.user.pem).subscribe((r: any) => {
       nft.message = "";
-      showMessage(this, "Frais de transaction " + (r.cost) + " xEgld");
+      let mes="Votre token n'est plus en vente. ";
+      if(new_state==0)mes="Votre token est en vente. "
+      showMessage(this, mes+"Frais de service " + (r.cost) + " xEgld");
       this.user.refresh_balance(() => {
         this.refresh(false);
       });
@@ -112,6 +109,7 @@ export class NftStoreComponent implements OnInit {
     nft.message = "En cours de destruction";
     this.api._post("burn/" + nft.token_id + "/", "", this.user.pem).subscribe((r: any) => {
       nft.message = "";
+      showMessage(this,"Votre token n'existe plus");
       this.user.refresh_balance(() => {
         this.refresh(false);
       });

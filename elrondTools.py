@@ -476,7 +476,13 @@ class ElrondNet:
                     except:
                         uri=""
 
-                    rc.append({"token_id": index, "uri": uri, "price": price, "state": state,"owner":addr})
+                    obj=dict({"token_id": index, "uri": uri, "price": price, "state": state,"owner":addr})
+                    if mined_only=="true":
+                        obj["miner"]=addr
+                    else:
+                        obj["miner"] = ""
+
+                    rc.append(obj)
                     index=index+1
 
         rc=sorted(rc,key=lambda i: i["token_id"],reverse=True)
