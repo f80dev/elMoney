@@ -13,7 +13,9 @@
     <br><br>
   </div>
 
-  <mat-checkbox [(ngModel)]="perso_only" (click)="refresh(false)">Uniquement les miens</mat-checkbox>
+  <mat-checkbox [(ngModel)]="perso_only" (ngModelChange)="refresh(false)">Uniquement les miens</mat-checkbox>
+  &nbsp;
+  <mat-checkbox [(ngModel)]="mined_only" (ngModelChange)="refresh(false)">Mes fabrications</mat-checkbox>
   <br>
 
   <div *ngIf="nfts.length>0" style="margin: 5px;padding:5px;" class="wrap-list" >
@@ -24,7 +26,8 @@
               {{nft.uri}}
         </mat-card-title>
         <mat-card-subtitle>
-           <small>{{nft.price}} xEGld</small>
+          <small *ngIf="nft.price==0">Gratuit (hors transaction)</small>
+          <small *ngIf="nft.price>0">{{nft.price}} xEGld</small>
         </mat-card-subtitle>
       </mat-card-header>
   <!--    <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">-->
@@ -53,6 +56,7 @@
               </button>
               <button mat-icon-button mat-flat-button
                       *ngIf="nft.state==0"
+                      title="Retirer de la vente"
                       class="icon-button"
                       (click)="setstate(nft,1,'retirer de la vente')">
                 <mat-icon>remove_shopping_cart</mat-icon>

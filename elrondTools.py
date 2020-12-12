@@ -440,10 +440,17 @@ class ElrondNet:
 
 
 
-    def get_uris(self, contract):
+    def get_uris(self, contract,owner,perso_only,mined_only):
         _contract=SmartContract(contract)
         rc = list()
-        tokens = self.query(_contract, "tokens", arguments=[0xAA,0xFF],isnumber=False)
+        _owner=Account(address=owner)
+
+        filter_miner="0x0000000000000000000000000000000000000000000000000000000000000000"
+        filter_owner="0x0000000000000000000000000000000000000000000000000000000000000000"
+        if perso_only=="true":filter_owner="0x"+str(_owner.address.hex())
+        if mined_only=="true":filter_miner="0x"+str(_owner.address.hex())
+
+        tokens = self.query(_contract, "tokens", arguments=[0xAA,0xFF,filter_owner,filter_miner],isnumber=False,n_try=1)
 
         if not tokens is None:
             tokens=tokens.hex()

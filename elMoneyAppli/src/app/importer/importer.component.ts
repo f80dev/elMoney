@@ -57,7 +57,7 @@ export class ImporterComponent implements OnInit {
     this.message="Enregistrement dans la blockchain";
     this.api._post("mint/"+this.count,"",obj).subscribe((r:any)=>{
       this.message="";
-      showMessage(this,"Fichier tokeniser pour "+r.tx.cost+" xEgld");
+      showMessage(this,"Fichier tokeniser pour "+r.cost+" xEgld");
       this.user.refresh_balance(()=>{
         this.router.navigate(["store"],{queryParams:{perso_only:true}});
       })

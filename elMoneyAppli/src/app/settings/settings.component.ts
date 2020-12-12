@@ -55,4 +55,7 @@ export class SettingsComponent implements OnInit {
   }
 
 
+  informe_clipboard() {
+    showMessage(this,"Adresse est dans le presse papier");
+  }
 }

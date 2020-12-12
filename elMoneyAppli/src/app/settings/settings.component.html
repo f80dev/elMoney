@@ -38,6 +38,16 @@
   <br><br><br>
 
 
+  <qrcode
+    [width]="150"
+    ngxClipboard
+    [cdkCopyToClipboard]="user.addr"
+    (click)="informe_clipboard()"
+    style="display: inline-block;"
+    [elementType]="'svg'"
+    [errorCorrectionLevel]="'M'"
+    [qrdata]="user.addr">
+  </qrcode>
 
 
   <br>

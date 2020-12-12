@@ -230,12 +230,14 @@ def burn(token_id,data:dict=None):
 
 
 
-#http://localhost:6660/api/nfts/
-@app.route('/api/nfts/',methods=["GET"])
-def nfts():
+#http://localhost:6660/api/nfts/erd1krm8k9vqkvfxrgrhrjducxz574nraz9zn242epfcxc99zxnqwessv2c4uz/true/true
+@app.route('/api/nfts/<owner>/<perso_only>/<mined_only>/',methods=["GET"])
+def nfts(owner:str,perso_only:str,mined_only:str):
     rc=[]
-    for uri in bc.get_uris(NFT_CONTRACT):
+
+    for uri in bc.get_uris(NFT_CONTRACT,owner,perso_only,mined_only):
         rc.append(uri)
+
     return jsonify(rc),200
 
 

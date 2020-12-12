@@ -21,7 +21,7 @@ MAIN_UNITY="CMK"
 MAIN_URL="https://coinmaker.f80.fr/assets/cmk.html"
 TOTAL_DEFAULT_UNITY=1000000
 CREDIT_FOR_NEWACCOUNT=75
-DEFAULT_CMK_CONTRACT="erd1qqqqqqqqqqqqqpgq50mdxq2fful0ylnm0qye54lml9n85hp0d8ssgqjved"
+DEFAULT_CMK_CONTRACT="erd1qqqqqqqqqqqqqpgqygvvtlty3v7cad507v5z793duw9jjmlxd8sszs8a2y"
 
 
 
@@ -39,9 +39,8 @@ DB_SERVERS=dict({
 MAIN_DEVISE="xEGld"
 
 
-
 #NFT pour le testnet officiel
 #NFT_CONTRACT="erd1qqqqqqqqqqqqqpgqfx6ndl75schd9y4ulkhj2vq26j93kgued8ssd9pv42"
 
-NFT_CONTRACT="erd1qqqqqqqqqqqqqpgq9j6hzapx7lxzqy9nklcyg0w2sfqdd76zd8sscwxfy8"
+NFT_CONTRACT="erd1qqqqqqqqqqqqqpgqr3yt02u59g2hwptpeawd5z8vt8qete0sd8ss6x8cnu"
 NFT_ADMIN="admin"
