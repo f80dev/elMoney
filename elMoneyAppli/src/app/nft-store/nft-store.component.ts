@@ -47,7 +47,7 @@ export class NftStoreComponent implements OnInit {
 
 
   refresh(withMessage = true) {
-    if (withMessage) this.message = "Remplissage de la boutique ...";
+    if (withMessage) this.message = "Chargement des tokens ...";
     this.api._get("nfts/" + this.user.addr + "/" + this.perso_only + "/" + this.mined_only).subscribe((r: any) => {
       this.message = "";
       this.nfts = [];

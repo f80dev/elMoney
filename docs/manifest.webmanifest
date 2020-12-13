@@ -1,6 +1,6 @@
 {
-  "name": "CoinMaKer",
-  "short_name": "CoinMaKer",
+  "name": "TokenMaker",
+  "short_name": "TokenMaKer",
   "theme_color": "#1976d2",
   "background_color": "#fafafa",
   "display": "standalone",
