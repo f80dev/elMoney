@@ -162,6 +162,7 @@ export class MainComponent implements OnInit {
 
   ngOnInit(): void {
     this.refresh();
+    localStorage.setItem("last_screen","main");
   }
 }
 

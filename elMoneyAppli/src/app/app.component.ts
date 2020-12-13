@@ -45,7 +45,12 @@ export class AppComponent implements OnInit,OnDestroy {
       //TODO: a remettre showMessage(this, "Sauvegarder votre clé privée dans un endroit sûr",5000, () => {this.router.navigate(["settings"]);}, "Enregistrer")
       let addr=this.routes.snapshot.queryParamMap.get("user");
       this.user.init(addr,JSON.parse(localStorage.getItem("pem")),
-        (r)=> {this.router.navigate(["main"]);},
+        (r)=> {
+        if(localStorage.getItem("last_screen")=="store")
+          this.router.navigate(["store"]);
+        else
+          this.router.navigate(["main"]);
+        },
         (err)=>{this.router.navigate(["moneys"]);},
         this
       );

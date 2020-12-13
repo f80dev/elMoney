@@ -3,10 +3,22 @@
 
   <br>
 
-  <div style="width: 100%;text-align: center;">
-    <mat-icon style="cursor: pointer;" (click)="router.navigate(['faucet'])">forward</mat-icon>&nbsp;&nbsp;
-    <span style="font-size: xx-large;">{{user.gas/1e18 | number:'1.0-3'}}</span>&nbsp;
+  <div style="width: 80%;text-align: center;margin-left:10%;">
+    <table><tr>
+      <td>
+    <button class="icon-button" mat-icon-button mat-raised-button
+            title="Recharger mon compte"
+            (click)="router.navigate(['faucet'])">
+      <mat-icon>forward</mat-icon>&nbsp;&nbsp;
+    </button>
+      </td>
+      <td>
+        <span style="font-size: xx-large;">{{user.gas/1e18 | number:'1.0-3'}}</span>&nbsp;
     <small>xEgld</small>
+      </td>
+    </tr></table>
+
+
   </div>
 
   <br>

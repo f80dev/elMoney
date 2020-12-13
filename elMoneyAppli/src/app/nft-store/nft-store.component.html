@@ -1,6 +1,8 @@
 <div class="mainform">
   <app-hourglass [message]="message"></app-hourglass>
 
+  <app-tuto label="Retrouvez ici tous les tokens en vente ainsi que les votres (ceux que vous possédez et ceux que vous avez fabriqués)"></app-tuto>
+
   <div *ngIf="nfts.length==0 && message.length==0">
     Aucun token disponible pour l'instant
     &nbsp;<mat-icon style="font-size: small;" (click)="refresh()">refresh</mat-icon>
@@ -8,7 +10,7 @@
     <button mat-raised-button
             mat-button class="app-button"
             (click)="router.navigate(['importer'])">
-      Vendez le votre
+      Fabriquer des tokens
     </button>
     <br><br>
   </div>
@@ -27,8 +29,8 @@
               {{nft.uri}}
         </mat-card-title>
         <mat-card-subtitle>
-          <small *ngIf="nft.price==0">Gratuit (hors transaction)</small>
-          <small *ngIf="nft.price>0">{{nft.price}} xEGld (+{{transac_cost}} réseau)</small>
+          <small *ngIf="nft.price==0">Gratuit (+{{transac_cost}} frais de réseau)</small>
+          <small *ngIf="nft.price>0">{{nft.price}} xEGld (+{{transac_cost}} frais de réseau)</small>
         </mat-card-subtitle>
       </mat-card-header>
   <!--    <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">-->
@@ -42,8 +44,8 @@
       </mat-card-content>
       <mat-card-actions class="app-card-action">
           <div *ngIf="nft.message?.length==0 && nft.open?.length==0">
-            <button t-raised-button mat-button class="app-button"
-                    *ngIf="nft.owner!=user.addr"
+            <button mat-raised-button mat-button class="app-button"
+                    *ngIf="nft.owner!=user.addr && nft.state==0"
                     (click)="buy(nft)">
              Acheter
             </button>

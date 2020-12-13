@@ -1,6 +1,6 @@
 <div class="mainform">
 
-  <h2>Fabriquer vos tokens</h2><br>
+  <app-tuto label="Fabriquer vos propres tokens ! vous pouvez les vendres et y placer un secret visible uniquement pour l'acheteur"></app-tuto>
   <app-hourglass [message]="message"></app-hourglass>
 
   <div *ngIf="message.length==0">
@@ -54,7 +54,7 @@
           mat-button class="large-button"
           [disabled]="uri?.length==0 && file.length>0"
           (click)="tokenizer()">
-    Publier
+    Fabriquer !
   </button>
   </div>
 

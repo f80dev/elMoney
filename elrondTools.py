@@ -482,7 +482,8 @@ class ElrondNet:
                     else:
                         obj["miner"] = ""
 
-                    rc.append(obj)
+                    if obj["owner"]==owner or obj["state"]==0:
+                        rc.append(obj)
                     index=index+1
 
         rc=sorted(rc,key=lambda i: i["token_id"],reverse=True)

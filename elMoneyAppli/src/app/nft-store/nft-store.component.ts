@@ -40,6 +40,7 @@ export class NftStoreComponent implements OnInit {
     }
 
     this.refresh();
+    localStorage.setItem("last_screen","store");
   }
 
 

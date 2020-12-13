@@ -39,6 +39,9 @@ export class SupportComponent implements OnInit {
   }
 
   restart(reset: boolean) {
-    this.user.reset();
+    if(reset)
+      this.user.reset();
+    else
+      window.location.href=environment.domain_appli;
   }
 }
