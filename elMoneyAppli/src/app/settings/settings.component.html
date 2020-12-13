@@ -7,16 +7,19 @@
 
   <a [href]="fileUrl"
      *ngIf="user.pem"
-     download="elrond_key.pem">Télécharger ma clé privée</a>
+     download="elrond_key.pem">Télécharger votre clé privée</a>
   <br><br>
   <small>
-    pour s'authentifier lors des transferts<br>et création de monnaie
+    pour utiliser ce compte en dehors de {{config.values.appname}}
   </small>
 
 
+  <br><br><br>
+  _____
   <br>
-  <br><br>
+  <br>
 
+  <h2>Changement de compte</h2>
   <button mat-raised-button mat-button
           class="app-button"
           (click)="router.navigate(['private'])">
@@ -28,6 +31,7 @@
           (click)="raz_account()">
     <div class="bloc-bouton">Nouveau<br>compte</div>
   </button>
+
 
   <br>
 

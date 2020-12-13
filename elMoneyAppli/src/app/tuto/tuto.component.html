@@ -31,9 +31,9 @@
   </div>
 
   <div  *ngIf="background?.length>0 && _type=='title'"
-        style="background-color:black;cursor: none;pointer-events: none;position: fixed;top:0;left:0;height:100vh;width:100vw;z-index: 999;object-fit:cover;">
+        style="background-color:black;cursor: none;pointer-events: none;position: fixed;top:0;left:0;height:100vh;width:100vw;z-index: 999;">
     <img [src]="background" *ngIf="background?.startsWith('http') || background?.startsWith('./')"
-         style="min-width:100%;min-height:100%;">
+         style="width:100%;object-fit:cover;">
   </div>
 
   <div *ngIf="background?.length==0 && _type=='title'"

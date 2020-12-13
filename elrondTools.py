@@ -169,7 +169,8 @@ class ElrondNet:
                 "from":user_from.address.bech32(),
                 "price":toFiat(tr["gasLimit"]),
                 "account":toFiat(infos),
-                "explorer":self.getExplorer(tr["blockHash"],"address"),
+                "cost":tr["cost"],
+                "explorer":self.getExplorer(tr["txHash"],"address"),
                 "to":user_to.address.bech32()
             }
         except Exception as inst:

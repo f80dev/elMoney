@@ -34,8 +34,7 @@
               {{nft.uri}}
         </mat-card-title>
         <mat-card-subtitle>
-          <small *ngIf="nft.price==0">Gratuit (+{{transac_cost}} frais de réseau)</small>
-          <small *ngIf="nft.price>0">{{nft.price}} xEGld (+{{transac_cost}} frais de réseau)</small>
+
         </mat-card-subtitle>
       </mat-card-header>
   <!--    <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">-->
@@ -52,7 +51,9 @@
             <button mat-raised-button mat-button class="app-button"
                     *ngIf="nft.owner!=user.addr && nft.state==0"
                     (click)="buy(nft)">
-             Acheter
+              <mat-icon>shopping_cart</mat-icon>&nbsp;
+              <small *ngIf="nft.price==0">Gratuit</small>
+              <span *ngIf="nft.price>0" style="font-size: large;">{{nft.price}} <small>xEGld</small></span>
             </button>
             <div *ngIf="nft.owner==user.addr">
               <button mat-raised-button mat-button
@@ -95,5 +96,12 @@
       </mat-card-actions>
     </mat-card>
   </div>
+
+  <p style="font-size: small;max-width: 500px;display: inline-block;" *ngIf="nfts.length>0">
+    <br><br>
+    Il faut ajouter {{transac_cost}} xEgld de frais de réseau à la mise en vente, l'achat et l'ouverture des token
+  </p>
+
+
 
 </div>

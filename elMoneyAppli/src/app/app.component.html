@@ -1,8 +1,8 @@
-<app-tuto   title="<br><br><br><br><br><strong>Coin MaKer</strong>"
+<app-tuto   title="<br><br><br><br><br><strong>TokenForge</strong>"
             color="white"
             image=""
-            [subtitle]="'Fabriquez vos propres monnaies !<br><small>alpha version '+appVersion+'</small>'"
-            background="./assets/img/moneys.jpg"></app-tuto>
+            [subtitle]="'Fabriquez vos propres token sur la blockchain Elrond<br><small>alpha version '+appVersion+'</small>'"
+            background="./assets/img/tokenforge.jpg"></app-tuto>
 
 
 <mat-toolbar class="mat-elevation-z2 toolbar-app" (mousedown)="closeMenu()" *ngIf="message?.length==0">
@@ -49,6 +49,7 @@
       <div class="sidenav-content" style="height: 90vh;text-align: center;"
            (mousedown)="closeMenu()">
         <app-hourglass marginTop="40px" fontsize="large" [diameter]="40" [message]="message"></app-hourglass>
+        <img src="./assets/img/elrond.png" style="width:200px;display: inline;margin-top: 50px;" *ngIf="message.length>0">
         <router-outlet style="width:100%;" *ngIf="message.length==0" ></router-outlet>
       </div>
     </mat-drawer-content>
