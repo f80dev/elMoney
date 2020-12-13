@@ -1,6 +1,13 @@
 <div class="mainform">
 
-  <app-tuto label="Fabriquer vos propres tokens ! vous pouvez les vendres et y placer un secret visible uniquement pour l'acheteur"></app-tuto>
+   <app-tuto title="<br><br><br><br><br><strong>Les tokens</strong>"
+            color="white"
+            image=""
+            subtitle="Fabriquer vos propres tokens ! vous pouvez les vendres et y placer un secret visible uniquement pour l'acheteur"
+            background="./assets/img/build.jpg"></app-tuto>
+
+
+
   <app-hourglass [message]="message"></app-hourglass>
 
   <div *ngIf="message.length==0">
