@@ -6,6 +6,17 @@
 
 <div class="mainform">
 
+  <mat-form-field appearance="legacy" style="max-width:600px;width:96%;" autofocus>
+    <mat-label>Rechercher un token</mat-label>
+    <input matInput matNativeControl
+           (keyup)="onQuery($event)"
+           placeholder="Un ou plusieurs mots du titre" [(ngModel)]="filter.value">
+    <mat-icon *ngIf="filter.value?.length>0"
+              matSuffix style="cursor: pointer"
+              (click)="clearQuery()">cancel</mat-icon>
+  </mat-form-field>
+  <br>
+
   Voir uniquement:
   <mat-checkbox [(ngModel)]="perso_only" (ngModelChange)="refresh(true)">les miens</mat-checkbox>
   &nbsp;
@@ -20,8 +31,8 @@
   </div>
 
 
-  <div *ngIf="nfts.length>0" style="margin: 5px;padding:5px;" class="wrap-list" >
-    <mat-card class="app-card" style="width:250px" *ngFor="let nft of nfts">
+  <div *ngIf="nfts.length>0" style="margin: 8px;padding:8px;" class="wrap-list" >
+    <mat-card class="app-card" style="width:300px;" *ngFor="let nft of nfts | filter:['uri',filter.value]">
       <mat-card-header>
         <img mat-card-avatar src="./assets/icons/gift.png" class="image-icon">
         <mat-card-title>
@@ -32,7 +43,7 @@
         </mat-card-subtitle>
       </mat-card-header>
   <!--    <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">-->
-      <mat-card-content>
+      <mat-card-content style="min-height: 50px;">
           <div *ngIf="nft.message?.length>0">
             <app-hourglass [message]="nft.message" fontsize="small"></app-hourglass>
           </div>
@@ -80,6 +91,13 @@
                 <mat-icon>delete</mat-icon>
               </button>
             </div>
+
+            <button mat-icon-button mat-flat-button
+                      *ngIf="nft.state==0"
+                      class="icon-button"
+                      (click)="share(nft)">
+                <mat-icon>share</mat-icon>
+              </button>
 
           </div>
 
