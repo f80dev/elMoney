@@ -18,7 +18,7 @@ from erdpy.transactions import Transaction
 from erdpy.wallet import generate_pair,derive_keys
 
 from Tools import log, base_alphabet_to_10
-from definitions import TRANSACTION_EXPLORER
+from definitions import TRANSACTION_EXPLORER, LIMIT_GAS
 
 
 def toFiat(crypto,fiat=8):
@@ -181,7 +181,7 @@ class ElrondNet:
 
 
 
-    def deploy(self,pem_file,unity,bytecode_file,amount,gas_limit=80000000):
+    def deploy(self,pem_file,unity,bytecode_file,amount,gas_limit=LIMIT_GAS):
         """
         Déployer une nouvelle monnaie, donc un conrat ERC20
         :param pem_file: signature du propriétaire de la monnaie
@@ -392,7 +392,7 @@ class ElrondNet:
                                                    function=function,
                                                    arguments=arguments,
                                                    gas_price=config.DEFAULT_GAS_PRICE,
-                                                   gas_limit=80000000,
+                                                   gas_limit=LIMIT_GAS,
                                                    value=value,
                                                    chain=self.chain_id,
                                                    version=config.get_tx_version()

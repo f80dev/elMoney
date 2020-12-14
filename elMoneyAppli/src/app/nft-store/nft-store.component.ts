@@ -117,9 +117,7 @@ export class NftStoreComponent implements OnInit {
       nft.message = "";
       nft.open = r.response;
       showMessage(this, "Coût de la transaction: " + r.cost+" xEgld");
-      this.user.refresh_balance(() => {
-        this.refresh(false);
-      });
+      this.user.refresh_balance(() => {});
     });
   }
 

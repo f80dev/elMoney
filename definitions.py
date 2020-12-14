@@ -23,6 +23,7 @@ TOTAL_DEFAULT_UNITY=1000000
 CREDIT_FOR_NEWACCOUNT=75
 DEFAULT_CMK_CONTRACT="erd1qqqqqqqqqqqqqpgqygvvtlty3v7cad507v5z793duw9jjmlxd8sszs8a2y"
 
+LIMIT_GAS=30000000
 
 
 TESTNET_EXPLORER="https://testnet-explorer.elrond.com"

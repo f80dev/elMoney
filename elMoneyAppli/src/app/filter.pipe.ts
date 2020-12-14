@@ -14,7 +14,7 @@ export class FilterPipe implements PipeTransform {
     else{
       if(args[1]=="")return items;
 
-      return items.filter(item => !item.hasOwnProperty(args[0]) || (item[args[0]].indexOf(args[1])!==-1));
+      return items.filter(item => !item.hasOwnProperty(args[0]) || (item[args[0]].toLowerCase().indexOf(args[1].toLowerCase())!==-1));
     }
   }
 }

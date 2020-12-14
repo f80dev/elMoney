@@ -74,8 +74,6 @@ export class MainComponent implements OnInit {
   }
 
 
-
-
   transfer(email:string){
     if(!this.user.pem){
       showMessage(this,"Avant tout transfert vous devez vous identifier avec votre fichier PEM ou votre clé secrète");

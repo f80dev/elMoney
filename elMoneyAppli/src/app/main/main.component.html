@@ -16,7 +16,7 @@
 
   <div *ngIf="user.gas<config.values?.min_gas_to_transfer && _max>0">
     Vous n'avez probablement plus assez de gas pour effectuer des transfert.<br>
-    <span style="cursor: pointer;color:deeppink;" (click)="router.navigate(['settings'])">Recharger votre compte</span>
+    <span style="cursor: pointer;color:deeppink;" (click)="router.navigate(['faucet'])">Recharger votre compte</span>
   </div>
 
   <app-hourglass [message]="message" style="margin-top: 20px;"></app-hourglass>
