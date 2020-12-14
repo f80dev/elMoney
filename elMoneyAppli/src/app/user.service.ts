@@ -102,7 +102,7 @@ export class UserService {
 
   create_new_account(func,func_error){
     $$("Création d'un nouveau compte");
-    this.api._get("new_account/false/").subscribe((r:any)=> {
+    this.api._get("new_account/").subscribe((r:any)=> {
       this.api.set_contract(r["default_money"])
       if (r.pem.length > 0) {
         $$("Initialisation du userService avec le fichier PEM correct");

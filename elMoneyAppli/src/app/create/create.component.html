@@ -23,7 +23,7 @@
 
    <mat-form-field appearance="fill" class="app-field" style="max-width: 150px">
     <mat-label>Nom de la monnaie</mat-label>
-    <input matInput type="text" maxlength="12" [(ngModel)]="name">
+    <input matInput type="text" maxlength="10" [(ngModel)]="name">
      <mat-hint>Le nom abrégé de votre monnaie</mat-hint>
    </mat-form-field>
   &nbsp;&nbsp;
@@ -31,6 +31,7 @@
    <mat-form-field appearance="fill" class="app-field" style="max-width: 150px">
     <mat-label>Quantité initiale</mat-label>
     <input matInput type="number" min="0" [(ngModel)]="amount">
+     <mat-hint>vous êtes la banque centrale, à vous de distribuer la monnaie</mat-hint>
    </mat-form-field>
 <br>
 <!--TODO a retablir une fois disponible-->
