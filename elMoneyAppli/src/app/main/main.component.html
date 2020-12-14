@@ -1,6 +1,7 @@
 <div class="mainform">
 
-  <app-tuto label="Bienvenue dans CoinMaKer. Cet écran va vous permettre de consulter votre solde de TFC (la monnaie par defaut de l'application), d'en envoyez et d'en recevoir. D'autres options sont disponibles dans le menu latéral">
+  <app-tuto [if]="_max>0"
+    label="Utilisez le slider pour fixer le montant à envoyer">
   </app-tuto>
 
   <app-tuto [if]="friends?.length>0"
@@ -65,14 +66,14 @@
         <button mat-raised-button mat-button class="app-button"
                 *ngIf="hand>0 && n_profils==0" color="primary"
                 (click)="add_contact()">
-          Envoyer {{hand}} <small>{{user.unity.toLowerCase()}}</small><br>
+          Envoyer {{hand}} <small>{{user.unity.toUpperCase()}}</small><br>
         </button>
         <br>
 
-        <table style="display: inline-block;width:90%;margin-left:5%;">
+        <table style="width:90%;margin-left:5%;">
           <tr style="width: 100%;">
             <td style="width: 10px;font-size: x-large;text-align: right;">0</td>
-            <td style="width:70vw;">
+            <td style="width:70%;">
               <mat-slider thumbLabel
                           color="primary"
                           style="width: 100%;"
@@ -83,7 +84,7 @@
             </td>
             <td style="width: 50px;font-size: large;text-align: left;line-height: 85%;">
               {{_max}}&nbsp;
-              <span style="font-size: small;">{{user.unity.toLowerCase()}}</span>
+              <span style="font-size: small;">{{user.unity.toUpperCase()}}</span>
             </td>
           </tr></table>
 
