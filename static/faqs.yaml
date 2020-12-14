@@ -87,7 +87,20 @@ content:
       Elle est également transmise dans les mails lorsque vous envoyer des fonds.
       </p>
       "
-      
+
+  - index: validate
+    title: Peut-on contrôler la propriété d'un token ?
+    order: 1
+    format: html
+    content: "
+     <p>
+     {{appname}} permet de retrouver tous les tokens que vous avez fabriqués en posséssion d'une personne donnée, identifiée par l'adresse
+     de son wallet. Ce système peut être très utile pour des tokens représentant des billets de concert et d'un événement quelconque.
+     Dans ce cas on va juste chercher à contrôler la propriété du billet pour autoriser l'accès à l'événement.
+     </p>
+     "
+
+
   - index: futur
     title: Quelles sont les prochaines évolutions de CoinMaker ?
     order: 3

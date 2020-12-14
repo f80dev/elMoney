@@ -53,6 +53,7 @@ import { NftStoreComponent } from './nft-store/nft-store.component';
 import {MatCardModule} from "@angular/material/card";
 import { FaucetComponent } from './faucet/faucet.component';
 import { FilterPipe } from './filter.pipe';
+import { ValidateComponent } from './validate/validate.component';
 
 const config: SocketIoConfig = { url: environment.domain_server, options: {} };
 
@@ -83,7 +84,8 @@ const config: SocketIoConfig = { url: environment.domain_server, options: {} };
     ImporterComponent,
     NftStoreComponent,
     FaucetComponent,
-    FilterPipe
+    FilterPipe,
+    ValidateComponent
   ],
     imports: [
         MatButtonModule,

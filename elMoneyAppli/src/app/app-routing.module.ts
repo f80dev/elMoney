@@ -14,6 +14,7 @@ import {FaqsComponent} from "./faqs/faqs.component";
 import {ImporterComponent} from "./importer/importer.component";
 import {NftStoreComponent} from "./nft-store/nft-store.component";
 import {FaucetComponent} from "./faucet/faucet.component";
+import {ValidateComponent} from "./validate/validate.component";
 
 const routes: Routes = [
    { path: 'admin', component: AdminComponent},
@@ -24,6 +25,7 @@ const routes: Routes = [
    { path: 'faqs', component: FaqsComponent},
    { path: 'settings', component: SettingsComponent},
    { path: 'about', component: AboutComponent},
+  { path: 'validate', component: ValidateComponent},
     { path: 'importer', component: ImporterComponent},
     { path: 'store', component: NftStoreComponent},
    { path: 'faucet', component: FaucetComponent},

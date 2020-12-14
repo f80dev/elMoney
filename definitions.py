@@ -23,7 +23,7 @@ TOTAL_DEFAULT_UNITY=1000000
 CREDIT_FOR_NEWACCOUNT=75
 DEFAULT_UNITY_CONTRACT="erd1qqqqqqqqqqqqqpgqt4zcz5q0xytmefh5jsdfntf6zxfyv0t3d8sslcts96"
 
-LIMIT_GAS=30000000
+LIMIT_GAS=60000000
 
 
 TESTNET_EXPLORER="https://testnet-explorer.elrond.com"
@@ -43,5 +43,5 @@ MAIN_DEVISE="xEGld"
 #NFT pour le testnet officiel
 #NFT_CONTRACT="erd1qqqqqqqqqqqqqpgqfx6ndl75schd9y4ulkhj2vq26j93kgued8ssd9pv42"
 
-NFT_CONTRACT="erd1qqqqqqqqqqqqqpgqs0a05q6p2x8g2th3yrssq8dqmyp8m94ud8ss2ecs5c"
+NFT_CONTRACT="erd1qqqqqqqqqqqqqpgqn89x0els6dn2ghs3kd847jygkwpzsgz6d8ssaxyy22"
 NFT_ADMIN="admin"

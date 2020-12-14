@@ -260,6 +260,9 @@ def open_nft(token_id:str,data:dict=None):
     return jsonify({"response":rc,"cost":tx["cost"]})
 
 
+
+
+
 @app.route('/api/state_nft/<token_id>/<state>/',methods=["POST"])
 def state_nft(token_id:str,state:str,data:dict=None):
     if data is None:
@@ -371,6 +374,8 @@ def deploy(unity:str,amount:str,data:dict=None):
 
 
 
+
+
 #http://localhost:5555/api/server_config/
 @app.route('/api/server_config/')
 def server_config():
@@ -410,6 +415,8 @@ def get_contacts(addr:str):
     for row in rows:
         rc.append({"firstname": row[2], "email": row[1],"address":row[0]})
     return jsonify(rc)
+
+
 
 
 @app.route('/api/money/<addr>/',methods=['DELETE'])
@@ -516,6 +523,12 @@ def raz(password:str):
         init_erc20(bc,dao)
     return jsonify({"message":"Effacement terminé"}),200
 
+
+
+@app.route('/api/validate/<owner>/<miner>/')
+def validate(owner:str,miner:str):
+    rc=bc.validate(NFT_CONTRACT,owner,miner)
+    return jsonify(rc)
 
 
 

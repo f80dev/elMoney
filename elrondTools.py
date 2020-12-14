@@ -483,8 +483,7 @@ class ElrondNet:
                     else:
                         obj["miner"] = ""
 
-                    if obj["owner"]==owner or obj["state"]==0:
-                        rc.append(obj)
+                    rc.append(obj)
                     index=index+1
 
         rc=sorted(rc,key=lambda i: i["token_id"],reverse=True)
@@ -553,6 +552,17 @@ class ElrondNet:
                           )
 
         return tx
+
+
+    #http://localhost:6660/api/validate/erd1lzlf9clpzvetunqdtrmnr3dq0jpqxuf64lzxa0lerd86lmrutuqszvmk5w/erd19e6gkufmeav2u4q6ltagarxeqag4d62maey8vunnfs52fk75jd8s390nfn/
+    def validate(self, contract, owner, miner):
+        _owner=Account(address=owner)
+        _miner=Account(address=miner)
+        rc=self.query(contract,"validate",["0x"+_owner.address.hex(),"0x"+_miner.address.hex()],isnumber=False)
+        l=[]
+        for i in range(0,len(rc),8):
+            l.append(int.from_bytes(rc[i:i+8],"big"))
+        return l
 
 
 

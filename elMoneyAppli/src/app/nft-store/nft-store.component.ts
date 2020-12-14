@@ -22,6 +22,7 @@ export class NftStoreComponent implements OnInit {
   transac_cost=environment.transac_cost;
   filter: any={value:""};
   filter_id: number=null;
+  filter_ids: any[]=[];
 
   constructor(public api: ApiService,
               public routes: ActivatedRoute,
@@ -54,6 +55,9 @@ export class NftStoreComponent implements OnInit {
       this.filter_id = Number(this.routes.snapshot.queryParamMap.get("id"));
     }
 
+    if (this.routes.snapshot.queryParamMap.has("ids")) {
+      this.filter_ids = this.routes.snapshot.queryParamMap.get("ids").split(",");
+    }
 
     this.refresh();
     localStorage.setItem("last_screen","store");
@@ -70,9 +74,13 @@ export class NftStoreComponent implements OnInit {
       for (let item of r) {
         item.message = "";
         item.open = "";
-        if(!this.filter_id || this.filter_id==item.token_id)
-          this.nfts.push(item);
+
+        if (!this.filter_id || this.filter_id == item.token_id) {
+          if (item.state == 0 || item.owner == this.user.addr) {
+            this.nfts.push(item);
+          }
         }
+      }
     });
   }
 
