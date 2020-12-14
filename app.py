@@ -20,7 +20,7 @@ from apiTools import create_app
 from dao import DAO
 from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, XGLD_FOR_NEWACCOUNT, \
     MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, MAIN_DEVISE, TESTNET_EXPLORER, \
-    ERC20_BYTECODE_PATH, NFT_CONTRACT, NFT_ADMIN, DEFAULT_CMK_CONTRACT
+    ERC20_BYTECODE_PATH, NFT_CONTRACT, NFT_ADMIN, DEFAULT_UNITY_CONTRACT
 from elrondTools import ElrondNet
 
 
@@ -29,8 +29,7 @@ scheduler = BackgroundScheduler()
 
 
 
-
-def init_cmk(bc,dao):
+def init_erc20(bc,dao):
     """
     :return: l'adresse de la monnaie par defaut
     """
@@ -40,32 +39,32 @@ def init_cmk(bc,dao):
 
     _m=dao.get_money_by_name(MAIN_UNITY,bc._proxy.url)
     if not _m is None:
-        cmk=_m["addr"]
-        _cmk=bc.getBalance(cmk,bc.bank)
-        if "error" in _cmk:
+        _unity=bc.getBalance(_m["addr"],bc.bank)
+        if "error" in _unity:
             log("Le contrat de "+MAIN_UNITY+" n'est pas valable")
-            cmk=""
+            erc20=""
+        else:
+            erc20 = _m["addr"]
     else:
-        cmk = ""
+        erc20 = ""
 
-    if len(cmk) == 0:
-        if len(DEFAULT_CMK_CONTRACT)==0:
+    if len(erc20) == 0:
+        if len(DEFAULT_UNITY_CONTRACT)==0:
             log("Pas de monnaie dans la configuration, on en créé une")
             rc=bc.deploy(bc.bank, MAIN_UNITY, ERC20_BYTECODE_PATH,TOTAL_DEFAULT_UNITY)
             if "error" in rc:
                 log("Impossible de déployer le contrat de la monnaie par defaut")
                 return None
         else:
-            rc={"contract":DEFAULT_CMK_CONTRACT}
+            rc={"contract":DEFAULT_UNITY_CONTRACT}
 
+        erc20 = rc["contract"]
 
-        cmk=rc["contract"]
+    if dao.get_money_by_address(erc20) is None:
+        dao.add_money(erc20,MAIN_UNITY,bc.bank.address.bech32(),True,True,MAIN_URL,bc._proxy.url)
 
-    if dao.get_money_by_address(cmk) is None:
-        dao.add_money(cmk,MAIN_UNITY,bc.bank.address.bech32(),True,True,MAIN_URL,bc._proxy.url)
-
-    log("Contrat de la monnaie par defaut déployer à "+cmk)
-    return cmk
+    log("Contrat de la monnaie par defaut déployer à "+erc20)
+    return erc20
 
 
 
@@ -76,7 +75,7 @@ def init_cmk(bc,dao):
 
 bc = ElrondNet(proxy=sys.argv[2])
 dao=DAO("server",sys.argv[3])
-app, socketio = create_app(init_cmk(bc,dao))
+app, socketio = create_app(init_erc20(bc,dao))
 
 
 
@@ -98,7 +97,7 @@ def analyse_pem():
         address="erd"+body.split("erd")[1].split("----")[0]
         _to=Account(address)
 
-    _cmk=dao.get_money_by_name(MAIN_UNITY,bc._proxy.url)
+    _erc20=dao.get_money_by_name(MAIN_UNITY,bc._proxy.url)
 
     return jsonify({"address":address,"pem":body}),200
 
@@ -177,8 +176,8 @@ def transfer(contract:str,dest:str,amount:str,unity:str):
 
     if not "error" in rc:
         log("Transfert effectué " + str(rc) + " programmation du rafraichissement des comptes")
-        scheduler.add_job(refresh_client,id="id_"+rc["to"],args=[rc["to"]],trigger="interval",minutes=0.2,max_instances=1)
-        scheduler.add_job(refresh_client,id="id_"+rc['from'],args=[rc['from']],trigger="interval",minutes=0.1,max_instances=1)
+        scheduler.add_job(refresh_client,id="id_"+rc["to"],args=[rc["to"]],trigger="interval",minutes=0.07,max_instances=1)
+        scheduler.add_job(refresh_client,id="id_"+rc['from'],args=[rc['from']],trigger="interval",minutes=0.05,max_instances=1)
         return jsonify(rc),200
     else:
         log("Erreur lors du transfert "+str(rc))
@@ -377,20 +376,20 @@ def deploy(unity:str,amount:str,data:dict=None):
 def server_config():
     log("Récupération de la configuration du server avec la bank "+bc.bank.address.bech32())
 
-    _cmk=dao.get_money_by_name(MAIN_UNITY,bc._proxy.url)
-    if _cmk is None:
-        _cmk=app.config["cmk"]
-        log("Pas de monnaie disponible, on charge celle du fichier de config " + str(_cmk))
+    _erc20=dao.get_money_by_name(MAIN_UNITY,bc._proxy.url)
+    if _erc20 is None:
+        _erc20=app.config["unity"]
+        log("Pas de monnaie disponible, on charge celle du fichier de config " + str(_erc20))
     else:
-        _cmk = _cmk["addr"]
+        _erc20 = _erc20["addr"]
 
-    bank_balance=bc.getBalance(_cmk,bc.bank.address.bech32())
+    bank_balance=bc.getBalance(_erc20,bc.bank.address.bech32())
     if not "error" in bank_balance:
         infos={
             "bank_addr":bc.bank.address.bech32(),
-            "bank_cmk":bank_balance["number"],
+            "bank_erc20":bank_balance["number"],
             "bank_gas": bank_balance["gas"],
-            "default_money":app.config["cmk"],
+            "default_money":app.config["unity"],
             "proxy":bc._proxy.url,
             "nft_contract":NFT_CONTRACT
         }
@@ -480,27 +479,23 @@ def getyaml(name):
 
 
 
-@app.route('/api/new_account/<wait>/')
+
 @app.route('/api/new_account/')
-def new_account(wait="true"):
+def new_account():
     factor = ""
     if not "elrond.com" in bc._proxy.url: factor = "0"
     _a,pem=bc.create_account(XGLD_FOR_NEWACCOUNT+factor)
 
     log("Création du compte " + _a.address.bech32() +". Demande de transfert de la monnaie par defaut")
 
-    rc=bc.transfer(app.config["cmk"], bc.bank, _a, CREDIT_FOR_NEWACCOUNT)
-    if wait=="true":
-        t=bc.wait_transaction(rc["tx"], not_equal="pending",timeout=5)
-        log("Résultat du transfert " + str(t))
-
+    rc=bc.transfer(app.config["unity"], bc.bank, _a, CREDIT_FOR_NEWACCOUNT)
 
     #TODO: private key a crypter
 
-    cmk:dict=dao.get_money_by_name(MAIN_UNITY,bc._proxy.url)
+    erc20:dict=dao.get_money_by_name(MAIN_UNITY,bc._proxy.url)
 
     keys = {"public": _a.address.bech32(), "private": _a.private_key_seed}
-    return jsonify({"address":_a.address.bech32(),"keys":keys,"pem":pem,"default_money":cmk["addr"]}),200
+    return jsonify({"address":_a.address.bech32(),"keys":keys,"pem":pem,"default_money":erc20["addr"]}),200
 
 
 
@@ -518,7 +513,7 @@ def raz(password:str):
     log("Demande d'effacement de la base")
     if password!="hh4271":return "Password incorrect",501
     if dao.raz(bc._proxy.url):
-        init_cmk(bc,dao)
+        init_erc20(bc,dao)
     return jsonify({"message":"Effacement terminé"}),200
 
 

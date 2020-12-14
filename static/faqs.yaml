@@ -53,6 +53,18 @@ content:
       </p>
       "
 
+ - index: token
+    title: Qu'est-ce qu'un token ?
+    order: 1
+    format: html
+    content: "
+      <p>
+      Token Forge permet de frabriquer des 'objets' virtuels attribuables à un propriétaire, associés à un prix
+      (donc commercialisables) et pouvant contenir un secret uniquement visible par le propriétaire.
+      Dans la terminologie habituellement utilisée, on désigne ces objets par Token non fongibles, ou NFT (Non fugible token).
+      </p>
+      "
+
   - index: wallet_elrond
     title: Peut on voir et manipuler les monnaies {{appname}} avec le wallet Elrond ?
     order: 1

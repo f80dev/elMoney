@@ -11,7 +11,7 @@ from dao import DAO
 from definitions import DOMAIN_APPLI
 
 
-def create_app(cmk):
+def create_app(unity):
     """
     Initialisation de l'instance de serveur d'API
     :param test_config:
@@ -20,7 +20,7 @@ def create_app(cmk):
     :return:
     """
 
-    if cmk is None:
+    if unity is None:
         log("Aucune monnaie par defaut, On en lance pas le server")
         return None
 
@@ -37,6 +37,7 @@ def create_app(cmk):
 
     app.config["DOMAIN_SERVER"] = domain_server
     app.config["DOMAIN_APPLI"] = domain_appli
+    app.config["unity"]=unity
 
     CORS(app)
 
@@ -58,7 +59,7 @@ def create_app(cmk):
         "authentication_source": "admin"
     }
     app.config['JSON_AS_ASCII'] = False
-    app.config['cmk']=cmk
+    app.config['tfc']=unity
 
 
     # ensure the instance folder exists
