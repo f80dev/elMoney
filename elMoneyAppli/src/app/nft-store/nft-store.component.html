@@ -6,7 +6,9 @@
 
 <div class="mainform">
 
-  <mat-form-field appearance="legacy" style="max-width:600px;width:96%;" autofocus>
+  <mat-form-field appearance="legacy"
+                  *ngIf="nfts?.length>2"
+                  style="max-width:600px;width:96%;" autofocus>
     <mat-label>Chercher un token à acheter</mat-label>
     <input matInput matNativeControl
            (keyup)="onQuery($event)"
