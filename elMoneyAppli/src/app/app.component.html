@@ -40,13 +40,13 @@
   </mat-toolbar>
 
 <mat-drawer-container class="container" autosize>
-    <mat-drawer #drawer class="sidenav" [mode]="sidemenu_mode">
+    <mat-drawer #drawer class="sidenav" style="z-index: 100;" [mode]="sidemenu_mode">
       <app-sidemenu (click)="closeMenu()" (logout)="logout()">
       </app-sidemenu>
     </mat-drawer>
 
     <mat-drawer-content style="overflow: scroll">
-      <div class="sidenav-content" style="height: 100vh;text-align: center;"
+      <div class="sidenav-content" style="z-index:100;height: 100vh;text-align: center;"
            (mousedown)="closeMenu()">
 
         <div style="width:60%;margin-left: 20%;">

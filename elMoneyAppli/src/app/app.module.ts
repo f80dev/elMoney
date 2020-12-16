@@ -54,6 +54,10 @@ import {MatCardModule} from "@angular/material/card";
 import { FaucetComponent } from './faucet/faucet.component';
 import { FilterPipe } from './filter.pipe';
 import { ValidateComponent } from './validate/validate.component';
+import { NftsComponent } from './nfts/nfts.component';
+import { TokenComponent } from './token/token.component';
+import { NftsPersoComponent } from './nfts-perso/nfts-perso.component';
+import {MatTabsModule} from "@angular/material/tabs";
 
 const config: SocketIoConfig = { url: environment.domain_server, options: {} };
 
@@ -85,36 +89,40 @@ const config: SocketIoConfig = { url: environment.domain_server, options: {} };
     NftStoreComponent,
     FaucetComponent,
     FilterPipe,
-    ValidateComponent
+    ValidateComponent,
+    NftsComponent,
+    TokenComponent,
+    NftsPersoComponent
   ],
-    imports: [
-        MatButtonModule,
-        MatDialogModule,
-        MatIconModule,
-        MatSnackBarModule,
-        SocialLoginModule,
-        SocketIoModule.forRoot(config),
-        FormsModule,
-        HttpClientModule,
-        MatCheckboxModule,
-        WebcamModule,
-        MatProgressSpinnerModule,
-        AppRoutingModule,
-        MatInputModule,
-        BrowserAnimationsModule,
-        ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
-        QRCodeModule,
-        ClipboardModule,
-        MatSlideToggleModule,
-        MatToolbarModule,
-        MatSidenavModule,
-        MatListModule,
-        MatSliderModule,
-        MatExpansionModule,
-        MatSelectModule,
-        ClipboardModule,
-        MatCardModule
-    ],
+  imports: [
+    MatButtonModule,
+    MatDialogModule,
+    MatIconModule,
+    MatSnackBarModule,
+    SocialLoginModule,
+    SocketIoModule.forRoot(config),
+    FormsModule,
+    HttpClientModule,
+    MatCheckboxModule,
+    WebcamModule,
+    MatProgressSpinnerModule,
+    AppRoutingModule,
+    MatInputModule,
+    BrowserAnimationsModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
+    QRCodeModule,
+    ClipboardModule,
+    MatSlideToggleModule,
+    MatToolbarModule,
+    MatSidenavModule,
+    MatListModule,
+    MatSliderModule,
+    MatExpansionModule,
+    MatSelectModule,
+    ClipboardModule,
+    MatCardModule,
+    MatTabsModule
+  ],
   providers: [
     ApiService,TransPipe,
     {

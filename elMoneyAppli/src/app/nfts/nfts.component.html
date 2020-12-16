@@ -1,0 +1,81 @@
+ <div *ngIf="nfts.length>0" style="margin: 8px;padding:8px;" class="wrap-list" >
+    <mat-card class="app-card" style="width:300px;" *ngFor="let nft of nfts | filter:['uri',filter.value]">
+      <mat-card-header>
+        <img mat-card-avatar src="./assets/icons/gift.png" class="image-icon">
+        <mat-card-title>
+              {{nft.uri}}
+        </mat-card-title>
+        <mat-card-subtitle>
+
+        </mat-card-subtitle>
+      </mat-card-header>
+  <!--    <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">-->
+      <mat-card-content style="min-height: 50px;text-align: center;">
+          <div *ngIf="nft.message?.length>0">
+            <app-hourglass [message]="nft.message" fontsize="small"></app-hourglass>
+          </div>
+          <div *ngIf="nft.open?.length>0">
+            <strong>{{nft.open}}</strong>
+          </div>
+        <app-tuto [if]="nft.state==1"
+                  label="Vous pouvez ouvrir les tokens que vous posséder pour voir ce qu'ils contiennent. Vous pouvez également les remettre en vente ou les détruire."></app-tuto>
+      </mat-card-content>
+      <mat-card-actions class="app-card-action">
+          <div *ngIf="nft.message?.length==0 && nft.open?.length==0">
+            <button mat-raised-button mat-button class="app-button"
+                    *ngIf="nft.owner!=user.addr && nft.state==0"
+                    [title]="'Acheter ce token pour '+nft.price+' xEgld'"
+                    (click)="buy(nft)">
+              <mat-icon>shopping_cart</mat-icon>&nbsp;
+              <small *ngIf="nft.price==0">Gratuit</small>
+              <span *ngIf="nft.price>0" style="font-size: large;">{{nft.price}} <small>xEGld</small></span>
+            </button>
+            <div *ngIf="nft.owner==user.addr" style="display: inline-block">
+              <button mat-raised-button mat-button
+                      color="primary"
+                      *ngIf="nft.state==1"
+                      class="app-button"
+                      (click)="open(nft)">
+               Ouvrir
+              </button>
+              <button mat-icon-button mat-flat-button
+                      *ngIf="nft.state==0"
+                      title="Retirer de la vente"
+                      class="icon-button"
+                      (click)="setstate(nft,1,'retirer de la vente')">
+                <mat-icon>remove_shopping_cart</mat-icon>
+              </button>
+
+              <button mat-raised-button mat-button class="app-button"
+                      *ngIf="nft.state==1"
+                      (click)="setstate(nft,0,'mise en vente')">
+                Vendre
+              </button>
+              <button mat-icon-button mat-flat-button
+                      *ngIf="nft.state==1 && nft.owner==user.addr"
+                      class="icon-button"
+                      (click)="burn(nft)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+
+            <button mat-icon-button mat-flat-button
+                      *ngIf="nft.state==0"
+                      title="Faire la promotion de ce token"
+                      class="icon-button"
+                      (click)="share(nft)">
+                <mat-icon>share</mat-icon>
+              </button>
+
+          </div>
+
+          <div *ngIf="nft.open?.length>0">
+            <button mat-icon-button
+                    class="icon-button"
+                    (click)="nft.open=''">
+              <mat-icon>visibility_off</mat-icon>
+            </button>
+          </div>
+      </mat-card-actions>
+    </mat-card>
+  </div>

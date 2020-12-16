@@ -230,11 +230,13 @@ def burn(token_id,data:dict=None):
 
 
 #http://localhost:6660/api/nfts/erd1krm8k9vqkvfxrgrhrjducxz574nraz9zn242epfcxc99zxnqwessv2c4uz/true/true
-@app.route('/api/nfts/<owner>/<perso_only>/<mined_only>/',methods=["GET"])
-def nfts(owner:str,perso_only:str,mined_only:str):
+@app.route('/api/nfts/',methods=["GET"])
+@app.route('/api/nfts/<owner_filter>/',methods=["GET"])
+@app.route('/api/nfts/<owner_filter>/<miner_filter>/',methods=["GET"])
+def nfts(owner_filter="0x0",miner_filter="0x0"):
     rc=[]
 
-    for uri in bc.get_uris(NFT_CONTRACT,owner,perso_only,mined_only):
+    for uri in bc.get_uris(NFT_CONTRACT,owner_filter,miner_filter):
         rc.append(uri)
 
     return jsonify(rc),200
@@ -321,6 +323,7 @@ def mint(count:str,data:dict=None):
 
     arguments=[int(count), "0x"+owner.address.hex(),"0x"+uri.encode().hex(),"0x"+secret.encode().hex(),price]
     result=bc.mint(NFT_CONTRACT,nft_contract_owner,arguments)
+    send(socketio, "refresh_nft")
     return jsonify(result), 200
 
 

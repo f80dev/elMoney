@@ -22,7 +22,7 @@
   <div class="mat-elevation-z4" style="margin: 10px;padding:5px;" *ngIf="validate_nfts.length>0">
     <h3>Cette utilisateur posséde</h3>
     <div *ngFor="let nft of validate_nfts" style="text-align: left;">
-      - {{nft.uri}}<br>
+      <mat-icon>checkmark</mat-icon>&nbsp;{{nft.uri}}<br>
     </div>
     <br>
   </div>

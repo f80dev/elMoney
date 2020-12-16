@@ -59,7 +59,7 @@ export class ImporterComponent implements OnInit {
       this.message="";
       showMessage(this,"Fichier tokeniser pour "+r.cost+" xEgld");
       this.user.refresh_balance(()=>{
-        this.router.navigate(["store"],{queryParams:{perso_only:true}});
+        this.router.navigate(["nfts-perso"],{queryParams:{index:1}});
       })
     })
   }

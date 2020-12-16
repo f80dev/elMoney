@@ -18,7 +18,6 @@
       </td>
     </tr></table>
 
-
   </div>
 
   <br>
@@ -73,7 +72,16 @@
      mat-list-item
      id="cmdStore">
     <mat-icon>shopping_cart</mat-icon>&nbsp;
-    Voir les tokens
+    Acheter des tokens
+  </a>
+
+  <a title="Voir mes tokens"
+     routerLink="nfts-perso"
+      [queryParams]="{only_perso:false}"
+     mat-list-item
+     id="cmdPerso">
+    <mat-icon>person</mat-icon>&nbsp;
+    Mes tokens
   </a>
 
   <a title="Valider des token"
@@ -129,7 +137,6 @@
     <mat-icon>constructions</mat-icon>&nbsp;
     Administration
   </a>
-
 
 
 </mat-nav-list>

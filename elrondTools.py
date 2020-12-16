@@ -441,24 +441,28 @@ class ElrondNet:
 
 
 
-    def get_uris(self, contract,owner,perso_only,mined_only):
+    def get_uris(self, contract,owner_filter,miner_filter):
         _contract=SmartContract(contract)
         rc = list()
-        _owner=Account(address=owner)
 
-        filter_miner="0x0000000000000000000000000000000000000000000000000000000000000000"
-        filter_owner="0x0000000000000000000000000000000000000000000000000000000000000000"
-        if perso_only=="true":filter_owner="0x"+str(_owner.address.hex())
-        if mined_only=="true":filter_miner="0x"+str(_owner.address.hex())
+        if owner_filter=="0x0":
+            owner_filter = "0x0000000000000000000000000000000000000000000000000000000000000000"
+        else:
+            owner_filter="0x"+str(Account(address=owner_filter).address.hex())
 
-        tokens = self.query(_contract, "tokens", arguments=[0xAA,0xFF,filter_owner,filter_miner],isnumber=False,n_try=1)
+        if miner_filter=="0x0":
+            miner_filter = "0x0000000000000000000000000000000000000000000000000000000000000000"
+        else:
+            miner_filter="0x"+str(Account(address=miner_filter).address.hex())
+
+        tokens = self.query(_contract, "tokens", arguments=[0xAA,0xFF,owner_filter,miner_filter],isnumber=False,n_try=1)
 
         if not tokens is None:
             tokens=tokens.hex()
             index=0
             for token in tokens.split("ffffffff"):
                 if len(token)>10:
-                    hexprice = token.split("aaaaaaaa")[0];
+                    hexprice = token.split("aaaaaaaa")[0]
                     i = 0
                     while hexprice[i] == "0": i = i + 1
                     if len(hexprice)>i+2:
@@ -478,10 +482,13 @@ class ElrondNet:
                         uri=""
 
                     obj=dict({"token_id": index, "uri": uri, "price": price, "state": state,"owner":addr})
-                    if mined_only=="true":
+                    if miner_filter!="0x0000000000000000000000000000000000000000000000000000000000000000":
                         obj["miner"]=addr
                     else:
                         obj["miner"] = ""
+
+                    obj["open"]=""
+                    obj["message"]=""
 
                     rc.append(obj)
                     index=index+1

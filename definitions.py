@@ -3,7 +3,7 @@ PASSWORD="Hh42714280"
 SMTP_SERVER="smtp.ionos.fr"
 IMAP_SERVER="imap.ionos.fr"
 
-APPNAME="CoinMaKer"
+APPNAME="TokenForge"
 
 #DOMAIN_APPLI="http://localhost:4200"
 DOMAIN_APPLI="https://tf.f80.fr"
@@ -21,7 +21,7 @@ MAIN_UNITY="TFC"
 MAIN_URL="https://tf.f80.fr/assets/cmk.html"
 TOTAL_DEFAULT_UNITY=1000000
 CREDIT_FOR_NEWACCOUNT=75
-DEFAULT_UNITY_CONTRACT="erd1qqqqqqqqqqqqqpgqt4zcz5q0xytmefh5jsdfntf6zxfyv0t3d8sslcts96"
+DEFAULT_UNITY_CONTRACT="erd1qqqqqqqqqqqqqpgqvlqklu5hecwlann295ll05qktphsppudd8sswzmwqk"
 
 LIMIT_GAS=60000000
 
@@ -43,5 +43,5 @@ MAIN_DEVISE="xEGld"
 #NFT pour le testnet officiel
 #NFT_CONTRACT="erd1qqqqqqqqqqqqqpgqfx6ndl75schd9y4ulkhj2vq26j93kgued8ssd9pv42"
 
-NFT_CONTRACT="erd1qqqqqqqqqqqqqpgqn89x0els6dn2ghs3kd847jygkwpzsgz6d8ssaxyy22"
+NFT_CONTRACT="erd1qqqqqqqqqqqqqpgqhf8qase6a8nw8phjwm2wd7uvkutexk67d8sszf9xuu"
 NFT_ADMIN="admin"

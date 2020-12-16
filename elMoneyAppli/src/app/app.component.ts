@@ -46,8 +46,8 @@ export class AppComponent implements OnInit,OnDestroy {
       let addr=this.routes.snapshot.queryParamMap.get("user");
       this.user.init(addr,JSON.parse(localStorage.getItem("pem")),
         (r)=> {
-        if(localStorage.getItem("last_screen")=="store")
-          this.router.navigate(["store"]);
+        if(localStorage.getItem("last_screen"))
+          this.router.navigate([localStorage.getItem("last_screen")]);
         else
           this.router.navigate(["main"]);
         },
@@ -103,6 +103,9 @@ export class AppComponent implements OnInit,OnDestroy {
   }
 
   ngOnInit(): void {
+    setTimeout(()=>{
+      this.onResize({currentTarget:{innerWidth:window.innerWidth}});
+    },4000);
 
   }
 
