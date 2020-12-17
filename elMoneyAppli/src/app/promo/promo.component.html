@@ -1,0 +1,24 @@
+<div class="mainform">
+  <h2>Promouvoir votre annonce</h2>
+  <qrcode
+    [width]="150"
+    ngxClipboard
+    [cdkCopyToClipboard]="url"
+    (click)="informe_clipboard()"
+    style="display: inline-block;"
+    [elementType]="'svg'"
+    [errorCorrectionLevel]="'M'"
+    [qrdata]="user.addr">
+  </qrcode>
+  <br>
+  <small>Toucher le QRCode pour copier l'adresse de l'annonce</small>
+
+  <br><br>
+  <button mat-raised-button
+          mat-button class="app-button"
+          (click)="share()">
+      <mat-icon>share</mat-icon>&nbsp;Partager
+  </button>
+  <br>
+
+</div>

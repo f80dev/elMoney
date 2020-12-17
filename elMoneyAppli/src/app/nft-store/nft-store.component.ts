@@ -6,8 +6,6 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Socket} from "ngx-socket-io";
 import {environment} from "../../environments/environment";
-import {NgNavigatorShareService} from "ng-navigator-share";
-import {ClipboardService} from "ngx-clipboard";
 
 @Component({
   selector: 'app-nft-store',

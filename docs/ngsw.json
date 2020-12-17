@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1608155308969,
+  "timestamp": 1608201127151,
   "index": "https://tf.f80.fr/index.html",
   "assetGroups": [
     {
@@ -87,7 +87,7 @@
     "https://tf.f80.fr/assets/logo coinmaker.svg": "7570bbf5d0cd79cdd7036b738632a641e0b3a850",
     "https://tf.f80.fr/favicon.ico": "22f6a4a3bcaafafb0254e0f2fa4ceb89e505e8b2",
     "https://tf.f80.fr/index.html": "58bcadad5dd6c9a190559394c3de011cec0188c5",
-    "https://tf.f80.fr/main.js": "19a2bf7f1a43d0daaa479d216dafea5f1cd6ca03",
+    "https://tf.f80.fr/main.js": "13950b1fbb835f770a3b3fa10ee1c26eb8b51892",
     "https://tf.f80.fr/manifest.webmanifest": "4330747dd266363fb42bc9580c53a46b310d92cc",
     "https://tf.f80.fr/polyfills.js": "72ad4ccc0a3916ae4598199447cdeadd6d380570",
     "https://tf.f80.fr/runtime.js": "a9aafcf49f49145093fc831efd9b8e2f6c71bb9c",

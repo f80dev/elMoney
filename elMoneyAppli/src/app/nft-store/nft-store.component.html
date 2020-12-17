@@ -1,8 +1,8 @@
 <app-tuto title="<br><br><br><br><br><strong>Les tokens</strong>"
-            color="white"
-            image=""
-            subtitle="Retrouvez tous les tokens en vente ainsi que les votres (ceux que vous possédez et ceux que vous avez fabriqués)"
-            background="./assets/img/items.jpg"></app-tuto>
+          color="white"
+          image=""
+          subtitle="Retrouvez tous les tokens en vente ainsi que les votres (ceux que vous possédez et ceux que vous avez fabriqués)"
+          background="./assets/img/items.jpg"></app-tuto>
 
 <div class="mainform">
 
@@ -19,7 +19,6 @@
   </mat-form-field>
   <br>
 
-
   <app-hourglass [message]="message"></app-hourglass>
   <div *ngIf="nfts.length==0 && message.length==0">
     Aucun token disponible pour l'instant
@@ -29,16 +28,18 @@
 
 
   <app-nfts [nfts]="nfts" [user]="user" [filter]="filter"
-            (refresh)="refresh(true)" (buy)="router.navigate(['nfts-perso'],{queryParams:{index:0}})"
-  ></app-nfts>
+            (refresh)="refresh(true)"
+            (buy)="router.navigate(['nfts-perso'],{queryParams:{index:0}})">
+  </app-nfts>
+
 
   <br><br>
   <button mat-raised-button
-            mat-button class="app-button"
-            (click)="router.navigate(['importer'])">
-      Fabriquer des tokens
-    </button>
-    <br>
+          mat-button class="app-button"
+          (click)="router.navigate(['importer'])">
+    Fabriquer des tokens
+  </button>
+  <br>
 
   <p style="font-size: small;max-width: 500px;display: inline-block;" *ngIf="nfts.length>0">
     <br><br>

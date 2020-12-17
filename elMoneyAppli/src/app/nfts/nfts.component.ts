@@ -31,21 +31,13 @@ export class NftsComponent implements OnInit {
   }
 
 
-  share(nft:any){
-    showMessage(this,"Lien du profil disponible dans le presse-papier");
-    this.ngNavigatorShareService.share({
-      title: nft.title,
-      text: "Achter ce token",
-      url: environment.domain_appli+"/store?id="+nft.token_id
-    })
-      .then( (response) => {console.log(response);},()=>{
-        this._clipboardService.copyFromContent(environment.domain_appli+"/store?id="+nft.token_id);
-      })
-      .catch( (error) => {
-        this._clipboardService.copyFromContent(environment.domain_appli+"/store?id="+nft.token_id);
-      });
+  share(nft){
+    this.router.navigate(["promo"],{queryParams:{
+        url:environment.domain_appli+"/store?id="+nft.token_id,
+        message:"Acheter ce token",
+        titre:"Partager"
+    }});
   }
-
 
   buy(nft: any) {
     if (nft.price > this.user.gas / 1e18+environment.transac_cost) {

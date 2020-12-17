@@ -58,6 +58,7 @@ import { NftsComponent } from './nfts/nfts.component';
 import { TokenComponent } from './token/token.component';
 import { NftsPersoComponent } from './nfts-perso/nfts-perso.component';
 import {MatTabsModule} from "@angular/material/tabs";
+import { PromoComponent } from './promo/promo.component';
 
 const config: SocketIoConfig = { url: environment.domain_server, options: {} };
 
@@ -92,7 +93,8 @@ const config: SocketIoConfig = { url: environment.domain_server, options: {} };
     ValidateComponent,
     NftsComponent,
     TokenComponent,
-    NftsPersoComponent
+    NftsPersoComponent,
+    PromoComponent
   ],
   imports: [
     MatButtonModule,

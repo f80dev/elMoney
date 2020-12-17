@@ -16,6 +16,7 @@ import {NftStoreComponent} from "./nft-store/nft-store.component";
 import {FaucetComponent} from "./faucet/faucet.component";
 import {ValidateComponent} from "./validate/validate.component";
 import {NftsPersoComponent} from "./nfts-perso/nfts-perso.component";
+import {PromoComponent} from "./promo/promo.component";
 
 const routes: Routes = [
    { path: 'admin', component: AdminComponent},
@@ -30,6 +31,7 @@ const routes: Routes = [
   { path: 'nfts-perso', component: NftsPersoComponent},
     { path: 'importer', component: ImporterComponent},
     { path: 'store', component: NftStoreComponent},
+    { path: 'promo', component: PromoComponent},
    { path: 'faucet', component: FaucetComponent},
    { path: 'support', component: SupportComponent},
     { path: 'main', component: MainComponent},
