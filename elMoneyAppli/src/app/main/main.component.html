@@ -1,3 +1,9 @@
+<app-tuto title="<br><br><br><br><br><strong>Le wallet Token Forge</strong>"
+          color="white"
+          image=""
+          subtitle="Bienvenue dans le wallet Token Forge. Celui-ci vous permet d'envoyer à vos contacts de l'argent dans la monnaie sélectionnée."
+          background="./assets/img/send.jpg"></app-tuto>
+
 <div class="mainform">
 
   <app-tuto [if]="_max>0"
@@ -43,7 +49,7 @@
 
       <div *ngIf="hand==0">Envoyer des {{user.unity}}</div>
 
-      <div *ngIf="showSlider" style="width: 100vw;text-align: center;">
+      <div *ngIf="showSlider" style="width: 100%;text-align: center;">
 
         <button mat-raised-button mat-button
                 class="app-button" color="primary"

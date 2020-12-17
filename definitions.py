@@ -29,7 +29,7 @@ LIMIT_GAS=60000000
 TESTNET_EXPLORER="https://testnet-explorer.elrond.com"
 TRANSACTION_EXPLORER=TESTNET_EXPLORER
 
-SIGNATURE="<br><br>CoinMaker<br><a href='https://t.me/coinmaker_forum'>Le forum des utilisateurs</a>"
+SIGNATURE="<br><br>L'équipe de TokenForge<br><a href='https://t.me/tokenforge'>Le forum des utilisateurs</a>"
 
 DB_SERVERS=dict({
     "local":"mongodb://127.0.0.1:27017",

@@ -1,5 +1,5 @@
 <div class="mainform">
-  <h2>Promouvoir votre annonce</h2>
+  <h2>Promouvoir {{title}}</h2>
   <qrcode
     [width]="150"
     ngxClipboard
@@ -20,5 +20,20 @@
       <mat-icon>share</mat-icon>&nbsp;Partager
   </button>
   <br>
+  <br>
+  __________
+  <br><br>
+
+
+  <mat-form-field appearance="fill" class="app-field">
+    <mat-label>Envoyer l'annonce par email</mat-label>
+    <input matInput type="text" max="50" [(ngModel)]="email" (keypress)="onkeypress($event)">
+     <mat-hint>Saisisser une ou plusieurs adresses mails (séparée par une ',')</mat-hint>
+   </mat-form-field><br>
+   <button mat-raised-button
+          mat-button class="app-button"
+          (click)="share_by_email()">
+      Envoyer
+  </button>
 
 </div>

@@ -35,7 +35,7 @@ export class NftsComponent implements OnInit {
     this.router.navigate(["promo"],{queryParams:{
         url:environment.domain_appli+"/store?id="+nft.token_id,
         message:"Acheter ce token",
-        titre:"Partager"
+        title:nft.uri
     }});
   }
 

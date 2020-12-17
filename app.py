@@ -287,6 +287,21 @@ def test():
     return jsonify(rc),200
 
 
+#http://localhost:6660/api/test/
+@app.route('/api/sendtokenbyemail/<dests>/',methods=["POST"])
+def sendtokenbyemail(dests:str):
+    data = json.loads(str(request.data, encoding="utf-8"))
+    html=open_html_file("share_token",{
+        "appname":APPNAME,
+        "signature":SIGNATURE,
+        "url":data["url"],
+        "title":data["title"],
+        "message":data["message"]
+    })
+    send_mail(html,dests,subject=data["title"])
+    return jsonify({"message":"token envoyé"}),200
+
+
 
 
 @app.route('/api/buy_nft/<token_id>/<price>/',methods=["POST"])

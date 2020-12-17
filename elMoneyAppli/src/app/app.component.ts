@@ -105,7 +105,7 @@ export class AppComponent implements OnInit,OnDestroy {
   ngOnInit(): void {
     setTimeout(()=>{
       this.onResize({currentTarget:{innerWidth:window.innerWidth}});
-    },4000);
+    },5000);
 
   }
 

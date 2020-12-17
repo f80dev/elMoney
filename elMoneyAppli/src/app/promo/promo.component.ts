@@ -2,12 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import {ApiService} from "../api.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {Socket} from "ngx-socket-io";
 import {UserService} from "../user.service";
 import {NgNavigatorShareService} from "ng-navigator-share";
 import {ClipboardService} from "ngx-clipboard";
 import {showMessage} from "../tools";
-import {environment} from "../../environments/environment";
 
 @Component({
   selector: 'app-promo',
@@ -18,6 +16,7 @@ export class PromoComponent implements OnInit {
   url: string;
   message:string;
   title:string;
+  email: string;
 
   constructor(public api: ApiService,
               public routes: ActivatedRoute,
@@ -31,15 +30,17 @@ export class PromoComponent implements OnInit {
 
   ngOnInit(): void {
     this.url=this.routes.snapshot.queryParamMap.get("url");
+    this.title=this.routes.snapshot.queryParamMap.get("title");
+    this.message=this.routes.snapshot.queryParamMap.get("message");
   }
 
   informe_clipboard() {
-
+    showMessage(this,"Lien du profil disponible dans le presse-papier");
   }
 
 
   share(){
-    showMessage(this,"Lien du profil disponible dans le presse-papier");
+    this.informe_clipboard();
     this.ngNavigatorShareService.share({
       title: this.title,
       text: this.message,
@@ -54,5 +55,20 @@ export class PromoComponent implements OnInit {
   }
 
 
+  onkeypress($event: KeyboardEvent) {
+    if($event.code=="\n"){
+      this.share_by_email();
+    }
+  }
 
+  share_by_email() {
+    let body={
+      title:this.title,
+      message:this.message,
+      url:this.url
+    }
+    this.api._post("sendtokenbyemail/"+this.email+"/","",body).subscribe(()=>{
+      showMessage(this,"Annonce envoyée");
+    })
+  }
 }
