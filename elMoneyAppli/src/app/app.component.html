@@ -1,11 +1,13 @@
 <app-tuto   title="<br><br><br><br><br><strong>TokenForge</strong>"
             color="white"
             image=""
-            [subtitle]="'Fabriquez vos propres token sur la blockchain Elrond<br><br><small>alpha version '+appVersion+'</small>'"
+            [subtitle]="'Fabriquez vos propres monnaies et tokens sur la blockchain Elrond<br><br><small>alpha version '+appVersion+'</small>'"
             background="./assets/img/tokenforge.jpg"></app-tuto>
 
 
-<mat-toolbar class="mat-elevation-z2 toolbar-app" (mousedown)="closeMenu()" *ngIf="message?.length==0">
+<mat-toolbar class="mat-elevation-z4 toolbar-app"
+             style="z-index: 9999999"
+             (mousedown)="closeMenu()" *ngIf="message?.length==0">
     <mat-icon
       title="Accédez au menu principal"
       id="cmdMenu"
@@ -40,7 +42,7 @@
   </mat-toolbar>
 
 <mat-drawer-container class="container" autosize>
-    <mat-drawer #drawer class="sidenav" style="z-index: 100;" [mode]="sidemenu_mode">
+    <mat-drawer #drawer class="sidenav" [mode]="sidemenu_mode">
       <app-sidemenu (click)="closeMenu()" (logout)="logout()">
       </app-sidemenu>
     </mat-drawer>
@@ -55,7 +57,7 @@
 
 
         <img src="./assets/img/elrond.png"
-             style="width:60vw;max-width:500px;display: inline;margin-top: 50px;filter: saturate(2) invert() blur(1px) grayscale(100%);"
+             style="width:60vw;max-width:300px;display: inline;margin-top: 50px;filter: saturate(2) invert() blur(1px) grayscale(100%);"
              *ngIf="message.length>0">
 
         <router-outlet style="width:100%;" *ngIf="message.length==0" ></router-outlet>

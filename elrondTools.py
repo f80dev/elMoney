@@ -426,12 +426,16 @@ class ElrondNet:
         if len(d)>0:
             if isnumber:
                 return d[0].number
-            else:
+
+            if type(d[0])==str:
+                return d[0]
+
+            if len(d[0].base64)>0:
                 val = d[0].base64
                 rc=base64.b64decode(val)
                 return rc
-        else:
-            return None
+
+        return None
 
 
 
@@ -457,7 +461,7 @@ class ElrondNet:
 
         tokens = self.query(_contract, "tokens", arguments=[0xAA,0xFF,owner_filter,miner_filter],isnumber=False,n_try=1)
 
-        if not tokens is None:
+        if not tokens is None and len(tokens)>0:
             tokens=tokens.hex()
             index=0
             for token in tokens.split("ffffffff"):

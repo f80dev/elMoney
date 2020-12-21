@@ -328,7 +328,7 @@ def mint(count:str,data:dict=None):
         log("Les données de fabrication sont " + data)
         data = json.loads(data)
 
-    if "file" in data:
+    if "file" in data and len(data["file"])>0:
         client = IPFS(IPFS_NODE)
         res = client.add(data["file"],data["filename"])
         log("Transfert IPFS du fichier : https://ipfs.io/ipfs/"+res)

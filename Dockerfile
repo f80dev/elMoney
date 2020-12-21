@@ -28,12 +28,13 @@ RUN pip3 -v install ipfshttpclient
 
 WORKDIR /
 RUN mkdir PEM
+RUN mkdir temp
 RUN mkdir static
 VOLUME /certs
 
 COPY *.py $APP_HOME/
 COPY ./static $APP_HOME/static
-COPY ../PEM $APP_HOME/PEM
+COPY ./PEM $APP_HOME/PEM
 
 
 EXPOSE 5555

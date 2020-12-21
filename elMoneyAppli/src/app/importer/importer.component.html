@@ -1,12 +1,11 @@
-<div class="mainform">
-
-  <app-tuto title="<br><br><br><br><br><strong>Les tokens</strong>"
+<app-tuto title="<br><br><br><br><br><strong>Les tokens</strong>"
             color="white"
             image=""
-            subtitle="Fabriquer vos propres tokens ! vous pouvez les vendres et y placer un secret visible uniquement pour l'acheteur"
+            subtitle="Fabriquer vos propres tokens a partir d'un fichier, fixez un prix et vendez-les !"
             background="./assets/img/build.jpg"></app-tuto>
 
 
+<div class="mainform">
 
   <app-hourglass [message]="message"></app-hourglass>
 
@@ -14,7 +13,7 @@
     <input #csvInput [hidden]="true"
            type="file" onclick="this.value=null"
            (change)="import($event)"
-           accept=".csv"/>
+           accept="*"/>
 
     <button mat-raised-button
             mat-button class="app-button"
@@ -22,7 +21,7 @@
       Importer un fichier
     </button>
     <br>
-    <span *ngIf="file.length>0">{{filename}} empaqueté</span>
+    <span *ngIf="file.length>0">'{{filename}}' empaqueté</span>
     <br><br>
 
 
