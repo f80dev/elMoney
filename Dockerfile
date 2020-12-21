@@ -23,6 +23,8 @@ RUN pip3 install pyopenssl
 RUN pip3 -v install apscheduler
 RUN pip3 -v install flask-socketio
 RUN pip3 -v install pymongo
+RUN pip3 -v install ipfshttpclient
+
 
 WORKDIR /
 RUN mkdir PEM
@@ -31,7 +33,7 @@ VOLUME /certs
 
 COPY *.py $APP_HOME/
 COPY ./static $APP_HOME/static
-COPY ./PEM $APP_HOME/PEM
+COPY ../PEM $APP_HOME/PEM
 
 
 EXPOSE 5555

@@ -14,12 +14,13 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 export class ImporterComponent implements OnInit {
 
   message: string="";
-  file:string="vide";
+  file:string="";
   count: any=1;
   secret: any="monsecret";
   price: any=0;
   uri: any="montoken";
   cost=0;
+  filename: string="";
 
   constructor(public api:ApiService,
               public user:UserService,
@@ -32,12 +33,14 @@ export class ImporterComponent implements OnInit {
     //     this.cost=r.txGasUnits;
     //   }
     // })
+     localStorage.setItem("last_screen","importer");
   }
 
    import(fileInputEvent: any) {
-      var reader = new FileReader();
+      var reader:any = new FileReader();
       this.message="Chargement du fichier";
-      reader.onload = ()=>{
+      this.filename=fileInputEvent.target.files[0].name;
+      reader.onload = ()=> {
         this.file=stringify(reader.result);
         this.message="";
       }
@@ -50,6 +53,7 @@ export class ImporterComponent implements OnInit {
       pem:this.user.pem["pem"],
       owner:this.user.addr,
       file:this.file,
+      filename:this.filename,
       signature:this.uri,
       secret:this.secret,
       price:this.price,

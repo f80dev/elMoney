@@ -21,10 +21,14 @@ MAIN_UNITY="TFC"
 MAIN_URL="https://tf.f80.fr/assets/cmk.html"
 TOTAL_DEFAULT_UNITY=1000000
 CREDIT_FOR_NEWACCOUNT=75
-DEFAULT_UNITY_CONTRACT="erd1qqqqqqqqqqqqqpgqvlqklu5hecwlann295ll05qktphsppudd8sswzmwqk"
+DEFAULT_UNITY_CONTRACT="erd1qqqqqqqqqqqqqpgqj2z2vqeank9q2wejfj5f6krg6vtf5709d8ss29yzsj"
 
 LIMIT_GAS=60000000
 
+
+NFT_CONTRACT="erd1qqqqqqqqqqqqqpgqcpnh6s5wl0aqg78vy2avkhkzvstyc62ed8ss9lk4l3"
+NFT_ADMIN="admin"
+IPFS_NODE="http://207.180.198.227:5001"
 
 TESTNET_EXPLORER="https://testnet-explorer.elrond.com"
 TRANSACTION_EXPLORER=TESTNET_EXPLORER
@@ -40,8 +44,4 @@ DB_SERVERS=dict({
 MAIN_DEVISE="xEGld"
 
 
-#NFT pour le testnet officiel
-#NFT_CONTRACT="erd1qqqqqqqqqqqqqpgqfx6ndl75schd9y4ulkhj2vq26j93kgued8ssd9pv42"
-
-NFT_CONTRACT="erd1qqqqqqqqqqqqqpgqhf8qase6a8nw8phjwm2wd7uvkutexk67d8sszf9xuu"
-NFT_ADMIN="admin"
+#

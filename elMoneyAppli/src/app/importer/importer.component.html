@@ -1,6 +1,6 @@
 <div class="mainform">
 
-   <app-tuto title="<br><br><br><br><br><strong>Les tokens</strong>"
+  <app-tuto title="<br><br><br><br><br><strong>Les tokens</strong>"
             color="white"
             image=""
             subtitle="Fabriquer vos propres tokens ! vous pouvez les vendres et y placer un secret visible uniquement pour l'acheteur"
@@ -11,58 +11,58 @@
   <app-hourglass [message]="message"></app-hourglass>
 
   <div *ngIf="message.length==0">
-      <input #csvInput hidden="true"
-         type="file" onclick="this.value=null"
-         (change)="import($event)"
-         accept=".csv"/>
+    <input #csvInput [hidden]="true"
+           type="file" onclick="this.value=null"
+           (change)="import($event)"
+           accept=".csv"/>
 
-<!--  <button mat-raised-button-->
-<!--          mat-button class="app-button"-->
-<!--          *ngIf="file=='vide'"-->
-<!--          (click)="csvInput.click()">-->
-<!--    Importer un fichier-->
-<!--  </button>-->
+    <button mat-raised-button
+            mat-button class="app-button"
+            (click)="csvInput.click()">
+      Importer un fichier
+    </button>
+    <br>
+    <span *ngIf="file.length>0">{{filename}} empaqueté</span>
+    <br><br>
 
-<!--  <br><br>-->
 
-
-  <mat-form-field appearance="fill" class="app-field">
-    <mat-label>Présentation du token</mat-label>
-    <input matInput type="text" maxlength="200" [(ngModel)]="uri">
-    <mat-hint>Présenter votre token en quelques mots pour le vendre</mat-hint>
-  </mat-form-field>
+    <mat-form-field appearance="fill" class="app-field">
+      <mat-label>Présentation du token</mat-label>
+      <input matInput type="text" maxlength="200" [(ngModel)]="uri">
+      <mat-hint>Présenter votre token en quelques mots pour le vendre</mat-hint>
+    </mat-form-field>
 
     <br>
 
-    <mat-form-field appearance="fill" class="app-field">
-    <mat-label>Secret à embarquer dans le token</mat-label>
-    <input matInput type="text" maxlength="200" [(ngModel)]="secret">
-    <mat-hint>un mot de passe, une adresse internet qui ne sera accessible qu'au propriétaire</mat-hint>
-  </mat-form-field>
+    <mat-form-field appearance="fill" class="app-field" *ngIf="file.length==0">
+      <mat-label>Secret à embarquer dans le token</mat-label>
+      <input matInput type="text" maxlength="200" [(ngModel)]="secret">
+      <mat-hint>un mot de passe, une adresse internet qui ne sera accessible qu'au propriétaire</mat-hint>
+    </mat-form-field>
 
-  <br><br>
+    <br><br>
 
-  <mat-form-field appearance="fill" class="app-field" style="max-width: 200px">
-    <mat-label>Combien d'exemplaire</mat-label>
-    <input matInput type="number" min="1" max="1000" [(ngModel)]="count">
-  </mat-form-field>
+    <mat-form-field appearance="fill" class="app-field" style="max-width: 200px">
+      <mat-label>Combien d'exemplaire</mat-label>
+      <input matInput type="number" min="1" max="1000" [(ngModel)]="count">
+    </mat-form-field>
     &nbsp;
-  <mat-form-field appearance="fill" class="app-field" style="max-width: 200px">
-    <mat-label>Prix de vente</mat-label>
-    <input matInput type="number" [(ngModel)]="price">
-    <span matSuffix>xeGld</span>
-  </mat-form-field>
+    <mat-form-field appearance="fill" class="app-field" style="max-width: 200px">
+      <mat-label>Prix de vente</mat-label>
+      <input matInput type="number" [(ngModel)]="price">
+      <span matSuffix>xeGld</span>
+    </mat-form-field>
 
 
 
 
-  <br><br>
-  <button mat-raised-button  color="primary"
-          mat-button class="large-button"
-          [disabled]="uri?.length==0 && file.length>0"
-          (click)="tokenizer()">
-    Fabriquer !
-  </button>
+    <br><br>
+    <button mat-raised-button  color="primary"
+            mat-button class="large-button"
+            [disabled]="uri?.length==0 && file.length>0"
+            (click)="tokenizer()">
+      Fabriquer !
+    </button>
   </div>
 
 </div>

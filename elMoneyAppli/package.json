@@ -1,11 +1,11 @@
 {
   "name": "el-money-appli",
-  "version": "0.0.132",
+  "version": "0.0.136",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "npm version patch && ng build --configuration=build --output-hashing none --baseHref=https://tf.f80.fr",
-    "prod": "npm version patch && ng build --configuration=production --output-hashing none --baseHref=https://tf.f80.fr",
+    "prod": "npm version patch && ng build --configuration=production --output-hashing=none --baseHref=https://tf.f80.fr",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

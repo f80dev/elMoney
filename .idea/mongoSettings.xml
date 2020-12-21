@@ -15,7 +15,6 @@
           <option name="sshTunnelingConfiguration">
             <SshTunnelingConfiguration />
           </option>
-          <option name="userDatabase" value="coinmaker" />
           <option name="username" value="admin" />
         </ServerConfiguration>
       </list>

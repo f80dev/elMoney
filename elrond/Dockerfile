@@ -14,12 +14,11 @@ USER erd
 
 RUN wget -O ~/erdpy-up.py https://raw.githubusercontent.com/ElrondNetwork/elrond-sdk/master/erdpy-up.py --no-check-certificate
 RUN python3 ~/erdpy-up.py
+#RUN source ~/elrondsdk/erdpy-activate
 
-RUN PATH=$PATH:/home/erd/elrondsdk/
-
-RUN pip install erdpy
-
+ENV PATH="/home/erd/elrondsdk/:${PATH}"
+#RUN pip install erdpy==1.0.0
 
 WORKDIR /home/erd/dev
 
-CMD ["bash"]
+CMD ["bash","source","/home/erd/elrondsdk/erdpy-activate"]

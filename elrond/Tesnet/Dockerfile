@@ -2,9 +2,14 @@
 #directement inspiré de https://github.com/erdDEVcode/erdnet/blob/master/Dockerfile
 
 FROM ubuntu:groovy
-#fabrication de l'image pour X86: docker build -t f80hub/elrond-testnet . & docker push f80hub/elrond-testnet:latest
+#fabrication de l'image pour X86: docker rm -f elrond-textnet & docker build -t f80hub/elrond-testnet . & docker push f80hub/elrond-testnet:latest
+
 #déploiement : docker rm -f elrond-testnet && docker pull f80hub/elrond-testnet:latest
-#execution : docker rm -f elrond-testnet && docker run --name elrond-testnet -p 7950:7950 -ti f80hub/elrond-testnet
+#déploiement : podman rm -f elrond-testnet && podman pull f80hub/elrond-testnet:latest
+
+#execution : docker rm -f elrond-testnet && docker run --name elrond-testnet -p 7950:7950 -d f80hub/elrond-testnet
+#execution : podman rm -f elrond-testnet && podman run --name elrond-testnet -p 7950:7950 -d f80hub/elrond-testnet
+
 #ligne de commande : docker rm -f elrond-testnet && docker run --name elrond-testnet -p 7950:7950 -ti f80hub/elrond-testnet bash
 
 #FROM arm32v7/ubuntu
@@ -20,7 +25,7 @@ USER erd
 RUN wget -O ~/erdpy-up.py https://raw.githubusercontent.com/ElrondNetwork/elrond-sdk/master/erdpy-up.py --no-check-certificate
 RUN python3 ~/erdpy-up.py
 
-RUN pip install erdpy
+RUN pip install erdpy==1.0.0
 
 RUN ~/elrondsdk/erdpy config set dependencies.elrond_proxy_go.tag master
 RUN ~/elrondsdk/erdpy config set dependencies.elrond_go.tag master
@@ -29,10 +34,10 @@ RUN ~/elrondsdk/erdpy config set chainID local-testnet
 RUN ~/elrondsdk/erdpy config set proxy http://0.0.0.0:7950
 
 RUN mkdir ~/sandbox
-RUN echo "[network]\nport_proxy=7950" > ~/sandbox/testnet.toml
+RUN echo "[network]\nport_proxy=7950\nchain_id=local-testnet" > ~/sandbox/testnet.toml
 
-WORKDIR /home/erd/sandbox
 EXPOSE 7950
+WORKDIR /home/erd/sandbox
 
 RUN echo "~/elrondsdk/erdpy testnet config\n~/elrondsdk/erdpy testnet start\n" > ~/sandbox/testnet.sh
 RUN chmod +x /home/erd/sandbox/testnet.sh

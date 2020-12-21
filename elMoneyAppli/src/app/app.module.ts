@@ -126,7 +126,8 @@ const config: SocketIoConfig = { url: environment.domain_server, options: {} };
     MatTabsModule
   ],
   providers: [
-    ApiService,TransPipe,
+    ApiService,
+    TransPipe,
     {
       provide: 'SocialAuthServiceConfig',
       useValue: {

@@ -4,7 +4,7 @@ import os
 import ssl
 import sys
 
-
+import ipfshttpclient
 from apscheduler.schedulers.background import BackgroundScheduler
 
 import yaml
@@ -20,10 +20,9 @@ from apiTools import create_app
 from dao import DAO
 from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, XGLD_FOR_NEWACCOUNT, \
     MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, MAIN_DEVISE, TESTNET_EXPLORER, \
-    ERC20_BYTECODE_PATH, NFT_CONTRACT, NFT_ADMIN, DEFAULT_UNITY_CONTRACT
+    ERC20_BYTECODE_PATH, NFT_CONTRACT, NFT_ADMIN, DEFAULT_UNITY_CONTRACT, IPFS_NODE
 from elrondTools import ElrondNet
-
-
+from ipfs import IPFS
 
 scheduler = BackgroundScheduler()
 
@@ -329,10 +328,17 @@ def mint(count:str,data:dict=None):
         log("Les données de fabrication sont " + data)
         data = json.loads(data)
 
+    if "file" in data:
+        client = IPFS(IPFS_NODE)
+        res = client.add(data["file"],data["filename"])
+        log("Transfert IPFS du fichier : https://ipfs.io/ipfs/"+res)
+        secret=res
+    else:
+        secret = data["secret"]
+
     owner = Account(pem_file=get_pem_file(data))
     nft_contract_owner=Account(pem_file="./PEM/"+NFT_ADMIN+".pem")
     uri=data["signature"]
-    secret=data["secret"]
     price = int(float(data["price"]) * 1e18)
     #TODO: ajouter ici un encodage du secret dont la clé est connu par le contrat
 
