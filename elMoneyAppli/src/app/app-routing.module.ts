@@ -35,6 +35,7 @@ const routes: Routes = [
    { path: 'faucet', component: FaucetComponent},
    { path: 'support', component: SupportComponent},
     { path: 'main', component: MainComponent},
+  { path: 'wallet', component: MainComponent},
       { path: 'contacts', component: ContactsComponent},
 ];
 

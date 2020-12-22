@@ -310,9 +310,10 @@ def buy_nft(token_id,price,data:dict=None):
 
     pem_file=get_pem_file(data)
     rc=bc.nft_buy(NFT_CONTRACT,pem_file,token_id,float(price))
-    send(socketio,"refresh_nft")
-    send(socketio,"refresh_balance",rc["sender"])
-    send(socketio, "refresh_balance", rc["receiver"])
+    if not rc is None:
+        send(socketio,"refresh_nft")
+        send(socketio,"refresh_balance",rc["sender"])
+        send(socketio, "refresh_balance", rc["receiver"])
     return jsonify(rc)
 
 

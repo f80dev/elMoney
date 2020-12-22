@@ -38,7 +38,6 @@ export class CreateComponent implements OnInit {
   }
 
   create() {
-
     if(this.email_confirm==""){
       showMessage(this,"Vous devez indiquer un email pour recevoir la confirmation");
       return;
@@ -60,7 +59,7 @@ export class CreateComponent implements OnInit {
       this.api.set_contract(r.contract);
       this.user.refresh_balance(()=>{
         showMessage(this,"Votre monnaie est maintenant disponible");
-        this._location.back();
+        this.router.navigate(["main"]);
       },()=>{
         showError(this);
       });

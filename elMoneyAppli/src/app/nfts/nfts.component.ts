@@ -78,7 +78,10 @@ export class NftsComponent implements OnInit {
     nft.message = "En cours d'ouverture";
     this.api._post("open_nft/" + nft.token_id + "/", "", this.user.pem).subscribe((r: any) => {
       nft.message = "";
+
       nft.open = r.response;
+      if(nft.open.length==46)nft.open="https://ipfs.io/ipfs/"+nft.open;
+
       showMessage(this, "Coût de la transaction: " + r.cost+" xEgld");
       this.user.refresh_balance(() => {});
     });

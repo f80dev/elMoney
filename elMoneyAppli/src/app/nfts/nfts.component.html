@@ -15,7 +15,8 @@
             <app-hourglass [message]="nft.message" fontsize="small"></app-hourglass>
           </div>
           <div *ngIf="nft.open?.length>0">
-            <strong>{{nft.open}}</strong>
+            <a *ngIf="nft.open.startsWith('http')" [href]="nft.open" target="_blank">Ouvrir le fichier</a>
+            <span *ngIf="!nft.open.startsWith('http')"><strong>{{nft.open}}</strong></span>
           </div>
         <app-tuto [if]="nft.state==1"
                   label="Vous pouvez ouvrir les tokens que vous posséder pour voir ce qu'ils contiennent. Vous pouvez également les remettre en vente ou les détruire."></app-tuto>

@@ -18,7 +18,8 @@ content:
     format: html
     content: "
       <p>
-      CoinMaker est à la fois un wallet et un outil de fabrication de monnaie.
+      {{appname}} est à la fois un wallet multi-monnaie, un outil de création de nouvelle monnaie, un outil de création de
+      token (Token non fongible) permettant de vendre des fichiers
       </p>
       "
 

@@ -21,12 +21,12 @@ MAIN_UNITY="TFC"
 MAIN_URL="https://tf.f80.fr/assets/cmk.html"
 TOTAL_DEFAULT_UNITY=1000000
 CREDIT_FOR_NEWACCOUNT=75
-DEFAULT_UNITY_CONTRACT="erd1qqqqqqqqqqqqqpgqj2z2vqeank9q2wejfj5f6krg6vtf5709d8ss29yzsj"
+DEFAULT_UNITY_CONTRACT="erd1qqqqqqqqqqqqqpgqll6ncfgjppe7gns40vq7xuq6wsvkfk6kd8ss8ujx5r"
 
 LIMIT_GAS=60000000
 
 
-NFT_CONTRACT="erd1qqqqqqqqqqqqqpgqcpnh6s5wl0aqg78vy2avkhkzvstyc62ed8ss9lk4l3"
+NFT_CONTRACT="erd1qqqqqqqqqqqqqpgqt5w9vlsdcmu5t5wvzdj8xnp42kqm4x3ud8ssrk9q8s"
 NFT_ADMIN="admin"
 IPFS_NODE="http://207.180.198.227:5001"
 
