@@ -4,25 +4,26 @@
   <br>
 
   <div style="width: 80%;text-align: center;margin-left:10%;">
-    <table><tr>
-      <td>
-    <button class="icon-button" mat-icon-button mat-raised-button
-            title="Recharger mon compte"
-            (click)="router.navigate(['faucet'])">
-      <mat-icon>forward</mat-icon>&nbsp;&nbsp;
-    </button>
-      </td>
-      <td>
+    <table><tr style="width: 100%;">
+
+      <td style="width: 60%;text-align: center;">
         <span style="font-size: xx-large;">{{user.gas/1e18 | number:'1.0-3'}}</span>&nbsp;
-    <small>xEgld</small>
+        <small>xEgld</small>
+      </td>
+
+      <td style="text-align: right">
+        <button mat-icon-button mat-raised-button class="icon-button"
+                title="Recharger mon compte"
+                *ngIf="user.gas/1e18<0.5"
+                (click)="router.navigate(['faucet'])">
+          <mat-icon>plus_one</mat-icon>
+        </button>
       </td>
     </tr></table>
 
   </div>
 
   <br>
-  <br>
-
 
   <a title="Wallet"
      routerLink="main"
@@ -66,9 +67,9 @@
     Fabriquer des tokens
   </a>
 
- <a title="Store des tokens"
+  <a title="Store des tokens"
      routerLink="store"
-      [queryParams]="{only_perso:false}"
+     [queryParams]="{only_perso:false}"
      mat-list-item
      id="cmdStore">
     <mat-icon>shopping_cart</mat-icon>&nbsp;
@@ -77,7 +78,7 @@
 
   <a title="Voir mes tokens"
      routerLink="nfts-perso"
-      [queryParams]="{only_perso:false}"
+     [queryParams]="{only_perso:false}"
      mat-list-item
      id="cmdPerso">
     <mat-icon>person</mat-icon>&nbsp;
@@ -86,7 +87,7 @@
 
   <a title="Permet de vérifier si un wallet est propriétaire de vos tokens fabriqués"
      routerLink="validate"
-      [queryParams]="{only_perso:false}"
+     [queryParams]="{only_perso:false}"
      mat-list-item
      id="cmdValidate">
     <mat-icon>checkmark</mat-icon>&nbsp;
@@ -108,7 +109,7 @@
      mat-list-item
      id="cmdRefund">
     <mat-icon>account_balance</mat-icon>&nbsp;
-      Recharger mon compte
+    Recharger mon compte
   </a>
 
   <br>

@@ -528,6 +528,15 @@ class ElrondNet:
         tx=self.execute(contract,user_from,"mint",arguments)
         return tx
 
+    def nft_transfer(self, contract, pem_file, token_id, dest):
+        _dest=Account(address=dest)
+        tr = self.execute(contract, pem_file,
+                          function="transfer",
+                          arguments=[token_id,"0x"+_dest.address.hex()],
+                          value=0)
+        return tr
+
+
 
     def nft_buy(self, contract, pem_file, token_id,price):
         value=int(1e18*price)
@@ -574,6 +583,10 @@ class ElrondNet:
         for i in range(0,len(rc),8):
             l.append(int.from_bytes(rc[i:i+8],"big"))
         return l
+
+
+
+
 
 
 

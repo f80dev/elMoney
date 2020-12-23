@@ -302,6 +302,21 @@ def sendtokenbyemail(dests:str):
 
 
 
+@app.route('/api/transfer_nft/<token_id>/<dest>/',methods=["POST"])
+def transfer_nft(token_id,dest,data:dict=None):
+    if data is None:
+        data = json.loads(str(request.data, encoding="utf-8"))
+
+    pem_file=get_pem_file(data)
+    rc=bc.nft_transfer(NFT_CONTRACT,pem_file,token_id,dest)
+    os.remove(pem_file)
+    if not rc is None:
+        send(socketio,"refresh_nft")
+        send(socketio,"refresh_balance",rc["sender"])
+        send(socketio, "refresh_balance", rc["receiver"])
+    return jsonify(rc)
+
+
 
 @app.route('/api/buy_nft/<token_id>/<price>/',methods=["POST"])
 def buy_nft(token_id,price,data:dict=None):
@@ -310,6 +325,7 @@ def buy_nft(token_id,price,data:dict=None):
 
     pem_file=get_pem_file(data)
     rc=bc.nft_buy(NFT_CONTRACT,pem_file,token_id,float(price))
+    os.remove(pem_file)
     if not rc is None:
         send(socketio,"refresh_nft")
         send(socketio,"refresh_balance",rc["sender"])
@@ -337,8 +353,10 @@ def mint(count:str,data:dict=None):
     else:
         secret = data["secret"]
 
-    owner = Account(pem_file=get_pem_file(data))
+    pem_file=get_pem_file(data)
+    owner = Account(pem_file=pem_file)
     nft_contract_owner=Account(pem_file="./PEM/"+NFT_ADMIN+".pem")
+
     uri=data["signature"]
     price = int(float(data["price"]) * 1e18)
     #TODO: ajouter ici un encodage du secret dont la clé est connu par le contrat
@@ -346,6 +364,9 @@ def mint(count:str,data:dict=None):
     arguments=[int(count), "0x"+owner.address.hex(),"0x"+uri.encode().hex(),"0x"+secret.encode().hex(),price]
     result=bc.mint(NFT_CONTRACT,nft_contract_owner,arguments)
     send(socketio, "refresh_nft")
+    send(socketio,"refresh_balance",owner.address.bech32())
+    os.remove(pem_file)
+
     return jsonify(result), 200
 
 
@@ -487,7 +508,7 @@ def getbalance(contract:str,addr:str):
 
     rc = bc.getBalance(contract,addr)
 
-    if rc is None:
+    if rc is None or "error" in rc:
         return jsonify({"error":"impossible d'évaluer la balance de "}),200
     else:
         log("Balance de "+addr+" à "+str(rc)+name.lower()+" pour le contrat "+bc.getExplorer(contract,"address"))

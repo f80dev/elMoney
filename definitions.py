@@ -26,7 +26,7 @@ DEFAULT_UNITY_CONTRACT="erd1qqqqqqqqqqqqqpgqll6ncfgjppe7gns40vq7xuq6wsvkfk6kd8ss
 LIMIT_GAS=60000000
 
 
-NFT_CONTRACT="erd1qqqqqqqqqqqqqpgqt5w9vlsdcmu5t5wvzdj8xnp42kqm4x3ud8ssrk9q8s"
+NFT_CONTRACT="erd1qqqqqqqqqqqqqpgqr3yt02u59g2hwptpeawd5z8vt8qete0sd8ss6x8cnu"
 NFT_ADMIN="admin"
 IPFS_NODE="http://207.180.198.227:5001"
 

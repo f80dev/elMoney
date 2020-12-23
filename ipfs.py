@@ -11,17 +11,17 @@ class IPFS:
 
     def add(self,body,filename):
         url=self.addr+"/api/v0/add/"
-        #url = self.addr + "/api/v0/files/write?create=true&arg=myfile.txt"
 
         f=open('./temp/'+filename, 'wb')
         f.write(base64.b64decode(body.split("base64,")[1]))
         f.close()
 
-        f = open('./temp/' + filename, 'r')
+        f = open('./temp/' + filename, 'rb')
         r = requests.post(url,files={'files': f})
         f.close()
 
         os.remove("./temp/"+filename)
         result=r.json()
+
         return result["Hash"]
 

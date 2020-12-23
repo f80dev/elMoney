@@ -5,6 +5,9 @@ import {$$, subscribe_socket} from "../tools";
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormControl} from "@angular/forms";
 import {Socket, SocketIoModule} from "ngx-socket-io";
+import {NewContactComponent} from "../new-contact/new-contact.component";
+import {ConfigService} from "../config.service";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-nfts-perso',
@@ -19,7 +22,9 @@ export class NftsPersoComponent implements OnInit {
   constructor(
     public routes:ActivatedRoute,
     public api:ApiService,
+    public config:ConfigService,
     public socket:Socket,
+    public dialog:MatDialog,
     public router:Router,
     public user:UserService,
   ) {
@@ -49,5 +54,24 @@ export class NftsPersoComponent implements OnInit {
         this.nfts[idx]=r;
       });
     }
+  }
+
+  transfer(nft:any){
+      let height='620px';
+      if(this.config.webcamsAvailable==0)height="350px";
+        this.dialog.open(NewContactComponent, {
+          position: {left: '10vw', top: '5vh'},
+          maxWidth: 450,
+          width: '80vw',height: height,
+          data:{}
+        }).afterClosed().subscribe((result:any) => {
+          if(result){
+            nft.message="En cours de transfert";
+            this.api._post("transfer_nft/"+nft.token_id+"/"+result.email+"/","",this.user.pem).subscribe(()=>{
+              nft.message="";
+              this.refresh();
+            });
+          }
+        });
   }
 }

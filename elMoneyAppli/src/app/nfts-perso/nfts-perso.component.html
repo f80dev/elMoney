@@ -2,7 +2,7 @@
   <app-tuto label="Consulter l'ensemble des tokens que vous avez achetés ou fabriqués"></app-tuto>
   <mat-tab-group animationDuration="1000ms" [selectedIndex]="selected.value">
     <mat-tab label="Les tokens possédés">
-      <app-nfts [user]="user" [nfts]="nfts[0]"></app-nfts>
+      <app-nfts [user]="user" [nfts]="nfts[0]" (transfer)="transfer($event)"></app-nfts>
 
       <br>
       <button mat-raised-button mat-button class="app-button"

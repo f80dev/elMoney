@@ -5,6 +5,7 @@ import {NgNavigatorShareService} from "ng-navigator-share";
 import {ClipboardService} from "ngx-clipboard";
 import {Router} from "@angular/router";
 import {ApiService} from "../api.service";
+import {NewContactComponent} from "../new-contact/new-contact.component";
 
 @Component({
   selector: 'app-nfts',
@@ -18,6 +19,7 @@ export class NftsComponent implements OnInit {
   @Input("nfts") nfts:any;
   @Output("refresh") onrefresh:EventEmitter<any>=new EventEmitter();
   @Output("buy") onbuy:EventEmitter<any>=new EventEmitter();
+  @Output("transfer") ontransfer:EventEmitter<any>=new EventEmitter();
 
 
   constructor(
@@ -77,6 +79,7 @@ export class NftsComponent implements OnInit {
   open(nft: any) {
     nft.message = "En cours d'ouverture";
     this.api._post("open_nft/" + nft.token_id + "/", "", this.user.pem).subscribe((r: any) => {
+      debugger
       nft.message = "";
 
       nft.open = r.response;
@@ -98,4 +101,7 @@ export class NftsComponent implements OnInit {
     });
   }
 
+  transfer(nft: any) {
+    this.ontransfer.emit(nft);
+  }
 }

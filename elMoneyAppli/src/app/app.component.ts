@@ -8,6 +8,7 @@ import {UserService} from "./user.service";
 import {MatSidenav} from "@angular/material/sidenav";
 import {Location} from "@angular/common";
 import {fromEvent, Observable,Subscription} from "rxjs";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-root',
@@ -30,6 +31,7 @@ export class AppComponent implements OnInit,OnDestroy {
   constructor(public config: ConfigService,
               public routes:ActivatedRoute,
               public router:Router,
+              public toast:MatSnackBar,
               public _location:Location,
               public user:UserService,
               public api:ApiService){
@@ -46,13 +48,16 @@ export class AppComponent implements OnInit,OnDestroy {
       let addr=this.routes.snapshot.queryParamMap.get("user");
       this.user.init(addr,JSON.parse(localStorage.getItem("pem")),
         (r)=> {
-        if(localStorage.getItem("last_screen"))
-          this.router.navigate([localStorage.getItem("last_screen")]);
-        else
-          this.router.navigate(["main"]);
+          if(localStorage.getItem("last_screen"))
+            this.router.navigate([localStorage.getItem("last_screen")]);
+          else
+            this.router.navigate(["main"]);
         },
-        (err)=>{this.router.navigate(["moneys"]);},
-        this
+        (err)=>{
+          $$("Evaluation de la balance impossible, on propose un changement de contrat");
+          showMessage(this,"Le compte est corrompu, changement de compte proposé");
+          this.router.navigate(["settings"]);
+        },
       );
     },()=>{
       this.message="";
