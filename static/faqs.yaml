@@ -19,7 +19,20 @@ content:
     content: "
       <p>
       {{appname}} est à la fois un wallet multi-monnaie, un outil de création de nouvelle monnaie, un outil de création de
-      token (Token non fongible) permettant de vendre des fichiers
+      token (Token non fongible) permettant de vendre des fichiers ou des secrets accessibles uniquement au propriétaire.
+      </p>
+      "
+
+  - index: technique_TF
+    title: Comment fonctionne {{appname}} ?
+    order: 1
+    format: html
+    content: "
+      <p>
+      Techniquement {{appname}} s'appuie sur 2 smartcontract déployés sur la blockchaine de test Elrond.<br>
+      Chaque monnaie repose sur un smartcontract respectant la norme ERC20.<br>
+      Les tokens reposent sur un smartcontract suivant la
+      norme ERC721 modifiée pour intégrer une logique de d'achat / vente via un prix fixé par le créateur (mineur) du token.
       </p>
       "
 

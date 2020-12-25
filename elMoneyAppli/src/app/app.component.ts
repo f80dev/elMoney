@@ -57,7 +57,7 @@ export class AppComponent implements OnInit,OnDestroy {
           $$("Evaluation de la balance impossible, on propose un changement de contrat");
           showMessage(this,"Le compte est corrompu, changement de compte proposé");
           this.router.navigate(["settings"]);
-        },
+        },this
       );
     },()=>{
       this.message="";
