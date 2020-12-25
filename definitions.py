@@ -21,7 +21,7 @@ MAIN_UNITY="TFC"
 MAIN_URL="https://tf.f80.fr/assets/cmk.html"
 TOTAL_DEFAULT_UNITY=1000000
 CREDIT_FOR_NEWACCOUNT=75
-DEFAULT_UNITY_CONTRACT="erd1qqqqqqqqqqqqqpgqll6ncfgjppe7gns40vq7xuq6wsvkfk6kd8ss8ujx5r"
+DEFAULT_UNITY_CONTRACT="erd1qqqqqqqqqqqqqpgqmv5ezenqwgexaaakn4ety5g2ncvjmhaqd8ssdy7eyr"
 
 LIMIT_GAS=60000000
 

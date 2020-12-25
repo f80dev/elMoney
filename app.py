@@ -4,11 +4,9 @@ import os
 import ssl
 import sys
 
-import ipfshttpclient
 from apscheduler.schedulers.background import BackgroundScheduler
 
 import yaml
-from bson import json_util
 from erdpy.accounts import Account
 
 from flask import  Response, request, jsonify
@@ -556,7 +554,7 @@ def new_account():
 @app.route('/api/moneys/')
 def getmoneys(addr:str=""):
     log("Récépuration de l'ensemble des monnaies pour "+addr)
-    return json_util.dumps(dao.get_moneys(addr,bc._proxy.url))
+    return jsonify(dao.get_moneys(addr, bc._proxy.url))
 
 
 
@@ -590,7 +588,7 @@ def getname(contract:str):
 
 
 if __name__ == '__main__':
-    _port=sys.argv[1]
+    _port=int(sys.argv[1])
     scheduler.start()
 
     if "debug" in sys.argv:
@@ -600,7 +598,6 @@ if __name__ == '__main__':
             context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
             context.load_cert_chain("/certs/fullchain.pem", "/certs/privkey.pem")
             socketio.run(app,host="0.0.0.0",  port=_port,debug=False, ssl_context=context)
-
         else:
             socketio.run(app,host="0.0.0.0",  port=_port,debug=False)
 

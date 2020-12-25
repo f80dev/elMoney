@@ -38,15 +38,17 @@ export class AppComponent implements OnInit,OnDestroy {
 
     this.appVersion=environment.appVersion;
     this.message="Connexion";
+    debugger
     this.config.init(()=>{
       this.message="";
       $$("Recherche du contrat à utiliser pour le device");
       this.api.init_contract(this.routes.snapshot.queryParamMap.get("contract"))
 
       $$("Initialisation de l'utilisateur")
-      //TODO: a remettre showMessage(this, "Sauvegarder votre clé privée dans un endroit sûr",5000, () => {this.router.navigate(["settings"]);}, "Enregistrer")
       let addr=this.routes.snapshot.queryParamMap.get("user");
-      this.user.init(addr,JSON.parse(localStorage.getItem("pem")),
+      let pem_key=localStorage.getItem("pem");
+      if(pem_key)pem_key=JSON.parse(pem_key);
+      this.user.init(addr,pem_key,
         (r)=> {
           if(localStorage.getItem("last_screen"))
             this.router.navigate([localStorage.getItem("last_screen")]);

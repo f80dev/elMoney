@@ -18,8 +18,26 @@ content:
     format: html
     content: "
       <p>
-      {{appname}} est à la fois un wallet multi-monnaie, un outil de création de nouvelle monnaie, un outil de création de
-      token (Token non fongible) permettant de vendre des fichiers ou des secrets accessibles uniquement au propriétaire.
+      {{appname}} est à la fois:
+      <ul>
+      <li>
+        un wallet multi-monnaies permettant le transfert de fond à vos contacts,
+      </li>
+      <li>
+        un outil de création de nouvelles monnaies (sur la base du protocol ERC20),
+      </li>
+      <li>
+        un outil de création de
+              token (Token non fongible) permettant de vendre des fichiers ou des secrets accessibles uniquement au propriétaire.
+      </li>
+      <li>
+        une marketplace de tokens à acheter
+      </li>
+      <li>
+        un système de contrôle de propriété des tokens (par exemple pour l'usage de token comme billet spectacle)
+      </li>
+
+      </ul>
       </p>
       "
 
@@ -32,7 +50,7 @@ content:
       Techniquement {{appname}} s'appuie sur 2 smartcontract déployés sur la blockchaine de test Elrond.<br>
       Chaque monnaie repose sur un smartcontract respectant la norme ERC20.<br>
       Les tokens reposent sur un smartcontract suivant la
-      norme ERC721 modifiée pour intégrer une logique de d'achat / vente via un prix fixé par le créateur (mineur) du token.
+      norme ERC721 modifiée pour intégrer une logique d'achat / vente via un prix fixé par le créateur (mineur) du token.
       </p>
       "
 
@@ -47,8 +65,10 @@ content:
       régler les frais de transactions du réseau
 
       <ul>
-        <li>un transfert coûte en moyenne 0.06 eGLD</li>
+        <li>un transfert coûte en moyenne 0.01 eGLD</li>
         <li>la création d'une monnaie coûte 0.05 eGLD</li>
+        <li>la création d'un token coûte 0.04 eGLD</li>
+        <li>l'ouverture d'un token ou sa mise en vente, coûte environ 0,01 eGld</li>
       </ul>
 
       </p>
@@ -114,6 +134,18 @@ content:
      </p>
      "
 
+  - index: ipfs
+    title: Ou sont conservé les fichiers de mes tokens ?
+    order: 3
+    format: html
+    content: "
+      <p>
+        Pour des raisons de coût, il est impossible de stoker un fichier dans la blockchain. Pour cela {{appname}} utilise
+        IPFS pour stocker un fichier sans divulger sont adresses de stockage et intégre le code d'accès du fichier dans
+        le token NFT. A l'ouverture d'un token, il est possible d'accèder directement au fichier.
+      </p>
+      "
+
 
   - index: futur
     title: Quelles sont les prochaines évolutions de {{appname}} ?
@@ -121,7 +153,7 @@ content:
     format: html
     content: "
       <p>
-      CoinMaKer va continuer de se développer pour intégrer notamment 
+      {{appname}} va continuer de se développer pour intégrer notamment
       La tokenisation de document (via la technologie des NFT)
       </p>
       "

@@ -42,7 +42,7 @@
   </mat-toolbar>
 
 <mat-drawer-container class="container" autosize>
-    <mat-drawer #drawer class="sidenav" [mode]="sidemenu_mode">
+    <mat-drawer #drawer class="sidenav" [mode]="sidemenu_mode" *ngIf="message.length==0">
       <app-sidemenu (click)="closeMenu()" (logout)="logout()">
       </app-sidemenu>
     </mat-drawer>
