@@ -11,7 +11,7 @@ export const environment = {
   domain_appli: "http://localhost:4200",
   appVersion: version,
   default_contract: "erd1qqqqqqqqqqqqqpgqeyayz09s2a4gnvcghdh9ma3he3j7cda0d8ss2apk2a",
-  transac_cost: 0.0001
+  transac_cost: 0.001
 };
 
 /*

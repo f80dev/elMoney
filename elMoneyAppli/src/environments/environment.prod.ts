@@ -8,5 +8,5 @@ export const environment = {
   domain_appli: "https://tf.f80.fr",
   appVersion: version,
   default_contract: "erd1qqqqqqqqqqqqqpgqeyayz09s2a4gnvcghdh9ma3he3j7cda0d8ss2apk2a",
-  transac_cost: 0.08
+  transac_cost: 0.001
 };
