@@ -480,12 +480,13 @@ class ElrondNet:
                     addr =_u.address.bech32()
 
                     state = int(token[64:66], 16)
+                    id=int(token[66:82], 16)
                     try:
-                        uri = str(bytearray.fromhex(token[66:]), "utf-8")
+                        uri = str(bytearray.fromhex(token[82:]), "utf-8")
                     except:
                         uri=""
 
-                    obj=dict({"token_id": index, "uri": uri, "price": price, "state": state,"owner":addr})
+                    obj=dict({"token_id": id, "uri": uri, "price": price, "state": state,"owner":addr})
                     if miner_filter!="0x0000000000000000000000000000000000000000000000000000000000000000":
                         obj["miner"]=addr
                     else:

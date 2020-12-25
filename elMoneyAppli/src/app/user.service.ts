@@ -142,7 +142,12 @@ export class UserService {
     localStorage.removeItem("contacts");
     localStorage.removeItem("email");
     localStorage.removeItem("pem");
+    localStorage.removeItem("contract")
+    localStorage.removeItem("last_to");
+    localStorage.removeItem("last_amount");
+    localStorage.removeItem("last_screen");
     window.location.href=environment.domain_appli;
+    window.location.reload();
   }
 
   get_gas() {

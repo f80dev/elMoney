@@ -6,18 +6,24 @@
               {{nft.uri}}
         </mat-card-title>
         <mat-card-subtitle>
-
         </mat-card-subtitle>
       </mat-card-header>
   <!--    <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">-->
       <mat-card-content style="min-height: 50px;text-align: center;">
-          <div *ngIf="nft.message?.length>0">
+
+        <div *ngIf="nft.state!=0 && nft.owner!=user.addr">
+          <img src="/assets/img/vendu.png" style="width:150px;">
+        </div>
+
+        <div *ngIf="nft.message?.length>0">
             <app-hourglass [message]="nft.message" fontsize="small"></app-hourglass>
           </div>
+
           <div *ngIf="nft.open?.length>0">
             <a *ngIf="nft.open.startsWith('http')" [href]="nft.open" target="_blank">Ouvrir le fichier</a>
             <span *ngIf="!nft.open.startsWith('http')"><strong>{{nft.open}}</strong></span>
           </div>
+
         <app-tuto [if]="nft.state==1"
                   label="Vous pouvez ouvrir les tokens que vous posséder pour voir ce qu'ils contiennent. Vous pouvez également les remettre en vente ou les détruire."></app-tuto>
       </mat-card-content>
