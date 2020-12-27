@@ -3,6 +3,8 @@ Interface avec la base de données
 """
 from datetime import datetime
 import pymongo
+
+from Tools import log
 from definitions import DB_SERVERS
 
 
@@ -51,7 +53,6 @@ class DAO:
 
 
     def get_moneys(self, addr,proxy):
-        #TODO: ajouter l'owner
         rc=list(self.db["moneys"].find(filter={"public": True,"proxy":proxy}))
         return rc
 

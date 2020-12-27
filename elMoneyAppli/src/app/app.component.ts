@@ -38,7 +38,6 @@ export class AppComponent implements OnInit,OnDestroy {
 
     this.appVersion=environment.appVersion;
     this.message="Connexion";
-    debugger
     this.config.init(()=>{
       this.message="";
       $$("Recherche du contrat à utiliser pour le device");

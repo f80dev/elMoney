@@ -19,9 +19,10 @@ XGLD_FOR_NEWACCOUNT="500000000000000000"
 #Description de la monnaie par defaut
 MAIN_UNITY="TFC"
 MAIN_URL="https://tf.f80.fr/assets/cmk.html"
-TOTAL_DEFAULT_UNITY=1000000
+TOTAL_DEFAULT_UNITY=10000000
 CREDIT_FOR_NEWACCOUNT=75
-DEFAULT_UNITY_CONTRACT="erd1qqqqqqqqqqqqqpgqmv5ezenqwgexaaakn4ety5g2ncvjmhaqd8ssdy7eyr"
+#DEFAULT_UNITY_CONTRACT="erd1qqqqqqqqqqqqqpgqmv5ezenqwgexaaakn4ety5g2ncvjmhaqd8ssdy7eyr"
+DEFAULT_UNITY_CONTRACT=""
 
 LIMIT_GAS=60000000
 

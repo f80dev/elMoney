@@ -100,11 +100,15 @@ class ElrondNet:
                 arguments=["0x"+user.address.hex()]
             )
         except Exception as inst:
-            log("Exception à l'interrogation du contrat : "+str(inst.args))
-            return {"error":str(inst.args),"number":0,"gas":gas}
+            log("Exception à l'interrogation du contrat : " + str(inst.args))
+            return {"error": str(inst.args), "number": 0, "gas": gas}
+
+        if rc is None:
+            log("Exception à l'interrogation du contrat")
+            return {"error":"reponse de balance","number":0,"gas":gas}
 
 
-        if rc[0] is None or rc[0]=="":
+        if len(rc)==0 or rc[0] is None or rc[0]=="":
             d={"number":0}
         else:
             d=json.loads(str(rc[0]).replace("'","\""))

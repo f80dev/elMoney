@@ -99,6 +99,23 @@ content:
       </p>
       "
 
+  - index: application
+    title: Quelles sont les applications possibles ?
+    order: 1
+    format: html
+    content: "
+      <p>
+      Les applications des tokens non fongibles sont très nombreuses,
+      <ul>
+      <li>Désigner le propriétaire d'une oeuvre en attachant le token au fichier de l'oeuvre</li>
+      <li>Implémenter un service de billeterie, chaque billet étant représenté par un token</li>
+      <li>Représenter des petites annonces, la version {{appname}} permettant en plus l'achat et la vente des informations contenus dans l'annonce</li>
+      </ul>
+      </p>
+      "
+
+
+
   - index: wallet_elrond
     title: Peut on voir et manipuler les monnaies {{appname}} avec le wallet Elrond ?
     order: 1
@@ -129,7 +146,7 @@ content:
     content: "
      <p>
      {{appname}} permet de retrouver tous les tokens que vous avez fabriqués en posséssion d'une personne donnée, identifiée par l'adresse
-     de son wallet. Ce système peut être très utile pour des tokens représentant des billets de concert et d'un événement quelconque.
+     de son wallet. Ce système peut être très utile pour des tokens représentant des billets de concert ou d'un événement quelconque.
      Dans ce cas on va juste chercher à contrôler la propriété du billet pour autoriser l'accès à l'événement.
      </p>
      "
@@ -140,8 +157,9 @@ content:
     format: html
     content: "
       <p>
-        Pour des raisons de coût, il est impossible de stoker un fichier dans la blockchain. Pour cela {{appname}} utilise
-        IPFS pour stocker un fichier sans divulger sont adresses de stockage et intégre le code d'accès du fichier dans
+        Pour des raisons de coût, il est impossible de stoker un fichier comme une image ou de la musique dans la blockchain.
+        Pour cela {{appname}} utilise
+        IPFS pour stocker le fichier sans divulger sont adresses de stockage et intégre le code d'accès du fichier dans
         le token NFT. A l'ouverture d'un token, il est possible d'accèder directement au fichier.
       </p>
       "

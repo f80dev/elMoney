@@ -221,6 +221,10 @@ def burn(token_id,data:dict=None):
     rc=bc.burn(NFT_CONTRACT,pem_file,token_id)
     os.remove(pem_file)
 
+    send(socketio,"refresh_nft",rc["sender"])
+
+    #TODO: ajouter la destruction du fichier
+
     return jsonify(rc)
 
 
@@ -442,6 +446,7 @@ def server_config():
             "proxy":bc._proxy.url,
             "nft_contract":NFT_CONTRACT
         }
+        log("Balance de la bank " + str(bank_balance))
         return jsonify(infos),200
     else:
         if "contract not found" in bank_balance["error"]:
@@ -538,7 +543,6 @@ def new_account():
     _a,pem=bc.create_account(XGLD_FOR_NEWACCOUNT+factor)
 
     log("Création du compte " + _a.address.bech32() +". Demande de transfert de la monnaie par defaut")
-
     rc=bc.transfer(app.config["unity"], bc.bank, _a, CREDIT_FOR_NEWACCOUNT)
 
     #TODO: private key a crypter
@@ -554,8 +558,8 @@ def new_account():
 @app.route('/api/moneys/')
 def getmoneys(addr:str=""):
     log("Récépuration de l'ensemble des monnaies pour "+addr)
-    return jsonify(dao.get_moneys(addr, bc._proxy.url))
-
+    rc=json.dumps(dao.get_moneys(addr, bc._proxy.url),default=str)
+    return rc
 
 
 #http://localhost:5555/api/raz/hh4271
