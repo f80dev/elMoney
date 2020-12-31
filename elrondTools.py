@@ -17,8 +17,8 @@ from erdpy.environments import TestnetEnvironment
 from erdpy.transactions import Transaction
 from erdpy.wallet import generate_pair,derive_keys
 
-from Tools import log, base_alphabet_to_10
-from definitions import TRANSACTION_EXPLORER, LIMIT_GAS
+from Tools import log, base_alphabet_to_10, str_to_hex
+from definitions import TRANSACTION_EXPLORER, LIMIT_GAS, ESDT_CONTRACT
 
 
 def toFiat(crypto,fiat=8):
@@ -80,6 +80,15 @@ class ElrondNet:
             type=type.replace("transactions","transaction")
             return self._proxy.url+"/"+type+"/"+tx
 
+
+    def getBalanceESDT(self, unity: str,_user:Account):
+        url=self._proxy.url + '/address/' + _user.address.bech32()+"/esdt/"+unity
+        log("Interrogation de la balance : "+url)
+        with urllib.request.urlopen(url) as response:
+            txt = response.read()
+        d=json.loads(txt)
+
+        return {"number":d["data"]["tokenData"]["balance"],"gas":0}
 
 
     def getBalance(self,contract,addr:str):
@@ -145,6 +154,38 @@ class ElrondNet:
 
 
 
+    def transferESDT(self,unity:str,user_from:Account,user_to:Account,amount:int):
+        """
+        Appel la fonction transfer du smart contrat, correpondant à un transfert de fond
+        :param _contract:
+        :param user_from:
+        :param user_to:
+        :param amount:
+        :return:
+        """
+        if user_from.address.bech32()==user_to.address.bech32():
+            return {"error":"Impossible de s'envoyer des fonds à soi-même"}
+
+        log("Transfert "+user_from.address.hex()+" -> "+user_to.address.hex()+" de "+str(amount)+" via le contrat "+_contract)
+        try:
+            tr=self.execute(ESDT_CONTRACT,
+                            _user=user_from,
+                            function="ESDTTransfer",
+                            arguments=["0x"+user_from.address.hex(),"0x"+user_to.address.hex(),amount]
+                            )
+
+            infos=self._proxy.get_account_balance(user_from.address)
+
+            return {
+                "from":user_from.address.bech32(),
+                "price":toFiat(tr["gasLimit"]),
+                "account":toFiat(infos),
+                "cost":tr["cost"],
+                "explorer":self.getExplorer(tr["txHash"],"address"),
+                "to":user_to.address.bech32()
+            }
+        except Exception as inst:
+            return {"error":str(inst.args)}
 
 
 
@@ -181,11 +222,52 @@ class ElrondNet:
             return {"error":str(inst.args)}
 
 
+    def deploy(self,pem_file,name,unity,amount,decimals=0x12,gas_limit=LIMIT_GAS):
+        """
+        Déployer une nouvelle monnaie, donc un conrat ERC20
+        :param pem_file: signature du propriétaire de la monnaie
+        :param unity: nom court de la monnaie
+        :param amount: montant de départ
+        :return:
+        """
+        log("Préparation du owner du contrat")
+        user = pem_file
+        if type(pem_file)==str:
+            user=Account(pem_file=pem_file)
+        user.sync_nonce(self._proxy)
+
+        arguments=[str_to_hex(name),str_to_hex(unity),hex(amount),hex(decimals)]
+        for opt in ["canFreeze","canWipe","canPause","canMint","canBurn"]:
+            arguments.append(str_to_hex(opt))
+            arguments.append(str_to_hex("true"))
+
+        #Voir documentation :
+        t=self.execute(ESDT_CONTRACT,
+                        user,"issue",
+                        value=5000000000000000000,
+                        arguments=arguments)
+
+        if t["status"]=="pending" or t["status"]=="fail":
+            log("Echec de déploiement")
+            return {"error":600,
+                    "message":t["scResults"][0]["returnMessage"],
+                    "cost": toFiat(gas_limit*config.DEFAULT_GAS_PRICE,1),
+                    "addr": user.address.bech32()
+                    }
+        else:
+            log("Déploiement du nouveau contrat réussi voir transaction "+self.getExplorer(t["blockHash"]))
+            return {
+                "cost": toFiat(gas_limit*config.DEFAULT_GAS_PRICE,1),
+                "owner":user.address.bech32()
+            }
 
 
 
 
-    def deploy(self,pem_file,unity,bytecode_file,amount,gas_limit=LIMIT_GAS):
+
+
+
+    def deploy_old(self,pem_file,unity,bytecode_file,amount,gas_limit=LIMIT_GAS):
         """
         Déployer une nouvelle monnaie, donc un conrat ERC20
         :param pem_file: signature du propriétaire de la monnaie

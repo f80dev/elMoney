@@ -98,7 +98,7 @@ export class AppComponent implements OnInit,OnDestroy {
   }
 
   closeMenu() {
-    if (this.innerWidth < 800)
+    if (this.innerWidth < 800 && this.drawer)
       this.drawer.close();
   }
 

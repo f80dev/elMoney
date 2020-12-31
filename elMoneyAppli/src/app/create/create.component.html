@@ -21,9 +21,16 @@
   </div>
 
 
-   <mat-form-field appearance="fill" class="app-field" style="max-width: 150px">
-    <mat-label>Nom de la monnaie</mat-label>
-    <input matInput type="text" maxlength="10" [(ngModel)]="name">
+   <mat-form-field appearance="fill" class="app-field" style="max-width: 320px">
+    <mat-label>Nom complet de la monnaie</mat-label>
+    <input matInput type="text" minlength="10" maxlength="20" [(ngModel)]="name" (focusout)="format_name()">
+     <mat-hint>de 10 (minimum) à 20 (maximum) caractères sans espace</mat-hint>
+   </mat-form-field>
+  &nbsp;&nbsp;
+    <br>
+  <mat-form-field appearance="fill" class="app-field" style="max-width: 100px">
+    <mat-label>Unité</mat-label>
+    <input matInput type="text" maxlength="8" [(ngModel)]="unity" (focusout)="upper_unity($event)">
      <mat-hint>Le nom abrégé de votre monnaie</mat-hint>
    </mat-form-field>
   &nbsp;&nbsp;

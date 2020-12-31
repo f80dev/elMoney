@@ -53,6 +53,23 @@ def base_alphabet_to_10(letters):
     )
 
 
+def str_to_hex(letters):
+    rc=""
+    for letter in letters:
+        rc=rc+hex(ord(letter))[2:]
+    return "0x"+rc
+
+
+def hex_to_str(number):
+    number=hex(number)[2:]
+    rc=""
+    for i in range(0,len(number),2):
+        rc=rc+chr(int(number[i:i+2],16))
+    return rc
+
+
+
+
 def open_html_file(name:str,replace=dict(),domain_appli=DOMAIN_APPLI):
     if not name.endswith("html"):name=name+".html"
     with open("./static/"+name, 'r', encoding='utf-8') as f: body = f.read()

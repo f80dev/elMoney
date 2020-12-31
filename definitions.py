@@ -13,19 +13,19 @@ NFT_BYTECODE_PATH="./static/deploy-nft.json"
 ADMIN_SALT="hh4271"
 
 #on alimente les nouveaux comptes en eGold pour leur permettre des transferts
-XGLD_FOR_NEWACCOUNT="500000000000000000"
-
+XGLD_FOR_NEWACCOUNT="6000000000000000000"
 
 #Description de la monnaie par defaut
 MAIN_UNITY="TFC"
+MAIN_NAME="TokenForgeCoin"
 MAIN_URL="https://tf.f80.fr/assets/cmk.html"
 TOTAL_DEFAULT_UNITY=10000000
 CREDIT_FOR_NEWACCOUNT=75
 #DEFAULT_UNITY_CONTRACT="erd1qqqqqqqqqqqqqpgqmv5ezenqwgexaaakn4ety5g2ncvjmhaqd8ssdy7eyr"
 DEFAULT_UNITY_CONTRACT=""
+ESDT_CONTRACT="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
 
 LIMIT_GAS=60000000
-
 
 NFT_CONTRACT="erd1qqqqqqqqqqqqqpgqfzslzch9hmn4nldsxn34mdk6mdwkyja5d8ss6wv2zm"
 NFT_ADMIN="admin"
@@ -43,6 +43,3 @@ DB_SERVERS=dict({
 })
 
 MAIN_DEVISE="xEGld"
-
-
-#

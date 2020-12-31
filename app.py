@@ -18,7 +18,7 @@ from apiTools import create_app
 from dao import DAO
 from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, XGLD_FOR_NEWACCOUNT, \
     MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, MAIN_DEVISE, TESTNET_EXPLORER, \
-    ERC20_BYTECODE_PATH, NFT_CONTRACT, NFT_ADMIN, DEFAULT_UNITY_CONTRACT, IPFS_NODE
+    ERC20_BYTECODE_PATH, NFT_CONTRACT, NFT_ADMIN, DEFAULT_UNITY_CONTRACT, IPFS_NODE, MAIN_NAME, ESDT_CONTRACT
 from elrondTools import ElrondNet
 from ipfs import IPFS
 
@@ -48,14 +48,17 @@ def init_erc20(bc,dao):
     if len(erc20) == 0:
         if len(DEFAULT_UNITY_CONTRACT)==0:
             log("Pas de monnaie dans la configuration, on en créé une")
-            rc=bc.deploy(bc.bank, MAIN_UNITY, ERC20_BYTECODE_PATH,TOTAL_DEFAULT_UNITY)
+            rc=bc.deploy(bc.bank, MAIN_NAME,MAIN_UNITY,TOTAL_DEFAULT_UNITY)
             if "error" in rc:
                 log("Impossible de déployer le contrat de la monnaie par defaut")
                 return None
         else:
             rc={"contract":DEFAULT_UNITY_CONTRACT}
 
-        erc20 = rc["contract"]
+        if not "contract" in rc:
+            erc20=ESDT_CONTRACT
+        else:
+            erc20 = rc["contract"]
 
     if dao.get_money_by_address(erc20) is None:
         dao.add_money(erc20,MAIN_UNITY,bc.bank.address.bech32(),True,True,MAIN_URL,bc._proxy.url)
@@ -384,9 +387,9 @@ def owner_of(contract,token):
 
 
 
-@app.route('/api/deploy/<unity>/<amount>/',methods=["POST"])
-def deploy(unity:str,amount:str,data:dict=None):
-    log("Appel du service de déploiement de contrat ERC20 pour "+unity)
+@app.route('/api/deploy/<name>/<unity>/<amount>/',methods=["POST"])
+def deploy(name:str,unity:str,amount:str,data:dict=None):
+    log("Appel du service de déploiement d'ESDT de nom="+name+" unite="+unity)
 
     if data is None:
        data = str(request.data, encoding="utf-8")
@@ -401,7 +404,7 @@ def deploy(unity:str,amount:str,data:dict=None):
 
     owner=Account(pem_file=pem_file)
     log("Compte propriétaire de la monnaie créé. Lancement du déploiement de "+unity)
-    result=bc.deploy(owner,unity,ERC20_BYTECODE_PATH,amount)
+    result=bc.deploy(owner,name,unity.upper(),int(amount),0x12)
     if "error" in result:
         log("Probléme de création de la monnaie "+str(result))
         return jsonify(result), 500
@@ -436,7 +439,7 @@ def server_config():
     else:
         _erc20 = _erc20["addr"]
 
-    bank_balance=bc.getBalance(_erc20,bc.bank.address.bech32())
+    bank_balance=bc.getBalanceESDT(MAIN_UNITY,bc.bank)
     if not "error" in bank_balance:
         infos={
             "bank_addr":bc.bank.address.bech32(),
@@ -509,7 +512,7 @@ def getbalance(contract:str,addr:str):
     name=_m["unity"]
     log("La monnaie correspondant à l'adresse "+addr+" est "+name)
 
-    rc = bc.getBalance(contract,addr)
+    rc = bc.getBalanceESDT(name,Account(address=addr))
 
     if rc is None or "error" in rc:
         return jsonify({"error":"impossible d'évaluer la balance de "}),200

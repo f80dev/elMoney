@@ -20,6 +20,7 @@ export class CreateComponent implements OnInit {
   url_transaction: string="";
   transferable=true;
   _public=true;
+  unity:string="";
   email_confirm: string="";
 
   constructor(public api:ApiService,
@@ -43,6 +44,11 @@ export class CreateComponent implements OnInit {
       return;
     }
 
+    if(this.name.length<10){
+      showMessage(this,"Le nom complet de la monnaie doit être plus long");
+      return;
+    }
+
     this.message="Déploiement du "+this.name+" en cours ...";
     let obj={
       pem:this.user.pem["pem"],
@@ -54,7 +60,7 @@ export class CreateComponent implements OnInit {
     };
     $$("Demande de déploiement de la monnaie "+this.name+" d'un montant initial de "+this.amount,obj);
 
-    this.api._post("/deploy/"+this.name+"/"+this.amount,"",obj,240).subscribe((r:any)=>{
+    this.api._post("/deploy/"+this.name+"/"+this.unity+"/"+this.amount,"",obj,240).subscribe((r:any)=>{
       this.message="";
       this.api.set_contract(r.contract);
       this.user.refresh_balance(()=>{
@@ -68,5 +74,17 @@ export class CreateComponent implements OnInit {
       $$("Erreur de fabrication de la monnaie",err);
       showMessage(this,err.error.message);
     });
+  }
+
+  upper_unity($event: KeyboardEvent) {
+    this.unity=this.unity.toUpperCase();
+  }
+
+  format_name() {
+    let rc="";
+    for(let word of this.name.split(" ")){
+      rc=rc+word.substr(0,1).toUpperCase()+word.substr(1,this.name.length);
+    }
+    this.name=rc;
   }
 }
