@@ -21,7 +21,7 @@ def create_app(unity):
     """
 
     if unity is None:
-        log("Aucune monnaie par defaut, On en lance pas le server")
+        log("Aucune monnaie par defaut, On ne peut pas lancer le server")
         return None
 
     app = Flask(__name__, static_folder="static", instance_relative_config=True)

@@ -1,5 +1,7 @@
 #Déployer le testnet elrond sur serveur linuex
 #directement inspiré de https://github.com/erdDEVcode/erdnet/blob/master/Dockerfile
+#voir la version d'erdpy sur
+#récupérer le dockerfile wget https://raw.githubusercontent.com/f80dev/elMoney/master/elrond/Tesnet/Dockerfile
 
 FROM ubuntu:groovy
 #fabrication de l'image pour X86:
@@ -23,25 +25,25 @@ RUN adduser --home /home/erd --shell /bin/bash --disabled-password erd
 RUN echo "erd     ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 USER erd
 
-#RUN wget -O ~/erdpy-up.py https://raw.githubusercontent.com/ElrondNetwork/elrond-sdk/master/erdpy-up.py --no-check-certificate
-#RUN python3 ~/erdpy-up.py
+RUN wget -O ~/erdpy-up.py https://raw.githubusercontent.com/ElrondNetwork/elrond-sdk/master/erdpy-up.py --no-check-certificate
+RUN python3 ~/erdpy-up.py
 RUN pip install erdpy==1.0.3
 ENV PATH="/home/erd/elrondsdk/:${PATH}"
 
-#RUN ~/elrondsdk/erdpy config set dependencies.elrond_proxy_go.tag master
-#RUN ~/elrondsdk/erdpy config set dependencies.elrond_go.tag master
-RUN ~/elrondsdk/erdpy testnet prerequisites
-RUN ~/elrondsdk/erdpy config set chainID local-testnet
-RUN ~/elrondsdk/erdpy config set proxy http://0.0.0.0:7950
+RUN erdpy config set dependencies.elrond_proxy_go.tag master
+RUN erdpy config set dependencies.elrond_go.tag master
+RUN erdpy testnet prerequisites
+RUN erdpy config set chainID "local-testnet"
+RUN erdpy config set proxy "http://0.0.0.0:7950"
 
 RUN mkdir ~/sandbox
-RUN echo "[network]\nport_proxy="7950"\nchain_id=local-testnet" > ~/sandbox/testnet.toml
+RUN echo "[network]\nport_proxy=7950\nchain_id=local-testnet" > ~/sandbox/testnet.toml
 
 EXPOSE 7950
 WORKDIR /home/erd/sandbox
 
 
-RUN echo "~/elrondsdk/erdpy testnet config\n~/elrondsdk/erdpy testnet start\n" > ~/sandbox/testnet.sh
+RUN echo "~/elrondsdk/python3 erdpy testnet config\n~/elrondsdk/python3 erdpy testnet start\n" > ~/sandbox/testnet.sh
 RUN chmod +x /home/erd/sandbox/testnet.sh
 
 COPY . /home/erd/sandbox

@@ -32,7 +32,7 @@ def init_erc20(bc,dao):
     """
     if bc.bank is None:
         log("Vous devez initialiser la bank pour créer le contrat de monnaie par défaut")
-        return False
+        return None
 
     _m=dao.get_money_by_name(MAIN_UNITY,bc._proxy.url)
     if not _m is None:
@@ -50,7 +50,7 @@ def init_erc20(bc,dao):
             log("Pas de monnaie dans la configuration, on en créé une")
             rc=bc.deploy(bc.bank, MAIN_NAME,MAIN_UNITY,TOTAL_DEFAULT_UNITY)
             if "error" in rc:
-                log("Impossible de déployer le contrat de la monnaie par defaut")
+                log("Impossible de déployer le contrat de la monnaie par defaut "+rc["message"])
                 return None
         else:
             rc={"contract":DEFAULT_UNITY_CONTRACT}
@@ -291,6 +291,7 @@ def test():
     return jsonify(rc),200
 
 
+
 #http://localhost:6660/api/test/
 @app.route('/api/sendtokenbyemail/<dests>/',methods=["POST"])
 def sendtokenbyemail(dests:str):
@@ -336,6 +337,7 @@ def buy_nft(token_id,price,data:dict=None):
         send(socketio,"refresh_balance",rc["sender"])
         send(socketio, "refresh_balance", rc["receiver"])
     return jsonify(rc)
+
 
 
 
