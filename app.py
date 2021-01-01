@@ -25,7 +25,6 @@ from ipfs import IPFS
 scheduler = BackgroundScheduler()
 
 
-
 def init_erc20(bc,dao):
     """
     :return: l'adresse de la monnaie par defaut

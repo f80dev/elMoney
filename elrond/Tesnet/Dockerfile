@@ -37,13 +37,12 @@ RUN erdpy config set chainID "local-testnet"
 RUN erdpy config set proxy "http://0.0.0.0:7950"
 
 RUN mkdir ~/sandbox
-RUN echo "[network]\nport_proxy=7950\nchain_id=local-testnet" > ~/sandbox/testnet.toml
+RUN echo "[network]\nport_proxy=7950" > ~/sandbox/testnet.toml
 
 EXPOSE 7950
 WORKDIR /home/erd/sandbox
 
-
-RUN echo "~/elrondsdk/python3 erdpy testnet config\n~/elrondsdk/python3 erdpy testnet start\n" > ~/sandbox/testnet.sh
+RUN echo "~/elrondsdk/erdpy testnet config\n~/elrondsdk/erdpy testnet start\n" > ~/sandbox/testnet.sh
 RUN chmod +x /home/erd/sandbox/testnet.sh
 
 COPY . /home/erd/sandbox
