@@ -40,6 +40,7 @@ export class SettingsComponent implements OnInit {
   raz_account() {
     this.dialog.open(PromptComponent, {
       width: '80%',
+      maxWidth: '300px',
       data: {
         title: 'Effacer votre compte',
         question: 'Si vous effacer votre compte, vous perdez immédiatement l\'ensemble de votre wallet. Etes vous sûr ?',

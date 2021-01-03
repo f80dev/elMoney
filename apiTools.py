@@ -11,7 +11,7 @@ from dao import DAO
 from definitions import DOMAIN_APPLI
 
 
-def create_app(unity):
+def create_app():
     """
     Initialisation de l'instance de serveur d'API
     :param test_config:
@@ -19,10 +19,6 @@ def create_app(unity):
     :param db_server:
     :return:
     """
-
-    if unity is None:
-        log("Aucune monnaie par defaut, On ne peut pas lancer le server")
-        return None
 
     app = Flask(__name__, static_folder="static", instance_relative_config=True)
     app.app_context().push()
@@ -37,7 +33,6 @@ def create_app(unity):
 
     app.config["DOMAIN_SERVER"] = domain_server
     app.config["DOMAIN_APPLI"] = domain_appli
-    app.config["unity"]=unity
 
     CORS(app)
 
@@ -59,7 +54,6 @@ def create_app(unity):
         "authentication_source": "admin"
     }
     app.config['JSON_AS_ASCII'] = False
-    app.config['tfc']=unity
 
 
     # ensure the instance folder exists

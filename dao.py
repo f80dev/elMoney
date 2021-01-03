@@ -21,11 +21,11 @@ class DAO:
         return rc
 
 
-    def add_money(self,address:str,unity:str,owner:str,_public:bool,transferable:bool,url="",proxy=""):
+    def add_money(self,idx:str,unity:str,owner:str,_public:bool,transferable:bool,url="",proxy=""):
         now=str(datetime.now().timestamp()*1000000)
         if not self.get_money_by_name(unity,proxy) is None:return None
         _money={
-            "addr":address,
+            "idx":idx,
             "unity":unity,
             "owner":owner,
             "public":_public,
@@ -38,8 +38,11 @@ class DAO:
 
 
 
-    def get_money_by_address(self, contract):
-        return self.db["moneys"].find_one(filter={"addr":contract})
+
+    def get_money_by_idx(self,idx):
+        return self.db["moneys"].find_one(filter={"idx":idx})
+
+
 
     def get_money_by_name(self, unity,proxy):
         """
@@ -67,8 +70,8 @@ class DAO:
         return self.db["contacts"].find_one({"email":email})
 
 
-    def del_contract(self, unity, proxy):
-        rc=self.db["moneys"].remove({"unity":unity,"proxy": proxy})
+    def del_contract(self, idx, proxy):
+        rc=self.db["moneys"].remove({"idx":idx,"proxy": proxy})
         pass
 
 

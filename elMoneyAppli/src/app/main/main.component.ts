@@ -59,7 +59,7 @@ export class MainComponent implements OnInit {
       })
     }
 
-    if(this.api.contract){
+    if(this.api.idx){
         this._max=this.user.balance;
         if(this.hand<0)this.hand=Math.round(this._max/10);
         this.temp_max=this._max;
@@ -84,7 +84,7 @@ export class MainComponent implements OnInit {
     let pem=JSON.stringify(this.user.pem);
     $$("Demande de transfert vers "+email+" avec pem="+pem);
     this.message=this.hand+" "+this.user.unity+" en cours de transfert à "+email;
-    this.api._post("transfer/" + this.api.contract + "/" +  email+ "/" + this.hand+"/"+this.user.unity+"/",
+    this.api._post("transfer/" + this.api.idx + "/" +  email+ "/" + this.hand+"/"+this.user.unity+"/",
         "",
         pem,180).subscribe((r: any) => {
           this.message="";

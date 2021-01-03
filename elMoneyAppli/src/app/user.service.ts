@@ -58,7 +58,7 @@ export class UserService {
       } else {
         this.balance=r.balance;
           this.gas=Number(r.gas);
-          this.unity=r.name;
+          this.unity=r.unity;
           if(func)func(r);
       }
         },(err)=>{
@@ -103,7 +103,7 @@ export class UserService {
   create_new_account(func,func_error){
     $$("Création d'un nouveau compte");
     this.api._get("new_account/").subscribe((r:any)=> {
-      this.api.set_contract(r["default_money"])
+      this.api.set_idx(r["default_money"])
       if (r.pem.length > 0) {
         $$("Initialisation du userService avec le fichier PEM correct");
         func(r)

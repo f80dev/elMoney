@@ -53,11 +53,14 @@ def base_alphabet_to_10(letters):
     )
 
 
-def str_to_hex(letters):
+def str_to_hex(letters,zerox=True):
     rc=""
     for letter in letters:
         rc=rc+hex(ord(letter))[2:]
-    return "0x"+rc
+    if zerox:
+        return "0x"+rc
+    else:
+        return rc
 
 
 def hex_to_str(number):

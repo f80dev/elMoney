@@ -62,7 +62,7 @@ export class CreateComponent implements OnInit {
 
     this.api._post("/deploy/"+this.name+"/"+this.unity+"/"+this.amount,"",obj,240).subscribe((r:any)=>{
       this.message="";
-      this.api.set_contract(r.contract);
+      this.api.set_idx(r.id);
       this.user.refresh_balance(()=>{
         showMessage(this,"Votre monnaie est maintenant disponible");
         this.router.navigate(["main"]);

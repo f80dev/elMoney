@@ -57,7 +57,7 @@
   <br>
   <br>
 
-  <div *ngIf="api.contract">
+  <div *ngIf="api.idx">
   ______
   <br><br><br>
 
@@ -69,7 +69,6 @@
 
   <br><br>
   <app-elrond-addr [label]="'Transactions sur \''+user.unity+'\''"
-                   [addr]="api.contract"
                    type="address">
   </app-elrond-addr>
 

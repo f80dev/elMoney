@@ -12,7 +12,7 @@ export class ApiService {
   user: any;
   token: string = null;
   token_expires: Date;
-  contract: string=environment.default_contract;
+  idx: string=environment.default_contract;
   connectionStatus: boolean=true;
 
 
@@ -82,16 +82,16 @@ export class ApiService {
   }
 
   balance(address_to: string) {
-    $$("Récupération du solde de "+address_to+" sur le contrat "+this.contract);
-    return this._get("/balance/"+this.contract+"/"+address_to+"/","");
+    $$("Récupération du solde de "+address_to+" sur le contrat "+this.idx);
+    return this._get("/balance/"+this.idx+"/"+address_to+"/","");
   }
 
 
-  set_contract(contract: string) {
-    if(contract && contract.length>0){
-      $$("Changement de contract : "+contract);
-      localStorage.setItem("contract",contract);
-      this.contract=contract;
+  set_idx(idx: string) {
+    if(idx && idx.length>0){
+      $$("Changement de contract : "+idx);
+      localStorage.setItem("idx",idx);
+      this.idx=idx;
       return true;
     } else {
       $$("Aucune monnaie sélectionné");
@@ -99,8 +99,8 @@ export class ApiService {
     }
   }
 
-  init_contract(contract: string) {
-    if(!contract)contract=localStorage.getItem("contract");
-    return this.set_contract(contract);
+  init_idx(idx: string) {
+    if(!idx)idx=localStorage.getItem("idx");
+    return this.set_idx(idx);
   }
 }

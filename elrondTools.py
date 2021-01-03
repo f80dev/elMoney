@@ -17,7 +17,7 @@ from erdpy.environments import TestnetEnvironment
 from erdpy.transactions import Transaction
 from erdpy.wallet import generate_pair,derive_keys
 
-from Tools import log, base_alphabet_to_10, str_to_hex
+from Tools import log, base_alphabet_to_10, str_to_hex, hex_to_str
 from definitions import TRANSACTION_EXPLORER, LIMIT_GAS, ESDT_CONTRACT
 
 
@@ -81,14 +81,54 @@ class ElrondNet:
             return self._proxy.url+"/"+type+"/"+tx
 
 
-    def getBalanceESDT(self, unity: str,_user:Account):
-        url=self._proxy.url + '/address/' + _user.address.bech32()+"/esdt/"+unity
+    def send_transaction(self,_sender:Account,_receiver:Account,_sign:Account,value:str,data:str):
+        """
+        Envoi d'une transaction signée
+        :param _sender:
+        :param _receiver:
+        :param _sign:
+        :param value:
+        :param data:
+        :return:
+        """
+        _sender.sync_nonce(self._proxy)
+        t = Transaction()
+        t.nonce = _sender.nonce
+        t.version = config.get_tx_version()
+        t.data = data
+        t.chainID = self._proxy.get_chain_id()
+        t.gasLimit = LIMIT_GAS
+        t.value = value.replace("0x","")
+        t.sender = _sender.address.bech32()
+        t.receiver = _receiver.address.bech32()
+        t.gasPrice = config.DEFAULT_GAS_PRICE
+
+        log("On signe la transaction avec le compte "+_sign.address.bech32())
+        t.sign(_sign)
+
+        try:
+            tx = t.send(self._proxy)
+            tr=self.wait_transaction(tx, not_equal="pending")
+            return tr
+        except Exception as inst:
+            return None
+
+
+
+
+    def getBalanceESDT(self, _user:Account,idx=None):
+        url=self._proxy.url + '/accounts/' + _user.address.bech32()+"/tokens"
         log("Interrogation de la balance : "+url)
         with urllib.request.urlopen(url) as response:
             txt = response.read()
         d=json.loads(txt)
-
-        return {"number":d["data"]["tokenData"]["balance"],"gas":0}
+        if not idx is None:
+            for token in d:
+                if token["tokenIdentifier"]==idx:
+                    return {"number":token["balance"],"gas":0,"token":token["tokenName"]}
+            return None
+        else:
+            return d
 
 
     def getBalance(self,contract,addr:str):
@@ -154,7 +194,7 @@ class ElrondNet:
 
 
 
-    def transferESDT(self,unity:str,user_from:Account,user_to:Account,amount:int):
+    def transferESDT(self,idx:str,user_from:Account,user_to:Account,amount:int):
         """
         Appel la fonction transfer du smart contrat, correpondant à un transfert de fond
         :param _contract:
@@ -166,14 +206,10 @@ class ElrondNet:
         if user_from.address.bech32()==user_to.address.bech32():
             return {"error":"Impossible de s'envoyer des fonds à soi-même"}
 
-        log("Transfert "+user_from.address.hex()+" -> "+user_to.address.hex()+" de "+str(amount)+" via le contrat "+_contract)
+        log("Transfert "+user_from.address.hex()+" -> "+user_to.address.hex()+" de "+str(amount)+" via ESDT")
+        data="ESDTTransfer@"+str_to_hex(idx,False)+"@"+str(hex(amount)).replace("0x","")
         try:
-            tr=self.execute(ESDT_CONTRACT,
-                            _user=user_from,
-                            function="ESDTTransfer",
-                            arguments=["0x"+user_from.address.hex(),"0x"+user_to.address.hex(),amount]
-                            )
-
+            tr=self.send_transaction(user_from,user_to,self.bank,"0",data)
             infos=self._proxy.get_account_balance(user_from.address)
 
             return {
@@ -186,6 +222,7 @@ class ElrondNet:
             }
         except Exception as inst:
             return {"error":str(inst.args)}
+
 
 
 
@@ -247,18 +284,30 @@ class ElrondNet:
                         value=5000000000000000000,
                         arguments=arguments)
 
-        if t["status"]=="pending" or t["status"]=="fail":
+        if t["status"]!="success":
             log("Echec de déploiement")
+            message=t["status"]
+            if "scResults" in t:message=t["scResults"][0]["returnMessage"]
+
             return {"error":600,
-                    "message":t["scResults"][0]["returnMessage"],
+                    "message":message,
                     "cost": toFiat(gas_limit*config.DEFAULT_GAS_PRICE,1),
                     "addr": user.address.bech32()
                     }
         else:
-            log("Déploiement du nouveau contrat réussi voir transaction "+self.getExplorer(t["blockHash"]))
+            log("Déploiement du nouveau contrat réussi voir transaction "+self.getExplorer(t["txHash"]))
+            id=""
+            for result in t["scResults"]:
+                id=str(base64.b64decode(result["data"]),"utf-8")
+                if id.startswith("ESDTTransfer"):
+                    id=id.split("@")[1]
+                    id=hex_to_str(int(id,16))
+                    break
             return {
+                "amount":amount,
                 "cost": toFiat(gas_limit*config.DEFAULT_GAS_PRICE,1),
-                "owner":user.address.bech32()
+                "owner":user.address.bech32(),
+                "id":id
             }
 
 
@@ -349,7 +398,7 @@ class ElrondNet:
 
 
 
-    def credit(self,_from:Account,_to:Account,amount:str):
+    def credit(self,_from:Account,_to:Account,value:str):
         """
         transfert des egold à un contrat
         :param _from:
@@ -357,29 +406,9 @@ class ElrondNet:
         :param amount:
         :return:
         """
-        _from.sync_nonce(self._proxy)
-        t = Transaction()
-        t.nonce = _from.nonce
-        t.version = config.get_tx_version()
-        t.data = "refund"
-        t.chainID = self._proxy.get_chain_id()
-        t.gasLimit = 50000000
-        t.value = amount
-        t.sender = _from.address.bech32()
-        t.receiver = _to.address.bech32()
-        t.gasPrice = config.DEFAULT_GAS_PRICE
+        return self.send_transaction(_from,_to,self.bank,value,"refund")
 
-        log("On signe la transaction avec le compte de la banque")
-        t.sign(self.bank)
 
-        try:
-            log("On envoi les fonds")
-            tx=t.send(self._proxy)
-            self.wait_transaction(tx,not_equal="pending")
-            log("Fond transférer, consulter la transaction "+self.getExplorer(tx))
-            return tx
-        except Exception as inst:
-            return None
 
 
     def wait_transaction(self, tx,field="status",equal="",not_equal="",timeout=30,interval=4):
@@ -456,9 +485,7 @@ class ElrondNet:
         if len(fund)>0:
             log("On transfere un peu d'eGold pour assurer les premiers transferts"+str(fund))
             tx=self.credit(self.bank,_u,fund)
-            if tx is None:log("Le compte "+_u.address.bech32()+" n'a pas recu d'eGld pour les transactions")
-
-        #if len(seed_phrase)==0 and name!="bank":os.remove(filename)
+            if tx["status"]!="Success":log("Le compte "+_u.address.bech32()+" n'a pas recu d'eGld pour les transactions")
 
         return _u,pem
 
@@ -488,6 +515,7 @@ class ElrondNet:
             return None
 
         tr = self.wait_transaction(tx, "status", not_equal="pending")
+        if not "txHash" in tr:tr["txHash"]=tx
         return tr
 
 

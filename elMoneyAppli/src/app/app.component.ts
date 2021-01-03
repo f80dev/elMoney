@@ -41,7 +41,7 @@ export class AppComponent implements OnInit,OnDestroy {
     this.config.init(()=>{
       this.message="";
       $$("Recherche du contrat à utiliser pour le device");
-      this.api.init_contract(this.routes.snapshot.queryParamMap.get("contract"))
+      this.api.init_idx(this.routes.snapshot.queryParamMap.get("contract"))
 
       $$("Initialisation de l'utilisateur")
       let addr=this.routes.snapshot.queryParamMap.get("user");
