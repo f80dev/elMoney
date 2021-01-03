@@ -108,6 +108,7 @@ class ElrondNet:
 
         try:
             tx = t.send(self._proxy)
+            log("Execution de la transaction "+self.getExplorer(tx))
             tr=self.wait_transaction(tx, not_equal="pending")
             return tr
         except Exception as inst:
@@ -125,8 +126,8 @@ class ElrondNet:
         if not idx is None:
             for token in d:
                 if token["tokenIdentifier"]==idx:
-                    return {"number":token["balance"],"gas":0,"token":token["tokenName"]}
-            return None
+                    return {"number":token["balance"],"gas":self._proxy.get_account_balance(_user.address),"token":token["tokenName"]}
+            return {"number":0,"gas":self._proxy.get_account_balance(_user.address)}
         else:
             return d
 
@@ -206,10 +207,10 @@ class ElrondNet:
         if user_from.address.bech32()==user_to.address.bech32():
             return {"error":"Impossible de s'envoyer des fonds à soi-même"}
 
-        log("Transfert "+user_from.address.hex()+" -> "+user_to.address.hex()+" de "+str(amount)+" via ESDT")
+        log("Transfert "+user_from.address.bech32()+" -> "+user_to.address.bech32()+" de "+str(amount)+" via ESDT")
         data="ESDTTransfer@"+str_to_hex(idx,False)+"@"+str(hex(amount)).replace("0x","")
         try:
-            tr=self.send_transaction(user_from,user_to,self.bank,"0",data)
+            tr=self.send_transaction(user_from,user_to,user_from,"0",data)
             infos=self._proxy.get_account_balance(user_from.address)
 
             return {

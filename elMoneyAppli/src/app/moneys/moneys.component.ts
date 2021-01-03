@@ -58,7 +58,6 @@ export class MoneysComponent implements OnInit {
   }
 
   select(_m:any){
-    debugger
     this.message="Changement de monnaie";
     this.api.set_idx(_m.idx);
     this.user.refresh_balance(()=>{

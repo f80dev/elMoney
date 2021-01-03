@@ -126,8 +126,8 @@ def refund(dest:str):
 
 
 #test http://localhost:5000/api/transfer
-@app.route('/api/transfer/<contract>/<dest>/<amount>/<unity>/',methods=["POST"])
-def transfer(contract:str,dest:str,amount:str,unity:str):
+@app.route('/api/transfer/<idx>/<dest>/<amount>/<unity>/',methods=["POST"])
+def transfer(idx:str,dest:str,amount:str,unity:str):
     addr_dest=None
     if "@" in dest:
         _u=dao.find_contact(dest)
@@ -143,7 +143,7 @@ def transfer(contract:str,dest:str,amount:str,unity:str):
             "amount": str(amount),
             "appname":APPNAME,
             "unity": unity.lower(),
-            "url_appli": DOMAIN_APPLI + "?contract=" + contract + "&user=" + _dest.address.bech32(),
+            "url_appli": DOMAIN_APPLI + "?contract=" + idx + "&user=" + _dest.address.bech32(),
             "signature": SIGNATURE
         }), _to=dest, subject="Transfert",attach=pem_dest)
         dao.add_contact(email=dest,addr=_dest.address.bech32())
@@ -171,7 +171,7 @@ def transfer(contract:str,dest:str,amount:str,unity:str):
             _from.private_key_seed=infos["private"]
 
     log("Appel du smartcontract")
-    rc=bc.transfer(contract,_from,_dest,int(amount))
+    rc=bc.transferESDT(idx,_from,_dest,int(amount))
 
     if not "error" in rc:
         log("Transfert effectué " + str(rc) + " programmation du rafraichissement des comptes")

@@ -102,7 +102,7 @@ export class UserService {
 
   create_new_account(func,func_error){
     $$("Création d'un nouveau compte");
-    this.api._get("new_account/").subscribe((r:any)=> {
+    this.api._get("new_account/","",120).subscribe((r:any)=> {
       this.api.set_idx(r["default_money"])
       if (r.pem.length > 0) {
         $$("Initialisation du userService avec le fichier PEM correct");
@@ -123,7 +123,10 @@ export class UserService {
       this.create_new_account((r)=>{
         if(vm)vm.message="";
         this.init(r.address, {pem:r.pem},func,func_error);},
-        ()=>{$$("Probleme de fabrication du nouveau compte")});
+        ()=>{
+          $$("Probleme de fabrication du nouveau compte")
+          func_error();
+        });
     } else {
       $$("Initialisation de l'utilisateur à l'adresse ",addr);
 

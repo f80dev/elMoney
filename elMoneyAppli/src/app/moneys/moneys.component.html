@@ -10,7 +10,7 @@
   <table *ngIf="message?.length==0" style="display: inline-block;">
     <tr *ngFor="let m of moneys" style="width: 90vw;">
       <td style="max-width:300px;text-align: center;font-size: large;width: 40%;">
-        <strong>{{m.unity}}</strong>
+        <strong [cdkCopyToClipboard]="m.idx" ngxClipboard style="cursor: pointer;">{{m.unity}}</strong>
       </td>
       <td style="text-align: right;width: min-content;">
         <button mat-button mat-raised-button
