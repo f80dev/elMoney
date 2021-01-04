@@ -21,13 +21,14 @@ class DAO:
         return rc
 
 
-    def add_money(self,idx:str,unity:str,owner:str,_public:bool,transferable:bool,url="",proxy=""):
+    def add_money(self,idx:str,unity:str,nbDecimals:int,owner:str,_public:bool,transferable:bool,url="",proxy=""):
         now=str(datetime.now().timestamp()*1000000)
         if not self.get_money_by_name(unity,proxy) is None:return None
         _money={
             "idx":idx,
             "unity":unity,
             "owner":owner,
+            "decimals":nbDecimals,
             "public":_public,
             "transferable":transferable,
             "url":url,

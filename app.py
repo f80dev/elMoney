@@ -17,7 +17,8 @@ from apiTools import create_app
 
 from dao import DAO
 from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, XGLD_FOR_NEWACCOUNT, \
-    MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, MAIN_DEVISE, NFT_CONTRACT, NFT_ADMIN, DEFAULT_UNITY_CONTRACT, IPFS_NODE, MAIN_NAME, ESDT_CONTRACT
+    MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, MAIN_DEVISE, NFT_CONTRACT, NFT_ADMIN, DEFAULT_UNITY_CONTRACT, IPFS_NODE, \
+    MAIN_NAME, ESDT_CONTRACT, MAIN_DECIMALS
 from elrondTools import ElrondNet
 from ipfs import IPFS
 
@@ -46,7 +47,7 @@ def init_default_money(bc,dao):
     if len(money_idx) == 0:
         if len(DEFAULT_UNITY_CONTRACT)==0:
             log("Pas de monnaie dans la configuration, on en créé une")
-            rc=bc.deploy(bc.bank, MAIN_NAME,MAIN_UNITY,TOTAL_DEFAULT_UNITY)
+            rc=bc.deploy(bc.bank, MAIN_NAME,MAIN_UNITY,TOTAL_DEFAULT_UNITY,MAIN_DECIMALS)
             if "error" in rc:
                 log("Impossible de déployer le contrat de la monnaie par defaut "+rc["message"])
                 return None
@@ -59,7 +60,7 @@ def init_default_money(bc,dao):
             money_idx = rc["contract"]
 
     if dao.get_money_by_idx(money_idx) is None:
-        dao.add_money(money_idx,MAIN_UNITY,bc.bank.address.bech32(),True,True,MAIN_URL,bc._proxy.url)
+        dao.add_money(money_idx,MAIN_UNITY,MAIN_DECIMALS,bc.bank.address.bech32(),True,True,MAIN_URL,bc._proxy.url)
 
     log("Contrat de la monnaie par defaut déployer à "+money_idx)
     return money_idx
@@ -128,6 +129,10 @@ def refund(dest:str):
 #test http://localhost:5000/api/transfer
 @app.route('/api/transfer/<idx>/<dest>/<amount>/<unity>/',methods=["POST"])
 def transfer(idx:str,dest:str,amount:str,unity:str):
+
+    _money=dao.get_money_by_idx(idx)
+    if _money is None:return "Monnaie inconnue",500
+
     addr_dest=None
     if "@" in dest:
         _u=dao.find_contact(dest)
@@ -388,8 +393,8 @@ def owner_of(contract,token):
 
 
 
-@app.route('/api/deploy/<name>/<unity>/<amount>/',methods=["POST"])
-def deploy(name:str,unity:str,amount:str,data:dict=None):
+@app.route('/api/deploy/<name>/<unity>/<nbdec>/<amount>/',methods=["POST"])
+def deploy(name:str,unity:str,nbdec:str,amount:str,data:dict=None):
     log("Appel du service de déploiement d'ESDT de nom="+name+" unite="+unity)
 
     if data is None:
@@ -405,7 +410,7 @@ def deploy(name:str,unity:str,amount:str,data:dict=None):
 
     owner=Account(pem_file=pem_file)
     log("Compte propriétaire de la monnaie créé. Lancement du déploiement de "+unity)
-    result=bc.deploy(owner,name,unity.upper(),int(amount),0x12)
+    result=bc.deploy(owner,name,unity.upper(),int(amount),int(nbdec))
 
     if "error" in result:
         log("Probléme de création de la monnaie "+str(result))
@@ -420,7 +425,7 @@ def deploy(name:str,unity:str,amount:str,data:dict=None):
             "amount":str(amount),
             "signature":SIGNATURE,
         }),_to=data["email"],subject="Confirmation de création du "+unity)
-        dao.add_money(result["id"],unity,result["owner"],data["public"],data["transferable"],data["url"],bc._proxy.url)
+        dao.add_money(result["id"],unity,int(nbdec),result["owner"],data["public"],data["transferable"],data["url"],bc._proxy.url)
 
     return jsonify(result),200
 

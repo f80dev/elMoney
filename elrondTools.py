@@ -208,7 +208,7 @@ class ElrondNet:
             return {"error":"Impossible de s'envoyer des fonds à soi-même"}
 
         log("Transfert "+user_from.address.bech32()+" -> "+user_to.address.bech32()+" de "+str(amount)+" via ESDT")
-        data="ESDTTransfer@"+str_to_hex(idx,False)+"@"+str(hex(amount)).replace("0x","")
+        data="ESDTTransfer@"+str_to_hex(idx,False)+"@"+str(hex(amount*10000000)).replace("0x","")
         try:
             tr=self.send_transaction(user_from,user_to,user_from,"0",data)
             infos=self._proxy.get_account_balance(user_from.address)
@@ -260,7 +260,7 @@ class ElrondNet:
             return {"error":str(inst.args)}
 
 
-    def deploy(self,pem_file,name,unity,amount,decimals=0x12,gas_limit=LIMIT_GAS):
+    def deploy(self,pem_file,name,unity,amount,decimals,gas_limit=LIMIT_GAS):
         """
         Déployer une nouvelle monnaie, donc un conrat ERC20
         :param pem_file: signature du propriétaire de la monnaie
@@ -288,7 +288,7 @@ class ElrondNet:
         if t["status"]!="success":
             log("Echec de déploiement")
             message=t["status"]
-            if "scResults" in t:message=t["scResults"][0]["returnMessage"]
+            if "scResults" in t and "returnMessage" in t["scResults"][0]:message=t["scResults"][0]["returnMessage"]
 
             return {"error":600,
                     "message":message,
