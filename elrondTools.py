@@ -208,7 +208,7 @@ class ElrondNet:
             return {"error":"Impossible de s'envoyer des fonds à soi-même"}
 
         log("Transfert "+user_from.address.bech32()+" -> "+user_to.address.bech32()+" de "+str(amount)+" via ESDT")
-        data="ESDTTransfer@"+str_to_hex(idx,False)+"@"+str(hex(amount*10000000)).replace("0x","")
+        data="ESDTTransfer@"+str_to_hex(idx,False)+"@"+str(hex(amount)).replace("0x","")
         try:
             tr=self.send_transaction(user_from,user_to,user_from,"0",data)
             infos=self._proxy.get_account_balance(user_from.address)
@@ -262,7 +262,8 @@ class ElrondNet:
 
     def deploy(self,pem_file,name,unity,amount,decimals,gas_limit=LIMIT_GAS):
         """
-        Déployer une nouvelle monnaie, donc un conrat ERC20
+        Déployer une nouvelle monnaie avec ESDT
+        exemple de data valable: issue@74657374546f6b656e@545443@d3c21bcecceda1000000@12@63616e55706772616465@66616c7365
         :param pem_file: signature du propriétaire de la monnaie
         :param unity: nom court de la monnaie
         :param amount: montant de départ
@@ -274,16 +275,21 @@ class ElrondNet:
             user=Account(pem_file=pem_file)
         user.sync_nonce(self._proxy)
 
+        amount=amount*(10**(decimals))
+        # exemple de data valable : issue@74657374546f6b656e@545443@d3c21bcecceda1000000@12@63616e55706772616465@66616c7365
         arguments=[str_to_hex(name),str_to_hex(unity),hex(amount),hex(decimals)]
-        for opt in ["canFreeze","canWipe","canPause","canMint","canBurn"]:
+        #for opt in ["canFreeze", "canWipe", "canPause", "canMint", "canBurn","canUpgrade","canChangeOwner"]:
+        for opt in ["canUpgrade"]:
             arguments.append(str_to_hex(opt))
-            arguments.append(str_to_hex("true"))
+            arguments.append(str_to_hex("false"))
 
         #Voir documentation :
         t=self.execute(ESDT_CONTRACT,
                         user,"issue",
                         value=5000000000000000000,
-                        arguments=arguments)
+                        arguments=arguments,
+                        gas_limit=LIMIT_GAS*2
+                        )
 
         if t["status"]!="success":
             log("Echec de déploiement")
@@ -492,7 +498,7 @@ class ElrondNet:
 
 
 
-    def execute(self,_contract,_user,function,arguments=[],value=None):
+    def execute(self,_contract,_user,function,arguments=[],value=None,gas_limit=LIMIT_GAS):
         if type(_contract) == str: _contract = SmartContract(_contract)
         if type(_user)==str:
             if ".pem" in _user:
@@ -506,7 +512,7 @@ class ElrondNet:
                                                    function=function,
                                                    arguments=arguments,
                                                    gas_price=config.DEFAULT_GAS_PRICE,
-                                                   gas_limit=LIMIT_GAS,
+                                                   gas_limit=gas_limit,
                                                    value=value,
                                                    chain=self.chain_id,
                                                    version=config.get_tx_version()

@@ -176,7 +176,7 @@ def transfer(idx:str,dest:str,amount:str,unity:str):
             _from.private_key_seed=infos["private"]
 
     log("Appel du smartcontract")
-    rc=bc.transferESDT(idx,_from,_dest,int(amount))
+    rc=bc.transferESDT(idx,_from,_dest,int(amount*(10**_money["decimals"])))
 
     if not "error" in rc:
         log("Transfert effectué " + str(rc) + " programmation du rafraichissement des comptes")
@@ -551,7 +551,7 @@ def new_account():
     #TODO: private key a crypter
 
     esdt:dict=dao.get_money_by_name(MAIN_UNITY,bc._proxy.url)
-    rc = bc.transferESDT(esdt["idx"], bc.bank, _a, CREDIT_FOR_NEWACCOUNT)
+    rc = bc.transferESDT(esdt["idx"], bc.bank, _a, CREDIT_FOR_NEWACCOUNT*(10**esdt["decimals"]))
 
     keys = {"public": _a.address.bech32(), "private": _a.private_key_seed}
     return jsonify({"address":_a.address.bech32(),"keys":keys,"pem":pem,

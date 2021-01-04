@@ -17,10 +17,10 @@ XGLD_FOR_NEWACCOUNT="6000000000000000000"
 
 #Description de la monnaie par defaut
 MAIN_UNITY="TFC"
-MAIN_DECIMALS=0x12
+MAIN_DECIMALS=18
 MAIN_NAME="TokenForgeCoin"
 MAIN_URL="https://tf.f80.fr/assets/cmk.html"
-TOTAL_DEFAULT_UNITY=100000
+TOTAL_DEFAULT_UNITY=1000000
 CREDIT_FOR_NEWACCOUNT=2000
 DEFAULT_UNITY_CONTRACT=""
 ESDT_CONTRACT="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
