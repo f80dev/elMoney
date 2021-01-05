@@ -8,7 +8,7 @@ from flask_socketio import SocketIO
 from Tools import log
 
 from dao import DAO
-from definitions import DOMAIN_APPLI
+from definitions import DOMAIN_APPLI, SECRET_KEY
 
 
 def create_app():
@@ -33,13 +33,15 @@ def create_app():
 
     app.config["DOMAIN_SERVER"] = domain_server
     app.config["DOMAIN_APPLI"] = domain_appli
+    app.config['SECRET_KEY'] = SECRET_KEY
 
-    CORS(app)
-
+    #voir https://flask-socketio.readthedocs.io/en/latest/
     socketio = SocketIO(app,
                         cors_allowed_origins="*",
                         logger=True,
                         ping_interval=500)
+
+    CORS(app)
 
     app.logger.info("Ouverture de l'application")
     app.logger.setLevel(8)

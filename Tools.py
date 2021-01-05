@@ -4,7 +4,6 @@ from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from pathlib import Path
 
 from definitions import SMTP_SERVER, USERNAME, PASSWORD, DOMAIN_APPLI
 
@@ -113,7 +112,6 @@ def open_html_file(name:str,replace=dict(),domain_appli=DOMAIN_APPLI):
     #     body=body.replace("{{faq:"+index_faq+"}}",faq)
 
     return body
-
 
 
 

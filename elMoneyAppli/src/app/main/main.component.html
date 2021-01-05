@@ -126,6 +126,7 @@
   <app-account [solde]="user.balance"
                title="La somme disponible dans votre wallet (de la monnaie sélectionnée)"
                fontsize="4em"
+               [decimals]="4"
                (change)="update_account()"
                [unity]="user.unity">
   </app-account>

@@ -3,6 +3,8 @@ PASSWORD="Hh42714280"
 SMTP_SERVER="smtp.ionos.fr"
 IMAP_SERVER="imap.ionos.fr"
 
+SECRET_KEY="hh4271"
+
 APPNAME="TokenForge"
 
 #DOMAIN_APPLI="http://localhost:4200"
