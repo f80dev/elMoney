@@ -117,7 +117,7 @@ class ElrondNet:
 
 
 
-    def getBalanceESDT(self, _user:Account,idx=None):
+    def getBalanceESDT(self, _user:Account,decimals=18,idx=None):
         url=self._proxy.url + '/accounts/' + _user.address.bech32()+"/tokens"
         log("Interrogation de la balance : "+url)
         with urllib.request.urlopen(url) as response:
@@ -126,7 +126,11 @@ class ElrondNet:
         if not idx is None:
             for token in d:
                 if token["tokenIdentifier"]==idx:
-                    return {"number":token["balance"],"gas":self._proxy.get_account_balance(_user.address),"token":token["tokenName"]}
+                    return {
+                        "number":float(token["balance"])/(10**decimals),
+                        "gas":self._proxy.get_account_balance(_user.address),
+                        "token":token["tokenName"]
+                    }
             return {"number":0,"gas":self._proxy.get_account_balance(_user.address)}
         else:
             return d
@@ -195,7 +199,7 @@ class ElrondNet:
 
 
 
-    def transferESDT(self,idx:str,user_from:Account,user_to:Account,amount:int):
+    def transferESDT(self,idx:str,user_from:Account,user_to:Account,amount:float):
         """
         Appel la fonction transfer du smart contrat, correpondant à un transfert de fond
         :param _contract:

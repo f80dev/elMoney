@@ -35,11 +35,12 @@ def init_default_money(bc,dao):
 
     _m=dao.get_money_by_name(MAIN_UNITY,bc._proxy.url)
     if not _m is None:
-        _unity=bc.getBalanceESDT(bc.bank,_m["idx"])
+        _unity=bc.getBalanceESDT(bc.bank,idx=_m["idx"],decimals=_m["decimals"])
         if _unity is None:
             log("Le contrat de "+MAIN_UNITY+" n'est pas valable")
             money_idx=""
         else:
+            log("Balance de la bank "+str(_unity))
             money_idx = _m["idx"]
     else:
         money_idx = ""
@@ -176,7 +177,7 @@ def transfer(idx:str,dest:str,amount:str,unity:str):
             _from.private_key_seed=infos["private"]
 
     log("Appel du smartcontract")
-    rc=bc.transferESDT(idx,_from,_dest,int(amount*(10**_money["decimals"])))
+    rc=bc.transferESDT(idx,_from,_dest,int(amount)*(10**_money["decimals"]))
 
     if not "error" in rc:
         log("Transfert effectué " + str(rc) + " programmation du rafraichissement des comptes")
@@ -437,31 +438,32 @@ def deploy(name:str,unity:str,nbdec:str,amount:str,data:dict=None):
 @app.route('/api/server_config/')
 def server_config():
     log("Récupération de la configuration du server avec la bank "+bc.bank.address.bech32())
-
+    decimals=MAIN_DECIMALS
     _erc20=dao.get_money_by_name(MAIN_UNITY,bc._proxy.url)
-    if _erc20 is None:
-        _erc20=MAIN_UNITY
+    if not _erc20 is None:
+        idx = _erc20["idx"]
+        decimals=_erc20["decimals"]
+
+        bank_balance=bc.getBalanceESDT(bc.bank,idx=_erc20["idx"],decimals=_erc20["decimals"])
+        if not bank_balance is None:
+            infos={
+                "bank_addr":bc.bank.address.bech32(),
+                "bank_esdt_ref":_erc20["idx"],
+                "bank_esdt":bank_balance["number"],
+                "bank_gas": bank_balance["gas"],
+                "default_money":MAIN_UNITY,
+                "proxy":bc._proxy.url,
+                "nft_contract":NFT_CONTRACT
+            }
+            log("Balance de la bank " + str(bank_balance))
+            return jsonify(infos),200
+
+    else:
         log("Pas de monnaie disponible, on charge celle du fichier de config " + str(_erc20))
-    else:
-        _erc20 = _erc20["idx"]
 
-    bank_balance=bc.getBalanceESDT(bc.bank,_erc20)
-    if not bank_balance is None:
-        infos={
-            "bank_addr":bc.bank.address.bech32(),
-            "bank_erc20":bank_balance["number"],
-            "bank_gas": bank_balance["gas"],
-            "default_money":MAIN_UNITY,
-            "proxy":bc._proxy.url,
-            "nft_contract":NFT_CONTRACT
-        }
-        log("Balance de la bank " + str(bank_balance))
-        return jsonify(infos),200
-    else:
-        dao.del_contract(_erc20,bc._proxy.url)
-        log("Impossible de récupérer la balance de la banque")
-        return Response("Probleme avec la bank",500)
 
+    log("Impossible de récupérer la balance de la banque")
+    return Response("Probleme avec la bank",500)
 
 
 @app.route('/api/contacts/<addr>/')
@@ -513,7 +515,7 @@ def getbalance(idx:str,addr:str):
     if _m is None:
         return jsonify({"error":"Pas de money correspondante à l'idx "+idx}), 200
 
-    rc = bc.getBalanceESDT(Account(address=addr),_m["idx"])
+    rc = bc.getBalanceESDT(Account(address=addr),idx=_m["idx"],decimals=_m["decimals"])
 
     if rc is None or "error" in rc:
         return jsonify({"error":"impossible d'évaluer la balance de "}),200
@@ -536,8 +538,6 @@ def getyaml(name):
     f=open("./static/"+name+".yaml","r",encoding="utf-8")
     rc=yaml.safe_load(f.read())
     return jsonify(rc),200
-
-
 
 
 @app.route('/api/new_account/')

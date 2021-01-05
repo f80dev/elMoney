@@ -27,8 +27,9 @@ USER erd
 
 RUN wget -O ~/erdpy-up.py https://raw.githubusercontent.com/ElrondNetwork/elrond-sdk/master/erdpy-up.py --no-check-certificate
 RUN python3 ~/erdpy-up.py
-RUN pip install erdpy==1.0.3
 ENV PATH="/home/erd/elrondsdk/:${PATH}"
+RUN pip install erdpy==1.0.3
+
 
 RUN erdpy config set dependencies.elrond_proxy_go.tag master
 RUN erdpy config set dependencies.elrond_go.tag master

@@ -60,7 +60,7 @@ export class CreateComponent implements OnInit {
     };
     $$("Demande de déploiement de la monnaie "+this.name+" d'un montant initial de "+this.amount,obj);
 
-    this.api._post("/deploy/"+this.name+"/"+this.unity+"/"+this.amount,"",obj,240).subscribe((r:any)=>{
+    this.api._post("/deploy/"+this.name+"/"+this.unity+"/18/"+this.amount,"",obj,240).subscribe((r:any)=>{
       this.message="";
       this.api.set_idx(r.id);
       this.user.refresh_balance(()=>{

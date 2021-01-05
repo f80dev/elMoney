@@ -36,7 +36,10 @@ def create_app():
 
     CORS(app)
 
-    socketio = SocketIO(app, cors_allowed_origins="*", logger=False,ping_interval=50)
+    socketio = SocketIO(app,
+                        cors_allowed_origins="*",
+                        logger=True,
+                        ping_interval=500)
 
     app.logger.info("Ouverture de l'application")
     app.logger.setLevel(8)

@@ -234,6 +234,7 @@ export function isNull(x:Object) {
 export function subscribe_socket(vm:any,event_name:string,func=null){
   if(vm.socket!=null){
     $$("Installation de la socket pour l'event "+event_name);
+    debugger
     vm.socket.on(event_name, (data: any) => {
       if (data.to == localStorage.getItem("addr") || data.to=="*") {
         $$("Réception de "+event_name+" avec data=",data);
@@ -246,12 +247,10 @@ export function subscribe_socket(vm:any,event_name:string,func=null){
             func(data);
           }
         },500);
-
       }
     });
   } else {
     $$("Impossibilité d'installer la socket pour "+event_name);
-
   }
 }
 
