@@ -550,28 +550,16 @@ class ElrondNet:
                 log("Essai "+str(i)+" Impossible d'executer "+function_name+"("+str(arguments)+") -> ")
                 log(str(inst.args))
 
-        if d is None: return None
+        return d
 
 
-        if len(d)>0:
-            if isnumber:
-                return d[0].number
-
-            if type(d[0])==str:
-                return d[0]
-
-            if len(d[0].base64)>0:
-                val = d[0].base64
-                rc=base64.b64decode(val)
-                return rc
-
-        return None
 
 
 
     def owner_of(self, contract,token):
         lst = self.query(SmartContract(address=contract), "tokenOwner",arguments=[token])
         return lst
+
 
 
 
@@ -589,47 +577,52 @@ class ElrondNet:
         else:
             miner_filter="0x"+str(Account(address=miner_filter).address.hex())
 
-        tokens = self.query(_contract, "tokens", arguments=[0xAA,0xFF,owner_filter,miner_filter],isnumber=False,n_try=1)
+        tokens = self.query(_contract, "tokens", arguments=[owner_filter,miner_filter],isnumber=True,n_try=1)
 
         if not tokens is None and len(tokens)>0:
-            tokens=tokens.hex()
-            index=0
-            for token in tokens.split("ffffffff"):
-                if len(token)>10:
-                    hexprice = token.split("aaaaaaaa")[0]
-                    i = 0
-                    while hexprice[i] == "0": i = i + 1
-                    if len(hexprice)>i+2:
-                        price = int(hexprice[i + 2:], 16)/1e18
-                    else:
-                        price=0
+            tokens=tokens[0].hex
+            index=8
 
-                    token = token.split("aaaaaaaa")[1]
+            while index<len(tokens):
+                uri_len=int(tokens[index:index + 8], 16)*2
 
-                    _u=SmartContract(address=token[0:64])
-                    addr =_u.address.bech32()
+                index=index+8
+                price = int(tokens[index:index+20], 16) / 1e18
 
-                    state = int(token[64:66], 16)
-                    id=int(token[66:82], 16)
-                    try:
-                        uri = str(bytearray.fromhex(token[82:]), "utf-8")
-                    except:
-                        uri=""
+                index=index+20
+                _u = SmartContract(address=tokens[index:index+64])
+                addr = _u.address.bech32()
 
-                    obj=dict({"token_id": id, "uri": uri, "price": price, "state": state,"owner":addr})
-                    if miner_filter!="0x0000000000000000000000000000000000000000000000000000000000000000":
-                        obj["miner"]=addr
-                    else:
-                        obj["miner"] = ""
+                index=index+64
+                state = int(tokens[index:index+2], 16)
 
-                    obj["open"]=""
-                    obj["message"]=""
+                index = index + 2
+                id=int(tokens[index:index+16], 16)
 
-                    rc.append(obj)
-                    index=index+1
+                index=index+16
+                try:
+                    uri:str = str(bytearray.fromhex(tokens[index:index+uri_len]), "utf-8")
+                except:
+                    uri=""
+
+                index=index+uri_len
+
+                obj=dict({"token_id": id, "uri": uri, "price": price, "state": state,"owner":addr})
+                if miner_filter!="0x0000000000000000000000000000000000000000000000000000000000000000":
+                    obj["miner"]=addr
+                else:
+                    obj["miner"] = ""
+
+                obj["open"]=""
+                obj["message"]=""
+
+                rc.append(obj)
+
 
         rc=sorted(rc,key=lambda i: i["token_id"],reverse=True)
         return rc
+
+
 
 
     def evalprice(self,sender_addr,receiver_addr,value=0,data="exemplededata"):

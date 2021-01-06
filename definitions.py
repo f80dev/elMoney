@@ -29,7 +29,7 @@ ESDT_CONTRACT="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
 
 LIMIT_GAS=60000000
 
-NFT_CONTRACT="erd1qqqqqqqqqqqqqpgqxmku8097fkjpk960pye7tu3mlzuptpjfd8ss4u4fvh"
+NFT_CONTRACT="erd1qqqqqqqqqqqqqpgqgm4p40ems8d3773mxzu73uapdyly5utyd8ss0k9ad3"
 NFT_ADMIN="admin"
 IPFS_NODE="http://207.180.198.227:5001"
 

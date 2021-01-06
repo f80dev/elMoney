@@ -7,7 +7,8 @@
 <div class="mainform">
 
   <h2>Fabriquer vos propres token</h2>
-
+  <app-tuto [if]="file.length>0"
+            label="Le fichier est stocké dans le réseau IPFS de façon totalement sécurisé. Seul la clé permettant de le reconstituer est embarqué dans le token"></app-tuto>
   <app-hourglass [message]="message"></app-hourglass>
 
   <div *ngIf="message.length==0" style="width:100%;">
@@ -27,16 +28,14 @@
           Importer un fichier
         </button>
         <br>
+        <span *ngIf="file.length>0">'{{filename}}' est caché dans votre token</span>
 
-        <span *ngIf="file.length>0">'{{filename}}' empaqueté</span>
-        <br>
-
-        <strong>ou</strong>
+        <strong *ngIf="file.length==0">ou</strong>
 
         <br>
 
         <mat-form-field appearance="fill" class="app-field" *ngIf="file.length==0">
-          <mat-label>Secret à embarquer dans le token</mat-label>
+          <mat-label>Ecrire un secret</mat-label>
           <input matInput type="text" maxlength="200" [(ngModel)]="secret" [ngModelOptions]="{standalone: true}">
           <mat-hint>un mot de passe, une adresse internet qui ne sera accessible qu'au propriétaire</mat-hint>
         </mat-form-field>
