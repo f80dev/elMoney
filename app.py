@@ -563,8 +563,17 @@ def new_account():
 @app.route('/api/moneys/')
 def getmoneys(addr:str=""):
     log("Récépuration de l'ensemble des monnaies pour "+addr)
-    rc=json.dumps(dao.get_moneys(addr, bc._proxy.url),default=str)
-    return rc
+    #rc=json.dumps(dao.get_moneys(addr, bc._proxy.url),default=str)
+    rc=list()
+    moneys=bc.getBalanceESDT(Account(address=addr))
+    for money in moneys:
+        rc.append({
+            "idx":money["tokenIdentifier"],
+            "unity":money["tokenIdentifier"].split("-")[0],
+            "balance":int(money["balance"])/(10**money["numDecimals"]),
+            "name":money["tokenName"]
+        })
+    return jsonify(rc)
 
 
 #http://localhost:5555/api/raz/hh4271

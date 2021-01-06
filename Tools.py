@@ -56,10 +56,23 @@ def str_to_hex(letters,zerox=True):
     rc=""
     for letter in letters:
         rc=rc+hex(ord(letter))[2:]
+
+    if len(rc) % 2==1:rc="0"+rc
+
     if zerox:
         return "0x"+rc
     else:
         return rc
+
+
+def nbr_to_hex(number,zerox=True):
+    rc=hex(number)
+    if len(rc) % 2 ==1:rc=rc.replace("0x","0x0")
+
+    if zerox:
+        return rc
+    else:
+        return rc.replace("0x","")
 
 
 def hex_to_str(number):

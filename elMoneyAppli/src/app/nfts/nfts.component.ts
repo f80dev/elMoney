@@ -79,7 +79,7 @@ export class NftsComponent implements OnInit {
   open(nft: any) {
     nft.message = "En cours d'ouverture";
     this.api._post("open_nft/" + nft.token_id + "/", "", this.user.pem).subscribe((r: any) => {
-      debugger
+
       nft.message = "";
 
       nft.open = r.response;

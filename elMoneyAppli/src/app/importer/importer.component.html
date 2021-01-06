@@ -4,16 +4,18 @@
           subtitle="Fabriquer vos propres tokens a partir d'un fichier, fixez un prix et vendez-les !"
           background="./assets/img/build.jpg"></app-tuto>
 
-
 <div class="mainform">
+
+  <h2>Fabriquer vos propres token</h2>
 
   <app-hourglass [message]="message"></app-hourglass>
 
-  <div *ngIf="message.length==0">
+  <div *ngIf="message.length==0" style="width:100%;">
 
-    <mat-card  class="app-card">
-      <mat-card-title>Contenu du token</mat-card-title>
-      <mat-card-content>
+    <mat-vertical-stepper [linear]="true" style="width:90%;display: inline-block;max-width:400px;text-align: left;">
+    <mat-step>
+      <form>
+        <ng-template matStepLabel>Contenu du token</ng-template>
         <input #csvInput [hidden]="true"
                type="file" onclick="this.value=null"
                (change)="import($event)"
@@ -25,62 +27,64 @@
           Importer un fichier
         </button>
         <br>
+
         <span *ngIf="file.length>0">'{{filename}}' empaqueté</span>
-        <br><br>
+        <br>
 
-
-        <mat-form-field appearance="fill" class="app-field" *ngIf="file.length==0">
-          <mat-label>Secret à embarquer dans le token</mat-label>
-          <input matInput type="text" maxlength="200" [(ngModel)]="secret">
-          <mat-hint>un mot de passe, une adresse internet qui ne sera accessible qu'au propriétaire</mat-hint>
-        </mat-form-field>
-      </mat-card-content>
-
-
-    </mat-card>
-
-    <br>
-    <mat-card class="app-card">
-      <mat-card-title>Présentation pour la marketplace</mat-card-title>
-      <mat-card-content>
-        <mat-form-field appearance="fill" class="app-field">
-          <mat-label>Présentation du token</mat-label>
-          <input matInput type="text" maxlength="200" [(ngModel)]="uri">
-          <mat-hint>Présenter votre token en quelques mots pour le vendre dans la marketplace</mat-hint>
-        </mat-form-field>
+        <strong>ou</strong>
 
         <br>
 
+        <mat-form-field appearance="fill" class="app-field" *ngIf="file.length==0">
+          <mat-label>Secret à embarquer dans le token</mat-label>
+          <input matInput type="text" maxlength="200" [(ngModel)]="secret" [ngModelOptions]="{standalone: true}">
+          <mat-hint>un mot de passe, une adresse internet qui ne sera accessible qu'au propriétaire</mat-hint>
+        </mat-form-field>
+      </form>
+
+    </mat-step>
+
+    <mat-step>
+      <form>
+        <ng-template matStepLabel>Présentation pour la marketplace</ng-template>
+        <br>
+        <mat-form-field appearance="fill" class="app-field">
+          <mat-label>Présentation du token</mat-label>
+          <input matInput type="text" maxlength="200" [(ngModel)]="uri" [ngModelOptions]="{standalone: true}">
+          <mat-hint>Présenter votre token en quelques mots pour le vendre dans la marketplace</mat-hint>
+        </mat-form-field>
+
+        <br><br>
+
         <mat-form-field appearance="fill" class="app-field" style="max-width: 200px">
           <mat-label>Prix de vente</mat-label>
-          <input matInput type="number" [(ngModel)]="price">
+          <input matInput type="number" [(ngModel)]="price" [ngModelOptions]="{standalone: true}">
           <span matSuffix>xeGld</span>
         </mat-form-field>
 
-      </mat-card-content>
+      </form>
+    </mat-step>
 
-    </mat-card>
-    <br>
-
-    <mat-card class="app-card">
-      <mat-card-title class="app-mat-panel-title">Fabrication</mat-card-title>
-      <mat-card-content>
-        <mat-form-field appearance="fill" class="app-field" style="max-width: 200px">
+      <mat-step>
+         <form>
+           <ng-template matStepLabel>Fabrication</ng-template>
+           <mat-form-field appearance="fill" class="app-field" style="max-width: 200px">
           <mat-label>Combien d'exemplaire</mat-label>
-          <input matInput type="number" min="1" max="1000" [(ngModel)]="count">
+          <input matInput type="number" min="1" max="1000" [(ngModel)]="count" [ngModelOptions]="{standalone: true}">
         </mat-form-field>
-
-      </mat-card-content>
-      <mat-card-actions class="app-card-action">
+           <br><br>
         <button mat-raised-button  color="primary"
             mat-button class="large-button"
             [disabled]="uri?.length==0 && file.length>0"
             (click)="tokenizer()">
       Fabriquer !
     </button>
-      </mat-card-actions>
-    </mat-card>
-   <br>
+         </form>
+      </mat-step>
+
+
+    </mat-vertical-stepper>
+
     &nbsp;
 
   </div>

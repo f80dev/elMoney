@@ -17,7 +17,7 @@ from erdpy.environments import TestnetEnvironment
 from erdpy.transactions import Transaction
 from erdpy.wallet import generate_pair,derive_keys
 
-from Tools import log, base_alphabet_to_10, str_to_hex, hex_to_str
+from Tools import log, base_alphabet_to_10, str_to_hex, hex_to_str, nbr_to_hex
 from definitions import TRANSACTION_EXPLORER, LIMIT_GAS, ESDT_CONTRACT
 
 
@@ -212,7 +212,12 @@ class ElrondNet:
             return {"error":"Impossible de s'envoyer des fonds à soi-même"}
 
         log("Transfert "+user_from.address.bech32()+" -> "+user_to.address.bech32()+" de "+str(amount)+" via ESDT")
-        data="ESDTTransfer@"+str_to_hex(idx,False)+"@"+str(hex(amount)).replace("0x","")
+
+        #Passage du montant en hex (attention il faut un nombre pair de caractères)
+        amount_in_hex=str(hex(amount)).replace("0x","")
+        if len(amount_in_hex) % 2 == 1: amount_in_hex="0"+amount_in_hex
+        data="ESDTTransfer@"+str_to_hex(idx,False)+"@"+amount_in_hex
+
         try:
             tr=self.send_transaction(user_from,user_to,user_from,"0",data)
             infos=self._proxy.get_account_balance(user_from.address)
@@ -281,7 +286,7 @@ class ElrondNet:
 
         amount=amount*(10**(decimals))
         # exemple de data valable : issue@74657374546f6b656e@545443@d3c21bcecceda1000000@12@63616e55706772616465@66616c7365
-        arguments=[str_to_hex(name),str_to_hex(unity),hex(amount),hex(decimals)]
+        arguments=[str_to_hex(name),str_to_hex(unity),nbr_to_hex(amount),nbr_to_hex(decimals)]
         #for opt in ["canFreeze", "canWipe", "canPause", "canMint", "canBurn","canUpgrade","canChangeOwner"]:
         for opt in ["canUpgrade"]:
             arguments.append(str_to_hex(opt))

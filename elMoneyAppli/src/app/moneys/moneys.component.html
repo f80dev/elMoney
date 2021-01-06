@@ -8,17 +8,23 @@
   <app-hourglass [message]="message"></app-hourglass>
 
   <table *ngIf="message?.length==0" style="display: inline-block;">
-    <tr *ngFor="let m of moneys" style="width: 90vw;">
-      <td style="max-width:300px;text-align: center;font-size: large;width: 40%;">
+    <tr>
+      <th></th>
+      <th></th>
+      <th>Solde</th>
+    </tr>
+    <tr *ngFor="let m of moneys" style="pointer:cursor;width: 95vw;" (click)="select(m)">
+      <td style="text-align: left;font-size: large;width: fit-content;">
         <strong [cdkCopyToClipboard]="m.idx" ngxClipboard style="cursor: pointer;">{{m.unity}}</strong>
+        <br>
       </td>
-      <td style="text-align: right;width: min-content;">
-        <button mat-button mat-raised-button
-                class="app-button" style="background-color: transparent;"
-                (click)="select(m)">
-          Sélectionner
-        </button>
+      <td style="max-width:300px;text-align: left;font-size: large;width: 50%;">
+        {{m.name}}<br>
       </td>
+      <td style="max-width:100px;text-align: right;font-size: large;">
+        <strong>{{m.balance}}</strong>
+      </td>
+
       <td style="text-align: left;">
         <button mat-raised-button mat-icon-button
                 mat-button class="icon-button" style="background-color: transparent;"

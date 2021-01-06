@@ -5,7 +5,7 @@ IMAP_SERVER="imap.ionos.fr"
 
 SECRET_KEY="hh4271"
 
-APPNAME="TokenForge"
+APPNAME="TOKEN FORGE"
 
 #DOMAIN_APPLI="http://localhost:4200"
 DOMAIN_APPLI="https://tf.f80.fr"
@@ -29,7 +29,7 @@ ESDT_CONTRACT="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
 
 LIMIT_GAS=60000000
 
-NFT_CONTRACT="erd1qqqqqqqqqqqqqpgqfzslzch9hmn4nldsxn34mdk6mdwkyja5d8ss6wv2zm"
+NFT_CONTRACT="erd1qqqqqqqqqqqqqpgqxmku8097fkjpk960pye7tu3mlzuptpjfd8ss4u4fvh"
 NFT_ADMIN="admin"
 IPFS_NODE="http://207.180.198.227:5001"
 

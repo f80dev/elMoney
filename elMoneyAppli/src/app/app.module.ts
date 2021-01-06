@@ -59,6 +59,7 @@ import { TokenComponent } from './token/token.component';
 import { NftsPersoComponent } from './nfts-perso/nfts-perso.component';
 import {MatTabsModule} from "@angular/material/tabs";
 import { PromoComponent } from './promo/promo.component';
+import {MatStepperModule} from "@angular/material/stepper";
 
 const config: SocketIoConfig = {
   url: environment.domain_server,
@@ -99,35 +100,36 @@ const config: SocketIoConfig = {
     NftsPersoComponent,
     PromoComponent
   ],
-  imports: [
-    MatButtonModule,
-    MatDialogModule,
-    MatIconModule,
-    MatSnackBarModule,
-    SocialLoginModule,
-    SocketIoModule.forRoot(config),
-    FormsModule,
-    HttpClientModule,
-    MatCheckboxModule,
-    WebcamModule,
-    MatProgressSpinnerModule,
-    AppRoutingModule,
-    MatInputModule,
-    BrowserAnimationsModule,
-    ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
-    QRCodeModule,
-    ClipboardModule,
-    MatSlideToggleModule,
-    MatToolbarModule,
-    MatSidenavModule,
-    MatListModule,
-    MatSliderModule,
-    MatExpansionModule,
-    MatSelectModule,
-    ClipboardModule,
-    MatCardModule,
-    MatTabsModule
-  ],
+    imports: [
+        MatButtonModule,
+        MatDialogModule,
+        MatIconModule,
+        MatSnackBarModule,
+        SocialLoginModule,
+        SocketIoModule.forRoot(config),
+        FormsModule,
+        HttpClientModule,
+        MatCheckboxModule,
+        WebcamModule,
+        MatProgressSpinnerModule,
+        AppRoutingModule,
+        MatInputModule,
+        BrowserAnimationsModule,
+        ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
+        QRCodeModule,
+        ClipboardModule,
+        MatSlideToggleModule,
+        MatToolbarModule,
+        MatSidenavModule,
+        MatListModule,
+        MatSliderModule,
+        MatExpansionModule,
+        MatSelectModule,
+        ClipboardModule,
+        MatCardModule,
+        MatTabsModule,
+        MatStepperModule
+    ],
   providers: [
     ApiService,
     TransPipe,
