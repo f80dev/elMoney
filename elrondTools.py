@@ -581,9 +581,11 @@ class ElrondNet:
 
         if not tokens is None and len(tokens)>0:
             tokens=tokens[0].hex
-            index=8
+            index=0
 
-            while index<len(tokens):
+            while len(tokens)-index>112 :
+                index=index+8
+                log("Traitement à partir de "+tokens[index:])
                 uri_len=int(tokens[index:index + 8], 16)*2
 
                 index=index+8
@@ -603,6 +605,7 @@ class ElrondNet:
                 try:
                     uri:str = str(bytearray.fromhex(tokens[index:index+uri_len]), "utf-8")
                 except:
+                    log(tokens[index:index+uri_len]+" n'est pas une chaine de caractères")
                     uri=""
 
                 index=index+uri_len

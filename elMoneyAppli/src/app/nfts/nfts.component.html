@@ -35,7 +35,7 @@
                     (click)="buy(nft)">
               <mat-icon>shopping_cart</mat-icon>&nbsp;
               <small *ngIf="nft.price==0">Gratuit</small>
-              <span *ngIf="nft.price>0" style="font-size: large;">{{nft.price}} <small>xEGld</small></span>
+              <span *ngIf="nft.price>0" style="font-size: large;">{{nft.price | number:'1.0-2'}} <small>xEGld</small></span>
             </button>
             <div *ngIf="nft.owner==user.addr" style="display: inline-block">
               <button mat-raised-button mat-button

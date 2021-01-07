@@ -16,9 +16,9 @@ export class ImporterComponent implements OnInit {
   message: string="";
   file:string="";
   count: any=1;
-  secret: any="monsecret";
+  secret: any="";
   price: any=0;
-  uri: any="montoken";
+  uri: any="Achetez mon super token";
   cost=0;
   filename: string="";
 

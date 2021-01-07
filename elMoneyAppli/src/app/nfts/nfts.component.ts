@@ -6,6 +6,7 @@ import {ClipboardService} from "ngx-clipboard";
 import {Router} from "@angular/router";
 import {ApiService} from "../api.service";
 import {NewContactComponent} from "../new-contact/new-contact.component";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-nfts',
@@ -25,6 +26,7 @@ export class NftsComponent implements OnInit {
   constructor(
     public ngNavigatorShareService:NgNavigatorShareService,
     public _clipboardService:ClipboardService,
+    public toast:MatSnackBar,
     public api:ApiService,
     public router:Router,
   ) { }
