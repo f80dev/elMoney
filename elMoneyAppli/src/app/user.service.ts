@@ -133,7 +133,10 @@ export class UserService {
       this.addr=addr;
       this.pem=pem;
       this.saveOnDevice();
-      this.refresh_balance(func,func_error);
+      if(this.config.hasESDT())
+        this.refresh_balance(func,func_error);
+      else
+        func();
     }
 
   }

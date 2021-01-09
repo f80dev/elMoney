@@ -26,11 +26,9 @@ TOTAL_DEFAULT_UNITY=1000000
 CREDIT_FOR_NEWACCOUNT=200
 DEFAULT_UNITY_CONTRACT=""
 ESDT_CONTRACT="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
-
 LIMIT_GAS=60000000
 
 NFT_CONTRACT="erd1qqqqqqqqqqqqqpgqc2telk3ugx4hrq79kgzvuwm3d7dlh342d8ss77yj60"
-
 
 NFT_ADMIN="admin"
 IPFS_NODE="http://207.180.198.227:5001"

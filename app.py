@@ -439,6 +439,13 @@ def deploy(name:str,unity:str,nbdec:str,amount:str,data:dict=None):
 def server_config():
     log("Récupération de la configuration du server avec la bank "+bc.bank.address.bech32())
     decimals=MAIN_DECIMALS
+
+    infos = {
+        "bank_addr": bc.bank.address.bech32(),
+        "proxy": bc._proxy.url,
+        "nft_contract": NFT_CONTRACT
+    }
+
     _erc20=dao.get_money_by_name(MAIN_UNITY,bc._proxy.url)
     if not _erc20 is None:
         idx = _erc20["idx"]
@@ -446,24 +453,21 @@ def server_config():
 
         bank_balance=bc.getBalanceESDT(bc.bank,idx=_erc20["idx"],decimals=_erc20["decimals"])
         if not bank_balance is None:
-            infos={
-                "bank_addr":bc.bank.address.bech32(),
-                "bank_esdt_ref":_erc20["idx"],
-                "bank_esdt":bank_balance["number"],
-                "bank_gas": bank_balance["gas"],
-                "default_money":MAIN_UNITY,
-                "proxy":bc._proxy.url,
-                "nft_contract":NFT_CONTRACT
-            }
+            infos["default_money"]=MAIN_UNITY
+            infos["bank_esdt_ref"]=_erc20["idx"]
+            infos["bank_esdt"]=bank_balance["number"]
+            infos["bank_gas"]=bank_balance["gas"]
             log("Balance de la bank " + str(bank_balance))
-            return jsonify(infos),200
-
+        else:
+            log("Pas de monnaie disponible, on charge celle du fichier de config " + str(_erc20))
     else:
         log("Pas de monnaie disponible, on charge celle du fichier de config " + str(_erc20))
 
 
-    log("Impossible de récupérer la balance de la banque")
-    return Response("Probleme avec la bank",500)
+    return jsonify(infos),200
+
+
+
 
 
 @app.route('/api/contacts/<addr>/')

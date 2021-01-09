@@ -51,8 +51,12 @@ export class AppComponent implements OnInit,OnDestroy {
         (r)=> {
           if(localStorage.getItem("last_screen"))
             this.router.navigate([localStorage.getItem("last_screen")]);
-          else
-            this.router.navigate(["main"]);
+          else{
+            if(this.config.hasESDT())
+              this.router.navigate(["main"]);
+            else
+              this.router.navigate(["store"]);
+          }
         },
         (err)=>{
           $$("Evaluation de la balance impossible, on propose un changement de contrat");

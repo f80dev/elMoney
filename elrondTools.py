@@ -305,6 +305,9 @@ class ElrondNet:
                         gas_limit=LIMIT_GAS*2
                         )
 
+        if t is None:
+            return {"error": 600, "message": "echec déploiement"}
+
         if t["status"]!="success":
             log("Echec de déploiement")
             message=t["status"]
@@ -331,12 +334,12 @@ class ElrondNet:
                 id=""
 
 
-            return {
-                "amount":amount,
-                "cost": toFiat(gas_limit*config.DEFAULT_GAS_PRICE,1),
-                "owner":user.address.bech32(),
-                "id":id
-            }
+        return {
+            "amount":amount,
+            "cost": toFiat(gas_limit*config.DEFAULT_GAS_PRICE,1),
+            "owner":user.address.bech32(),
+            "id":id
+        }
 
 
 

@@ -25,6 +25,9 @@
 
   <br>
 
+  <div *ngIf="config.hasESDT()">
+
+
   <a title="Wallet"
      routerLink="main"
      mat-list-item
@@ -34,7 +37,7 @@
   </a>
 
 
-  <a title="Fabriquer votre monaie"
+  <a title="Fabriquer votre monnaie"
      routerLink="moneys"
      mat-list-item
      id="cmdSwap">
@@ -57,6 +60,7 @@
     <mat-icon>build</mat-icon>&nbsp;
     Créer votre monnaie
   </a>
+    </div>
 
   <br>
   <a title="Tokenizer des items"

@@ -93,6 +93,10 @@ export class ConfigService {
 
   }
 
+  public hasESDT() : boolean {
+    return(this.server["default_money"]!=null);
+  }
+
 
   init_user(func_success=null,func_anonyme=null) {
     $$("Initialisation de l'utilisateur");
