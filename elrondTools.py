@@ -120,9 +120,14 @@ class ElrondNet:
     def getBalanceESDT(self, _user:Account,decimals=18,idx=None):
         url=self._proxy.url + '/accounts/' + _user.address.bech32()+"/tokens"
         log("Interrogation de la balance : "+url)
-        with urllib.request.urlopen(url) as response:
-            txt = response.read()
-        d=json.loads(txt)
+        try:
+            with urllib.request.urlopen(url) as response:
+                txt = response.read()
+            d=json.loads(txt)
+        except:
+            log("L'interrogation des tokens ne fonctionne pas")
+            return {"number": 0, "gas": self._proxy.get_account_balance(_user.address)}
+
         if not idx is None:
             for token in d:
                 if token["tokenIdentifier"]==idx:
@@ -313,12 +318,19 @@ class ElrondNet:
         else:
             log("Déploiement du nouveau contrat réussi voir transaction "+self.getExplorer(t["txHash"]))
             id=""
-            for result in t["scResults"]:
-                id=str(base64.b64decode(result["data"]),"utf-8")
-                if id.startswith("ESDTTransfer"):
-                    id=id.split("@")[1]
-                    id=hex_to_str(int(id,16))
-                    break
+            if "scResults" in t:
+                for result in t["scResults"]:
+                    id=str(base64.b64decode(result["data"]),"utf-8")
+                    if id.startswith("ESDTTransfer"):
+                        id=id.split("@")[1]
+                        id=hex_to_str(int(id,16))
+                        break
+            else:
+                log("On doit être sur le testnet qui ne retourne pas scResults")
+                amount=0
+                id=""
+
+
             return {
                 "amount":amount,
                 "cost": toFiat(gas_limit*config.DEFAULT_GAS_PRICE,1),
