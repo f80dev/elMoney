@@ -82,8 +82,8 @@ export class ApiService {
   }
 
   balance(address_to: string) {
-    $$("Récupération du solde de "+address_to+" sur le contrat "+this.idx);
-    return this._get("/balance/"+this.idx+"/"+address_to+"/","");
+    $$("Récupération du solde de "+address_to+" sur le contrat l'ensemble des contrats");
+    return this._get("/balance/"+address_to+"/","");
   }
 
 

@@ -116,68 +116,90 @@ class ElrondNet:
 
 
 
-
-    def getBalanceESDT(self, _user:Account,decimals=18,idx=None):
-        url=self._proxy.url + '/accounts/' + _user.address.bech32()+"/tokens"
-        log("Interrogation de la balance : "+url)
+    def getMoneys(self,_user:Account):
+        url = self._proxy.url + '/accounts/' + _user.address.bech32() + "/tokens"
+        log("Interrogation de la balance : " + url)
         try:
             with urllib.request.urlopen(url) as response:
                 txt = response.read()
-            d=json.loads(txt)
+            lst=json.loads(txt)
         except:
             log("L'interrogation des tokens ne fonctionne pas")
-            return {"number": 0, "gas": self._proxy.get_account_balance(_user.address)}
+            lst=[]
 
-        if not idx is None:
-            for token in d:
-                if token["tokenIdentifier"]==idx:
-                    return {
-                        "number":float(token["balance"])/(10**decimals),
-                        "gas":self._proxy.get_account_balance(_user.address),
-                        "token":token["tokenName"]
-                    }
-            return {"number":0,"gas":self._proxy.get_account_balance(_user.address)}
-        else:
-            return d
+        lst.append({
+            "tokenIdentifier":"egld",
+            "tokenName":"eGold",
+            "number": self._proxy.get_account_balance(_user.address)
+        })
 
+        rc=dict()
+        for l in lst:
+            rc[l["tokenIdentifier"]]=l
+            rc[l["tokenIdentifier"]]["unity"]=l["tokenIdentifier"].split("-")[0]
 
-    def getBalance(self,contract,addr:str):
-        if type(addr)==str:
-            user = Account(address=addr)
-        else:
-            user=addr
-
-        log("Ouverture du compte " + user.address.bech32() + " ok. Récupération du gas")
-        gas=self._proxy.get_account_balance(address=user.address)
-
-        log("Gas disponible "+str(gas))
-        _contract=SmartContract(contract)
-        try:
-            rc=self.environment.query_contract(
-                contract=_contract,
-                function="balanceOf",
-                arguments=["0x"+user.address.hex()]
-            )
-        except Exception as inst:
-            log("Exception à l'interrogation du contrat : " + str(inst.args))
-            return {"error": str(inst.args), "number": 0, "gas": gas}
-
-        if rc is None:
-            log("Exception à l'interrogation du contrat")
-            return {"error":"reponse de balance","number":0,"gas":gas}
-
-
-        if len(rc)==0 or rc[0] is None or rc[0]=="":
-            d={"number":0}
-        else:
-            d=json.loads(str(rc[0]).replace("'","\""))
-
-        if "number" in d:
-            d["gas"] = gas
-            return d
 
         return rc
 
+
+
+
+
+
+    # def getBalanceESDT(self, _user:Account,_money=None):
+    #
+    #     if not _money is None:
+    #         decimals = _money["decimals"]
+    #         idx = _money["idx"]
+    #         for token in d:
+    #             if token["tokenIdentifier"]==idx:
+    #                 return {
+    #                     "number":float(token["balance"])/(10**decimals),
+    #                     "gas":self._proxy.get_account_balance(_user.address),
+    #                     "token":token["tokenName"]
+    #                 }
+    #         return {"number":0,"gas":self._proxy.get_account_balance(_user.address)}
+    #
+
+
+
+    # def getBalance(self,contract,addr:str):
+    #     if type(addr)==str:
+    #         user = Account(address=addr)
+    #     else:
+    #         user=addr
+    #
+    #     log("Ouverture du compte " + user.address.bech32() + " ok. Récupération du gas")
+    #     gas=self._proxy.get_account_balance(address=user.address)
+    #
+    #     log("Gas disponible "+str(gas))
+    #     _contract=SmartContract(contract)
+    #     try:
+    #         rc=self.environment.query_contract(
+    #             contract=_contract,
+    #             function="balanceOf",
+    #             arguments=["0x"+user.address.hex()]
+    #         )
+    #     except Exception as inst:
+    #         log("Exception à l'interrogation du contrat : " + str(inst.args))
+    #         return {"error": str(inst.args), "number": 0, "gas": gas}
+    #
+    #     if rc is None:
+    #         log("Exception à l'interrogation du contrat")
+    #         return {"error":"reponse de balance","number":0,"gas":gas}
+    #
+    #
+    #     if len(rc)==0 or rc[0] is None or rc[0]=="":
+    #         d={"number":0}
+    #     else:
+    #         d=json.loads(str(rc[0]).replace("'","\""))
+    #
+    #     if "number" in d:
+    #         d["gas"] = gas
+    #         return d
+    #
+    #     return rc
+    #
 
 
 
@@ -274,7 +296,7 @@ class ElrondNet:
             return {"error":str(inst.args)}
 
 
-    def deploy(self,pem_file,name,unity,amount,decimals,gas_limit=LIMIT_GAS):
+    def deploy(self,pem_file,name,unity,amount,decimals,gas_limit=LIMIT_GAS,timeout=60):
         """
         Déployer une nouvelle monnaie avec ESDT
         exemple de data valable: issue@74657374546f6b656e@545443@d3c21bcecceda1000000@12@63616e55706772616465@66616c7365
@@ -302,7 +324,8 @@ class ElrondNet:
                         user,"issue",
                         value=5000000000000000000,
                         arguments=arguments,
-                        gas_limit=LIMIT_GAS*2
+                        gas_limit=LIMIT_GAS*2,
+                        timeout=timeout,
                         )
 
         if t is None:
@@ -522,7 +545,7 @@ class ElrondNet:
 
 
 
-    def execute(self,_contract,_user,function,arguments=[],value=None,gas_limit=LIMIT_GAS):
+    def execute(self,_contract,_user,function,arguments=[],value=None,gas_limit=LIMIT_GAS,timeout=60):
         if type(_contract) == str: _contract = SmartContract(_contract)
         if type(_user)==str:
             if ".pem" in _user:
@@ -545,7 +568,7 @@ class ElrondNet:
             log("Impossible d'executer "+function+" "+str(inst.args))
             return None
 
-        tr = self.wait_transaction(tx, "status", not_equal="pending")
+        tr = self.wait_transaction(tx, "status", not_equal="pending",timeout=60)
         if not "txHash" in tr:tr["txHash"]=tx
         return tr
 

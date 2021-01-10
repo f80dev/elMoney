@@ -19,6 +19,9 @@ export class SidemenuComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLocal=!environment.production;
+    setTimeout(()=>{
+      this.user.refresh_balance();
+    },500);
   }
 
 }

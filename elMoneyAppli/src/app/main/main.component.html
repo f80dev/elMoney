@@ -47,7 +47,7 @@
       *ngIf="_max>0"
       title="Augmenté la valeur à transférer en utilisant ces boutons suivant le montant que vous souhaitez atteindre">
 
-      <div *ngIf="hand==0">Envoyer des {{user.unity}}</div>
+      <div *ngIf="hand==0">Envoyer des {{user.moneys[user.selected_money].unity}}</div>
 
       <div *ngIf="showSlider" style="width: 100%;text-align: center;">
 
@@ -57,7 +57,7 @@
                 (click)="send_to()">
           <div class="bloc-bouton" style="height:60px;">
             <mat-icon>arrow_drop_up</mat-icon><br>
-            Envoyer {{hand}} <small>{{user.unity.toLowerCase()}}</small><br>à
+            Envoyer {{hand}} <small>{{user.moneys[user.selected_money].unity.toLowerCase()}}</small><br>à
 
             <span *ngIf="n_profils>1">
                 {{n_profils}} personnes
@@ -72,7 +72,7 @@
         <button mat-raised-button mat-button class="app-button"
                 *ngIf="hand>0 && n_profils==0" color="primary"
                 (click)="add_contact()">
-          Envoyer {{hand}} <small>{{user.unity.toUpperCase()}}</small><br>
+          Envoyer {{hand}} <small>{{user.moneys[user.selected_money].unity.toUpperCase()}}</small><br>
         </button>
         <br>
 
@@ -90,7 +90,7 @@
             </td>
             <td style="width: 50px;font-size: large;text-align: left;line-height: 85%;">
               {{_max}}&nbsp;
-              <span style="font-size: small;">{{user.unity.toUpperCase()}}</span>
+              <span style="font-size: small;">{{user.moneys[user.selected_money].unity.toUpperCase()}}</span>
             </td>
           </tr></table>
 
@@ -123,12 +123,12 @@
   <br><br>
   <mat-progress-spinner diameter="20px"
                         *ngIf="hourglass"></mat-progress-spinner>
-  <app-account [solde]="user.balance"
+  <app-account [solde]="user.moneys[user.selected_money].number"
                title="La somme disponible dans votre wallet (de la monnaie sélectionnée)"
                fontsize="4em"
                [decimals]="4"
                (change)="update_account()"
-               [unity]="user.unity">
+               [unity]="user.moneys[user.selected_money].unity">
   </app-account>
   <br>
 
@@ -136,7 +136,7 @@
 
   <br>
   <button mat-raised-button mat-button class="app-button"
-          *ngIf="user.unity && !showQRCode"
+          *ngIf="user.moneys[user.selected_money].unity && !showQRCode"
           (click)="showQRCode=true">
     Recevoir
   </button>

@@ -18,13 +18,13 @@ ADMIN_SALT="hh4271"
 XGLD_FOR_NEWACCOUNT="6000000000000000000"
 
 #Description de la monnaie par defaut
-MAIN_UNITY="TFC"
+MAIN_UNITY=""
 MAIN_DECIMALS=18
 MAIN_NAME="TokenForgeCoin"
 MAIN_URL="https://tf.f80.fr/assets/cmk.html"
 TOTAL_DEFAULT_UNITY=1000000
 CREDIT_FOR_NEWACCOUNT=200
-DEFAULT_UNITY_CONTRACT=""
+MAIN_IDENTIFIER=""
 ESDT_CONTRACT="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
 LIMIT_GAS=60000000
 

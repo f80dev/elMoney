@@ -14,9 +14,10 @@ export class UserService {
   addr:string="";
   pem:string="";
   last_contact="";
-  balance:number=0;
+  moneys=[];
+  selected_money="";
   gas: number=0;
-  unity: string="";
+
 
   constructor(public api:ApiService,
               public socket:Socket,
@@ -24,6 +25,8 @@ export class UserService {
     subscribe_socket(this,"refresh_account",()=>{this.refresh_balance();})
     if(localStorage.getItem("contacts"))this.contacts=JSON.parse(localStorage.getItem("contacts"));
   };
+
+
 
   loadFromDevice(){
     if(!this.addr)this.addr=localStorage.getItem("addr");
@@ -56,15 +59,15 @@ export class UserService {
       if(r.hasOwnProperty("error")){
         if(func_error)func_error(r);
       } else {
-        this.balance=r.balance;
-          this.gas=Number(r.gas);
-          this.unity=r.unity;
+
+        this.moneys=r;
+          this.gas=Number(r.egld.number);
+
           if(func)func(r);
       }
         },(err)=>{
           $$("!Erreur de récupération de la balance pour "+this.addr);
-          this.balance=0;
-          this.unity="";
+          this.moneys=[];
           if(func_error)
             func_error(err.error);
           else

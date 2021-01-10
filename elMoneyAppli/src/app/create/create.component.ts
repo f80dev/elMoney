@@ -35,7 +35,7 @@ export class CreateComponent implements OnInit {
        $$("Fichier PEM non disponible, il est nécéssaire d'un ajouter un");
        this.router.navigate(["private"]);
      }
-     this.user.get_gas();
+     this.user.refresh_balance();
   }
 
   create() {

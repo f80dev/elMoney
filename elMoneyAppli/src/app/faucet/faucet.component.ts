@@ -22,6 +22,7 @@ export class FaucetComponent implements OnInit {
 
   ngOnInit(): void {
      checkConfig(this);
+     this.user.refresh_balance();
   }
 
    reload_account() {

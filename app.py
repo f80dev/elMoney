@@ -17,8 +17,8 @@ from apiTools import create_app
 
 from dao import DAO
 from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, XGLD_FOR_NEWACCOUNT, \
-    MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, MAIN_DEVISE, NFT_CONTRACT, NFT_ADMIN, DEFAULT_UNITY_CONTRACT, IPFS_NODE, \
-    MAIN_NAME, ESDT_CONTRACT, MAIN_DECIMALS
+    MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, MAIN_DEVISE, NFT_CONTRACT, NFT_ADMIN, MAIN_IDENTIFIER, IPFS_NODE, \
+    MAIN_NAME, MAIN_DECIMALS
 from elrondTools import ElrondNet
 from ipfs import IPFS
 
@@ -33,27 +33,21 @@ def init_default_money(bc,dao):
         log("Vous devez initialiser la bank pour créer le contrat de monnaie par défaut")
         return None
 
-    _m=dao.get_money_by_name(MAIN_UNITY,bc._proxy.url)
-    if not _m is None:
-        _unity=bc.getBalanceESDT(bc.bank,idx=_m["idx"],decimals=_m["decimals"])
-        if _unity is None:
-            log("Le contrat de "+MAIN_UNITY+" n'est pas valable")
-            money_idx=""
-        else:
-            log("Balance de la bank "+str(_unity))
-            money_idx = _m["idx"]
+    _balance=bc.getMoneys(bc.bank)
+    if not MAIN_IDENTIFIER in _balance:
+        log("Le contrat de "+MAIN_UNITY+" n'est pas valable")
+        money_idx=""
     else:
-        money_idx = ""
+        log("Balance de la bank "+str(_balance))
+        money_idx = MAIN_IDENTIFIER
 
     if len(money_idx) == 0:
-        if len(DEFAULT_UNITY_CONTRACT)==0:
-            log("Pas de monnaie dans la configuration, on en créé une")
-            rc=bc.deploy(bc.bank, MAIN_NAME,MAIN_UNITY,TOTAL_DEFAULT_UNITY,MAIN_DECIMALS)
-            if "error" in rc:
-                log("Impossible de déployer le contrat de la monnaie par defaut "+rc["message"])
-                return None
-        else:
-            rc={"contract":DEFAULT_UNITY_CONTRACT}
+        log("Pas de monnaie dans la configuration, on en créé une")
+        #rc=bc.deploy(bc.bank, MAIN_NAME,MAIN_UNITY,TOTAL_DEFAULT_UNITY,MAIN_DECIMALS,timeout=60)
+        rc={"error":"","message":""}
+        if "error" in rc:
+            log("Impossible de déployer le contrat de la monnaie par defaut "+rc["message"])
+            return None
 
         if not "contract" in rc:
             money_idx=rc["id"]
@@ -438,31 +432,22 @@ def deploy(name:str,unity:str,nbdec:str,amount:str,data:dict=None):
 @app.route('/api/server_config/')
 def server_config():
     log("Récupération de la configuration du server avec la bank "+bc.bank.address.bech32())
-    decimals=MAIN_DECIMALS
 
     infos = {
         "bank_addr": bc.bank.address.bech32(),
         "proxy": bc._proxy.url,
-        "nft_contract": NFT_CONTRACT
+        "nft_contract": NFT_CONTRACT,
+        "bank_gas":bc._proxy.get_account_balance(bc.bank.address)
     }
 
-    _erc20=dao.get_money_by_name(MAIN_UNITY,bc._proxy.url)
-    if not _erc20 is None:
-        idx = _erc20["idx"]
-        decimals=_erc20["decimals"]
-
-        bank_balance=bc.getBalanceESDT(bc.bank,idx=_erc20["idx"],decimals=_erc20["decimals"])
-        if not bank_balance is None:
-            infos["default_money"]=MAIN_UNITY
-            infos["bank_esdt_ref"]=_erc20["idx"]
-            infos["bank_esdt"]=bank_balance["number"]
-            infos["bank_gas"]=bank_balance["gas"]
-            log("Balance de la bank " + str(bank_balance))
-        else:
-            log("Pas de monnaie disponible, on charge celle du fichier de config " + str(_erc20))
+    bank_balance=bc.getMoneys(bc.bank)
+    if MAIN_UNITY in bank_balance:
+        infos["default_money"]=bank_balance[MAIN_UNITY]["unity"]
+        infos["bank_esdt_ref"]=bank_balance[MAIN_UNITY]["tokenIdentifier"]
+        infos["bank_esdt"]=bank_balance[MAIN_UNITY]["number"]
+        log("Balance de la bank " + str(bank_balance))
     else:
-        log("Pas de monnaie disponible, on charge celle du fichier de config " + str(_erc20))
-
+        log("Pas de monnaie disponible, on charge celle du fichier de config " + str(bank_balance))
 
     return jsonify(infos),200
 
@@ -513,19 +498,11 @@ def add_contact(owner:str):
 
 
 #test http://localhost:5555/api/balance/erd1qqqqqqqqqqqqqpgqqvtq3xx0pgnehaynt6flzp8hyc0ckahf9e3se00ejh/erd1jgffp69cxeqqzvrv3u96da6lqwx5d6d6e7j9uau3dv84e34vwq4q3gzjxl/
-@app.route('/api/balance/<idx>/<addr>/')
-def getbalance(idx:str,addr:str):
-    _m=dao.get_money_by_idx(idx)
-    if _m is None:
-        return jsonify({"error":"Pas de money correspondante à l'idx "+idx}), 200
-
-    rc = bc.getBalanceESDT(Account(address=addr),idx=_m["idx"],decimals=_m["decimals"])
-
-    if rc is None or "error" in rc:
-        return jsonify({"error":"impossible d'évaluer la balance de "}),200
-    else:
-        log("Balance de "+addr+" à "+str(rc))
-        return jsonify({"balance":rc["number"],"gas":str(rc["gas"]),"unity":_m["unity"]}),200
+@app.route('/api/balance/<addr>/')
+def getbalance(addr:str):
+    _u = Account(address=addr)
+    rc = bc.getMoneys(_u)
+    return jsonify(rc),200
 
 
 
@@ -553,13 +530,22 @@ def new_account():
     log("Création du compte " + _a.address.bech32() +". Demande de transfert de la monnaie par defaut")
 
     #TODO: private key a crypter
+    keys = {"public": _a.address.bech32(), "private": _a.private_key_seed}
+    rc={"address":_a.address.bech32(),
+        "keys":keys,
+        "pem":pem
+        }
 
     esdt:dict=dao.get_money_by_name(MAIN_UNITY,bc._proxy.url)
-    rc = bc.transferESDT(esdt["idx"], bc.bank, _a, CREDIT_FOR_NEWACCOUNT*(10**esdt["decimals"]))
+    if not esdt is None:
+        bc.transferESDT(esdt["idx"], bc.bank, _a, CREDIT_FOR_NEWACCOUNT*(10**esdt["decimals"]))
+        rc["default_money"]=esdt["idx"]
+        rc["default_name"]=esdt["unity"]
+    else:
+        log("Pas de monnaie par défaut, Les ESDT ne sont pas actifs")
 
-    keys = {"public": _a.address.bech32(), "private": _a.private_key_seed}
-    return jsonify({"address":_a.address.bech32(),"keys":keys,"pem":pem,
-                    "default_money":esdt["idx"],"default_name":esdt["unity"]}),200
+
+    return jsonify(rc),200
 
 
 
@@ -569,7 +555,7 @@ def getmoneys(addr:str=""):
     log("Récépuration de l'ensemble des monnaies pour "+addr)
     #rc=json.dumps(dao.get_moneys(addr, bc._proxy.url),default=str)
     rc=list()
-    moneys=bc.getBalanceESDT(Account(address=addr))
+    moneys=bc.getMoneys(Account(address=addr))
     for money in moneys:
         rc.append({
             "idx":money["tokenIdentifier"],
