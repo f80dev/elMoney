@@ -38,7 +38,8 @@ def create_app():
     #voir https://flask-socketio.readthedocs.io/en/latest/
     socketio = SocketIO(app,
                         cors_allowed_origins="*",
-                        logger=True,
+                        logger=False,
+                        engineio_logger=False,
                         ping_interval=500)
 
     CORS(app)
@@ -47,7 +48,7 @@ def create_app():
     app.logger.setLevel(8)
 
     app.config.from_mapping(
-        SECRET_KEY='secret!',
+        SECRET_KEY=SECRET_KEY,
         ADMIN_PASSWORD="hh4271"
     )
     app.config["MONGODB_SETTINGS"] = {

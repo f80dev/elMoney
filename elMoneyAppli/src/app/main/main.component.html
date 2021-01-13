@@ -123,12 +123,11 @@
   <br><br>
   <mat-progress-spinner diameter="20px"
                         *ngIf="hourglass"></mat-progress-spinner>
-  <app-account [solde]="user.moneys[user.selected_money].number"
+  <app-account [money]="user.moneys[user.selected_money]"
                title="La somme disponible dans votre wallet (de la monnaie sélectionnée)"
                fontsize="4em"
-               [decimals]="4"
-               (change)="update_account()"
-               [unity]="user.moneys[user.selected_money].unity">
+               [decimals]="3"
+               (change)="update_account()">
   </app-account>
   <br>
 
@@ -136,7 +135,7 @@
 
   <br>
   <button mat-raised-button mat-button class="app-button"
-          *ngIf="user.moneys[user.selected_money].unity && !showQRCode"
+          *ngIf="user.moneys[user.selected_money]?.unity && !showQRCode"
           (click)="showQRCode=true">
     Recevoir
   </button>
@@ -169,7 +168,6 @@
     </button>
     &nbsp;
     <button mat-raised-button mat-button class="app-button" color="primary"
-
             (click)="router.navigate(['store'])">
       <div class="bloc-bouton">Acheter & vendre<br>des tokens</div>
     </button>

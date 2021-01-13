@@ -59,8 +59,8 @@ export class MainComponent implements OnInit {
       })
     }
 
-    if(this.api.idx){
-        this._max=this.user.moneys[this.user.selected_money]["number"];
+    if(this.api.tokenIdentifier){
+        this._max=this.user.moneys[this.user.selected_money].solde;
         if(this.hand<0)this.hand=Math.round(this._max/10);
         this.temp_max=this._max;
     }
@@ -74,6 +74,8 @@ export class MainComponent implements OnInit {
   }
 
 
+
+
   transfer(email:string){
     if(!this.user.pem){
       showMessage(this,"Avant tout transfert vous devez vous identifier avec votre fichier PEM ou votre clé secrète");
@@ -84,13 +86,13 @@ export class MainComponent implements OnInit {
     let pem=JSON.stringify(this.user.pem);
     $$("Demande de transfert vers "+email+" avec pem="+pem);
     this.message=this.hand+" "+this.user.moneys[this.user.selected_money].unity+" en cours de transfert à "+email;
-    this.api._post("transfer/" + this.api.idx + "/" +  email+ "/" + this.hand+"/"+this.user.moneys[this.user.selected_money].unity+"/",
+    this.api._post("transfer/" + this.api.tokenIdentifier + "/" +  email+ "/" + this.hand+"/"+this.user.moneys[this.user.selected_money].unity+"/",
         "",
         pem,180).subscribe((r: any) => {
           this.message="";
           showMessage(this, "Fond transféré, pour "+r["cost"]+" xeGld de frais de réseau",4000);
           this.user.refresh_balance(()=>{this.refresh();})
-          this.user.moneys[this.user.selected_money].money=this.user.moneys[this.user.selected_money].money-this.hand;
+          this.user.moneys[this.user.selected_money].solde=this.user.moneys[this.user.selected_money].solde-this.hand;
           this.hand=0;
           this.refresh();
       },(err)=>{
@@ -136,15 +138,16 @@ export class MainComponent implements OnInit {
     }
 
     if(this.n_profils==0){
-      this._max=this.user.moneys[this.user.selected_money].number;
+      this._max=this.user.moneys[this.user.selected_money].solde;
     } else {
-      this._max=this.user.moneys[this.user.selected_money].number/this.n_profils;
+      this._max=this.user.moneys[this.user.selected_money].solde/this.n_profils;
       if(this.hand>this._max){
         this.hand=this._max;
       }
     }
-
   }
+
+
 
   select_friends(fr: any) {
     if(fr.color=="white"){
@@ -155,9 +158,10 @@ export class MainComponent implements OnInit {
       fr.color="white";
       fr.selected=false;
     }
-
     this.update_account();
   }
+
+
 
   ngOnInit(): void {
     this.refresh();

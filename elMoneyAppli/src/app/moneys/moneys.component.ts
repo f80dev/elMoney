@@ -34,13 +34,16 @@ export class MoneysComponent implements OnInit {
   }
 
   refresh(){
+    this.message="Chargement des monnaies";
     this.api._get("moneys/"+this.user.addr).subscribe((r:any)=>{
-      this.moneys=r;
+      this.message="";
+      delete r.egld;
+      this.moneys=Object.values(r);
     })
   }
 
-  delete_money(idx:string){
-    $$("On supprime la monnaie "+idx);
+  delete_money(tokenIdentifier:string){
+    $$("On supprime la monnaie "+tokenIdentifier);
      this.dialog.open(PromptComponent, {
       data: {
         title: 'Déréférencer une monnaie',
@@ -50,7 +53,7 @@ export class MoneysComponent implements OnInit {
         lbl_cancel: 'Non'
       }}).afterClosed().subscribe((result:any) => {
         if(result){
-          this.api._delete("money/"+idx).subscribe(()=>{
+          this.api._delete("money/"+tokenIdentifier).subscribe(()=>{
             this.refresh();
           });
         }
@@ -59,7 +62,8 @@ export class MoneysComponent implements OnInit {
 
   select(_m:any){
     this.message="Changement de monnaie";
-    this.api.set_idx(_m.idx);
+    this.api.set_tokenIdentifier(_m.tokenIdentifier);
+    this.user.selected_money=_m.tokenIdentifier;
     this.user.refresh_balance(()=>{
       this.message="";
       this.router.navigate(["main"]);
@@ -76,4 +80,5 @@ export class MoneysComponent implements OnInit {
   openDoc(url: any) {
     if(url.length>0)open(url,"_blank");
   }
+
 }

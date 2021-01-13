@@ -45,13 +45,13 @@ export class NftsPersoComponent implements OnInit {
   }
 
    refresh() {
-    for(let idx of [0,1]){
+    for(let tokenIdentifier of [0,1]){
       let filters=["0x0","0x0"];
-      filters[idx]=this.user.addr;
+      filters[tokenIdentifier]=this.user.addr;
       this.message = "Chargement des tokens ...";
       this.api._get("nfts/"+filters[0]+"/"+filters[1]+"/").subscribe((r: any) => {
         this.message = "";
-        this.nfts[idx]=r;
+        this.nfts[tokenIdentifier]=r;
       });
     }
   }

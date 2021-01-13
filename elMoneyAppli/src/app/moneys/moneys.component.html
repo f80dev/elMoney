@@ -15,14 +15,14 @@
     </tr>
     <tr *ngFor="let m of moneys" style="pointer:cursor;width: 95vw;" (click)="select(m)">
       <td style="text-align: left;font-size: large;width: fit-content;">
-        <strong [cdkCopyToClipboard]="m.idx" ngxClipboard style="cursor: pointer;">{{m.unity}}</strong>
+        <strong [cdkCopyToClipboard]="m.tokenIdentifier" ngxClipboard style="cursor: pointer;">{{m.unity}}</strong>
         <br>
       </td>
       <td style="max-width:300px;text-align: left;font-size: large;width: 50%;">
         {{m.name}}<br>
       </td>
       <td style="max-width:100px;text-align: right;font-size: large;">
-        <strong>{{m.balance}}</strong>
+        <strong>{{m.solde | number:'1.0-2'}}</strong>
       </td>
 
       <td style="text-align: left;">
@@ -36,13 +36,13 @@
         <button mat-raised-button mat-icon-button
                 mat-button class="icon-button" style="background-color: transparent;"
                 *ngIf="m.owner==user.addr"
-                (click)="delete_money(m.idx)">
+                (click)="delete_money(m.tokenIdentifier)">
           <mat-icon>cancel</mat-icon>
         </button>
 
          <button mat-icon-button mat-raised-button style="background-color: transparent;"
                 mat-button class="icon-button"
-                *ngIf="m.url?.length>0"
+                *ngIf="m.url && m.url?.length>0"
                 (click)="openDoc(m.url)">
           <mat-icon>help</mat-icon>
         </button>

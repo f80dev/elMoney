@@ -42,9 +42,8 @@ def init_default_money(bc,dao):
         money_idx = MAIN_IDENTIFIER
 
     if len(money_idx) == 0:
-        log("Pas de monnaie dans la configuration, on en créé une")
-        #rc=bc.deploy(bc.bank, MAIN_NAME,MAIN_UNITY,TOTAL_DEFAULT_UNITY,MAIN_DECIMALS,timeout=60)
-        rc={"error":"","message":""}
+        log("Pas de monnaie dans la configuration, on déploy "+MAIN_NAME+" d'unite "+MAIN_UNITY)
+        rc=bc.deploy(bc.bank, MAIN_NAME,MAIN_UNITY,TOTAL_DEFAULT_UNITY,MAIN_DECIMALS,timeout=60)
         if "error" in rc:
             log("Impossible de déployer le contrat de la monnaie par defaut "+rc["message"])
             return None
@@ -441,10 +440,10 @@ def server_config():
     }
 
     bank_balance=bc.getMoneys(bc.bank)
-    if MAIN_UNITY in bank_balance:
-        infos["default_money"]=bank_balance[MAIN_UNITY]["unity"]
-        infos["bank_esdt_ref"]=bank_balance[MAIN_UNITY]["tokenIdentifier"]
-        infos["bank_esdt"]=bank_balance[MAIN_UNITY]["number"]
+    if MAIN_IDENTIFIER in bank_balance:
+        infos["default_money"]=bank_balance[MAIN_IDENTIFIER]["unity"]
+        infos["bank_esdt_ref"]=MAIN_IDENTIFIER
+        infos["bank_esdt"]=bank_balance[MAIN_IDENTIFIER]["balance"]
         log("Balance de la bank " + str(bank_balance))
     else:
         log("Pas de monnaie disponible, on charge celle du fichier de config " + str(bank_balance))
@@ -553,17 +552,7 @@ def new_account():
 @app.route('/api/moneys/')
 def getmoneys(addr:str=""):
     log("Récépuration de l'ensemble des monnaies pour "+addr)
-    #rc=json.dumps(dao.get_moneys(addr, bc._proxy.url),default=str)
-    rc=list()
-    moneys=bc.getMoneys(Account(address=addr))
-    for money in moneys:
-        rc.append({
-            "idx":money["tokenIdentifier"],
-            "unity":money["tokenIdentifier"].split("-")[0],
-            "balance":int(money["balance"])/(10**money["numDecimals"]),
-            "name":money["tokenName"]
-        })
-    return jsonify(rc)
+    return jsonify(bc.getMoneys(Account(address=addr)))
 
 
 #http://localhost:5555/api/raz/hh4271

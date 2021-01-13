@@ -59,11 +59,9 @@ export class UserService {
       if(r.hasOwnProperty("error")){
         if(func_error)func_error(r);
       } else {
-
         this.moneys=r;
-          this.gas=Number(r.egld.number);
-
-          if(func)func(r);
+        this.gas=r.egld.balance;
+        if(func)func(r);
       }
         },(err)=>{
           $$("!Erreur de récupération de la balance pour "+this.addr);
@@ -106,7 +104,7 @@ export class UserService {
   create_new_account(func,func_error){
     $$("Création d'un nouveau compte");
     this.api._get("new_account/","",120).subscribe((r:any)=> {
-      this.api.set_idx(r["default_money"])
+      this.api.set_tokenIdentifier(r["default_money"])
       if (r.pem.length > 0) {
         $$("Initialisation du userService avec le fichier PEM correct");
         func(r)
@@ -136,8 +134,10 @@ export class UserService {
       this.addr=addr;
       this.pem=pem;
       this.saveOnDevice();
-      if(this.config.hasESDT())
+      if(this.config.hasESDT()){
+        if(this.selected_money.length==0)this.selected_money=this.api.tokenIdentifier;
         this.refresh_balance(func,func_error);
+      }
       else
         func();
     }

@@ -18,7 +18,7 @@ from erdpy.transactions import Transaction
 from erdpy.wallet import generate_pair,derive_keys
 
 from Tools import log, base_alphabet_to_10, str_to_hex, hex_to_str, nbr_to_hex
-from definitions import TRANSACTION_EXPLORER, LIMIT_GAS, ESDT_CONTRACT
+from definitions import TRANSACTION_EXPLORER, LIMIT_GAS, ESDT_CONTRACT, MAIN_DECIMALS
 
 
 def toFiat(crypto,fiat=8):
@@ -130,13 +130,18 @@ class ElrondNet:
         lst.append({
             "tokenIdentifier":"egld",
             "tokenName":"eGold",
-            "number": self._proxy.get_account_balance(_user.address)
+            "numDecimals":18,
+            "balance": self._proxy.get_account_balance(_user.address)
         })
 
+        #Transforme la liste en dict sur la base du tokenIdentifier
         rc=dict()
         for l in lst:
             rc[l["tokenIdentifier"]]=l
+            rc[l["tokenIdentifier"]]["solde"]=float(l["balance"])/(10**l["numDecimals"])
             rc[l["tokenIdentifier"]]["unity"]=l["tokenIdentifier"].split("-")[0]
+            rc[l["tokenIdentifier"]]["url"]=""
+            #TODO ajouter ici la documentation des monnaies via la base de données
 
 
         return rc
@@ -443,7 +448,7 @@ class ElrondNet:
         """
         lst=self.environment.query_contract(SmartContract(address=contract),"nameOf")
         if len(lst)>0:
-            val=str(lst[0].number)
+            val=str(lst[0].balance)
             name=bytes.fromhex(val).decode("utf-8")
             return name
         else:
@@ -490,7 +495,9 @@ class ElrondNet:
             with urllib.request.urlopen(self._proxy.url+'/transactions/'+tx) as response:
                 txt = response.read()
             rc=json.loads(txt)
-            rc["cost"] = (rc["gasPrice"] * rc["gasUsed"]) / 1e18
+            gasUsed=0
+            if "gasUsed" in rc:gasUsed=rc["gasUsed"]
+            rc["cost"] = (rc["gasPrice"] * gasUsed) / 1e18
         else:
             rc["cost"]=rc["gasPrice"]*rc["gasLimit"]/1e18
 

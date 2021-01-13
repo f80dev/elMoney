@@ -47,10 +47,8 @@ content:
     format: html
     content: "
       <p>
-      Techniquement {{appname}} s'appuie sur 2 smartcontract déployés sur la blockchaine de test Elrond.<br>
-      Chaque monnaie repose sur un smartcontract respectant la norme ERC20.<br>
-      Les tokens reposent sur un smartcontract suivant la
-      norme ERC721 modifiée pour intégrer une logique d'achat / vente via un prix fixé par le créateur (mineur) du token.
+      Techniquement {{appname}} s'appuie sur les API ESDT et un smartcontract déployé sur la blockchaine de test en charge de la gestion des tokens.<br>
+      Ce smartcontract respect la norme ERC721 et ajoute quelques fonctionnalités pour gérer une logique d'achat / vente via un prix fixé par le créateur (mineur) du token.
       </p>
       "
 
@@ -114,7 +112,19 @@ content:
       </p>
       "
 
-
+  - index: receive
+    title: Comment recevoir des tokens, des fonds dans les monnaies disponibles, des eGolds ?
+    order: 1
+    format: html
+    content: "
+      <p>
+      {{appname}} propose plusieurs façons de recevoir des tokens ou des fonds.
+      Le principe repose sur l'utilisation de l'adresse Elrond de votre wallet. Celle ci peut être partagé avec l'envoyeur par copier / coller ou
+      via flashcode. <br>
+      Si votre wallet est associé à votre adresse mail, il est possible de recevoir des tokens ou des fonds simplement lorsque l'envoyeur indique votre
+      adresse mail.
+      </p>
+      "
 
   - index: wallet_elrond
     title: Peut on voir et manipuler les monnaies {{appname}} avec le wallet Elrond ?

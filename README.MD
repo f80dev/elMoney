@@ -17,6 +17,12 @@ L'architecture de la solution repose sur
 - un serveur IPFS pour stocker les fichiers des NFT
 
 
+#Renouvellement des certificats du serveur
+<pre>
+certbot certonly --standalone -d server.f80.fr
+cp /etc/letsencrypt/live/server.f80.fr/* /root/certs
+</pre>
+
 
 #Mise en oeuvre
 ##Lancement du serveur principal
@@ -41,8 +47,11 @@ firewall-cmd --zone=public --add-port=8080/tcp
 mkdir /root/ipfs
 mkdir /root/ipfs/staging
 mkdir /root/ipfs/data
-podman run -d --name ipfs_host -v /root/ipfs/staging:/export -v /root/ipfs/data:/data/ipfs -p 4001:4001 -p 127.0.0.1:8080:8080 -p 127.0.0.1:5001:5001 ipfs/go-ipfs:latest
+cd /root/ipfs
 </pre>
+
+Récupération du fichier 
+
 
 
 
