@@ -24,16 +24,15 @@ MAIN_NAME="TokenForgeCoin"
 MAIN_URL="https://tf.f80.fr/assets/cmk.html"
 TOTAL_DEFAULT_UNITY=1000000
 CREDIT_FOR_NEWACCOUNT=200
-MAIN_IDENTIFIER="TFC-4ff4b9"
+MAIN_IDENTIFIER=""
 ESDT_CONTRACT="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
 LIMIT_GAS=60000000
 
-NFT_CONTRACT="erd1qqqqqqqqqqqqqpgqc2telk3ugx4hrq79kgzvuwm3d7dlh342d8ss77yj60"
-
+NFT_CONTRACT="erd1qqqqqqqqqqqqqpgqak8zt22wl2ph4tswtyc39namqx6ysa2sd8ss4xmlj3"
 NFT_ADMIN="admin"
 IPFS_NODE="http://207.180.198.227:5001"
 
-TESTNET_EXPLORER="https://testnet-explorer.elrond.com"
+TESTNET_EXPLORER="https://devnet-explorer.elrond.com"
 TRANSACTION_EXPLORER=TESTNET_EXPLORER
 
 SIGNATURE="<br><br>L'équipe de TokenForge<br><a href='https://t.me/tokenforge'>Le forum des utilisateurs</a>"

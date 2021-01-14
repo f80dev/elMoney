@@ -43,7 +43,7 @@ class ElrondNet:
     chain_id=None
 
 
-    def __init__(self,proxy="https://testnet-api.elrond.com"):
+    def __init__(self,proxy="https://devnet-api.elrond.com"):
         """
         Initialisation du proxy
         :param proxy:
