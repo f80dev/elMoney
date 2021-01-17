@@ -18,7 +18,7 @@ from erdpy.transactions import Transaction
 from erdpy.wallet import generate_pair,derive_keys
 
 from Tools import log, base_alphabet_to_10, str_to_hex, hex_to_str, nbr_to_hex
-from definitions import TRANSACTION_EXPLORER, LIMIT_GAS, ESDT_CONTRACT, MAIN_DECIMALS
+from definitions import LIMIT_GAS, ESDT_CONTRACT,NETWORKS
 
 
 def toFiat(crypto,fiat=8):
@@ -41,14 +41,17 @@ class ElrondNet:
     _proxy:ElrondProxy=None
     bank=None
     chain_id=None
+    network_name="devnet"
 
 
-    def __init__(self,proxy="https://devnet-api.elrond.com"):
+    def __init__(self,network_name="devnet"):
         """
         Initialisation du proxy
         :param proxy:
         :param bank_pem:
         """
+        self.network_name=network_name
+        proxy=NETWORKS[network_name]["proxy"]
         log("Initialisation de l'environnement "+proxy)
         logging.basicConfig(level=logging.DEBUG)
 
@@ -73,7 +76,7 @@ class ElrondNet:
 
 
     def getExplorer(self,tx,type="transactions"):
-        url=TRANSACTION_EXPLORER+"/"+type+"/"+tx
+        url=NETWORKS[self.network_name]["explorer"]+"/"+type+"/"+tx
         if "elrond.com" in self._proxy.url:
             return url
         else:
@@ -647,15 +650,20 @@ class ElrondNet:
                 id=int(tokens[index:index+16], 16)
 
                 index=index+16
+                uri = ""
+                visual=""
                 try:
                     uri:str = str(bytearray.fromhex(tokens[index:index+uri_len]), "utf-8")
+                    if "%%" in uri:
+                        uri=uri.split("%%")[0]
+                        visual="https://ipfs.io/ipfs/"+uri.split("%%")[1]
                 except:
                     log(tokens[index:index+uri_len]+" n'est pas une chaine de caractères")
-                    uri=""
+
 
                 index=index+uri_len
 
-                obj=dict({"token_id": id, "uri": uri, "price": price, "state": state,"owner":addr})
+                obj=dict({"token_id": id, "uri": uri, "price": price, "state": state,"owner":addr,"visual":visual})
                 if miner_filter!="0x0000000000000000000000000000000000000000000000000000000000000000":
                     obj["miner"]=addr
                 else:

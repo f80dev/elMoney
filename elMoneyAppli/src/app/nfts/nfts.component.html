@@ -15,6 +15,11 @@
           <img src="/assets/img/vendu.png" style="width:150px;">
         </div>
 
+        <div *ngIf="nft.visual.length>0 && nft.owner!=user.addr">
+          <img [src]="nft.visual" style="width:150px;">
+        </div>
+
+
         <div *ngIf="nft.message?.length>0">
             <app-hourglass [message]="nft.message" fontsize="small"></app-hourglass>
           </div>

@@ -17,8 +17,8 @@ from apiTools import create_app
 
 from dao import DAO
 from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, XGLD_FOR_NEWACCOUNT, \
-    MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, MAIN_DEVISE, NFT_CONTRACT, NFT_ADMIN, MAIN_IDENTIFIER, IPFS_NODE, \
-    MAIN_NAME, MAIN_DECIMALS
+    MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, MAIN_DEVISE, NFT_ADMIN, MAIN_IDENTIFIER, IPFS_NODE, \
+    MAIN_NAME, MAIN_DECIMALS, NETWORKS
 from elrondTools import ElrondNet
 from ipfs import IPFS
 
@@ -66,7 +66,7 @@ def init_default_money(bc,dao):
 #2=adresse du proxy de la blockchain
 #3=nom de la base de données
 
-bc = ElrondNet(proxy=sys.argv[2])
+bc = ElrondNet(network_name=sys.argv[2])
 dao=DAO("server",sys.argv[3])
 init_default_money(bc,dao)
 app, socketio = create_app()
@@ -208,7 +208,7 @@ def get_pem_file(data):
 #http://localhost:6660/api/nfts/
 @app.route('/api/evalprice/<sender>/<data>/<value>/',methods=["GET"])
 def evalprice(sender,data="",value=0):
-    rc=bc.evalprice(sender,NFT_CONTRACT,value,data)
+    rc=bc.evalprice(sender,NETWORKS[bc.network_name]["nft"],value,data)
     return jsonify(rc)
 
 
@@ -219,7 +219,7 @@ def burn(token_id,data:dict=None):
         data = json.loads(str(request.data, encoding="utf-8"))
 
     pem_file=get_pem_file(data)
-    rc=bc.burn(NFT_CONTRACT,pem_file,token_id)
+    rc=bc.burn(NETWORKS[bc.network_name]["nft"],pem_file,token_id)
     os.remove(pem_file)
 
     send(socketio,"refresh_nft",rc["sender"])
@@ -238,7 +238,7 @@ def burn(token_id,data:dict=None):
 def nfts(owner_filter="0x0",miner_filter="0x0"):
     rc=[]
 
-    for uri in bc.get_uris(NFT_CONTRACT,owner_filter,miner_filter):
+    for uri in bc.get_uris(NETWORKS[bc.network_name]["nft"],owner_filter,miner_filter):
         rc.append(uri)
 
     return jsonify(rc),200
@@ -252,7 +252,7 @@ def open_nft(token_id:str,data:dict=None):
         data = json.loads(str(request.data, encoding="utf-8"))
 
     pem_file = get_pem_file(data)
-    tx = bc.nft_open(NFT_CONTRACT, pem_file, token_id)
+    tx = bc.nft_open(NETWORKS[bc.network_name]["nft"], pem_file, token_id)
     os.remove(pem_file)
 
     if "scResults" in tx:
@@ -273,7 +273,7 @@ def state_nft(token_id:str,state:str,data:dict=None):
         data = json.loads(str(request.data, encoding="utf-8"))
 
     pem_file = get_pem_file(data)
-    tx = bc.set_state(NFT_CONTRACT, pem_file, token_id,state)
+    tx = bc.set_state(NETWORKS[bc.network_name]["nft"], pem_file, token_id,state)
     os.remove(pem_file)
 
     send(socketio,"refresh_nft")
@@ -285,7 +285,7 @@ def state_nft(token_id:str,state:str,data:dict=None):
 #http://localhost:6660/api/test/
 @app.route('/api/test/',methods=["GET"])
 def test():
-    rc=bc.check_contract(NFT_CONTRACT)
+    rc=bc.check_contract(NETWORKS[bc.network_name]["nft"])
     return jsonify(rc),200
 
 
@@ -312,7 +312,7 @@ def transfer_nft(token_id,dest,data:dict=None):
         data = json.loads(str(request.data, encoding="utf-8"))
 
     pem_file=get_pem_file(data)
-    rc=bc.nft_transfer(NFT_CONTRACT,pem_file,token_id,dest)
+    rc=bc.nft_transfer(NETWORKS[bc.network_name]["nft"],pem_file,token_id,dest)
     os.remove(pem_file)
     if not rc is None:
         send(socketio,"refresh_nft")
@@ -328,7 +328,7 @@ def buy_nft(token_id,price,data:dict=None):
        data = json.loads(str(request.data, encoding="utf-8"))
 
     pem_file=get_pem_file(data)
-    rc=bc.nft_buy(NFT_CONTRACT,pem_file,token_id,float(price))
+    rc=bc.nft_buy(NETWORKS[bc.network_name]["nft"],pem_file,token_id,float(price))
     os.remove(pem_file)
     if not rc is None:
         send(socketio,"refresh_nft")
@@ -371,8 +371,8 @@ def mint(count:str,data:dict=None):
     price = int(float(data["price"]) * 1e18)
     #TODO: ajouter ici un encodage du secret dont la clé est connu par le contrat
 
-    arguments=[int(count), "0x"+owner.address.hex(),"0x"+uri.encode().hex(),"0x"+secret.encode().hex(),price,"0x0"]
-    result=bc.mint(NFT_CONTRACT,nft_contract_owner,arguments)
+    arguments=[int(count), "0x"+owner.address.hex(),"0x"+uri.encode().hex(),"0x"+secret.encode().hex(),price,0]
+    result=bc.mint(NETWORKS[bc.network_name]["nft"],nft_contract_owner,arguments)
     send(socketio, "refresh_nft")
     send(socketio,"refresh_balance",owner.address.bech32())
     os.remove(pem_file)
@@ -440,7 +440,7 @@ def server_config():
     infos = {
         "bank_addr": bc.bank.address.bech32(),
         "proxy": bc._proxy.url,
-        "nft_contract": NFT_CONTRACT,
+        "nft_contract": NETWORKS[bc.network_name]["nft"],
         "bank_gas":bc._proxy.get_account_balance(bc.bank.address)
     }
 
@@ -573,7 +573,7 @@ def raz(password:str):
 
 @app.route('/api/validate/<owner>/<miner>/')
 def validate(owner:str,miner:str):
-    rc=bc.validate(NFT_CONTRACT,owner,miner)
+    rc=bc.validate(NETWORKS[bc.network_name]["nft"],owner,miner)
     return jsonify(rc)
 
 

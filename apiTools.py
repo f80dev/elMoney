@@ -40,7 +40,8 @@ def create_app():
                         cors_allowed_origins="*",
                         logger=False,
                         engineio_logger=False,
-                        ping_interval=500)
+                        ping_interval=500
+                        )
 
     CORS(app)
 

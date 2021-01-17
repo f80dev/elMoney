@@ -28,12 +28,32 @@ MAIN_IDENTIFIER=""
 ESDT_CONTRACT="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
 LIMIT_GAS=60000000
 
-NFT_CONTRACT="erd1qqqqqqqqqqqqqpgqnrxrpzyw3g4ldx992vc0tw0u0fy882pvd8ss9dgg5f"
 NFT_ADMIN="admin"
 IPFS_NODE="http://207.180.198.227:5001"
 
-TESTNET_EXPLORER="https://devnet-explorer.elrond.com"
-TRANSACTION_EXPLORER=TESTNET_EXPLORER
+NETWORKS={
+    "testnet":{
+        "proxy":"https://testnet-api.elrond.com",
+        "explorer":"https://testnet-explorer.elrond.com",
+        "wallet":"https://testnet-wallet.elrond.com",
+        "nft":"erd1qqqqqqqqqqqqqpgq2j4t5v0lu0cvrwapl9z5zr88zfcepvjsd8ssc6sfq6"
+    },
+
+    "devnet":{
+        "proxy":"https://devnet-api.elrond.com",
+        "explorer":"https://devnet-explorer.elrond.com",
+        "wallet":"https://devnet-wallet.elrond.com",
+        "nft":"erd1qqqqqqqqqqqqqpgquwpmstnjxn4pwmvwj7qpwufjcckgkpmyd8ssd8s8yj",
+    },
+
+    "server":{
+        "proxy":"http://161.97.75.165:7950",
+        "explorer":"",
+        "wallet":"",
+        "nft":"erd1qqqqqqqqqqqqqpgqfzydqmdw7m2vazsp6u5p95yxz76t2p9rd8ss0zp9ts",
+    }
+}
+
 
 SIGNATURE="<br><br>L'équipe de TokenForge<br><a href='https://t.me/tokenforge'>Le forum des utilisateurs</a>"
 
