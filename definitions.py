@@ -28,7 +28,7 @@ MAIN_IDENTIFIER=""
 ESDT_CONTRACT="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
 LIMIT_GAS=60000000
 
-NFT_CONTRACT="erd1qqqqqqqqqqqqqpgqak8zt22wl2ph4tswtyc39namqx6ysa2sd8ss4xmlj3"
+NFT_CONTRACT="erd1qqqqqqqqqqqqqpgqnrxrpzyw3g4ldx992vc0tw0u0fy882pvd8ss9dgg5f"
 NFT_ADMIN="admin"
 IPFS_NODE="http://207.180.198.227:5001"
 

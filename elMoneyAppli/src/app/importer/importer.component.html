@@ -7,7 +7,7 @@
 <div class="mainform">
 
   <h2>Fabriquer vos propres token</h2>
-  <app-tuto [if]="file.length>0"
+  <app-tuto [if]="files[0].length>0"
             label="Le fichier est stocké dans le réseau IPFS de façon totalement sécurisé. Seul la clé permettant de le reconstituer est embarqué dans le token"></app-tuto>
   <app-hourglass [message]="message"></app-hourglass>
 
@@ -19,7 +19,7 @@
         <ng-template matStepLabel>Contenu du token</ng-template>
         <input #csvInput [hidden]="true"
                type="file" onclick="this.value=null"
-               (change)="import($event)"
+               (change)="import($event,0)"
                accept="*"/>
 
         <button mat-raised-button
@@ -28,13 +28,13 @@
           Importer un fichier
         </button>
         <br>
-        <span *ngIf="file.length>0">'{{filename}}' est caché dans votre token</span>
+        <span *ngIf="files[0].length>0">'{{filename}}' est caché dans votre token</span>
 
-        <strong *ngIf="file.length==0">ou</strong>
+        <strong *ngIf="files[0].length==0">ou</strong>
 
         <br>
 
-        <mat-form-field appearance="fill" class="app-field" *ngIf="file.length==0">
+        <mat-form-field appearance="fill" class="app-field" *ngIf="files[0].length==0">
           <mat-label>Ecrire un secret</mat-label>
           <input matInput type="text" maxlength="200" [(ngModel)]="secret" [ngModelOptions]="{standalone: true}">
           <mat-hint>un mot de passe, une adresse internet qui ne sera accessible qu'au propriétaire</mat-hint>
@@ -46,6 +46,28 @@
     <mat-step>
       <form>
         <ng-template matStepLabel>Présentation sur la marketplace</ng-template>
+
+        <table><tr style="width: 100%;">
+          <td style="text-align: left;">
+            <button mat-raised-button
+                mat-button class="app-button"
+                (click)="add_visual()">
+              <div class="bloc-bouton">
+                <span *ngIf="files[1].length>0">Modifier le</span>
+                <span *ngIf="files[1].length==0">Ajouter un</span>
+                <br>
+                visuel
+              </div>
+        </button>
+
+          </td>
+          <td *ngIf="files[1].length>0"  style="text-align: right;width:50%;">
+            <img class="mat-elevation-z4"
+                 [src]="files[1]"
+                 style="max-width:150px;border: white 1px solid">
+          </td>
+        </tr></table>
+
         <br>
         <mat-form-field appearance="fill" class="app-field">
           <mat-label>Intitulé du token</mat-label>
@@ -74,7 +96,7 @@
            <br><br>
         <button mat-raised-button  color="primary"
             mat-button class="large-button"
-            [disabled]="uri?.length==0 && file.length>0"
+            [disabled]="uri?.length==0 && files[0].length==0"
             (click)="tokenizer()">
       Fabriquer !
     </button>

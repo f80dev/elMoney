@@ -893,7 +893,7 @@ export function clear(elt: any, xpath: string) {
   });
 }
 
-declare var EXIF: any;
+
 
 export function extractEXIF(src:string,func){
   var image = new Image();

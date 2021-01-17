@@ -5,6 +5,8 @@ import {Router} from "@angular/router";
 import {UserService} from "../user.service";
 import {stringify} from "@angular/compiler/src/util";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {MatDialog} from "@angular/material/dialog";
+import {ImageSelectorComponent} from "../image-selector/image-selector.component";
 
 @Component({
   selector: 'app-importer',
@@ -14,7 +16,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 export class ImporterComponent implements OnInit {
 
   message: string="";
-  file:string="";
+  files:string[]=["",""];
   count: any=1;
   secret: any="";
   price: any=0;
@@ -24,6 +26,7 @@ export class ImporterComponent implements OnInit {
 
   constructor(public api:ApiService,
               public user:UserService,
+              public dialog:MatDialog,
               public toast:MatSnackBar,
               public router:Router) { }
 
@@ -36,12 +39,12 @@ export class ImporterComponent implements OnInit {
      localStorage.setItem("last_screen","importer");
   }
 
-   import(fileInputEvent: any) {
+   import(fileInputEvent: any,index_file=0) {
       var reader:any = new FileReader();
       this.message="Chargement du fichier";
       this.filename=fileInputEvent.target.files[0].name;
       reader.onload = ()=> {
-        this.file=stringify(reader.result);
+        this.files[index_file]=stringify(reader.result);
         this.message="";
       }
       reader.readAsDataURL(fileInputEvent.target.files[0]);
@@ -52,7 +55,8 @@ export class ImporterComponent implements OnInit {
     let obj={
       pem:this.user.pem["pem"],
       owner:this.user.addr,
-      file:this.file,
+      file:this.files[0],
+      visual:this.files[1],
       filename:this.filename,
       signature:this.uri,
       secret:this.secret,
@@ -66,5 +70,27 @@ export class ImporterComponent implements OnInit {
         this.router.navigate(["nfts-perso"],{queryParams:{index:1}});
       })
     })
+  }
+
+  add_visual() {
+  this.dialog.open(ImageSelectorComponent, {position:
+          {left: '5vw', top: '5vh'},
+        maxWidth: 400, maxHeight: 700, width: '50vw', height: '600px', data:
+                  {
+                    result: this.files[1],
+                    checkCode: true,
+                    width: 200,
+                    height: 200,
+                    emoji: false,
+                    internet: false,
+                    ratio: 1,
+                    quality:0.7
+                  }
+              }).afterClosed().subscribe((result) => {
+        if (result) {
+          this.files[1]= result;
+        }
+    });
+
   }
 }

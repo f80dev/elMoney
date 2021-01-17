@@ -350,23 +350,28 @@ def mint(count:str,data:dict=None):
         log("Les données de fabrication sont " + data)
         data = json.loads(data)
 
+    #Chargement des fichiers
+    client = IPFS(IPFS_NODE)
     if "file" in data and len(data["file"])>0:
-        client = IPFS(IPFS_NODE)
-        res = client.add(data["file"],data["filename"])
+        res = client.add(data["file"])
         log("Transfert IPFS du fichier : https://ipfs.io/ipfs/"+res)
         secret=res
     else:
         secret = data["secret"]
 
+    res_visual = ""
+    if "visual" in data and len(data["visual"])>0:
+        res_visual = "%%" + client.add(data["visual"])
+
     pem_file=get_pem_file(data)
     owner = Account(pem_file=pem_file)
     nft_contract_owner=Account(pem_file="./PEM/"+NFT_ADMIN+".pem")
 
-    uri=data["signature"]
+    uri=data["signature"]+res_visual
     price = int(float(data["price"]) * 1e18)
     #TODO: ajouter ici un encodage du secret dont la clé est connu par le contrat
 
-    arguments=[int(count), "0x"+owner.address.hex(),"0x"+uri.encode().hex(),"0x"+secret.encode().hex(),price]
+    arguments=[int(count), "0x"+owner.address.hex(),"0x"+uri.encode().hex(),"0x"+secret.encode().hex(),price,"0x0"]
     result=bc.mint(NFT_CONTRACT,nft_contract_owner,arguments)
     send(socketio, "refresh_nft")
     send(socketio,"refresh_balance",owner.address.bech32())

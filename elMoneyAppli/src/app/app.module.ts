@@ -60,6 +60,10 @@ import { NftsPersoComponent } from './nfts-perso/nfts-perso.component';
 import {MatTabsModule} from "@angular/material/tabs";
 import { PromoComponent } from './promo/promo.component';
 import {MatStepperModule} from "@angular/material/stepper";
+import { ImageSelectorComponent } from './image-selector/image-selector.component';
+import {PickerModule} from "@ctrl/ngx-emoji-mart";
+import {MatGridListModule} from "@angular/material/grid-list";
+import {ImageCropperModule} from "ngx-image-cropper";
 
 const config: SocketIoConfig = {
   url: environment.domain_server,
@@ -98,38 +102,42 @@ const config: SocketIoConfig = {
     NftsComponent,
     TokenComponent,
     NftsPersoComponent,
-    PromoComponent
+    PromoComponent,
+    ImageSelectorComponent
   ],
-    imports: [
-        MatButtonModule,
-        MatDialogModule,
-        MatIconModule,
-        MatSnackBarModule,
-        SocialLoginModule,
-        SocketIoModule.forRoot(config),
-        FormsModule,
-        HttpClientModule,
-        MatCheckboxModule,
-        WebcamModule,
-        MatProgressSpinnerModule,
-        AppRoutingModule,
-        MatInputModule,
-        BrowserAnimationsModule,
-        ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
-        QRCodeModule,
-        ClipboardModule,
-        MatSlideToggleModule,
-        MatToolbarModule,
-        MatSidenavModule,
-        MatListModule,
-        MatSliderModule,
-        MatExpansionModule,
-        MatSelectModule,
-        ClipboardModule,
-        MatCardModule,
-        MatTabsModule,
-        MatStepperModule
-    ],
+  imports: [
+    MatButtonModule,
+    MatDialogModule,
+    MatIconModule,
+    MatSnackBarModule,
+    SocialLoginModule,
+    SocketIoModule.forRoot(config),
+    FormsModule,
+    HttpClientModule,
+    MatCheckboxModule,
+    WebcamModule,
+    MatProgressSpinnerModule,
+    AppRoutingModule,
+    MatInputModule,
+    BrowserAnimationsModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
+    QRCodeModule,
+    ClipboardModule,
+    MatSlideToggleModule,
+    MatToolbarModule,
+    MatSidenavModule,
+    MatListModule,
+    MatSliderModule,
+    MatExpansionModule,
+    MatSelectModule,
+    ClipboardModule,
+    MatCardModule,
+    MatTabsModule,
+    MatStepperModule,
+    PickerModule,
+    MatGridListModule,
+    ImageCropperModule
+  ],
   providers: [
     ApiService,
     TransPipe,

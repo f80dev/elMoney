@@ -7,6 +7,8 @@ import {Router} from "@angular/router";
 import {ApiService} from "../api.service";
 import {NewContactComponent} from "../new-contact/new-contact.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {PromptComponent} from "../prompt/prompt.component";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-nfts',
@@ -28,8 +30,10 @@ export class NftsComponent implements OnInit {
     public _clipboardService:ClipboardService,
     public toast:MatSnackBar,
     public api:ApiService,
+    public dialog:MatDialog,
     public router:Router,
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
   }
@@ -105,5 +109,25 @@ export class NftsComponent implements OnInit {
 
   transfer(nft: any) {
     this.ontransfer.emit(nft);
+  }
+
+  update_price(nft: any) {
+    this.dialog.open(PromptComponent, {
+      data: {
+        title: 'Modifier le prix',
+        question: 'Indiquer le nouveau prix',
+        onlyConfirm: false,
+        lbl_ok: 'Oui',
+        lbl_cancel: 'Non'
+      }}).afterClosed().subscribe((result:any) => {
+        debugger
+        if(result){
+          this.api._get("update_price/"+result+"/","").subscribe(()=>{
+            nft.price=result;
+          });
+        }
+      });
+
+
   }
 }

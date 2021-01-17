@@ -45,6 +45,15 @@
                       (click)="open(nft)">
                Ouvrir
               </button>
+
+              <button mat-icon-button mat-flat-button
+                      title="Modifier le prix"
+                      class="icon-button"
+                      (click)="update_price(nft)">
+                <mat-icon>dollar</mat-icon>
+              </button>
+
+
               <button mat-icon-button mat-flat-button
                       *ngIf="nft.state==0"
                       title="Retirer de la vente"

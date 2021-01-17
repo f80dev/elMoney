@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1610666338843,
+  "timestamp": 1610877673997,
   "index": "https://tf.f80.fr/index.html",
   "assetGroups": [
     {
@@ -11,6 +11,7 @@
         "ignoreVary": true
       },
       "urls": [
+        "https://tf.f80.fr/exif.js",
         "https://tf.f80.fr/favicon.ico",
         "https://tf.f80.fr/index.html",
         "https://tf.f80.fr/main.js",
@@ -89,9 +90,10 @@
     "https://tf.f80.fr/assets/img/vendu.png": "508f0b23afafa2c0284dde1eb9a0ff448c0caa43",
     "https://tf.f80.fr/assets/img/work.png": "817016b0bb4190f9715aae75cfab36a952359d53",
     "https://tf.f80.fr/assets/logo coinmaker.svg": "7570bbf5d0cd79cdd7036b738632a641e0b3a850",
+    "https://tf.f80.fr/exif.js": "b5962aef35409d93f1ff55461045a6796e80343f",
     "https://tf.f80.fr/favicon.ico": "22f6a4a3bcaafafb0254e0f2fa4ceb89e505e8b2",
-    "https://tf.f80.fr/index.html": "58bcadad5dd6c9a190559394c3de011cec0188c5",
-    "https://tf.f80.fr/main.js": "488bdeb806144e04312a4db5d0125778517f68ca",
+    "https://tf.f80.fr/index.html": "8e9a5b50a5c5ed94f5d5abe710ef69fb8bae92a4",
+    "https://tf.f80.fr/main.js": "4db73d1501e2018d9ba8c4dd077e948bce91f1b2",
     "https://tf.f80.fr/manifest.webmanifest": "4330747dd266363fb42bc9580c53a46b310d92cc",
     "https://tf.f80.fr/polyfills.js": "72ad4ccc0a3916ae4598199447cdeadd6d380570",
     "https://tf.f80.fr/runtime.js": "a9aafcf49f49145093fc831efd9b8e2f6c71bb9c",
