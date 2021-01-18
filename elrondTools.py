@@ -655,8 +655,8 @@ class ElrondNet:
                 try:
                     uri:str = str(bytearray.fromhex(tokens[index:index+uri_len]), "utf-8")
                     if "%%" in uri:
+                        visual = "https://ipfs.io/ipfs/" + uri.split("%%")[1]
                         uri=uri.split("%%")[0]
-                        visual="https://ipfs.io/ipfs/"+uri.split("%%")[1]
                 except:
                     log(tokens[index:index+uri_len]+" n'est pas une chaine de caractères")
 
@@ -720,11 +720,12 @@ class ElrondNet:
 
     def nft_buy(self, contract, pem_file, token_id,price):
         value=int(1e18*price)
-        tr = self.execute(contract,pem_file,
-                                               function="buy",
-                                               arguments=[token_id],
-                                               value=value)
-
+        tr = self.execute(
+               contract,pem_file,
+               function="buy",
+               arguments=[token_id],
+               value=value
+        )
         return tr
 
 

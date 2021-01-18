@@ -45,6 +45,7 @@
             <div *ngIf="nft.owner==user.addr" style="display: inline-block">
               <button mat-raised-button mat-button
                       color="primary"
+                      title="Ouvrir le token pour découvrir le secret"
                       *ngIf="nft.state==1"
                       class="app-button"
                       (click)="open(nft)">
@@ -68,10 +69,11 @@
                 <mat-icon>remove_shopping_cart</mat-icon>
               </button>
 
-               <button mat-raised-button mat-button class="app-button"
+               <button mat-icon-button mat-flat-button class="icon-button"
                       *ngIf="nft.state==1"
+                       title="Mettre en vente"
                       (click)="setstate(nft,0,'mise en vente')">
-                Vendre
+                <mat-icon>shopping_cart</mat-icon>
               </button>
 
               <button mat-icon-button mat-flat-button class="icon-button"
@@ -84,6 +86,7 @@
 
               <button mat-icon-button mat-flat-button class="icon-button"
                       *ngIf="nft.state==1 && nft.owner==user.addr"
+                      title="Détruire ce token"
                       (click)="burn(nft)">
                 <mat-icon>delete</mat-icon>
               </button>
