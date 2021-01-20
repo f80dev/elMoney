@@ -101,7 +101,7 @@ class ElrondNet:
         t.data = data
         t.chainID = self._proxy.get_chain_id()
         t.gasLimit = LIMIT_GAS
-        t.value = value.replace("0x","")
+        t.value = value
         t.sender = _sender.address.bech32()
         t.receiver = _receiver.address.bech32()
         t.gasPrice = config.DEFAULT_GAS_PRICE
@@ -468,7 +468,7 @@ class ElrondNet:
         :param amount:
         :return:
         """
-        return self.send_transaction(_from,_to,self.bank,value,"refund")
+        return self.send_transaction(_from,_to,self.bank,str(value),"refund")
 
 
 
@@ -546,10 +546,11 @@ class ElrondNet:
             _u = Account(address=address)
             _u.private_key_seed = seed.hex()
 
-        if len(fund)>0:
+        if fund>0:
             log("On transfere un peu d'eGold pour assurer les premiers transferts"+str(fund))
-            tx=self.credit(self.bank,_u,fund)
+            tx=self.credit(self.bank,_u,"%.0f" % fund)
             if tx["status"]!="Success":log("Le compte "+_u.address.bech32()+" n'a pas recu d'eGld pour les transactions")
+
 
         return _u,pem
 
@@ -627,7 +628,7 @@ class ElrondNet:
 
         tokens = self.query(_contract, "tokens", arguments=[owner_filter,miner_filter],isnumber=True,n_try=1)
 
-        if not tokens is None and len(tokens)>0:
+        if not tokens is None and len(tokens)>60:
             tokens=tokens[0].hex
             index=0
 

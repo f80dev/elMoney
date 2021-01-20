@@ -167,10 +167,11 @@ content:
     format: html
     content: "
       <p>
-        Pour des raisons de coût, il est impossible de stoker un fichier comme une image ou de la musique dans la blockchain.
-        Pour cela {{appname}} utilise
-        IPFS pour stocker le fichier sans divulger sont adresses de stockage et intégre le code d'accès du fichier dans
-        le token NFT. A l'ouverture d'un token, il est possible d'accèder directement au fichier.
+        Pour des raisons de coût, il est impossible de stoker un fichier comme une image ou de la musique directement dans la blockchain.
+        Pour cela {{appname}} utilise la technologie décentralisée
+        IPFS pour stocker le fichier sans divulger son adresses de stockage.
+        Le principe consiste a cacher dans le token le code unique d'accès au fichier.
+        Seul l'ouverture du token (possible uniquement par le propriétaire), permet de lire le fichier.
       </p>
       "
 

@@ -15,7 +15,6 @@ NFT_BYTECODE_PATH="./static/deploy-nft.json"
 ADMIN_SALT="hh4271"
 
 #on alimente les nouveaux comptes en eGold pour leur permettre des transferts
-XGLD_FOR_NEWACCOUNT="6000000000000000000"
 
 #Description de la monnaie par defaut
 MAIN_UNITY="TFC"
@@ -33,6 +32,8 @@ IPFS_NODE="http://207.180.198.227:5001"
 
 NETWORKS={
     "testnet":{
+        "new_account":float(10*1e18),
+        "bank":"admin",
         "proxy":"https://testnet-api.elrond.com",
         "explorer":"https://testnet-explorer.elrond.com",
         "wallet":"https://testnet-wallet.elrond.com",
@@ -40,13 +41,17 @@ NETWORKS={
     },
 
     "devnet":{
+        "new_account":float(2*1e18),
+        "bank":"admin",
         "proxy":"https://devnet-api.elrond.com",
         "explorer":"https://devnet-explorer.elrond.com",
         "wallet":"https://devnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgquwpmstnjxn4pwmvwj7qpwufjcckgkpmyd8ssd8s8yj",
+        "nft":"erd1qqqqqqqqqqqqqpgqsl0phg7xmzhqmk768h9agrrscgm7qwudd8ssls3aq2",
     },
 
     "server":{
+        "new_account":float(100*1e18),
+        "bank":"admin",
         "proxy":"http://161.97.75.165:7950",
         "explorer":"",
         "wallet":"",

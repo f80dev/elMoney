@@ -17,7 +17,7 @@ RUN python3 ~/erdpy-up.py
 #RUN source ~/elrondsdk/erdpy-activate
 
 ENV PATH="/home/erd/elrondsdk/:${PATH}"
-RUN pip install erdpy==1.0.3
+RUN pip install erdpy==1.0.7
 
 WORKDIR /home/erd/dev
 

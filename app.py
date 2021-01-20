@@ -16,7 +16,7 @@ from Tools import  log, send_mail, open_html_file, now, send
 from apiTools import create_app
 
 from dao import DAO
-from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, XGLD_FOR_NEWACCOUNT, \
+from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, \
     MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, MAIN_DEVISE, NFT_ADMIN, MAIN_IDENTIFIER, IPFS_NODE, \
     MAIN_NAME, MAIN_DECIMALS, NETWORKS
 from elrondTools import ElrondNet
@@ -107,10 +107,7 @@ def refresh_client(dest:str):
 @app.route('/api/refund/<dest>/',methods=["GET"])
 def refund(dest:str):
     _dest=Account(dest)
-    if not "elrond" in bc._proxy.url:
-        amount=XGLD_FOR_NEWACCOUNT+"0"
-    else:
-        amount=XGLD_FOR_NEWACCOUNT
+    amount="%.0f" % NETWORKS[bc.network_name]["new_account"]
 
     if bc.credit(bc.bank,_dest,amount):
         account=bc._proxy.get_account_balance(_dest.address)
@@ -527,9 +524,7 @@ def getyaml(name):
 
 @app.route('/api/new_account/')
 def new_account():
-    factor = ""
-    if not "elrond.com" in bc._proxy.url: factor = "0"
-    _a,pem=bc.create_account(XGLD_FOR_NEWACCOUNT+factor)
+    _a,pem=bc.create_account(NETWORKS[bc.network_name]["new_account"])
 
     log("Création du compte " + _a.address.bech32() +". Demande de transfert de la monnaie par defaut")
 
