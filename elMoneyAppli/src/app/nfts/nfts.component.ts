@@ -116,14 +116,19 @@ export class NftsComponent implements OnInit {
       data: {
         title: 'Modifier le prix',
         question: 'Indiquer le nouveau prix',
+        result:nft.price,
         onlyConfirm: false,
         lbl_ok: 'Oui',
         lbl_cancel: 'Non'
       }}).afterClosed().subscribe((result:any) => {
-        debugger
         if(result){
-          this.api._get("update_price/"+result+"/","").subscribe(()=>{
+          let obj={
+            pem:this.user.pem.pem,
+            price:result,
+          };
+          this.api._post("update_price/"+nft.token_id+"/","",obj).subscribe(()=>{
             nft.price=result;
+            showMessage(this,"Prix mis à jour");
           });
         }
       });

@@ -221,11 +221,11 @@ class ElrondNet:
         :return:
         """
         log("Initialisation de la bank")
-        if os.path.exists("PEM/bank.pem"):
+        if os.path.exists("PEM/"+NETWORKS[self.network_name]["bank"]+".pem"):
             log("On utilise le fichier bank.pem")
-            self.bank=Account(pem_file="./PEM/bank.pem")
+            self.bank=Account(pem_file="./PEM/"+NETWORKS[self.network_name]["bank"]+".pem")
         else:
-            self.bank,pem=self.create_account(name="bank")
+            self.bank,pem=self.create_account(name=NETWORKS[self.network_name]["bank"])
             log("Vous devez transférer des fonds vers la banques "+self.bank.address.bech32())
 
         log("Initialisation de la banque à l'adresse "+self.getExplorer(self.bank.address.bech32(),"address"))
@@ -628,7 +628,7 @@ class ElrondNet:
 
         tokens = self.query(_contract, "tokens", arguments=[owner_filter,miner_filter],isnumber=True,n_try=1)
 
-        if not tokens is None and len(tokens)>60:
+        if not tokens is None and len(tokens)>0:
             tokens=tokens[0].hex
             index=0
 
@@ -765,6 +765,17 @@ class ElrondNet:
         for i in range(0,len(rc),8):
             l.append(int.from_bytes(rc[i:i+8],"big"))
         return l
+
+
+
+
+    def set_price(self, contract, pem_file, token_id, new_price):
+        tx = self.execute(contract, pem_file,
+                          function="price",
+                          arguments=[int(token_id), int(new_price)],
+                          )
+
+        return tx
 
 
 

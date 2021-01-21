@@ -64,6 +64,7 @@ import { ImageSelectorComponent } from './image-selector/image-selector.componen
 import {PickerModule} from "@ctrl/ngx-emoji-mart";
 import {MatGridListModule} from "@angular/material/grid-list";
 import {ImageCropperModule} from "ngx-image-cropper";
+import { SafePipe } from './safe.pipe';
 
 const config: SocketIoConfig = {
   url: environment.domain_server,
@@ -103,7 +104,8 @@ const config: SocketIoConfig = {
     TokenComponent,
     NftsPersoComponent,
     PromoComponent,
-    ImageSelectorComponent
+    ImageSelectorComponent,
+    SafePipe
   ],
   imports: [
     MatButtonModule,

@@ -17,7 +17,7 @@ from apiTools import create_app
 
 from dao import DAO
 from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, \
-    MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, MAIN_DEVISE, NFT_ADMIN, MAIN_IDENTIFIER, IPFS_NODE, \
+    MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, MAIN_DEVISE, MAIN_IDENTIFIER, IPFS_NODE, \
     MAIN_NAME, MAIN_DECIMALS, NETWORKS
 from elrondTools import ElrondNet
 from ipfs import IPFS
@@ -133,7 +133,7 @@ def transfer(idx:str,dest:str,amount:str,unity:str):
 
     if addr_dest is None:
         log("Le destinataire n'a pas encore d'adresse elrond")
-        _dest,pem_dest=bc.create_account(XGLD_FOR_NEWACCOUNT)
+        _dest,pem_dest=bc.create_account(NETWORKS[bc.network_name]["new_account"])
         send_mail(open_html_file("share", {
             "email": dest,
             "amount": str(amount),
@@ -189,7 +189,7 @@ def get_pem_file(data):
     :return:
     """
     if not "pem" in data:
-        rc="./PEM/admin.pem"
+        rc="./PEM/"+NETWORKS[bc.network_name]["bank"]+".pem"
     else:
         if not ".pem" in data["pem"]:
             rc="./PEM/temp"+str(now()*1000)+".pem"
@@ -238,6 +238,19 @@ def nfts(owner_filter="0x0",miner_filter="0x0"):
     for uri in bc.get_uris(NETWORKS[bc.network_name]["nft"],owner_filter,miner_filter):
         rc.append(uri)
 
+    return jsonify(rc),200
+
+
+
+
+@app.route('/api/update_price/<token_id>/',methods=["POST"])
+def update_price(token_id:str,data:dict=None):
+    if data is None:
+        data = json.loads(str(request.data, encoding="utf-8"))
+
+    pem_file = get_pem_file(data)
+    rc = bc.set_price(NETWORKS[bc.network_name]["nft"], pem_file, token_id,data["price"]*1e18)
+    send(socketio,"nft_store")
     return jsonify(rc),200
 
 
@@ -362,7 +375,7 @@ def mint(count:str,data:dict=None):
 
     pem_file=get_pem_file(data)
     owner = Account(pem_file=pem_file)
-    nft_contract_owner=Account(pem_file="./PEM/"+NFT_ADMIN+".pem")
+    nft_contract_owner=Account(pem_file="./PEM/"+NETWORKS[bc.network_name]["bank"]+".pem")
 
     uri=data["signature"]+res_visual
     price = int(float(data["price"]) * 1e18)

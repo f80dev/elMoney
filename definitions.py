@@ -27,35 +27,37 @@ MAIN_IDENTIFIER=""
 ESDT_CONTRACT="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
 LIMIT_GAS=60000000
 
-NFT_ADMIN="admin"
 IPFS_NODE="http://207.180.198.227:5001"
 
 NETWORKS={
     "testnet":{
         "new_account":float(10*1e18),
-        "bank":"admin",
+        "bank":"bob",
+        "faucet":"https://r3d4.fr/elrond/testnet/index.php",
         "proxy":"https://testnet-api.elrond.com",
         "explorer":"https://testnet-explorer.elrond.com",
         "wallet":"https://testnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgq2j4t5v0lu0cvrwapl9z5zr88zfcepvjsd8ssc6sfq6"
+        "nft":"erd1qqqqqqqqqqqqqpgqefyw2x04qgeqtz4whq0yfsyur4y3z3dud8ssv9h6ja"
     },
 
     "devnet":{
         "new_account":float(2*1e18),
         "bank":"admin",
+        "faucet":"https://r3d4.fr/elrond/devnet/index.php",
         "proxy":"https://devnet-api.elrond.com",
         "explorer":"https://devnet-explorer.elrond.com",
         "wallet":"https://devnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqsl0phg7xmzhqmk768h9agrrscgm7qwudd8ssls3aq2",
+        "nft":"erd1qqqqqqqqqqqqqpgqfd65zpsyq6yjmemxh9ys0ycpxx62ktc5d8ss0y47vz",
     },
 
     "server":{
         "new_account":float(100*1e18),
         "bank":"admin",
+        "faucet":"",
         "proxy":"http://161.97.75.165:7950",
         "explorer":"",
         "wallet":"",
-        "nft":"erd1qqqqqqqqqqqqqpgqfzydqmdw7m2vazsp6u5p95yxz76t2p9rd8ss0zp9ts",
+        "nft":"erd1qqqqqqqqqqqqqpgqyn0gqe6fknegxkle72l3lnc6lra8rne3d8ssduz7ta",
     }
 }
 

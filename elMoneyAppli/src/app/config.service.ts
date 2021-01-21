@@ -74,7 +74,6 @@ export class ConfigService {
     this.width_screen=window.innerWidth;
 
     initAvailableCameras((res)=>{this.webcamsAvailable=res;});
-
     $$("Chargement des jobs");
     this.getConfig().then(r=>{
         this.values=r;
