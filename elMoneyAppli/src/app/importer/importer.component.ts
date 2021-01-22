@@ -75,7 +75,7 @@ export class ImporterComponent implements OnInit {
   add_visual() {
   this.dialog.open(ImageSelectorComponent, {position:
           {left: '5vw', top: '5vh'},
-        maxWidth: 400, maxHeight: 700, width: '50vw', height: '600px', data:
+        maxWidth: 400, maxHeight: 700, width: '90vw', height: '600px', data:
                   {
                     result: this.files[1],
                     checkCode: true,

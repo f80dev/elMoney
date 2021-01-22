@@ -249,7 +249,7 @@ def update_price(token_id:str,data:dict=None):
         data = json.loads(str(request.data, encoding="utf-8"))
 
     pem_file = get_pem_file(data)
-    rc = bc.set_price(NETWORKS[bc.network_name]["nft"], pem_file, token_id,data["price"]*1e18)
+    rc = bc.set_price(NETWORKS[bc.network_name]["nft"], pem_file, token_id,float(data["price"])*1e18)
     send(socketio,"nft_store")
     return jsonify(rc),200
 
