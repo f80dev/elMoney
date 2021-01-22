@@ -5,7 +5,6 @@ logo: "./assets/coin.png"
 min_gas_to_transfer: 50000000000000000
 min_gas_to_create: 100000000000000000
 
-
 labels:
   solde: "Votre solde"
 

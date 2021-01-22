@@ -17,7 +17,7 @@ from apiTools import create_app
 
 from dao import DAO
 from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, \
-    MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, MAIN_DEVISE, MAIN_IDENTIFIER, IPFS_NODE, \
+    MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, MAIN_DEVISE, IPFS_NODE, \
     MAIN_NAME, MAIN_DECIMALS, NETWORKS
 from elrondTools import ElrondNet
 from ipfs import IPFS
@@ -34,16 +34,16 @@ def init_default_money(bc,dao):
         return None
 
     _balance=bc.getMoneys(bc.bank)
-    if not MAIN_IDENTIFIER in _balance:
+    if not NETWORKS[bc.network_name]["tokenIdentifier"] in _balance:
         log("Le contrat de "+MAIN_UNITY+" n'est pas valable")
         money_idx=""
     else:
         log("Balance de la bank "+str(_balance))
-        money_idx = MAIN_IDENTIFIER
+        money_idx = NETWORKS[bc.network_name]["tokenIdentifier"]
 
     if len(money_idx) == 0:
         log("Pas de monnaie dans la configuration, on déploy "+MAIN_NAME+" d'unite "+MAIN_UNITY)
-        rc=bc.deploy(bc.bank, MAIN_NAME,MAIN_UNITY,TOTAL_DEFAULT_UNITY,MAIN_DECIMALS,timeout=60)
+        rc=bc.deploy(bc.bank, MAIN_NAME,MAIN_UNITY,TOTAL_DEFAULT_UNITY,MAIN_DECIMALS,timeout=20)
         if "error" in rc:
             log("Impossible de déployer le contrat de la monnaie par defaut "+rc["message"])
             return None
@@ -379,10 +379,11 @@ def mint(count:str,data:dict=None):
 
     uri=data["signature"]+res_visual
     price = int(float(data["price"]) * 1e18)
+    limit=int(float(data["limit"]) * 1e18)
     #TODO: ajouter ici un encodage du secret dont la clé est connu par le contrat
 
-    arguments=[int(count), "0x"+owner.address.hex(),"0x"+uri.encode().hex(),"0x"+secret.encode().hex(),price,0]
-    result=bc.mint(NETWORKS[bc.network_name]["nft"],nft_contract_owner,arguments)
+    arguments=[int(count),"0x"+uri.encode().hex(),"0x"+secret.encode().hex(),price,limit]
+    result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,arguments)
     send(socketio, "refresh_nft")
     send(socketio,"refresh_balance",owner.address.bech32())
     os.remove(pem_file)
@@ -455,10 +456,10 @@ def server_config():
     }
 
     bank_balance=bc.getMoneys(bc.bank)
-    if MAIN_IDENTIFIER in bank_balance:
-        infos["default_money"]=bank_balance[MAIN_IDENTIFIER]["unity"]
-        infos["bank_esdt_ref"]=MAIN_IDENTIFIER
-        infos["bank_esdt"]=bank_balance[MAIN_IDENTIFIER]["balance"]
+    if NETWORKS[bc.network_name]["tokenIdentifier"] in bank_balance:
+        infos["default_money"]=bank_balance[NETWORKS[bc.network_name]["tokenIdentifier"]]["unity"]
+        infos["bank_esdt_ref"]=NETWORKS[bc.network_name]["tokenIdentifier"]
+        infos["bank_esdt"]=bank_balance[NETWORKS[bc.network_name]["tokenIdentifier"]]["balance"]
         log("Balance de la bank " + str(bank_balance))
     else:
         log("Pas de monnaie disponible, on charge celle du fichier de config " + str(bank_balance))

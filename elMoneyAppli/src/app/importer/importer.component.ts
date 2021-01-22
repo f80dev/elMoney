@@ -61,6 +61,7 @@ export class ImporterComponent implements OnInit {
       signature:this.uri,
       secret:this.secret,
       price:this.price,
+      limit:this.price/10
     };
     this.message="Enregistrement dans la blockchain";
     this.api._post("mint/"+this.count,"",obj).subscribe((r:any)=>{

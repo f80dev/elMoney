@@ -23,7 +23,6 @@ MAIN_NAME="TokenForgeCoin"
 MAIN_URL="https://tf.f80.fr/assets/cmk.html"
 TOTAL_DEFAULT_UNITY=1000000
 CREDIT_FOR_NEWACCOUNT=200
-MAIN_IDENTIFIER=""
 ESDT_CONTRACT="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
 LIMIT_GAS=60000000
 
@@ -31,23 +30,25 @@ IPFS_NODE="http://207.180.198.227:5001"
 
 NETWORKS={
     "testnet":{
+        "tokenIdentifier":"",
         "new_account":float(10*1e18),
         "bank":"bob",
         "faucet":"https://r3d4.fr/elrond/testnet/index.php",
         "proxy":"https://testnet-api.elrond.com",
         "explorer":"https://testnet-explorer.elrond.com",
         "wallet":"https://testnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgq3ytm9m8dpeud35v3us20vsafp77smqghd8ss4jtm0q"
+        "nft":"erd1qqqqqqqqqqqqqpgqp7tdg0spman2al64z68pfejqs9f832aqd8ss63y07l"
     },
 
     "devnet":{
         "new_account":float(2*1e18),
         "bank":"admin",
+        "tokenIdentifier":"TFC-ee56a4",
         "faucet":"https://r3d4.fr/elrond/devnet/index.php",
         "proxy":"https://devnet-api.elrond.com",
         "explorer":"https://devnet-explorer.elrond.com",
         "wallet":"https://devnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqfd65zpsyq6yjmemxh9ys0ycpxx62ktc5d8ss0y47vz",
+        "nft":"erd1qqqqqqqqqqqqqpgqg4xwfrswlqvnm9awguqawfqlu7gp6p7sd8ssxd3dvp",
     },
 
     "server":{
@@ -57,7 +58,7 @@ NETWORKS={
         "proxy":"http://161.97.75.165:7950",
         "explorer":"",
         "wallet":"",
-        "nft":"erd1qqqqqqqqqqqqqpgqyn0gqe6fknegxkle72l3lnc6lra8rne3d8ssduz7ta",
+        "nft":"erd1qqqqqqqqqqqqqpgqmv5ezenqwgexaaakn4ety5g2ncvjmhaqd8ssdy7eyr",
     }
 }
 

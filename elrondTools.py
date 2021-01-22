@@ -485,14 +485,14 @@ class ElrondNet:
         :return:
         """
         rc=dict()
-        log("Attente jusqu'a "+str(interval*timeout)+" secs synchrone de la transaction "+self.getExplorer(tx))
+        log("Attente jusqu'a "+str(timeout)+" secs synchrone de la transaction "+self.getExplorer(tx))
         rc=None
         while timeout>0:
             sleep(interval)
             rc=self._proxy.get_transaction(tx_hash=tx)
             if len(equal)>0 and rc[field]==equal:break
             if len(not_equal) > 0 and rc[field] != not_equal: break
-            timeout=timeout-1
+            timeout=timeout-interval
 
         if "elrond.com" in self._proxy.url:
             with urllib.request.urlopen(self._proxy.url+'/transactions/'+tx) as response:
@@ -579,7 +579,7 @@ class ElrondNet:
             log("Impossible d'executer "+function+" "+str(inst.args))
             return None
 
-        tr = self.wait_transaction(tx, "status", not_equal="pending",timeout=60)
+        tr = self.wait_transaction(tx, "status", not_equal="pending",timeout=timeout)
         if not "txHash" in tr:tr["txHash"]=tx
         return tr
 
@@ -628,7 +628,7 @@ class ElrondNet:
 
         tokens = self.query(_contract, "tokens", arguments=[owner_filter,miner_filter],isnumber=True,n_try=1)
 
-        if not tokens is None and len(tokens)>0:
+        if not tokens is None and len(tokens)>0 and tokens[0]!="":
             tokens=tokens[0].hex
             index=0
 
@@ -697,6 +697,7 @@ class ElrondNet:
         return rc
 
 
+
     def mint(self, contract, user_from,arguments):
         """
         Fabriquer un NFT
@@ -708,6 +709,10 @@ class ElrondNet:
         log("Minage avec "+str(arguments))
         tx=self.execute(contract,user_from,"mint",arguments)
         return tx
+
+
+
+
 
     def nft_transfer(self, contract, pem_file, token_id, dest):
         _dest=Account(address=dest)

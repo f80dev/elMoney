@@ -126,9 +126,15 @@ export class NftsComponent implements OnInit {
             pem:this.user.pem.pem,
             price:result,
           };
-          this.api._post("update_price/"+nft.token_id+"/","",obj).subscribe(()=>{
-            nft.price=result;
-            showMessage(this,"Prix mis à jour");
+          nft.message="Mise a jour du prix";
+          this.api._post("update_price/"+nft.token_id+"/","",obj).subscribe((r:any)=>{
+            nft.message="";
+            let message=r.scResults[0].returnMessage;
+            if(message.length<5){
+              nft.price=result;
+              message="Le nouveau prix est fixé à "+result;
+            }
+            showMessage(this,message);
           });
         }
       });
