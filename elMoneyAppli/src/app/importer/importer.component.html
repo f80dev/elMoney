@@ -13,7 +13,7 @@
 
   <div *ngIf="message.length==0" style="width:100%;">
 
-    <mat-vertical-stepper [linear]="true" style="width:90%;display: inline-block;max-width:400px;text-align: left;">
+    <mat-vertical-stepper [linear]="true" style="width:90%;display: inline-block;max-width:600px;text-align: left;">
       <mat-step>
         <form>
           <ng-template matStepLabel>Contenu du token</ng-template>
@@ -57,31 +57,74 @@
               visuel
             </div>
           </button>
+          <br>
+
+
+          <div *ngIf="files[1].length>0"  style="text-align: right;width:50%;">
+            <img class="mat-elevation-z4"
+                 [src]="files[1]"
+                 style="max-width:150px;border: white 1px solid">
+          </div>
+
+          <br>
+          <mat-form-field appearance="fill" class="app-field">
+            <mat-label>Intitulé du token</mat-label>
+            <input color="accent" matInput type="text" maxlength="200" [(ngModel)]="uri" [ngModelOptions]="{standalone: true}">
+            <mat-hint>Présenter votre token en quelques mots pour le vendre dans la marketplace</mat-hint>
+          </mat-form-field>
+
+          <br><br>
+
+          <mat-form-field color="accent" appearance="fill" class="app-field" style="max-width: 200px">
+            <mat-label>Prix de vente</mat-label>
+            <input matInput type="number" [(ngModel)]="price" [ngModelOptions]="{standalone: true}">
+            <span matSuffix>xeGld</span>
+          </mat-form-field>
+
+        </form>
+      </mat-step>
+      <mat-step>
+
+          <ng-template matStepLabel>Distribution</ng-template>
+          <mat-slide-toggle [(ngModel)]="reseller" (toggleChange)="update_prices()">Revente possible</mat-slide-toggle>
+          <br>
+          <div *ngIf="reseller">
             <br>
-
-
-            <div *ngIf="files[1].length>0"  style="text-align: right;width:50%;">
-              <img class="mat-elevation-z4"
-                   [src]="files[1]"
-                   style="max-width:150px;border: white 1px solid">
-            </div>
-
-            <br>
-            <mat-form-field appearance="fill" class="app-field">
-              <mat-label>Intitulé du token</mat-label>
-              <input matInput type="text" maxlength="200" [(ngModel)]="uri" [ngModelOptions]="{standalone: true}">
-              <mat-hint>Présenter votre token en quelques mots pour le vendre dans la marketplace</mat-hint>
+            Modification du prix<br>
+            <mat-form-field color="accent" appearance="fill" class="app-field" style="max-width: 130px">
+              <mat-label>Prix minimum</mat-label>
+              <input matInput type="number" [(ngModel)]="min_price" [ngModelOptions]="{standalone: true}">
+              <span matSuffix>xeGld</span>
             </mat-form-field>
-
-            <br><br>
-
-            <mat-form-field appearance="fill" class="app-field" style="max-width: 200px">
-              <mat-label>Prix de vente</mat-label>
-              <input matInput type="number" [(ngModel)]="price" [ngModelOptions]="{standalone: true}">
+            &nbsp;
+            <mat-form-field color="accent" appearance="fill" class="app-field" style="max-width: 130px">
+              <mat-label>Prix maximum</mat-label>
+              <input matInput type="number" min="0" [(ngModel)]="max_price" [ngModelOptions]="{standalone: true}">
               <span matSuffix>xeGld</span>
             </mat-form-field>
 
-        </form>
+            <br>
+            <mat-slide-toggle [(ngModel)]="only_owner">le propriétaire peut revendre</mat-slide-toggle>
+            <br>
+            <div>
+             <mat-form-field color="accent" appearance="fill" class="app-field" style="width: 100%">
+              <mat-label>Adresse du distributeur</mat-label>
+              <input matInput type="text" [(ngModel)]="reseller_addr" [ngModelOptions]="{standalone: true}">
+            </mat-form-field>
+            <br>
+            <mat-form-field appearance="fill" class="app-field" style="max-width: 200px">
+              <mat-label>Marge</mat-label>
+              <input matInput type="number" max="50" min="0" [(ngModel)]="reseller_pourcent" [ngModelOptions]="{standalone: true}">
+              <span matSuffix>% du prix</span>
+            </mat-form-field>
+           </div>
+
+
+          </div>
+
+          <br>
+
+
       </mat-step>
 
       <mat-step>

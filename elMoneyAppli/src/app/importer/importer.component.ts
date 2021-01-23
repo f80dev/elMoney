@@ -7,6 +7,7 @@ import {stringify} from "@angular/compiler/src/util";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {MatDialog} from "@angular/material/dialog";
 import {ImageSelectorComponent} from "../image-selector/image-selector.component";
+import {FormBuilder, FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'app-importer',
@@ -23,12 +24,19 @@ export class ImporterComponent implements OnInit {
   uri: any="Achetez mon super token";
   cost=0;
   filename: string="";
+  reseller: any=false;
+  max_price: any=0;
+  min_price: any=0;
+  only_owner: boolean=false;
+  reseller_addr: string="erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx";
+  reseller_pourcent:number=1;
 
   constructor(public api:ApiService,
               public user:UserService,
               public dialog:MatDialog,
               public toast:MatSnackBar,
-              public router:Router) { }
+              public router:Router) {
+  }
 
   ngOnInit(): void {
     // this.api._get("evalprice/"+this.user.addr+"/kjfdkljgklfdjgklfdjklgfdlk/0/").subscribe((r:any)=>{
@@ -61,15 +69,20 @@ export class ImporterComponent implements OnInit {
       signature:this.uri,
       secret:this.secret,
       price:this.price,
-      limit:this.price/10
+      max_price:this.max_price,
+      min_price:this.min_price,
+      seller:this.reseller_addr,
+      percent:this.reseller_pourcent
     };
     this.message="Enregistrement dans la blockchain";
     this.api._post("mint/"+this.count,"",obj).subscribe((r:any)=>{
+      if(r){
       this.message="";
       showMessage(this,"Fichier tokeniser pour "+r.cost+" xEgld");
       this.user.refresh_balance(()=>{
         this.router.navigate(["nfts-perso"],{queryParams:{index:1}});
       })
+      }
     })
   }
 
@@ -93,5 +106,10 @@ export class ImporterComponent implements OnInit {
         }
     });
 
+  }
+
+  update_prices() {
+    if(this.max_price==0)this.max_price=this.price*1.1;
+    if(this.min_price==0 && this.price>0)this.min_price=this.price*0.9;
   }
 }

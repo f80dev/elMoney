@@ -34,7 +34,7 @@ def init_default_money(bc,dao):
         return None
 
     _balance=bc.getMoneys(bc.bank)
-    if not NETWORKS[bc.network_name]["tokenIdentifier"] in _balance:
+    if not "tokenIdentifier" in NETWORKS[bc.network_name] or not NETWORKS[bc.network_name]["tokenIdentifier"] in _balance:
         log("Le contrat de "+MAIN_UNITY+" n'est pas valable")
         money_idx=""
     else:
@@ -332,13 +332,14 @@ def transfer_nft(token_id,dest,data:dict=None):
 
 
 
-@app.route('/api/buy_nft/<token_id>/<price>/',methods=["POST"])
-def buy_nft(token_id,price,data:dict=None):
+@app.route('/api/buy_nft/<token_id>/<price>/<seller>/',methods=["POST"])
+def buy_nft(token_id,price,seller:str,data:dict=None):
     if data is None:
        data = json.loads(str(request.data, encoding="utf-8"))
 
     pem_file=get_pem_file(data)
-    rc=bc.nft_buy(NETWORKS[bc.network_name]["nft"],pem_file,token_id,float(price))
+    if seller.startswith("erd"):seller="0x"+Account(address=seller).address.hex()
+    rc=bc.nft_buy(NETWORKS[bc.network_name]["nft"],pem_file,token_id,float(price),seller)
     os.remove(pem_file)
     if not rc is None:
         send(socketio,"refresh_nft")
@@ -375,14 +376,20 @@ def mint(count:str,data:dict=None):
 
     pem_file=get_pem_file(data)
     owner = Account(pem_file=pem_file)
+    seller=Account(address=data["seller"])
+
     nft_contract_owner=Account(pem_file="./PEM/"+NETWORKS[bc.network_name]["bank"]+".pem")
 
     uri=data["signature"]+res_visual
     price = int(float(data["price"]) * 1e18)
-    limit=int(float(data["limit"]) * 1e18)
+    max_price=int(float(data["max_price"]) * 1e18)
+    min_price=int(float(data["min_price"]) * 1e18)
+
     #TODO: ajouter ici un encodage du secret dont la clé est connu par le contrat
 
-    arguments=[int(count),"0x"+uri.encode().hex(),"0x"+secret.encode().hex(),price,limit]
+
+
+    arguments=[int(count),"0x"+uri.encode().hex(),"0x"+secret.encode().hex(),price,max_price,min_price,"0x"+seller.address.hex(),data["percent"]]
     result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,arguments)
     send(socketio, "refresh_nft")
     send(socketio,"refresh_balance",owner.address.bech32())
@@ -456,7 +463,7 @@ def server_config():
     }
 
     bank_balance=bc.getMoneys(bc.bank)
-    if NETWORKS[bc.network_name]["tokenIdentifier"] in bank_balance:
+    if "tokenIdentifier" in NETWORKS[bc.network_name] and NETWORKS[bc.network_name]["tokenIdentifier"] in bank_balance:
         infos["default_money"]=bank_balance[NETWORKS[bc.network_name]["tokenIdentifier"]]["unity"]
         infos["bank_esdt_ref"]=NETWORKS[bc.network_name]["tokenIdentifier"]
         infos["bank_esdt"]=bank_balance[NETWORKS[bc.network_name]["tokenIdentifier"]]["balance"]

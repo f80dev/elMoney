@@ -58,7 +58,7 @@ NETWORKS={
         "proxy":"http://161.97.75.165:7950",
         "explorer":"",
         "wallet":"",
-        "nft":"erd1qqqqqqqqqqqqqpgqmv5ezenqwgexaaakn4ety5g2ncvjmhaqd8ssdy7eyr",
+        "nft":"erd1qqqqqqqqqqqqqpgqpetp2dwtlkm3tmzeg66sqll0thc7qcjud8ssjh2pvl",
     }
 }
 

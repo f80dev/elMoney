@@ -20,6 +20,7 @@ export class NftsComponent implements OnInit {
   @Input("user") user:any;
   @Input("filter") filter:any={value:""};
   @Input("nfts") nfts:any;
+  @Input("seller") seller:string="0x0000000000000000000000000000000000000000000000000000000000000000";
   @Output("refresh") onrefresh:EventEmitter<any>=new EventEmitter();
   @Output("buy") onbuy:EventEmitter<any>=new EventEmitter();
   @Output("transfer") ontransfer:EventEmitter<any>=new EventEmitter();
@@ -57,7 +58,7 @@ export class NftsComponent implements OnInit {
 
     nft.message = "En cours d'achat";
     let price = nft.price;
-    this.api._post("buy_nft/" + nft.token_id + "/" + price, "", this.user.pem).subscribe((r: any) => {
+    this.api._post("buy_nft/" + nft.token_id + "/" + price+"/"+this.seller, "", this.user.pem).subscribe((r: any) => {
       nft.message = "";
       showMessage(this, "Achat du token pour " + (nft.price + r.cost) + " xEgld");
       this.user.refresh_balance(() => {

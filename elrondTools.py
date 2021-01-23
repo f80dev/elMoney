@@ -724,12 +724,12 @@ class ElrondNet:
 
 
 
-    def nft_buy(self, contract, pem_file, token_id,price):
+    def nft_buy(self, contract, pem_file, token_id,price,seller):
         value=int(1e18*price)
         tr = self.execute(
                contract,pem_file,
                function="buy",
-               arguments=[token_id],
+               arguments=[token_id,seller],
                value=value
         )
         return tr
