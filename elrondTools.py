@@ -612,7 +612,7 @@ class ElrondNet:
 
 
 
-    def get_uris(self, contract,owner_filter,miner_filter):
+    def get_uris(self, contract,seller_filter,owner_filter,miner_filter):
         _contract=SmartContract(contract)
         rc = list()
 
@@ -621,12 +621,17 @@ class ElrondNet:
         else:
             owner_filter="0x"+str(Account(address=owner_filter).address.hex())
 
+        if seller_filter=="0x0":
+            seller_filter = "0x0000000000000000000000000000000000000000000000000000000000000000"
+        else:
+            seller_filter="0x"+str(Account(address=seller_filter).address.hex())
+
         if miner_filter=="0x0":
             miner_filter = "0x0000000000000000000000000000000000000000000000000000000000000000"
         else:
             miner_filter="0x"+str(Account(address=miner_filter).address.hex())
 
-        tokens = self.query(_contract, "tokens", arguments=[owner_filter,miner_filter],isnumber=True,n_try=1)
+        tokens = self.query(_contract, "tokens", arguments=[seller_filter,owner_filter,miner_filter],isnumber=True,n_try=1)
 
         if not tokens is None and len(tokens)>0 and tokens[0]!="":
             tokens=tokens[0].hex

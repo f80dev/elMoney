@@ -228,14 +228,15 @@ def burn(token_id,data:dict=None):
 
 
 
-#http://localhost:6660/api/nfts/erd1krm8k9vqkvfxrgrhrjducxz574nraz9zn242epfcxc99zxnqwessv2c4uz/true/true
+#http://localhost:6660/api/nfts/
 @app.route('/api/nfts/',methods=["GET"])
-@app.route('/api/nfts/<owner_filter>/',methods=["GET"])
-@app.route('/api/nfts/<owner_filter>/<miner_filter>/',methods=["GET"])
-def nfts(owner_filter="0x0",miner_filter="0x0"):
+@app.route('/api/nfts/<seller_filter>/',methods=["GET"])
+@app.route('/api/nfts/<seller_filter>/<owner_filter>/',methods=["GET"])
+@app.route('/api/nfts/<seller_filter>/<owner_filter>/<miner_filter>/',methods=["GET"])
+def nfts(seller_filter="0x0",owner_filter="0x0",miner_filter="0x0"):
     rc=[]
 
-    for uri in bc.get_uris(NETWORKS[bc.network_name]["nft"],owner_filter,miner_filter):
+    for uri in bc.get_uris(NETWORKS[bc.network_name]["nft"],seller_filter,owner_filter,miner_filter):
         rc.append(uri)
 
     return jsonify(rc),200
