@@ -112,4 +112,8 @@ export class ImporterComponent implements OnInit {
     if(this.max_price==0)this.max_price=this.price*1.1;
     if(this.min_price==0 && this.price>0)this.min_price=this.price*0.9;
   }
+
+  open_store() {
+    open("./assets/store.html?seller="+this.reseller_addr,"store");
+  }
 }
