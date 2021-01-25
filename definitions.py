@@ -37,7 +37,7 @@ NETWORKS={
         "proxy":"https://testnet-api.elrond.com",
         "explorer":"https://testnet-explorer.elrond.com",
         "wallet":"https://testnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqp7tdg0spman2al64z68pfejqs9f832aqd8ss63y07l"
+        "nft":"erd1qqqqqqqqqqqqqpgq78cxruqwtywur74jae8euv03g75uz8jfd8ssqwdq5j"
     },
 
     "devnet":{
@@ -48,17 +48,17 @@ NETWORKS={
         "proxy":"https://devnet-api.elrond.com",
         "explorer":"https://devnet-explorer.elrond.com",
         "wallet":"https://devnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgq52k0ldyu80e6vk8qjg8urpqnvn3g78r2d8ssrxy4yu",
+        "nft":"erd1qqqqqqqqqqqqqpgq39fxslxk30ynzx8vts7q3wm5upprwryud8sshftuzw",
     },
 
     "server":{
-        "new_account":float(100*1e18),
+        "new_account":float(300*1e18),
         "bank":"admin",
         "faucet":"",
         "proxy":"http://161.97.75.165:7950",
         "explorer":"",
         "wallet":"",
-        "nft":"erd1qqqqqqqqqqqqqpgqe9h0r0me5c700ujl4p5vz0d5mz2emv6dd8ss4azpsh",
+        "nft":"erd1qqqqqqqqqqqqqpgqrxxl3ayj7et2vlc3yp4pk5cpde7k6xdhd8ss3zjz5u",
     }
 }
 

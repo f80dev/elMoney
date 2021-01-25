@@ -122,7 +122,7 @@ export class NftsComponent implements OnInit {
         lbl_ok: 'Oui',
         lbl_cancel: 'Non'
       }}).afterClosed().subscribe((result:any) => {
-        if(result){
+        if(result!="no"){
           let obj={
             pem:this.user.pem.pem,
             price:result,
