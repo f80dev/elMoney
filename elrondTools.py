@@ -221,9 +221,10 @@ class ElrondNet:
         :return:
         """
         log("Initialisation de la bank")
-        if os.path.exists("PEM/"+NETWORKS[self.network_name]["bank"]+".pem"):
+        pem_file="./PEM/"+NETWORKS[self.network_name]["bank"]+".pem"
+        if os.path.exists(pem_file):
             log("On utilise le fichier bank.pem")
-            self.bank=Account(pem_file="./PEM/"+NETWORKS[self.network_name]["bank"]+".pem")
+            self.bank=Account(pem_file=pem_file)
         else:
             self.bank,pem=self.create_account(name=NETWORKS[self.network_name]["bank"])
             log("Vous devez transférer des fonds vers la banques "+self.bank.address.bech32())

@@ -42,13 +42,13 @@ NETWORKS={
 
     "devnet":{
         "new_account":float(2*1e18),
-        "bank":"admin",
-        "tokenIdentifier":"TFC-ee56a4",
+        "bank":"alice",
+        "tokenIdentifier":"TFC-57a49e",
         "faucet":"https://r3d4.fr/elrond/devnet/index.php",
         "proxy":"https://devnet-api.elrond.com",
         "explorer":"https://devnet-explorer.elrond.com",
         "wallet":"https://devnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgq39fxslxk30ynzx8vts7q3wm5upprwryud8sshftuzw",
+        "nft":"erd1qqqqqqqqqqqqqpgqs9sz8szlc8dyg94w3426x965wzcfmam9d8ss97v95r",
     },
 
     "server":{

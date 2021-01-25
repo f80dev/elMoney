@@ -51,7 +51,7 @@
   <h3>Exemple minimaliste de billeterie</h3>
   <br>
   <div>
-   <label for="upload_pem">Sélectionner un fichier PEM</label><br>
+   <label id="label_button" for="upload_pem">Sélectionner un fichier PEM</label><br>
    <input type="file" name="upload_pem" id="upload_pem" accept=".pem" style="display: none;">
  </div>
 
@@ -193,6 +193,7 @@
     var reader = new FileReader();
     reader.onload = (event)=> {
         pem= event.target.result;
+        document.getElementById("label_button").innerHTML="Fichier: "+files[0].name;
     };
     reader.readAsText(files[0]);
   }
