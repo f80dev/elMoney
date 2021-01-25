@@ -8,7 +8,10 @@
   <style type="text/css">
     label {
       min-width: 200px;
-      color:gray;
+      background-color: gray;
+      padding: 10px;
+      border-radius: 15px;
+      color: white;
       margin: 5px;
       margin-right: 10px;
       font-variant: titling-caps;
@@ -47,7 +50,12 @@
 <div style="width:100vw;text-align: center;" id="store_zone">
   <h3>Exemple minimaliste de billeterie</h3>
   <br>
-  <input type="file" id="upload_pem">
+  <div>
+   <label for="upload_pem">Sélectionner un fichier PEM</label><br>
+   <input type="file" name="upload_pem" id="upload_pem" accept=".pem" style="display: none;">
+ </div>
+
+
   <br><br><br>
   <div id="tickets">
   </div>
@@ -216,6 +224,7 @@
         .then(resp => {
           var html="";
           for(let ticket of resp){
+            if(ticket.state==0)
               html=html+"<div>"+ticket.uri+" - "+ticket.price+" xEgld&nbsp;<a href='javascript:buy("+ticket.token_id+","+ticket.price+",\""+seller+"\")'>acheter</a></div>";
           }
           document.getElementById("tickets").innerHTML=html;

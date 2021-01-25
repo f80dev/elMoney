@@ -388,9 +388,7 @@ def mint(count:str,data:dict=None):
 
     #TODO: ajouter ici un encodage du secret dont la clé est connu par le contrat
 
-
-
-    arguments=[int(count),"0x"+uri.encode().hex(),"0x"+secret.encode().hex(),price,max_price,min_price,"0x"+seller.address.hex(),data["percent"]]
+    arguments=[int(count),"0x"+uri.encode().hex(),"0x"+secret.encode().hex(),price,max_price,min_price,"0x"+seller.address.hex(),data["percent"]*100]
     result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,arguments)
     send(socketio, "refresh_nft")
     send(socketio,"refresh_balance",owner.address.bech32())
