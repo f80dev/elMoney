@@ -48,7 +48,7 @@ NETWORKS={
         "proxy":"https://devnet-api.elrond.com",
         "explorer":"https://devnet-explorer.elrond.com",
         "wallet":"https://devnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqs9sz8szlc8dyg94w3426x965wzcfmam9d8ss97v95r",
+        "nft":"erd1qqqqqqqqqqqqqpgqhf8qase6a8nw8phjwm2wd7uvkutexk67d8sszf9xuu",
     },
 
     "server":{
@@ -61,7 +61,6 @@ NETWORKS={
         "nft":"erd1qqqqqqqqqqqqqpgqrxxl3ayj7et2vlc3yp4pk5cpde7k6xdhd8ss3zjz5u",
     }
 }
-
 
 SIGNATURE="<br><br>L'équipe de TokenForge<br><a href='https://t.me/tokenforge'>Le forum des utilisateurs</a>"
 

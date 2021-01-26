@@ -29,7 +29,7 @@ export class ImporterComponent implements OnInit {
   min_price: any=0;
   only_owner: boolean=false;
   reseller_addr: string="erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx";
-  reseller_pourcent:number=1;
+  reseller_pourcent:number=33;
 
   constructor(public api:ApiService,
               public user:UserService,
