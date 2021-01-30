@@ -85,29 +85,29 @@
       </mat-step>
       <mat-step>
 
-          <ng-template matStepLabel>Distribution</ng-template>
-          <mat-slide-toggle [(ngModel)]="reseller" (toggleChange)="update_prices()">Revente possible</mat-slide-toggle>
+        <ng-template matStepLabel>Distribution</ng-template>
+        <mat-slide-toggle [(ngModel)]="reseller" (toggleChange)="update_prices()">Revente possible</mat-slide-toggle>
+        <br>
+        <div *ngIf="reseller">
           <br>
-          <div *ngIf="reseller">
-            <br>
-            Modification du prix<br>
-            <mat-form-field color="accent" appearance="fill" class="app-field" style="max-width: 130px">
-              <mat-label>Prix minimum</mat-label>
-              <input matInput type="number" [(ngModel)]="min_price" [ngModelOptions]="{standalone: true}">
-              <span matSuffix>xeGld</span>
-            </mat-form-field>
-            &nbsp;
-            <mat-form-field color="accent" appearance="fill" class="app-field" style="max-width: 130px">
-              <mat-label>Prix maximum</mat-label>
-              <input matInput type="number" min="0" [(ngModel)]="max_price" [ngModelOptions]="{standalone: true}">
-              <span matSuffix>xeGld</span>
-            </mat-form-field>
+          Le vendeur peut modifier le prix<br>
+          <mat-form-field color="accent" appearance="fill" class="app-field" style="max-width: 130px">
+            <mat-label>Prix minimum</mat-label>
+            <input matInput type="number" [(ngModel)]="min_price" [ngModelOptions]="{standalone: true}">
+            <span matSuffix>xeGld</span>
+          </mat-form-field>
+          &nbsp;
+          <mat-form-field color="accent" appearance="fill" class="app-field" style="max-width: 130px">
+            <mat-label>Prix maximum</mat-label>
+            <input matInput type="number" min="0" [(ngModel)]="max_price" [ngModelOptions]="{standalone: true}">
+            <span matSuffix>xeGld</span>
+          </mat-form-field>
 
-            <br>
-            <mat-slide-toggle [(ngModel)]="only_owner">le propriétaire peut revendre</mat-slide-toggle>
-            <br>
-            <div>
-             <mat-form-field color="accent" appearance="fill" class="app-field" style="width: 100%">
+          <br>
+          <mat-slide-toggle [(ngModel)]="only_owner">le propriétaire peut revendre</mat-slide-toggle>
+          <br>
+          <div>
+            <mat-form-field color="accent" appearance="fill" class="app-field" style="width: 100%">
               <mat-label>Adresse du distributeur</mat-label>
               <input matInput type="text" [(ngModel)]="reseller_addr" [ngModelOptions]="{standalone: true}">
             </mat-form-field>
@@ -117,21 +117,48 @@
               <input matInput type="number" max="50" min="0" [(ngModel)]="reseller_pourcent" [ngModelOptions]="{standalone: true}">
               <span matSuffix>% du prix</span>
             </mat-form-field>
+            &nbsp;
+            <button mat-raised-button
+                    mat-button class="app-button"
+                    (click)="add_seller()">
+              Ajouter
+            </button>
 
-              <br>
+            <br>
 
-              <button mat-raised-button
-                  mat-button class="app-button"
-                  (click)="open_store()">
-            Ouvrir le store
-          </button>
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+              <ng-container matColumnDef="address">
+                <th mat-header-cell *matHeaderCellDef>Adresse</th>
+                <td mat-cell *matCellDef="let element"> {{element.address}} </td>
+              </ng-container>
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>Nom</th>
+                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+              </ng-container>
+              <ng-container matColumnDef="marge">
+                <th mat-header-cell *matHeaderCellDef>Marge</th>
+                <td mat-cell *matCellDef="let element"> {{element.marge}} </td>
+              </ng-container>
 
-           </div>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
+            </table>
+            <br>
+
+
+            <button mat-raised-button
+                    mat-button class="app-button"
+                    (click)="open_store()">
+              Ouvrir le store
+            </button>
 
           </div>
 
-          <br>
+
+        </div>
+
+        <br>
 
 
       </mat-step>

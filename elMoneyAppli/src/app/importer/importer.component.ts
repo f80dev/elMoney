@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {showError, showMessage} from "../tools";
+import {showMessage} from "../tools";
 import {ApiService} from "../api.service";
 import {Router} from "@angular/router";
 import {UserService} from "../user.service";
@@ -7,7 +7,12 @@ import {stringify} from "@angular/compiler/src/util";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {MatDialog} from "@angular/material/dialog";
 import {ImageSelectorComponent} from "../image-selector/image-selector.component";
-import {FormBuilder, FormGroup} from "@angular/forms";
+
+export interface SellerProperties {
+  address: string;
+  name: string;
+  marge:number;
+}
 
 @Component({
   selector: 'app-importer',
@@ -30,6 +35,10 @@ export class ImporterComponent implements OnInit {
   only_owner: boolean=false;
   reseller_addr: string="erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx";
   reseller_pourcent:number=33;
+
+  displayedColumns: string[] = ['Address', 'Nom', 'Marge'];
+  dataSource:SellerProperties[]=[];
+
 
   constructor(public api:ApiService,
               public user:UserService,
@@ -115,5 +124,9 @@ export class ImporterComponent implements OnInit {
 
   open_store() {
     open("./assets/store.html?seller="+this.reseller_addr,"store");
+  }
+
+  add_seller() {
+    this.dataSource.push({name:"", address:this.reseller_addr,marge:this.reseller_pourcent});
   }
 }

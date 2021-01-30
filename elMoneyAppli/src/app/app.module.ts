@@ -61,7 +61,6 @@ import {MatTabsModule} from "@angular/material/tabs";
 import { PromoComponent } from './promo/promo.component';
 import {MatStepperModule} from "@angular/material/stepper";
 import { ImageSelectorComponent } from './image-selector/image-selector.component';
-import {PickerModule} from "@ctrl/ngx-emoji-mart";
 import {MatGridListModule} from "@angular/material/grid-list";
 import {ImageCropperModule} from "ngx-image-cropper";
 import { SafePipe } from './safe.pipe';
@@ -136,7 +135,6 @@ const config: SocketIoConfig = {
     MatCardModule,
     MatTabsModule,
     MatStepperModule,
-    PickerModule,
     MatGridListModule,
     ImageCropperModule
   ],
