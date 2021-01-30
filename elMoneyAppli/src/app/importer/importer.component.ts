@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import {showMessage} from "../tools";
 import {ApiService} from "../api.service";
-import {Router} from "@angular/router";
 import {UserService} from "../user.service";
-import {stringify} from "@angular/compiler/src/util";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {MatDialog} from "@angular/material/dialog";
 import {ImageSelectorComponent} from "../image-selector/image-selector.component";
+import {MatDialog} from "@angular/material/dialog";
+import {stringify} from "@angular/compiler/src/util";
+import {Router} from "@angular/router";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 export interface SellerProperties {
   address: string;

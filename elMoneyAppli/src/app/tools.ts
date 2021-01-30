@@ -1,7 +1,4 @@
 import {environment} from '../environments/environment';
-import {Router} from '@angular/router';
-
-import {MatSnackBar} from "@angular/material/snack-bar";
 import {WebcamUtil} from "ngx-webcam";
 
 declare var EXIF: any;
@@ -365,7 +362,7 @@ export function showMessage(vm:any,s:string="",duration=2000,func=null,label_but
     if(s.length>0)setTimeout(()=>{vm.showMessage=true;},500);
   } else {
     //Affichage en mode toaster
-    var toaster:MatSnackBar=vm.toast || vm.snackBar || vm.toaster;
+    var toaster=vm.toast || vm.snackBar || vm.toaster;
     if(toaster!=null){
       if(func){
         toaster.open(s,label_button,{duration:duration}).onAction().subscribe(()=>{
@@ -764,7 +761,7 @@ export function checkConfig(vm:any) {
   }
 }
 
-export function checkLogin(vm,params: any = null,router: Router=null,redirect="search" ) {
+export function checkLogin(vm,params: any = null,router=null,redirect="search" ) {
   if (vm.config.user==null || vm.config.user.user==null || vm.config.user.user.email=="") {
     if(router==null)router=vm.router;
     router.navigate([redirect], {queryParams: params});

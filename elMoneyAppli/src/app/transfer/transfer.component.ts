@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import {ApiService} from "../api.service";
-import {Router} from "@angular/router";
-import {MatSnackBar} from "@angular/material/snack-bar";
 import {showError, showMessage} from "../tools";
 import {Location} from "@angular/common";
-import {toBase64String} from "@angular/compiler/src/output/source_map";
 import {ConfigService} from "../config.service";
 import {UserService} from "../user.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-transfer',
@@ -24,7 +23,8 @@ export class TransferComponent implements OnInit {
                public config:ConfigService,
                public user:UserService,
                public _location:Location,
-               public router:Router,public toast:MatSnackBar) { }
+               public router:Router,
+               public toast:MatSnackBar) { }
 
 
   ngOnInit(): void {
