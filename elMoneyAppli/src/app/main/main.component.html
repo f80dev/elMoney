@@ -5,7 +5,6 @@
           background="./assets/img/send.jpg"></app-tuto>
 
 <div class="mainform">
-
   <app-tuto [if]="_max>0"
     label="Utilisez le slider pour fixer le montant à envoyer">
   </app-tuto>
@@ -82,6 +81,7 @@
             <td style="width:70%;">
               <mat-slider thumbLabel
                           color="primary"
+                          class="app-slider"
                           style="width: 100%;"
                           [(ngModel)]="hand"
                           (ngModelChange)="update_account()"

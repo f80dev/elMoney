@@ -4,7 +4,6 @@ import {ApiService} from "../api.service";
 import {UserService} from "../user.service";
 import {ImageSelectorComponent} from "../image-selector/image-selector.component";
 import {MatDialog} from "@angular/material/dialog";
-import {stringify} from "@angular/compiler/src/util";
 import {Router} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
@@ -61,7 +60,7 @@ export class ImporterComponent implements OnInit {
       this.message="Chargement du fichier";
       this.filename=fileInputEvent.target.files[0].name;
       reader.onload = ()=> {
-        this.files[index_file]=stringify(reader.result);
+        this.files[index_file]=JSON.stringify(reader.result);
         this.message="";
       }
       reader.readAsDataURL(fileInputEvent.target.files[0]);

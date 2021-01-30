@@ -6,7 +6,6 @@
 
 
 <mat-toolbar class="mat-elevation-z4 toolbar-app"
-             style="z-index: 9999999"
              (mousedown)="closeMenu()" *ngIf="message?.length==0">
     <mat-icon
       title="Accédez au menu principal"
@@ -16,11 +15,7 @@
       menu
     </mat-icon>
 
-    &nbsp;
-    <!--    <img src="./assets/icons/icon-72x72.png"-->
-    <!--         *ngIf="config.width_screen>800"-->
-    <!--         style="width:30px;display: inline;">-->
-    &nbsp;
+    &nbsp;&nbsp;
 
     <span>
     {{config.values?.appname}}&nbsp;
@@ -41,14 +36,14 @@
     <!--    </mat-icon>-->
   </mat-toolbar>
 
-<mat-drawer-container class="container" autosize>
+<mat-drawer-container class="container" style="background-color: #323232" autosize>
     <mat-drawer #drawer class="sidenav" [mode]="sidemenu_mode" *ngIf="message.length==0">
       <app-sidemenu (logout)="logout()" (click)="closeMenu()">
       </app-sidemenu>
     </mat-drawer>
 
     <mat-drawer-content style="overflow: scroll">
-      <div class="sidenav-content" style="z-index:100 !important;height: 100vh;text-align: center;"
+      <div class="sidenav-container" style="z-index:100 !important;text-align: center;height: 100vh;border: #5d5d5d solid 1px;margin: 0"
            (mousedown)="closeMenu()">
 
         <div style="width:60%;margin-left: 20%;">
@@ -61,7 +56,10 @@
              style="width:60vw;max-width:300px;display: inline;margin-top: 50px;filter: saturate(2) invert() blur(1px) grayscale(100%);"
              *ngIf="message.length>0">
 
-        <router-outlet style="width:100%;" *ngIf="message.length==0" ></router-outlet>
+        <router-outlet style="width:100%;"
+                       *ngIf="message.length==0" >
+
+        </router-outlet>
       </div>
     </mat-drawer-content>
 

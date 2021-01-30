@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+
 import {AdminComponent} from './admin/admin.component';
 import {MainComponent} from "./main/main.component";
 import {TransferComponent} from "./transfer/transfer.component";
@@ -17,6 +17,7 @@ import {ValidateComponent} from "./validate/validate.component";
 import {NftsPersoComponent} from "./nfts-perso/nfts-perso.component";
 import {PromoComponent} from "./promo/promo.component";
 import {RouterModule, Routes} from "@angular/router";
+import {NgModule} from "@angular/core";
 
 const routes: Routes = [
    { path: 'admin', component: AdminComponent},

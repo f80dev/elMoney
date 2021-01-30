@@ -3,7 +3,6 @@ import {ApiService} from "../api.service";
 import {UserService} from "../user.service";
 import {ConfigService} from "../config.service";
 import {Router} from "@angular/router";
-import {stringify} from "@angular/compiler/src/util";
 
 @Component({
   selector: 'app-validate',

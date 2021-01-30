@@ -1,9 +1,8 @@
 <div class="mainform" style="text-align: left;">
-
   <app-tuto label="Accèder à la liste de vos contacts, ajoutez en ou supprimez en simplement ici"></app-tuto>
-
+  <h2>Gérer vos contacts</h2>
   <div>
-    <mat-form-field appearance="fill" style="max-width: 250px" class="app-field">
+    <mat-form-field appearance="legacy" class="app-field">
       <mat-label>Ajouter un mail</mat-label>
       <input matInput type="text" max="50" [(ngModel)]="email" (keypress)="add_contact($event)">
    </mat-form-field>
@@ -17,7 +16,7 @@
     Ajouter
   </button>
     <br>
-    <mat-form-field appearance="fill" style="max-width: 250px"
+    <mat-form-field appearance="legacy" style="max-width: 250px"
                     *ngIf="email?.startsWith('erd')"
                     class="app-field">
       <mat-label>Pseudo</mat-label>

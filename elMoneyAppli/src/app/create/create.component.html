@@ -15,27 +15,26 @@
 
   <div *ngIf="message?.length==0 && user.gas>config.values?.min_gas_to_create">
 
-
   <div *ngIf="url_transaction?.length>0">
     <a [href]="url_transaction" target="_blank">Voir la transaction</a>
   </div>
 
 
-   <mat-form-field appearance="fill" class="app-field" style="max-width: 320px">
+   <mat-form-field appearance="legacy" class="app-field" style="max-width: 320px">
     <mat-label>Nom complet de la monnaie</mat-label>
     <input matInput type="text" minlength="10" maxlength="20" [(ngModel)]="name" (focusout)="format_name()">
      <mat-hint>de 10 (minimum) à 20 (maximum) caractères sans espace</mat-hint>
    </mat-form-field>
   &nbsp;&nbsp;
     <br>
-  <mat-form-field appearance="fill" class="app-field" style="max-width: 100px">
+  <mat-form-field appearance="legacy" class="app-field" style="max-width: 100px">
     <mat-label>Unité</mat-label>
     <input matInput type="text" maxlength="8" [(ngModel)]="unity" (focusout)="upper_unity($event)">
      <mat-hint>Le nom abrégé de votre monnaie</mat-hint>
    </mat-form-field>
   &nbsp;&nbsp;
 
-   <mat-form-field appearance="fill" class="app-field" style="max-width: 150px">
+   <mat-form-field appearance="legacy" class="app-field" style="max-width: 150px">
     <mat-label>Quantité initiale</mat-label>
     <input matInput type="number" min="0" [(ngModel)]="amount">
      <mat-hint>vous êtes la banque centrale, à vous de distribuer la monnaie</mat-hint>
@@ -57,7 +56,7 @@
 
 
 
-    <mat-form-field appearance="fill" class="app-field" style="max-width: 320px">
+    <mat-form-field appearance="legacy" class="app-field" style="max-width: 320px">
     <mat-label>Votre mail pour recevoir la confirmation</mat-label>
     <input matInput type="text" maxlength="200" [(ngModel)]="email_confirm">
      <mat-hint>Des infos sur votre monnaie vous seront immédiatement envoyées après la création de celle-ci</mat-hint>
@@ -66,7 +65,7 @@
 
 
 
-      <mat-form-field appearance="fill" class="app-field" style="max-width: 320px">
+      <mat-form-field appearance="legacy" class="app-field" style="max-width: 320px">
     <mat-label>Lien internet associé (optionnel)</mat-label>
     <input matInput type="text" maxlength="200" [(ngModel)]="url">
      <mat-hint>Renvoi vers la documentation / promotion de votre monnaie</mat-hint>

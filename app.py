@@ -458,7 +458,8 @@ def server_config():
         "bank_addr": bc.bank.address.bech32(),
         "proxy": bc._proxy.url,
         "nft_contract": NETWORKS[bc.network_name]["nft"],
-        "bank_gas":bc._proxy.get_account_balance(bc.bank.address)
+        "bank_gas":bc._proxy.get_account_balance(bc.bank.address),
+        "explorer":bc._proxy.url.replace("-api","-explorer")
     }
 
     bank_balance=bc.getMoneys(bc.bank)
