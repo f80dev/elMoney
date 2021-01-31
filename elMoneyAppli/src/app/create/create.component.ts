@@ -22,6 +22,7 @@ export class CreateComponent implements OnInit {
   _public=true;
   unity:string="";
   email_confirm: string="";
+  focus_idx: number=0;
 
   constructor(public api:ApiService,
               public router:Router,

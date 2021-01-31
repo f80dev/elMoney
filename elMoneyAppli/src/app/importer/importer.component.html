@@ -37,8 +37,8 @@
 
           <mat-form-field appearance="legacy" class="app-field" *ngIf="files[0].length==0">
             <mat-label>Ecrire un secret</mat-label>
-            <input matInput type="text" maxlength="200" [(ngModel)]="secret" [ngModelOptions]="{standalone: true}">
-            <mat-hint>un mot de passe, une adresse internet qui ne sera accessible qu'au propriétaire</mat-hint>
+            <input matInput type="text" (focusin)="focus_idx=1" maxlength="200" [(ngModel)]="secret" [ngModelOptions]="{standalone: true}">
+            <mat-hint *ngIf="focus_idx==1">un mot de passe, une adresse internet qui ne sera accessible qu'au propriétaire</mat-hint>
           </mat-form-field>
         </form>
 
@@ -70,8 +70,8 @@
           <br>
           <mat-form-field appearance="legacy" class="app-field">
             <mat-label>Intitulé du token</mat-label>
-            <input matInput type="text" maxlength="200" [(ngModel)]="uri" [ngModelOptions]="{standalone: true}">
-            <mat-hint>Présenter votre token en quelques mots pour le vendre dans la marketplace</mat-hint>
+            <input matInput type="text" maxlength="200" [(ngModel)]="uri" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=2">
+            <mat-hint *ngIf="focus_idx==2">Présenter votre token en quelques mots pour le vendre dans la marketplace</mat-hint>
           </mat-form-field>
 
           <br><br>
@@ -96,13 +96,13 @@
           Le vendeur peut modifier le prix<br>
           <mat-form-field appearance="legacy" class="app-field" style="max-width: 130px">
             <mat-label>Prix minimum</mat-label>
-            <input matInput type="number" [(ngModel)]="min_price" [ngModelOptions]="{standalone: true}">
+            <input matInput type="number" [(ngModel)]="min_price" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=3">
             <span matSuffix>xeGld</span>
           </mat-form-field>
           &nbsp;
           <mat-form-field appearance="legacy" class="app-field" style="max-width: 130px">
             <mat-label>Prix maximum</mat-label>
-            <input matInput type="number" min="0" [(ngModel)]="max_price" [ngModelOptions]="{standalone: true}">
+            <input matInput type="number" min="0" [(ngModel)]="max_price" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=4">
             <span matSuffix>xeGld</span>
           </mat-form-field>
 
@@ -115,7 +115,7 @@
           <div>
             <mat-form-field appearance="legacy" class="app-field" style="width: 100%">
               <mat-label>Adresse du distributeur</mat-label>
-              <input matInput type="text" [(ngModel)]="reseller_addr" [ngModelOptions]="{standalone: true}">
+              <input matInput type="text" [(ngModel)]="reseller_addr" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=5">
             </mat-form-field>
             <br>
             <mat-form-field appearance="legacy" class="app-field" style="max-width: 200px">
@@ -161,7 +161,6 @@
 
           </div>
 
-
         </div>
 
         <br>
@@ -174,7 +173,8 @@
           <ng-template matStepLabel>Fabrication</ng-template>
           <mat-form-field appearance="legacy" class="app-field" style="max-width: 200px">
             <mat-label>Combien d'exemplaire</mat-label>
-            <input matInput type="number" min="1" max="1000" [(ngModel)]="count" [ngModelOptions]="{standalone: true}">
+            <input matInput type="number" min="1" max="1000" [(ngModel)]="count" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=10">
+            <mat-hint *ngIf="focus_idx==10">Attention le coût de fabrication dépend également du nombre de token fabriqués</mat-hint>
           </mat-form-field>
           <br><br>
           <button mat-raised-button  color="primary"

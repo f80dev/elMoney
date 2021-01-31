@@ -1,31 +1,34 @@
-<h1 mat-dialog-title>{{data.title}}</h1>
-<div mat-dialog-content>
-  <p *ngIf="data.question?.length>0 && !data.question?.startsWith('http') && !data.question?.startsWith('./')">{{data.question}}</p>
-  <div *ngIf="data.question?.length>0 && (data.question?.startsWith('http') || data.question?.startsWith('./'))">
-    <iframe  scrolling="auto" frameborder="0" style="background: none;"
-             [src]="data.question | safe: 'resourceUrl'" width="100%">
-    </iframe>
+<div class="app-prompt">
+  <h1 mat-dialog-title>{{data.title}}</h1>
+  <div mat-dialog-content>
+    <p *ngIf="data.question?.length>0 && !data.question?.startsWith('http') && !data.question?.startsWith('./')">{{data.question}}</p>
+    <div *ngIf="data.question?.length>0 && (data.question?.startsWith('http') || data.question?.startsWith('./'))">
+      <iframe  scrolling="auto" frameborder="0" style="background: none;"
+               [src]="data.question | safe: 'resourceUrl'" width="100%">
+      </iframe>
+    </div>
+
+    <mat-form-field *ngIf="!data.onlyConfirm" style="width: 95%;">
+      <input id="txtPrompt" [type]="_type" matInput [(ngModel)]="data.result" cdkFocusInitial (keypress)="onEnter($event)">
+      <mat-icon *ngIf="data.emojis" matSuffix (click)="showEmoji=!showEmoji">emoji_emotions</mat-icon>
+    </mat-form-field>
+
+    <!--  <emoji-mart-->
+    <!--    *ngIf="showEmoji"-->
+    <!--    set="google"-->
+    <!--    [showPreview]="false"-->
+    <!--    [emojiSize]="32"-->
+    <!--    (emojiSelect)="selectEmoji($event)"-->
+    <!--    [style]="{ display: 'inline-block', bottom: '20px', right: '20px' }"-->
+    <!--    [emojiTooltip]="true"-->
+    <!--    emoji="point_up">-->
+    <!--  </emoji-mart>-->
+
   </div>
-
-  <mat-form-field *ngIf="!data.onlyConfirm" style="width: 95%;">
-    <input id="txtPrompt" [type]="_type" matInput [(ngModel)]="data.result" cdkFocusInitial (keypress)="onEnter($event)">
-    <mat-icon *ngIf="data.emojis" matSuffix (click)="showEmoji=!showEmoji">emoji_emotions</mat-icon>
-  </mat-form-field>
-
-  <emoji-mart
-    *ngIf="showEmoji"
-    set="google"
-    [showPreview]="false"
-    [emojiSize]="32"
-    (emojiSelect)="selectEmoji($event)"
-    [style]="{ display: 'inline-block', bottom: '20px', right: '20px' }"
-    [emojiTooltip]="true"
-    emoji="point_up">
-  </emoji-mart>
-
-</div>
-<div mat-dialog-actions style="text-align: right;">
+  <div mat-dialog-actions style="text-align: right;">
     <button id="cmdNo" *ngIf="data.lbl_cancel" mat-button mat-raised-button [mat-dialog-close]="'no'">{{data.lbl_cancel}}</button>
     <button id="cmdYes" *ngIf="data.lbl_ok" mat-button mat-raised-button [mat-dialog-close]="data.result">{{data.lbl_ok}}</button>
     <button id="cmdSup" *ngIf="data.lbl_sup" mat-button mat-raised-button [mat-dialog-close]="'lbl_sup'">{{data.lbl_sup}}</button>
+  </div>
+
 </div>
