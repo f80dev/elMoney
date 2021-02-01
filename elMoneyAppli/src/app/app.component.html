@@ -34,16 +34,18 @@
     <!--              title="Se déconnecter de l'application"-->
     <!--              (click)="logout()" style="cursor: pointer;">exit_to_app-->
     <!--    </mat-icon>-->
-  </mat-toolbar>
+</mat-toolbar>
 
-<mat-drawer-container class="container" style="background-color: #323232" autosize>
-    <mat-drawer #drawer class="sidenav" [mode]="sidemenu_mode" *ngIf="message.length==0">
+<mat-drawer-container class="container" autosize>
+
+    <mat-drawer #drawer class="sidenav" style="background-color: #323232;" [mode]="sidemenu_mode" *ngIf="message.length==0">
       <app-sidemenu (logout)="logout()" (click)="closeMenu()">
       </app-sidemenu>
     </mat-drawer>
 
     <mat-drawer-content style="overflow: scroll">
-      <div class="sidenav-container" style="z-index:100 !important;text-align: center;height: 100vh;border: #5d5d5d solid 1px;margin: 0"
+      <div class="sidenav-container"
+           style="z-index:100 !important;text-align: center;height: 100vh;border: none;margin: 0;padding: 0;"
            (mousedown)="closeMenu()">
 
         <div style="width:60%;margin-left: 20%;">
@@ -51,14 +53,12 @@
                          [diameter]="40" [message]="message"></app-hourglass>
         </div>
 
-
         <img src="./assets/img/elrond.png"
              style="width:60vw;max-width:300px;display: inline;margin-top: 50px;filter: saturate(2) invert() blur(1px) grayscale(100%);"
              *ngIf="message.length>0">
 
-        <router-outlet style="width:100%;"
-                       *ngIf="message.length==0" >
-
+        <router-outlet style="width:100%;background-color: #323232;"
+                       *ngIf="message.length==0">
         </router-outlet>
       </div>
     </mat-drawer-content>

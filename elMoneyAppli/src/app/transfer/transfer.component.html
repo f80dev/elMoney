@@ -2,7 +2,7 @@
   <h2>Envoyer des fonds</h2>
   <app-hourglass [message]="message"></app-hourglass>
 
-   <mat-form-field appearance="legacy" class="app-field">
+   <mat-form-field appearance="fill" class="app-field">
     <mat-label>Destinataire</mat-label>
     <input matInput type="text" max="50" [(ngModel)]="address_to">
      <mat-hint *ngIf="solde">solde de son compte: {{solde}}</mat-hint>
@@ -11,7 +11,7 @@
   <br><br>
 
 
-   <mat-form-field appearance="legacy" class="app-field">
+   <mat-form-field appearance="fill" class="app-field">
     <mat-label>Montant</mat-label>
     <input matInput type="number" min="0" max="50" [(ngModel)]="amount">
     <span matSuffix>{{user.moneys[user.selected_money].unity}}</span>

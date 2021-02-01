@@ -1,14 +1,14 @@
 <div style="overflow: hidden;">
     <h2>Destinataire</h2>
 
-    <mat-form-field appearance="legacy" class="app-field" color="accent">
+    <mat-form-field appearance="fill" class="app-field" color="accent">
       <mat-label>Mail ou adresse Elrond du destinataire</mat-label>
       <input matInput type="text" max="50" [(ngModel)]="email"
              (ngModelChange)="refresh_pseudo($event)"
              (keypress)="add_contact($event)">
     </mat-form-field>
   <br>
-  <mat-form-field appearance="legacy" class="app-field">
+  <mat-form-field appearance="fill" class="app-field">
       <mat-label>Pseudo</mat-label>
       <input matInput type="text" max="50" [(ngModel)]="pseudo" (keypress)="add_contact($event)">
     <mat-hint>Ajouter un pseudo, prénom, pour reconnaitre le profil dans vos contacts</mat-hint>
