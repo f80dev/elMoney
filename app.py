@@ -18,7 +18,7 @@ from apiTools import create_app
 from dao import DAO
 from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, \
     MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, MAIN_DEVISE, IPFS_NODE, \
-    MAIN_NAME, MAIN_DECIMALS, NETWORKS
+    MAIN_NAME, MAIN_DECIMALS, NETWORKS, ESDT_CONTRACT
 from elrondTools import ElrondNet
 from ipfs import IPFS
 
@@ -458,8 +458,10 @@ def server_config():
         "bank_addr": bc.bank.address.bech32(),
         "proxy": bc._proxy.url,
         "nft_contract": NETWORKS[bc.network_name]["nft"],
+        "esdt_contract": ESDT_CONTRACT,
         "bank_gas":bc._proxy.get_account_balance(bc.bank.address),
-        "explorer":bc._proxy.url.replace("-api","-explorer")
+        "explorer":bc._proxy.url.replace("-api","-explorer"),
+        "wallet": bc._proxy.url.replace("-api", "-wallet")+"/unlock/pem"
     }
 
     bank_balance=bc.getMoneys(bc.bank)

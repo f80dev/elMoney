@@ -19,26 +19,26 @@
     <a [href]="url_transaction" target="_blank">Voir la transaction</a>
   </div>
 
-
    <mat-form-field appearance="fill" class="app-field" style="max-width: 320px">
-    <mat-label>Nom complet de la monnaie</mat-label>
-    <input matInput type="text" minlength="10" maxlength="20" [(ngModel)]="name" (focusout)="format_name()" (focusin)="focus_idx=1">
-     <mat-hint *ngIf="focus_idx==1">de 10 (minimum) à 20 (maximum) caractères sans espace</mat-hint>
+    <mat-label>Nom complet de votre monnaie</mat-label>
+    <input matInput autocomplete="off" type="text" minlength="3" maxlength="20" [(ngModel)]="name" (focusout)="format_name()" (focusin)="focus_idx=1">
+     <mat-hint *ngIf="focus_idx==1">entre 3 et 20 caractères sans espace</mat-hint>
    </mat-form-field>
   &nbsp;&nbsp;
     <br>
-  <mat-form-field appearance="fill" class="app-field" style="max-width: 100px">
+  <mat-form-field appearance="fill" class="app-field" style="max-width: 120px">
     <mat-label>Unité</mat-label>
-    <input matInput type="text" maxlength="8" [(ngModel)]="unity" (focusout)="upper_unity($event)" (focusin)="focus_idx=2">
+    <input autocomplete="off" matInput type="text" maxlength="8" [(ngModel)]="unity" (focusout)="upper_unity($event)" (focusin)="focus_idx=2">
      <mat-hint *ngIf="focus_idx==2">Le nom abrégé de votre monnaie</mat-hint>
    </mat-form-field>
   &nbsp;&nbsp;
 
-   <mat-form-field appearance="fill" class="app-field" style="max-width: 150px">
+   <mat-form-field appearance="fill" class="app-field" style="max-width: 170px">
     <mat-label>Quantité initiale</mat-label>
     <input matInput type="number" min="0" [(ngModel)]="amount" (focusin)="focus_idx=3">
      <mat-hint *ngIf="focus_idx==3">vous êtes la banque centrale, à vous de distribuer la monnaie</mat-hint>
    </mat-form-field>
+
 <br>
 <!--TODO a retablir une fois disponible-->
     <!--    <div style="width:200px;text-align: left;display: inline-block">-->

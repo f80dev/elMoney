@@ -45,7 +45,7 @@ export class CreateComponent implements OnInit {
       return;
     }
 
-    if(this.name.length<10){
+    if(this.name.length<3){
       showMessage(this,"Le nom complet de la monnaie doit être plus long");
       return;
     }

@@ -19,7 +19,8 @@ export class AdminComponent implements OnInit {
                public toast:MatSnackBar,
                public config:ConfigService,
                public user:UserService,
-               public router:Router) { }
+               public router:Router) {
+   }
 
 
   ngOnInit(): void {
