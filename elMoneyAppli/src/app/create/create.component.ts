@@ -36,7 +36,13 @@ export class CreateComponent implements OnInit {
        $$("Fichier PEM non disponible, il est nécéssaire d'un ajouter un");
        this.router.navigate(["private"]);
      }
-     this.user.refresh_balance();
+     this.user.refresh_balance((r:any)=>{
+       if(r.egld.solde<5){
+         showMessage(this,"Vous n'avez pas assez d'eGold pour créer une nouvelle monnaie. recharger votre compte jusqu'a 5 eGold");
+         this.router.navigate(["faucet"]);
+       }
+       }
+     );
   }
 
   create() {

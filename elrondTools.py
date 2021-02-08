@@ -318,16 +318,24 @@ class ElrondNet:
         user = pem_file
         if type(pem_file)==str:
             user=Account(pem_file=pem_file)
+
+        if self._proxy.get_account_balance(user.address)<5e18:
+            return {"error": 600,
+                    "message": "not enought money to create ESDT token",
+                    "cost": 0,
+                    "addr": user.address.bech32()
+                    }
+
         user.sync_nonce(self._proxy)
 
         amount=amount*(10**(decimals))
         # ok : issue@506c657368636f696e@504c534843@c350@02@63616e4368616e67654f776e6572@74727565@63616e55706772616465@74727565
         # ko : issue@54686546616D6F75735256436F696E@525643@021E19E0C9BAB2400000@12
         arguments=[str_to_hex(name),str_to_hex(unity),nbr_to_hex(amount),nbr_to_hex(decimals)]
-        for opt in ["canFreeze", "canWipe", "canPause", "canMint", "canBurn","canChangeOwner","canUpgrade"]:
+        #for opt in ["canFreeze", "canWipe", "canPause", "canMint", "canBurn","canChangeOwner","canUpgrade"]:
         #for opt in ["canUpgrade"]:
-            arguments.append(str_to_hex(opt))
-            arguments.append(str_to_hex("false"))
+        #    arguments.append(str_to_hex(opt))
+        #    arguments.append(str_to_hex("false"))
 
         #Voir documentation : https://docs.elrond.com/developers/esdt-tokens/
         t=self.execute(ESDT_CONTRACT,

@@ -34,6 +34,7 @@ const routes: Routes = [
     { path: 'store', component: NftStoreComponent},
     { path: 'promo', component: PromoComponent},
    { path: 'faucet', component: FaucetComponent},
+   { path: 'refund', component: FaucetComponent},
    { path: 'support', component: SupportComponent},
     { path: 'main', component: MainComponent},
   { path: 'wallet', component: MainComponent},

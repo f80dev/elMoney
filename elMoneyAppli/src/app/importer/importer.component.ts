@@ -69,6 +69,10 @@ export class ImporterComponent implements OnInit {
 
 
   tokenizer() {
+    let owner_seller=0;
+    if(this.owner_can_transfer)owner_seller=owner_seller+1;
+    if(this.owner_can_sell)owner_seller=owner_seller+2;
+
     let obj={
       pem:this.user.pem["pem"],
       owner:this.user.addr,
@@ -81,8 +85,9 @@ export class ImporterComponent implements OnInit {
       max_price:this.max_price,
       min_price:this.min_price,
       dealers:this.dataSource,
-      owner_seller:this.owner_can_sell,
+      owner_seller:owner_seller
     };
+
     this.message="Enregistrement dans la blockchain";
     this.api._post("mint/"+this.count,"",obj).subscribe((r:any)=>{
       if(r){
