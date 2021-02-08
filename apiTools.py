@@ -38,8 +38,8 @@ def create_app():
     #voir https://flask-socketio.readthedocs.io/en/latest/
     socketio = SocketIO(app,
                         cors_allowed_origins="*",
-                        logger=False,
-                        engineio_logger=False,
+                        logger=True,
+                        engineio_logger=True,
                         ping_interval=500
                         )
 

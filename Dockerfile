@@ -21,9 +21,9 @@ RUN pip3 install --user --upgrade --no-cache-dir erdpy
 RUN pip3 install pyopenssl
 
 RUN pip3 -v install apscheduler
-RUN pip3 -v install flask-socketio
 RUN pip3 -v install pymongo
 RUN pip3 -v install ipfshttpclient
+RUN pip3 -v install flask-socketio==4.3.2
 
 
 WORKDIR /
