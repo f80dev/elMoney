@@ -790,6 +790,16 @@ class ElrondNet:
         return tx
 
 
+    def add_dealer(self, contract, pem_file, arguments):
+        tx = self.execute(contract, pem_file,
+                          function="add_dealer",
+                          arguments=arguments,
+                          )
+
+        return tx
+
+
+
 
 
 

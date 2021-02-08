@@ -78,7 +78,7 @@
 
           <mat-form-field appearance="fill" class="app-field" style="max-width: 200px">
             <mat-label>Prix de vente</mat-label>
-            <input matInput type="number" [(ngModel)]="price" [ngModelOptions]="{standalone: true}">
+            <input matInput type="number" [(ngModel)]="price" [ngModelOptions]="{standalone: true}" (ngModelChange)="update_prices()">
             <span matSuffix>xeGld</span>
           </mat-form-field>
 
@@ -87,11 +87,73 @@
       <mat-step>
 
         <ng-template matStepLabel>Distribution</ng-template>
-        <mat-slide-toggle [(ngModel)]="reseller"
-                          color="primary"
-                          (toggleChange)="update_prices()">Revente possible</mat-slide-toggle>
+        <mat-tab-group
+          animationDuration="1000ms">
+          <mat-tab label="Le propriétaire">
+            <br>
+            <mat-slide-toggle
+              color="primary"
+              [(ngModel)]="owner_can_sell">le propriétaire peut revendre
+            </mat-slide-toggle>
+
+            <br><br>
+            <mat-slide-toggle
+              color="primary"
+              [(ngModel)]="owner_can_transfer">le propriétaire peut offrir
+            </mat-slide-toggle>
+          </mat-tab>
+
+          <mat-tab label="Les revendeurs">
+
+            <div *ngIf="dataSource.length==0"><br>Aucun revendeur autorisé</div>
+            <br>
+            <button mat-raised-button
+                    mat-button class="app-button"
+                    (click)="add_seller()">
+              Ajouter
+            </button>
+
+            <br>
+
+            <table mat-table [dataSource]="dataSource"
+                   *ngIf="dataSource.length>0"
+                   class="mat-elevation-z8 app-table">
+
+              <ng-container matColumnDef="Address" style="margin:3px">
+                <th mat-header-cell *matHeaderCellDef>Adresse</th>
+                <td mat-cell title="Ouvrir un exemple de store"
+                    style="cursor: pointer;"
+                    *matCellDef="let element" (click)="open_store(element)"> {{element.address.substr(0,10)+'..'}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="name"  style="margin:3px">
+                <th mat-header-cell *matHeaderCellDef>Name</th>
+                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="marge" style="margin:3px">
+                <th mat-header-cell *matHeaderCellDef>Marge</th>
+                <td mat-cell *matCellDef="let element"> {{element.marge}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="delete" style="margin:3px">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element">
+                  <mat-icon style="cursor: pointer" (click)="delete_dealer(element)">cancel</mat-icon>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+            </table>
+
+          </mat-tab>
+        </mat-tab-group>
+
         <br>
-        <div *ngIf="reseller">
+
+        <div *ngIf="owner_can_sell || dataSource.length>0">
           <br>
           Le vendeur peut modifier le prix<br>
           <mat-form-field appearance="fill" class="app-field" style="max-width: 130px">
@@ -105,92 +167,42 @@
             <input matInput type="number" min="0" [(ngModel)]="max_price" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=4">
             <span matSuffix>xeGld</span>
           </mat-form-field>
+        </div>
 
-          <br>
-          <mat-slide-toggle
-            color="primary"
-            [(ngModel)]="only_owner">le propriétaire peut revendre
-          </mat-slide-toggle>
-          <br>
-          <div>
-            <mat-form-field appearance="fill" class="app-field" style="width: 100%">
-              <mat-label>Adresse du distributeur</mat-label>
-              <input matInput type="text" [(ngModel)]="reseller_addr" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=5">
-            </mat-form-field>
-            <br>
-            <mat-form-field appearance="fill" class="app-field" style="max-width: 200px">
-              <mat-label>Marge</mat-label>
-              <input matInput type="number" max="50" min="0" [(ngModel)]="reseller_pourcent" [ngModelOptions]="{standalone: true}">
-              <span matSuffix>% du prix</span>
-            </mat-form-field>
-            &nbsp;
-            <button mat-raised-button
-                    mat-button class="app-button"
-                    (click)="add_seller()">
-              Ajouter
-            </button>
+        <div>
 
-            <br>
-
-            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-              <ng-container matColumnDef="address">
-                <th mat-header-cell *matHeaderCellDef>Adresse</th>
-                <td mat-cell *matCellDef="let element"> {{element.address}} </td>
-              </ng-container>
-              <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef>Nom</th>
-                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-              </ng-container>
-              <ng-container matColumnDef="marge">
-                <th mat-header-cell *matHeaderCellDef>Marge</th>
-                <td mat-cell *matCellDef="let element"> {{element.marge}} </td>
-              </ng-container>
-
-                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-            </table>
-            <br>
-
-
-            <button mat-raised-button
-                    mat-button class="app-button"
-                    (click)="open_store()">
-              Ouvrir le store
-            </button>
-
-          </div>
 
         </div>
 
-        <br>
+
+  <br>
 
 
-      </mat-step>
+  </mat-step>
 
-      <mat-step>
-        <form>
-          <ng-template matStepLabel>Fabrication</ng-template>
-          <mat-form-field appearance="fill" class="app-field" style="max-width: 200px">
-            <mat-label>Combien d'exemplaire</mat-label>
-            <input matInput type="number" min="1" max="1000" [(ngModel)]="count" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=10">
-            <mat-hint *ngIf="focus_idx==10">Attention le coût de fabrication dépend également du nombre de token fabriqués</mat-hint>
-          </mat-form-field>
-          <br><br>
-          <button mat-raised-button  color="primary"
-                  mat-button class="large-button"
-                  [disabled]="uri?.length==0 && files[0].length==0"
-                  (click)="tokenizer()">
-            Fabriquer !
-          </button>
-        </form>
-      </mat-step>
+  <mat-step>
+    <form>
+      <ng-template matStepLabel>Fabrication</ng-template>
+      <mat-form-field appearance="fill" class="app-field" style="max-width: 200px">
+        <mat-label>Combien d'exemplaire</mat-label>
+        <input matInput type="number" min="1" max="1000" [(ngModel)]="count" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=10">
+        <mat-hint *ngIf="focus_idx==10">Attention le coût de fabrication dépend également du nombre de token fabriqués</mat-hint>
+      </mat-form-field>
+      <br><br>
+      <button mat-raised-button  color="primary"
+              mat-button class="large-button"
+              [disabled]="uri?.length==0 && files[0].length==0"
+              (click)="tokenizer()">
+        Fabriquer !
+      </button>
+    </form>
+  </mat-step>
 
 
-    </mat-vertical-stepper>
+  </mat-vertical-stepper>
 
-    &nbsp;
+  &nbsp;
 
-  </div>
+</div>
 
 </div>

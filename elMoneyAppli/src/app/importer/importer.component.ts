@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import {showMessage} from "../tools";
+import {showError, showMessage} from "../tools";
 import {ApiService} from "../api.service";
 import {UserService} from "../user.service";
 import {ImageSelectorComponent} from "../image-selector/image-selector.component";
 import {MatDialog} from "@angular/material/dialog";
 import {Router} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {NewDealerComponent} from "../new-dealer/new-dealer.component";
 
 export interface SellerProperties {
   address: string;
@@ -31,13 +32,12 @@ export class ImporterComponent implements OnInit {
   reseller: any=false;
   max_price: any=0;
   min_price: any=0;
-  only_owner: boolean=false;
-  reseller_addr: string="erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx";
-  reseller_pourcent:number=33;
   focus_idx=0;
 
-  displayedColumns: string[] = ['Address', 'Nom', 'Marge'];
+  displayedColumns: string[] = ['Address', 'name', 'marge','delete'];
   dataSource:SellerProperties[]=[];
+  owner_can_sell: boolean=true;
+  owner_can_transfer: boolean=true;
 
 
   constructor(public api:ApiService,
@@ -80,8 +80,8 @@ export class ImporterComponent implements OnInit {
       price:this.price,
       max_price:this.max_price,
       min_price:this.min_price,
-      seller:this.reseller_addr,
-      percent:this.reseller_pourcent
+      dealers:this.dataSource,
+      owner_seller:this.owner_can_sell,
     };
     this.message="Enregistrement dans la blockchain";
     this.api._post("mint/"+this.count,"",obj).subscribe((r:any)=>{
@@ -92,6 +92,8 @@ export class ImporterComponent implements OnInit {
         this.router.navigate(["nfts-perso"],{queryParams:{index:1}});
       })
       }
+    },(err)=>{
+      showError(this,err);
     })
   }
 
@@ -122,11 +124,29 @@ export class ImporterComponent implements OnInit {
     if(this.min_price==0 && this.price>0)this.min_price=this.price*0.9;
   }
 
-  open_store() {
-    open("./assets/store.html?seller="+this.reseller_addr,"store");
+  open_store(elt:any) {
+    open("./assets/store.html?seller="+elt.address,"store");
   }
 
   add_seller() {
-    this.dataSource.push({name:"", address:this.reseller_addr,marge:this.reseller_pourcent});
+     this.dialog.open(NewDealerComponent, {
+       position:
+       {left: '5vw', top: '5vh'},
+       maxWidth: 400, width: '90vw', height: 'auto', data:{}
+              }).afterClosed().subscribe((result) => {
+        if (result && result.hasOwnProperty("addr")) {
+          localStorage.setItem("last_name",result.name);
+          localStorage.setItem("last_percent",result.percent);
+          let obj:SellerProperties={address:result.addr,name:result.name,marge:result.percent};
+          this.dataSource.push(obj);
+        }
+    });
+
+
+
+  }
+
+  delete_dealer(element: any) {
+
   }
 }

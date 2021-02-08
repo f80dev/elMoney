@@ -14,11 +14,10 @@
             *ngIf="data.emoji"
             (click)="showEmoji=!showEmoji">Emojis</button>
 
-
     <button mat-flat-button mat-button
-            id="cmdFile"
-            style="width:70px;text-align: center;">
-      <label for="file">Photos</label>
+            id="cmdFile" class="app-button"
+            style="width:65px;">
+      <label for="file">&nbsp;&nbsp;Photos</label>
       <input type="file" id="file" style="opacity: 0;"
              (change)="onSelectFile($event)"
              accept="image/gif,image/jpeg,image/png" />
@@ -27,17 +26,17 @@
   </div>
 
 
-  <emoji-mart
-    *ngIf="showEmoji"
-    set="google"
-    style="margin-top:5px;"
-    [showPreview]="false"
-    [emojiSize]="48"
-    (emojiSelect)="selectEmoji($event)"
-    [style]="{ display: 'inline-block', bottom: '20px', right: '20px',width:'95%'}"
-    [emojiTooltip]="true"
-    emoji="point_up">
-  </emoji-mart>
+<!--  <emoji-mart-->
+<!--    *ngIf="showEmoji"-->
+<!--    set="google"-->
+<!--    style="margin-top:5px;"-->
+<!--    [showPreview]="false"-->
+<!--    [emojiSize]="48"-->
+<!--    (emojiSelect)="selectEmoji($event)"-->
+<!--    [style]="{ display: 'inline-block', bottom: '20px', right: '20px',width:'95%'}"-->
+<!--    [emojiTooltip]="true"-->
+<!--    emoji="point_up">-->
+<!--  </emoji-mart>-->
 
 
   <mat-grid-list *ngIf="pictures?.length>0 && imageBase64==null" style="width:100%;" cols="3" rowHeight="16:9">
@@ -75,14 +74,15 @@
 <mat-dialog-actions style="text-align: center;width:100%;">
 
   <button id="cmdTurn" mat-button mat-raised-button mat-icon-button
+          class="icon-button"
           title="Permet de faire tourner la photo de 90 degrés"
           *ngIf="data.square && data.result.startsWith('data')"
           (click)="rotatePhoto()">
     <mat-icon>refresh</mat-icon>
   </button>
 
-  <button id="cmdCancel" mat-button mat-raised-button (click)="onNoClick()">Annuler</button>
-  <button id="cmdValide" mat-button mat-raised-button [mat-dialog-close]="data.result" >Ok</button>
+  <button id="cmdCancel" class="app-button" mat-button mat-raised-button (click)="onNoClick()">Annuler</button>
+  <button id="cmdValide" class="app-button" mat-button mat-raised-button [mat-dialog-close]="data.result" >Ok</button>
 </mat-dialog-actions>
 
 

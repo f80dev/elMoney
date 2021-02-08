@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-
+import {MatTableModule} from '@angular/material/table';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -64,6 +64,7 @@ import { ImageSelectorComponent } from './image-selector/image-selector.componen
 import {MatGridListModule} from "@angular/material/grid-list";
 import {ImageCropperModule} from "ngx-image-cropper";
 import { SafePipe } from './safe.pipe';
+import { NewDealerComponent } from './new-dealer/new-dealer.component';
 
 const config: SocketIoConfig = {
   url: environment.domain_server,
@@ -104,7 +105,8 @@ const config: SocketIoConfig = {
     NftsPersoComponent,
     PromoComponent,
     ImageSelectorComponent,
-    SafePipe
+    SafePipe,
+    NewDealerComponent
   ],
   imports: [
     MatButtonModule,
@@ -114,6 +116,7 @@ const config: SocketIoConfig = {
     SocialLoginModule,
     SocketIoModule.forRoot(config),
     FormsModule,
+    MatTableModule,
     HttpClientModule,
     MatCheckboxModule,
     WebcamModule,

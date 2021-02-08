@@ -377,24 +377,40 @@ def mint(count:str,data:dict=None):
 
     pem_file=get_pem_file(data)
     owner = Account(pem_file=pem_file)
-    seller=Account(address=data["seller"])
 
-    nft_contract_owner=Account(pem_file="./PEM/"+NETWORKS[bc.network_name]["bank"]+".pem")
+    #nft_contract_owner=Account(pem_file="./PEM/"+NETWORKS[bc.network_name]["bank"]+".pem")
 
     uri=data["signature"]+res_visual
     price = int(float(data["price"]) * 1e18)
     max_price=int(float(data["max_price"]) * 1e18)
     min_price=int(float(data["min_price"]) * 1e18)
+    owner_seller=int(data["owner_seller"])
 
     #TODO: ajouter ici un encodage du secret dont la clé est connu par le contrat
 
-    arguments=[int(count),"0x"+uri.encode().hex(),"0x"+secret.encode().hex(),price,max_price,min_price,"0x"+seller.address.hex(),data["percent"]*100]
-    result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,arguments)
-    send(socketio, "refresh_nft")
-    send(socketio,"refresh_balance",owner.address.bech32())
-    os.remove(pem_file)
 
-    return jsonify(result), 200
+    arguments=[int(count),"0x"+uri.encode().hex(),"0x"+secret.encode().hex(),price,max_price,min_price,owner_seller]
+    result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,arguments)
+    if len(result["scResults"])>0:
+        return_string=str(base64.b64decode(result["scResults"][0]["data"]),"utf-8")
+        last_new_id=int(return_string.split("@")[2],16)
+        tokenids=range(last_new_id-int(count),last_new_id)
+
+        #TODO: a optimiser pour pouvoir passer plusieurs distributeurs à plusieurs billet
+        if "dealers" in data and len(data["dealers"])>0:
+            for dealer in data["dealers"]:
+                for tokenid in tokenids:
+                    _dealer=Account(address=dealer["address"])
+                    arguments=[tokenid,"0x"+_dealer.address.hex(),dealer["marge"]*100]
+                    tx=bc.add_dealer(NETWORKS[bc.network_name]["nft"],pem_file,arguments)
+
+        send(socketio, "refresh_nft")
+        send(socketio,"refresh_balance",owner.address.bech32())
+        os.remove(pem_file)
+
+        return jsonify(result), 200
+    else:
+        return "Probleme technique",500
 
 
 
