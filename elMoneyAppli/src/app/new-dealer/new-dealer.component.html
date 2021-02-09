@@ -1,0 +1,30 @@
+<h2 mat-dialog-title>Ajout d'un distributeur</h2>
+<mat-dialog-content>
+
+  <mat-form-field appearance="fill" class="app-field" style="width: 100%">
+    <mat-label>Adresse du distributeur</mat-label>
+    <input matInput type="text" [(ngModel)]="dealer.addr"
+           [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=1">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="app-field" style="max-width: 150px">
+    <mat-label>Nom du revendeur</mat-label>
+    <input matInput type="text" max="30"
+           [(ngModel)]="dealer.name"
+           [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=2">
+  </mat-form-field>
+
+
+  <mat-form-field appearance="fill" class="app-field" style="max-width: 150px">
+    <mat-label>Marge</mat-label>
+    <input matInput type="number" max=50 min=0
+           (focusin)="focus_idx=2"
+           [(ngModel)]="dealer.percent">
+    <span matSuffix>%</span>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions style="text-align: right;width:100%;">
+  <button id="cmdNo" class="app-button" mat-button mat-raised-button [mat-dialog-close]="{}">Annuler</button>
+  <button id="cmdYes" class="app-button" mat-button mat-raised-button [mat-dialog-close]="dealer">Ajouter</button>
+</mat-dialog-actions>
+
