@@ -7,6 +7,8 @@ import {MatDialog} from "@angular/material/dialog";
 import {Router} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {NewDealerComponent} from "../new-dealer/new-dealer.component";
+import {ConfigService} from "../config.service";
+import {environment} from "../../environments/environment";
 
 export interface SellerProperties {
   address: string;
@@ -42,6 +44,7 @@ export class ImporterComponent implements OnInit {
 
   constructor(public api:ApiService,
               public user:UserService,
+              public config:ConfigService,
               public dialog:MatDialog,
               public toast:MatSnackBar,
               public router:Router) {
@@ -130,7 +133,7 @@ export class ImporterComponent implements OnInit {
   }
 
   open_store(elt:any) {
-    open("./assets/store.html?seller="+elt.address,"store");
+    open("./assets/store.html?seller="+elt.address+"&server="+environment.domain_server+"&explorer="+this.config.server.explorer,"store");
   }
 
   add_seller() {

@@ -8,13 +8,14 @@
   <app-hourglass [message]="message"></app-hourglass>
 
   <table *ngIf="message?.length==0" style="display: inline-block;">
-    <tr>
+    <tr color="primary">
       <th></th>
       <th></th>
       <th>Solde</th>
     </tr>
     <tr *ngFor="let m of moneys" style="pointer:cursor;width: 95vw;" (click)="select(m)">
       <td style="text-align: left;font-size: large;width: fit-content;">
+        <mat-icon style="cursor: pointer;">check</mat-icon>&nbsp;
         <strong [cdkCopyToClipboard]="m.tokenIdentifier" ngxClipboard style="cursor: pointer;">{{m.unity}}</strong>
         <br>
       </td>

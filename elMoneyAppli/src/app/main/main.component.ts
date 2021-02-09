@@ -58,7 +58,6 @@ export class MainComponent implements OnInit {
         color:"white"
       })
     }
-
     if(this.api.tokenIdentifier && this.user.moneys[this.user.selected_money]){
         this._max=this.user.moneys[this.user.selected_money].solde;
         if(this.hand<0)this.hand=Math.round(this._max/10);
@@ -164,7 +163,9 @@ export class MainComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.refresh();
+    this.user.refresh_balance(()=>{
+      this.refresh();
+    })
     localStorage.setItem("last_screen","main");
   }
 }

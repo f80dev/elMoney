@@ -2,9 +2,9 @@
 <html lang="fr">
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta charset="UTF-8">
-    <title>Minimal store sample</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <title>Minimal store sample</title>
   <style type="text/css">
     label {
       min-width: 200px;
@@ -19,12 +19,13 @@
     }
 
     button {
-      padding: 15px;
+      padding: 5px;
       border: none;
       font-family: Arial;
-      background-color: #b4b7ff;
-      border-radius: 15px;
-      font-size: large;
+      background-color: #7a7a96;
+      border-radius: 10px;
+      color: white;
+      font-size: medium;
       width: 150px;
     }
 
@@ -34,6 +35,23 @@
       padding: 5px;
     }
   </style>
+
+  <script>
+
+  function getParam() {
+    var vars = {};
+    window.location.href.replace(location.hash, '').replace(/[?&]+([^=&]+)=?([^&]*)?/gi, function (m, key, value) { vars[key] = value !== undefined ? value : ''; });
+    return vars;
+  }
+
+
+    function open_explorer() {
+    window.open(getParam().explorer+"/address/"+getParam().seller);
+    }
+  </script>
+
+
+
 </head>
 
 
@@ -43,26 +61,36 @@
 
 <body onload="onload()">
 
+
 <!--Zone d'affichage des message-->
 <div id="message" style="width: 100%;text-align: center;color: red;"></div>
 
 <!--Section principale de la boutique-->
 <div style="width:100vw;text-align: center;" id="store_zone">
-  <h3>Exemple minimaliste de billeterie</h3>
+  <div id="zone_title">
+    <h3>Billeterie</h3>
+  </div>
+
+  <button onclick="open_explorer()">Voir les transactions</button>
+  <br>
+  <br>
   <br>
   <div>
-   <label id="label_button" for="upload_pem">Sélectionner un fichier PEM</label><br>
-   <input type="file" name="upload_pem" id="upload_pem" accept=".pem" style="display: none;">
- </div>
+    Le client doit s'identifier avec son fichier PEM pour acheter les places<br><br>
+    <label id="label_button" for="upload_pem">Sélectionner un fichier PEM</label><br>
+    <input type="file" name="upload_pem" id="upload_pem" accept=".pem" style="display: none;">
+  </div>
 
 
   <br><br><br>
-  <div id="tickets">
+  <h2>Les tokens en vente</h2>
+  <br>
+  <div id="tickets" style="font-size: large;">
   </div>
 </div>
 
-  <hr>
-  <!--Section lié à la documentation de l'API-->
+<hr>
+<!--Section lié à la documentation de l'API-->
 <!--    <div id="faq">-->
 <!--      <h2>Questions Fréquentes</h2>-->
 <!--      <iframe-->
@@ -75,19 +103,14 @@
 
 <script>
 
-  var domain="http://localhost:6660";
-  var api="";
-  var pem="";
+
 
   //Méthodes outils ________________________________________________________________________________________________________________________________________________
   //Récupére les paramétres passés dans l'url
-  function getParam() {
-    var vars = {};
-    window.location.href.replace(location.hash, '').replace(/[?&]+([^=&]+)=?([^&]*)?/gi, function (m, key, value) { vars[key] = value !== undefined ? value : ''; });
-    return vars;
-  }
 
-
+  var domain=getParam().server;
+  var api="";
+  var pem="";
 
 
   //Méthode d'affichage dans la console
@@ -126,79 +149,25 @@
 
     refresh(seller);
 
-    // if (seller == 0) {
-    //   //Si l'événement n'a pas été transmit à l'ouverture de la billeterie, on appelle une API pour proposer les différents
-    //   //événements
-    //   document.getElementById("events_zone").style.display="inline-block";
-    //   fetch(domain + "/api/events/_/dtCreate/online,with_store").then(function (r) {
-    //     r.json().then(function (resp) {
-    //        var src="";
-    //        resp.forEach(function(item){
-    //          src="<option value='"+item._id+"'>"+item.name+"</option>";
-    //        });
-    //        document.getElementById("selectEvent").innerHTML=src;
-    //
-    //        if(resp==null || resp.length==0){
-    //          document.getElementById("message").innerHTML="<h2>Aucun événement n'est disponible actuellement</h2><br><a href='https://tf.f80.fr'>CREER LE VOTRE</a><br><br>";
-    //          document.getElementById("store_zone").style.display="none";
-    //        }
-    //     });
-    //   });
-    // }
-
   }
 
 
-
-  // function build_tickets(frm){
-  //   $$("Méthode de fabrication des billets sur base des paramètres du formulaire");
-  //   var datas=new FormData(frm);
-  //   var rc=[];
-  //   for(var i=0;i<datas.get("tickets");i++){
-  //     rc.push({
-  //       ref:"tkt"+i,
-  //       seat:i,
-  //       visual:"https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/237/seat_1f4ba.png",
-  //       price:datas.get("price")
-  //     });
-  //   }
-  //   return rc;
-  // }
-
-
-  // function create_ticket_with_form(url){
-  //   document.getElementById("message").innerHTML="La page transmet l'ensemble du formulaire via l'API : <pre>"+url+"</pre><br>";
-  //   fetch(url,
-  //     {
-  //       body: new FormData(document.getElementById('frm')),
-  //       method: "post",
-  //       mode: 'no-cors',
-  //       headers:{"access_token":access_token}
-  //     }).then(function (r) {
-  //     console.log(r);
-  //     r.json().then(informe,function(r) {
-  //     console.log(r);
-  //   });
-  //   });
-  // }
 
   document.getElementById('upload_pem').addEventListener('change', readFileAsString)
   function readFileAsString() {
     var files = this.files;
     if (files.length === 0) {
-        console.log('No file is selected');
-        return;
+      console.log('No file is selected');
+      return;
     }
 
     var reader = new FileReader();
     reader.onload = (event)=> {
-        pem= event.target.result;
-        document.getElementById("label_button").innerHTML="Fichier: "+files[0].name;
+      pem= event.target.result;
+      document.getElementById("label_button").innerHTML="Fichier: "+files[0].name;
     };
     reader.readAsText(files[0]);
   }
-
-
 
 
   var access_token = getParam().access_token;
@@ -211,8 +180,6 @@
 
 
   function refresh(seller) {
-
-
     let api = domain + "/api/nfts";
     //api = api.replace("http//", "http://").replace("https//", "https://");
     let url_api = api + "/" + seller + "/" + "?access_token=" + access_token;
@@ -222,13 +189,14 @@
         mode: 'cors',
         headers: {"access_token": access_token}
       }).then(r => r.json())
-        .then(resp => {
-          var html="";
-          for(let ticket of resp){
-            if(ticket.state==0)
-              html=html+"<div>"+ticket.uri+" - "+ticket.price+" xEgld&nbsp;<a href='javascript:buy("+ticket.token_id+","+ticket.price+",\""+seller+"\")'>acheter</a></div>";
-          }
-          document.getElementById("tickets").innerHTML=html;
+      .then(resp => {
+        var html="<table style='width: 90vw;'>";
+        for(let ticket of resp){
+          if(ticket.state==0)
+            html=html+"<tr style='width:100%;text-align:center;'><td>"+ticket.uri+"</td><td>"+ticket.price+" xEgld</td><td><a href='javascript:buy("+ticket.token_id+","+ticket.price+",\""+seller+"\")'>acheter</a></td></tr>";
+        }
+        html=html+"</table>";
+        document.getElementById("tickets").innerHTML=html;
       });
   }
 
@@ -236,18 +204,18 @@
     let url_api = domain + "/api/buy_nft/"+token_id+"/"+price+"/"+ seller + "/" + "?access_token=" + access_token;
     if(pem.length>0){
       fetch(url_api,{
-          method: 'post',
-          body: JSON.stringify({pem:pem}),
-          mode: 'cors',
-          headers: {
-            "access_token": access_token,
-            "Content-Type": "application/json"
-          }
-        }).then(r => r.json())
-          .then(resp => {
-            informe("achat");
-            refresh(seller);
-          });
+        method: 'post',
+        body: JSON.stringify({pem:pem}),
+        mode: 'cors',
+        headers: {
+          "access_token": access_token,
+          "Content-Type": "application/json"
+        }
+      }).then(r => r.json())
+        .then(resp => {
+          informe("achat");
+          refresh(seller);
+        });
     } else {
       informe("Veuillez vous identifier");
     }
@@ -273,30 +241,30 @@
     var params=new FormData(document.getElementById('frm'));
 
 
-      //http://localhost:6800/api/add_ticket/last/paul.dudule@gmail.com/tkt3/10/+30
-      var delay=Math.round((new Date(params.get("date")).getTime()-new Date().getTime())/(3600*1000));
-      for(var i=0;i<params.get("tickets");i++) {
+    //http://localhost:6800/api/add_ticket/last/paul.dudule@gmail.com/tkt3/10/+30
+    var delay=Math.round((new Date(params.get("date")).getTime()-new Date().getTime())/(3600*1000));
+    for(var i=0;i<params.get("tickets");i++) {
 
-        setTimeout(function (i) {
-          var ref_ticket = new Date().getTime().toString(32).toUpperCase();
-          var url_api = api + "/" + params.get("email") + "/" + ref_ticket + "/" + params.get("price") + "/+" + delay + "?access_token=" + access_token;
-          $$("Appel de " + url_api);
-          fetch(url_api,
-            {
-              method: 'get',
-              mode: 'no-cors',
-              headers: {"access_token": access_token}do
-            }).then(function (r) {
-            r.text().then(function (resp) {
-              var email = document.getElementById("email").value;
-              informe("Vous billets sont en cours de réservation. Retrouvez les dans l'application <a href='https://app.kerberus.tech/?email=" + email + "' target='_blank'>KERBERUS</a>");
-            });
-          }, function (r) {
-            informe("Problème technique, veuillez recommencer l'opération");
-            console.log(r);
+      setTimeout(function (i) {
+        var ref_ticket = new Date().getTime().toString(32).toUpperCase();
+        var url_api = api + "/" + params.get("email") + "/" + ref_ticket + "/" + params.get("price") + "/+" + delay + "?access_token=" + access_token;
+        $$("Appel de " + url_api);
+        fetch(url_api,
+          {
+            method: 'get',
+            mode: 'no-cors',
+            headers: {"access_token": access_token}
+          }).then(function (r) {
+          r.text().then(function (resp) {
+            var email = document.getElementById("email").value;
+            informe("Vous billets sont en cours de réservation. Retrouvez les dans l'application <a href='https://app.kerberus.tech/?email=" + email + "' target='_blank'>KERBERUS</a>");
           });
-        }, i * 1000 + 100);
-      }
+        }, function (r) {
+          informe("Problème technique, veuillez recommencer l'opération");
+          console.log(r);
+        });
+      }, i * 1000 + 100);
+    }
   }
 
 </script>

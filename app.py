@@ -97,8 +97,8 @@ def analyse_pem():
 
 
 
-def refresh_client(dest:str):
-    send(socketio,"refresh_account",dest)
+def refresh_client(dest:str,comment:str=""):
+    send(socketio,"refresh_account",dest,"",{"comment":comment})
     scheduler.remove_job("id_"+dest)
 
 
@@ -171,7 +171,7 @@ def transfer(idx:str,dest:str,amount:str,unity:str):
 
     if not "error" in rc:
         log("Transfert effectué " + str(rc) + " programmation du rafraichissement des comptes")
-        scheduler.add_job(refresh_client,id="id_"+rc["to"],args=[rc["to"]],trigger="interval",minutes=0.07,max_instances=1)
+        scheduler.add_job(refresh_client,id="id_"+rc["to"],args=[rc["to"]],trigger="interval",minutes=0.02,max_instances=1)
         scheduler.add_job(refresh_client,id="id_"+rc['from'],args=[rc['from']],trigger="interval",minutes=0.05,max_instances=1)
         return jsonify(rc),200
     else:
@@ -227,7 +227,7 @@ def burn(token_id,data:dict=None):
 
 
 
-
+#tag: get_tokens tokens all_tokens
 #http://localhost:6660/api/nfts/
 @app.route('/api/nfts/',methods=["GET"])
 @app.route('/api/nfts/<seller_filter>/',methods=["GET"])
@@ -473,6 +473,7 @@ def server_config():
     infos = {
         "bank_addr": bc.bank.address.bech32(),
         "proxy": bc._proxy.url,
+        "network":bc.network_name,
         "nft_contract": NETWORKS[bc.network_name]["nft"],
         "esdt_contract": ESDT_CONTRACT,
         "bank_gas":bc._proxy.get_account_balance(bc.bank.address),

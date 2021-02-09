@@ -37,6 +37,7 @@ export class NftsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
   }
 
 

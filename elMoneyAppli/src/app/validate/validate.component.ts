@@ -22,7 +22,7 @@ export class ValidateComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.api._get("nfts/0x0/" + this.user.addr + "/").subscribe((r: any) => {
+    this.api._get("nfts/0x0/0x0/" + this.user.addr + "/").subscribe((r: any) => {
       this.nfts=r;
     });
   }

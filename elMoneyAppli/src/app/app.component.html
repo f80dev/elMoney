@@ -6,7 +6,7 @@
             background="./assets/img/tokenforge.jpg"></app-tuto>
 
 
-<mat-toolbar class="mat-elevation-z4 toolbar-app"
+<mat-toolbar class="toolbar-app"
              (mousedown)="closeMenu()" *ngIf="message?.length==0">
     <mat-icon
       title="Accédez au menu principal"
@@ -16,12 +16,10 @@
       menu
     </mat-icon>
 
-    &nbsp;&nbsp;
-
     <span>
     {{config.values?.appname}}&nbsp;
     </span>
-    <span style="font-size: xx-small">({{appVersion}})</span>
+    <span style="font-size: xx-small">({{appVersion}} sur {{config.server.network}})</span>
 
     &nbsp;
     <span class="fill-remaining-space"></span>

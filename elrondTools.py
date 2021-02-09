@@ -663,6 +663,9 @@ class ElrondNet:
                 state = int(tokens[index:index+2], 16)
 
                 index = index + 2
+                owner_seller = int(tokens[index:index + 2], 16)
+
+                index = index + 2
                 id=int(tokens[index:index+16], 16)
 
                 index=index+16
@@ -679,7 +682,7 @@ class ElrondNet:
 
                 index=index+uri_len
 
-                obj=dict({"token_id": id, "uri": uri, "price": price, "state": state,"owner":addr,"visual":visual})
+                obj=dict({"token_id": id, "uri": uri, "price": price, "state": state,"owner":addr,"visual":visual,"owner_seller":owner_seller})
                 if miner_filter!="0x0000000000000000000000000000000000000000000000000000000000000000":
                     obj["miner"]=addr
                 else:
