@@ -1,9 +1,11 @@
+from secret import MAIL_PASSWORD, APP_SECRET_KEY
+
 USERNAME="reply@f80.fr"
-PASSWORD="Hh42714280"
+PASSWORD=MAIL_PASSWORD
 SMTP_SERVER="smtp.ionos.fr"
 IMAP_SERVER="imap.ionos.fr"
 
-SECRET_KEY="hh4271"
+SECRET_KEY=APP_SECRET_KEY
 
 APPNAME="TOKEN FORGE"
 
@@ -11,8 +13,6 @@ APPNAME="TOKEN FORGE"
 DOMAIN_APPLI="https://tf.f80.fr"
 ERC20_BYTECODE_PATH="./static/deploy-erc20.json"
 NFT_BYTECODE_PATH="./static/deploy-nft.json"
-
-ADMIN_SALT="hh4271"
 
 #on alimente les nouveaux comptes en eGold pour leur permettre des transferts
 
@@ -33,6 +33,7 @@ NETWORKS={
         "tokenIdentifier":"",
         "new_account":float(10*1e18),
         "bank":"bob",
+        "unity":"tEgld",
         "faucet":"https://r3d4.fr/elrond/testnet/index.php",
         "proxy":"https://testnet-api.elrond.com",
         "explorer":"https://testnet-explorer.elrond.com",
@@ -43,17 +44,19 @@ NETWORKS={
     "devnet":{
         "new_account":float(2*1e18),
         "bank":"alice",
+        "unity":"xEgld",
         "tokenIdentifier":"TFC-57a49e",
         "faucet":"https://r3d4.fr/elrond/devnet/index.php",
         "proxy":"https://devnet-api.elrond.com",
         "explorer":"https://devnet-explorer.elrond.com",
         "wallet":"https://devnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgq60ckku9n9r3geanwjc5a6quggp8swqshd8ssa9hqh3",
+        "nft":"erd1qqqqqqqqqqqqqpgqsqgxcdj468hgvphnh7v5pn7g67pqd8xjd8ssllsqzg",
     },
 
     "server":{
         "new_account":float(300*1e18),
         "bank":"admin",
+        "unity":"eGld",
         "faucet":"",
         "proxy":"http://161.97.75.165:7950",
         "explorer":"",
@@ -70,4 +73,3 @@ DB_SERVERS=dict({
     "cloud":"mongodb+srv://admin:hh4271!!@kerberus-44xyy.gcp.mongodb.net/test"
 })
 
-MAIN_DEVISE="xEGld"

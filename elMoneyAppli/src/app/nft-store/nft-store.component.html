@@ -29,7 +29,7 @@
 
   <app-nfts [nfts]="nfts" [user]="user" [filter]="filter"
             (refresh)="refresh(true)"
-            (buy)="router.navigate(['nfts-perso'],{queryParams:{index:0}})">
+            (buy)="on_buy($event)">
   </app-nfts>
 
 

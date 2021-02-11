@@ -97,7 +97,8 @@ export class NftStoreComponent implements OnInit {
   }
 
 
-
-
-
+  on_buy($event: any) {
+    this.user.refresh_balance();
+    this.router.navigate(['nfts-perso'],{queryParams:{index:0}})
+  }
 }

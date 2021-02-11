@@ -6,11 +6,12 @@
   <br>
 
   <a [href]="fileUrl"
+     title="Ce fichier est strictement confidentiel, il ne doit être communiquer à personne et conserver précieusement."
      *ngIf="user.pem"
      download="elrond_key.pem">Télécharger votre clé privée</a>
-  <br><br>
+  <br>
   <small>
-    pour accéder dans le <a href="https://testnet-wallet.elrond.com/unlock/pem" target="_blank">wallet Elrond</a>
+    pour accéder à votre compte depuis le <a href="https://testnet-wallet.elrond.com/unlock/pem" target="_blank">wallet Elrond</a>
   </small>
 
 

@@ -28,84 +28,95 @@
   <div *ngIf="config.hasESDT()">
 
 
-  <a title="Wallet"
-     routerLink="main"
-     mat-list-item
-     id="cmdSearch">
-    <mat-icon>local_grocery_store</mat-icon>&nbsp;
-    Wallet
-  </a>
+    <a title="Wallet"
+       routerLink="main"
+       mat-list-item
+       id="cmdSearch">
+      <mat-icon>local_grocery_store</mat-icon>&nbsp;
+      Mon wallet
+    </a>
 
 
-  <a title="Fabriquer votre monnaie"
-     routerLink="moneys"
-     mat-list-item
-     id="cmdSwap">
-    <mat-icon>swap_horizontal</mat-icon>&nbsp;
-    Changer de monnaie
-  </a>
+    <a title="Voir mes tokens"
+       routerLink="nfts-perso"
+       [queryParams]="{only_perso:false}"
+       mat-list-item
+       id="cmdPerso">
+      <mat-icon>person</mat-icon>&nbsp;
+      Mes tokens (NFC)
+    </a>
 
-  <a title="Accéder à vos contacts"
-     routerLink="contacts"
-     mat-list-item
-     id="cmdAddPerson">
-    <mat-icon>person_add</mat-icon>&nbsp;
-    Gérer les contacts
-  </a>
+    <br>
+    <br>
+    <a title="Tokenizer des items"
+       routerLink="importer"
+       mat-list-item
+       id="cmdTokenizer">
+      <mat-icon>category</mat-icon>&nbsp;
+      Fabriquer des tokens
+    </a>
 
-  <a title="Fabriquer votre monnaie"
-     routerLink="create"
-     mat-list-item
-     id="cmdCreateMoney">
-    <mat-icon>build</mat-icon>&nbsp;
-    Créer votre monnaie
-  </a>
-    </div>
+    <a title="Store des tokens"
+       routerLink="store"
+       [queryParams]="{only_perso:false}"
+       mat-list-item
+       id="cmdStore">
+      <mat-icon>shopping_cart</mat-icon>&nbsp;
+      Acheter des tokens
+    </a>
+
+
+
+    <a title="Permet de vérifier si un wallet est propriétaire de vos tokens fabriqués"
+       routerLink="validate"
+       [queryParams]="{only_perso:false}"
+       mat-list-item
+       id="cmdValidate">
+      <mat-icon>checkmark</mat-icon>&nbsp;
+      Vérifier la propriété
+    </a>
+
+    <br>
+    <br>
+
+
+
+    <a title="Fabriquer votre monnaie"
+       routerLink="create"
+       mat-list-item
+       id="cmdCreateMoney">
+      <mat-icon>build</mat-icon>&nbsp;
+      Créer votre monnaie
+    </a>
+
+    <a title="Fabriquer votre monnaie"
+       routerLink="moneys"
+       mat-list-item
+       id="cmdSwap">
+      <mat-icon>swap_horizontal</mat-icon>&nbsp;
+      Changer de monnaie
+    </a>
+
+    <a title="Accéder à vos contacts"
+       routerLink="contacts"
+       mat-list-item
+       id="cmdAddPerson">
+      <mat-icon>person_add</mat-icon>&nbsp;
+      Gérer les contacts
+    </a>
+
+
+  </div>
 
   <br>
-  <a title="Tokenizer des items"
-     routerLink="importer"
-     mat-list-item
-     id="cmdTokenizer">
-    <mat-icon>category</mat-icon>&nbsp;
-    Fabriquer des tokens
-  </a>
-
-  <a title="Store des tokens"
-     routerLink="store"
-     [queryParams]="{only_perso:false}"
-     mat-list-item
-     id="cmdStore">
-    <mat-icon>shopping_cart</mat-icon>&nbsp;
-    Acheter des tokens
-  </a>
-
-  <a title="Voir mes tokens"
-     routerLink="nfts-perso"
-     [queryParams]="{only_perso:false}"
-     mat-list-item
-     id="cmdPerso">
-    <mat-icon>person</mat-icon>&nbsp;
-    Mes tokens
-  </a>
-
-  <a title="Permet de vérifier si un wallet est propriétaire de vos tokens fabriqués"
-     routerLink="validate"
-     [queryParams]="{only_perso:false}"
-     mat-list-item
-     id="cmdValidate">
-    <mat-icon>checkmark</mat-icon>&nbsp;
-    Vérifier la propriété
-  </a>
-
-  <br><br>
+  <br>
 
   <a title="Modifier vos préférences"
      routerLink="settings"
      mat-list-item
      id="cmdSetting">
     <mat-icon>person</mat-icon>&nbsp;
-    Préférences
+    Mes préférences
   </a>
 
   <a title="Recharger mon compte"

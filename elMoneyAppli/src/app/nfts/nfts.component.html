@@ -5,15 +5,17 @@
         <mat-card-title>
               {{nft.uri}}
         </mat-card-title>
-        <mat-card-subtitle>
-        </mat-card-subtitle>
       </mat-card-header>
   <!--    <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">-->
-      <mat-card-content style="min-height: 50px;text-align: center;">
+      <mat-card-content style="min-height: 50px;text-align: center;color: white;">
 
         <div *ngIf="nft.state!=0 && nft.owner!=user.addr">
           <img src="/assets/img/vendu.png" style="width:150px;">
         </div>
+
+        <span *ngIf="nft.price>0 && nft.state==0">
+          {{nft.price}} xEgld
+        </span>
 
         <div *ngIf="nft.visual.length>0 && nft.owner!=user.addr">
           <img [src]="nft.visual" style="width:150px;">

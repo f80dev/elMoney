@@ -385,11 +385,11 @@ def mint(count:str,data:dict=None):
     max_price=int(float(data["max_price"]) * 1e18)
     min_price=int(float(data["min_price"]) * 1e18)
     owner_seller=int(data["owner_seller"])
+    miner_ratio=int(data["miner_ratio"]*100)
 
     #TODO: ajouter ici un encodage du secret dont la clé est connu par le contrat
 
-
-    arguments=[int(count),"0x"+uri.encode().hex(),"0x"+secret.encode().hex(),price,max_price,min_price,owner_seller]
+    arguments=[int(count),"0x"+uri.encode().hex(),"0x"+secret.encode().hex(),price,max_price,min_price,owner_seller,miner_ratio]
     result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,arguments)
     if len(result["scResults"])>0:
         return_string=str(base64.b64decode(result["scResults"][0]["data"]),"utf-8")
@@ -452,7 +452,7 @@ def deploy(name:str,unity:str,nbdec:str,amount:str,data:dict=None):
             "idx":result["id"],
             "unity":unity,
             "appname":APPNAME,
-            "devise":MAIN_DEVISE,
+            "devise":NETWORKS[bc.network_name]["unity"],
             "bill":result["cost"],
             "amount":str(amount),
             "signature":SIGNATURE,

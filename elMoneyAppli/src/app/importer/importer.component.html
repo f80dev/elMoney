@@ -104,7 +104,6 @@
           </mat-tab>
 
           <mat-tab label="Les revendeurs">
-
             <div *ngIf="dataSource.length==0"><br>Aucun revendeur autorisé</div>
             <br>
             <button mat-raised-button
@@ -149,6 +148,10 @@
 
             </table>
 
+            <br>
+
+
+
           </mat-tab>
         </mat-tab-group>
 
@@ -159,15 +162,24 @@
           Le vendeur peut modifier le prix<br>
           <mat-form-field appearance="fill" class="app-field" style="max-width: 130px">
             <mat-label>Prix minimum</mat-label>
-            <input matInput type="number" [(ngModel)]="min_price" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=3">
+            <input matInput type="number" min="0" [max]="price" [(ngModel)]="min_price" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=3">
             <span matSuffix>xeGld</span>
           </mat-form-field>
           &nbsp;
           <mat-form-field appearance="fill" class="app-field" style="max-width: 130px">
             <mat-label>Prix maximum</mat-label>
-            <input matInput type="number" min="0" [(ngModel)]="max_price" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=4">
+            <input matInput type="number" [min]="price" [(ngModel)]="max_price" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=4">
             <span matSuffix>xeGld</span>
           </mat-form-field>
+
+          <br>
+          <mat-form-field appearance="fill" class="app-field" style="max-width: 200px" *ngIf="max_price>min_price">
+            <mat-label>Marge du créateur</mat-label>
+            <input matInput type="number" min="0" max="100" [(ngModel)]="miner_ratio" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=20">
+            <span matSuffix>%</span>
+            <mat-hint *ngIf="focus_idx==20">Percentage attribué au créateur du token sur le prix augmenté</mat-hint>
+          </mat-form-field>
+
         </div>
 
         <div>
@@ -176,34 +188,34 @@
         </div>
 
 
-  <br>
+        <br>
 
 
-  </mat-step>
+      </mat-step>
 
-  <mat-step>
-    <form>
-      <ng-template matStepLabel>Fabrication</ng-template>
-      <mat-form-field appearance="fill" class="app-field" style="max-width: 200px">
-        <mat-label>Combien d'exemplaire</mat-label>
-        <input matInput type="number" min="1" max="1000" [(ngModel)]="count" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=10">
-        <mat-hint *ngIf="focus_idx==10">Attention le coût de fabrication dépend également du nombre de token fabriqués</mat-hint>
-      </mat-form-field>
-      <br><br>
-      <button mat-raised-button  color="primary"
-              mat-button class="large-button"
-              [disabled]="uri?.length==0 && files[0].length==0"
-              (click)="tokenizer()">
-        Fabriquer !
-      </button>
-    </form>
-  </mat-step>
+      <mat-step>
+        <form>
+          <ng-template matStepLabel>Fabrication</ng-template>
+          <mat-form-field appearance="fill" class="app-field" style="max-width: 200px">
+            <mat-label>Combien d'exemplaire</mat-label>
+            <input matInput type="number" min="1" max="1000" [(ngModel)]="count" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=10">
+            <mat-hint *ngIf="focus_idx==10">Attention le coût de fabrication dépend également du nombre de token fabriqués</mat-hint>
+          </mat-form-field>
+          <br><br>
+          <button mat-raised-button  color="primary"
+                  mat-button class="large-button"
+                  [disabled]="uri?.length==0 && files[0].length==0"
+                  (click)="tokenizer()">
+            Fabriquer !
+          </button>
+        </form>
+      </mat-step>
 
 
-  </mat-vertical-stepper>
+    </mat-vertical-stepper>
 
-  &nbsp;
+    &nbsp;
 
-</div>
+  </div>
 
 </div>

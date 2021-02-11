@@ -9,7 +9,7 @@
     </div>
 
     <mat-form-field *ngIf="!data.onlyConfirm" style="width: 95%;">
-      <input id="txtPrompt" [type]="_type" matInput [(ngModel)]="data.result" cdkFocusInitial (keypress)="onEnter($event)">
+      <input id="txtPrompt" [type]="_type" [min]="_min" matInput [(ngModel)]="data.result" cdkFocusInitial (keypress)="onEnter($event)">
       <mat-icon *ngIf="data.emojis" matSuffix (click)="showEmoji=!showEmoji">emoji_emotions</mat-icon>
     </mat-form-field>
 

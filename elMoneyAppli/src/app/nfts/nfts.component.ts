@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {showMessage} from "../tools";
+import {showError, showMessage} from "../tools";
 import {environment} from "../../environments/environment";
 import {NgNavigatorShareService} from "ng-navigator-share";
 import {ClipboardService} from "ngx-clipboard";
@@ -120,6 +120,8 @@ export class NftsComponent implements OnInit {
         question: 'Indiquer le nouveau prix',
         result:nft.price,
         onlyConfirm: false,
+        min:0,
+        type:"number",
         lbl_ok: 'Oui',
         lbl_cancel: 'Non'
       }}).afterClosed().subscribe((result:any) => {
@@ -137,6 +139,8 @@ export class NftsComponent implements OnInit {
               message="Le nouveau prix est fixé à "+result;
             }
             showMessage(this,message);
+          },(err)=>{
+            showError(this,err);
           });
         }
       });

@@ -40,6 +40,7 @@ export class ImporterComponent implements OnInit {
   dataSource:SellerProperties[]=[];
   owner_can_sell: boolean=true;
   owner_can_transfer: boolean=true;
+  miner_ratio: number = 0;
 
 
   constructor(public api:ApiService,
@@ -88,7 +89,8 @@ export class ImporterComponent implements OnInit {
       max_price:this.max_price,
       min_price:this.min_price,
       dealers:this.dataSource,
-      owner_seller:owner_seller
+      owner_seller:owner_seller,
+      miner_ratio:this.miner_ratio
     };
 
     this.message="Enregistrement dans la blockchain";

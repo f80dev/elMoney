@@ -120,7 +120,7 @@ export class UserService {
     $$("Initialisation de l'utilisateur avec ",addr);
     if(!addr)addr=localStorage.getItem("addr");
     if(!addr) {
-      if(vm)vm.message="Ouverture d'un nouveau compte. Cela prendra moins de 1 minute, le temps de créditer quelques eGold pour les transactions et quelques 'TFC', la monnaie par défaut de l'application";
+      if(vm)vm.message="Ouverture d'un nouveau compte sur le "+this.config.server.network+". Cela prendra moins de 1 minute, le temps de créditer quelques eGold pour les transactions et quelques 'TFC', la monnaie par défaut de l'application";
       this.create_new_account((r)=>{
         if(vm)vm.message="";
         this.init(r.address, {pem:r.pem},func,func_error);},
