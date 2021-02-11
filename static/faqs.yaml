@@ -91,7 +91,7 @@ content:
     format: html
     content: "
       <p>
-      Token Forge permet de frabriquer des 'objets' virtuels attribuables à un propriétaire, associés à un prix
+      {{appname}} permet de frabriquer des 'objets' virtuels attribuables à un propriétaire, associés à un prix
       (donc commercialisables) et pouvant contenir un secret uniquement visible par le propriétaire.
       Dans la terminologie habituellement utilisée, on désigne ces objets par Token non fongibles, ou NFT (Non fugible token).
       </p>

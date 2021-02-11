@@ -17,7 +17,7 @@ from apiTools import create_app
 
 from dao import DAO
 from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, \
-    MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, MAIN_DEVISE, IPFS_NODE, \
+    MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, IPFS_NODE, \
     MAIN_NAME, MAIN_DECIMALS, NETWORKS, ESDT_CONTRACT
 from elrondTools import ElrondNet
 from ipfs import IPFS
@@ -171,7 +171,7 @@ def transfer(idx:str,dest:str,amount:str,unity:str):
 
     if not "error" in rc:
         log("Transfert effectué " + str(rc) + " programmation du rafraichissement des comptes")
-        scheduler.add_job(refresh_client,id="id_"+rc["to"],args=[rc["to"]],trigger="interval",minutes=0.02,max_instances=1)
+        scheduler.add_job(refresh_client,id="id_"+rc["to"],args=[rc["to"],unity],trigger="interval",minutes=0.02,max_instances=1)
         scheduler.add_job(refresh_client,id="id_"+rc['from'],args=[rc['from']],trigger="interval",minutes=0.05,max_instances=1)
         return jsonify(rc),200
     else:

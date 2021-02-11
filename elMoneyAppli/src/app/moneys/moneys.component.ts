@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Location} from "@angular/common";
 import {ApiService} from "../api.service";
 import {$$, showMessage} from "../tools";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {UserService} from "../user.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ConfigService} from "../config.service";
@@ -21,6 +21,7 @@ export class MoneysComponent implements OnInit {
 
   constructor(public api:ApiService,
               public router:Router,
+              public routes:ActivatedRoute,
               public dialog:MatDialog,
               public config:ConfigService,
               public toast:MatSnackBar,
@@ -30,6 +31,7 @@ export class MoneysComponent implements OnInit {
 
 
   ngOnInit(): void {
+
     this.refresh();
   }
 
@@ -37,8 +39,16 @@ export class MoneysComponent implements OnInit {
     this.message="Chargement des monnaies";
     this.api._get("moneys/"+this.user.addr).subscribe((r:any)=>{
       this.message="";
-      delete r.egld;
+      delete r.egld; //On n'affiche pas les eGold dans les monnaies
       this.moneys=Object.values(r);
+
+      if(this.routes.snapshot.queryParamMap.get("select")){
+        for(let m of this.moneys){
+          if(m.unity==this.routes.snapshot.queryParamMap.get("select"))
+            this.select(m);
+        }
+      }
+
     })
   }
 

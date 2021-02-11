@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   sodipodi:docname="logo.svg"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   id="svg8"
+   version="1.1"
+   viewBox="0 0 210 297"
+   height="297mm"
+   width="210mm">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     inkscape:window-maximized="1"
+     inkscape:window-y="-8"
+     inkscape:window-x="1912"
+     inkscape:window-height="1017"
+     inkscape:window-width="1920"
+     showgrid="false"
+     inkscape:document-rotation="0"
+     inkscape:current-layer="layer1"
+     inkscape:document-units="mm"
+     inkscape:cy="290.75582"
+     inkscape:cx="388.65624"
+     inkscape:zoom="0.96377841"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:groupmode="layer"
+     inkscape:label="Calque 1">
+    <path
+       sodipodi:nodetypes="ccccc"
+       id="path841"
+       d="m 72.085008,59.480487 c 2.164126,-0.359599 4.195258,-0.797667 4.25298,-2.400096 h 16.379726 l -0.05748,2.400096 z"
+       style="fill:#000000;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <text
+       transform="scale(1.0001584,0.99984162)"
+       id="text845"
+       y="84.006149"
+       x="71.897499"
+       style="font-style:normal;font-weight:normal;font-size:33.8442px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         style="fill:#000000;stroke-width:0.264583"
+         y="84.006149"
+         x="71.897499"
+         id="tspan843"
+         sodipodi:role="line">Token</tspan></text>
+    <text
+       transform="scale(0.96969123,1.0312561)"
+       id="text849"
+       y="93.771309"
+       x="140.63071"
+       style="font-style:normal;font-weight:normal;font-size:12.3381px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ff6600;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         style="fill:#ff6600;stroke-width:0.264583"
+         y="93.771309"
+         x="140.63071"
+         id="tspan847"
+         sodipodi:role="line">Forge</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:33.8442px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="73.450211"
+       y="148.46419"
+       id="text853"
+       transform="scale(1.0001584,0.99984162)"><tspan
+         sodipodi:role="line"
+         id="tspan851"
+         x="73.450211"
+         y="148.46419"
+         style="fill:#000000;stroke-width:0.264583">Tf<tspan
+   id="tspan857"
+   style="fill:#ff6600" /></tspan></text>
+    <path
+       style="fill:#000000;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 73.637968,123.92833 c 2.164126,-0.3596 4.195258,-0.79767 4.25298,-2.4001 h 16.379726 l -0.05748,2.4001 z"
+       id="path855"
+       sodipodi:nodetypes="ccccc" />
+    <ellipse
+       ry="25"
+       rx="25.000002"
+       cy="127.39861"
+       cx="28.56885"
+       id="path859"
+       style="opacity:0.436187;fill:#ff6600;stroke:none;stroke-width:0.735806;stroke-linecap:round;stroke-linejoin:round;stroke-dashoffset:31.234" />
+  </g>
+</svg>
