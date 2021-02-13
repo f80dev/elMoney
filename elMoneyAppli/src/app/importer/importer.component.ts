@@ -36,7 +36,7 @@ export class ImporterComponent implements OnInit {
   min_price: any=0;
   focus_idx=0;
 
-  displayedColumns: string[] = ['Address', 'name', 'marge','delete'];
+  displayedColumns: string[] = ['Address', 'name','delete'];
   dataSource:SellerProperties[]=[];
   owner_can_sell: boolean=true;
   owner_can_transfer: boolean=true;

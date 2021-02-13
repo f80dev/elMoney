@@ -657,7 +657,7 @@ class ElrondNet:
 
                 index=index+20
                 _u = SmartContract(address=tokens[index:index+64])
-                addr = _u.address.bech32()
+                owner_addr = _u.address.bech32()
 
                 index=index+64
                 state = int(tokens[index:index+2], 16)
@@ -682,9 +682,9 @@ class ElrondNet:
 
                 index=index+uri_len
 
-                obj=dict({"token_id": id, "uri": uri, "price": price, "state": state,"owner":addr,"visual":visual,"owner_seller":owner_seller})
+                obj=dict({"token_id": id, "uri": uri, "price": price, "state": state,"owner":owner_addr,"visual":visual,"owner_seller":owner_seller})
                 if miner_filter!="0x0000000000000000000000000000000000000000000000000000000000000000":
-                    obj["miner"]=addr
+                    obj["miner"]=owner_addr
                 else:
                     obj["miner"] = ""
 

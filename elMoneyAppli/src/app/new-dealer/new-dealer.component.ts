@@ -8,7 +8,7 @@ import {DialogData} from "../prompt/prompt.component";
   styleUrls: ['./new-dealer.component.sass']
 })
 export class NewDealerComponent implements OnInit {
-  dealer: any={addr:"erd18tudnj2z8vjh0339yu3vrkgzz2jpz8mjq0uhgnmklnap6z33qqeszq2yn4",name:"eve",percent:1};
+  dealer: any={addr:"erd18tudnj2z8vjh0339yu3vrkgzz2jpz8mjq0uhgnmklnap6z33qqeszq2yn4",name:"eve"};
   focus_idx: number=0;
 
   constructor( public dialogRef: MatDialogRef<NewDealerComponent>,

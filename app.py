@@ -250,7 +250,7 @@ def update_price(token_id:str,data:dict=None):
         data = json.loads(str(request.data, encoding="utf-8"))
 
     pem_file = get_pem_file(data)
-    rc = bc.set_price(NETWORKS[bc.network_name]["nft"], pem_file, token_id,float(data["price"])*1e18)
+    rc = bc.set_price(NETWORKS[bc.network_name]["nft"], pem_file, token_id,float(data["price"])*100)
     send(socketio,"nft_store")
     return jsonify(rc),200
 
@@ -355,6 +355,12 @@ def buy_nft(token_id,price,seller:str,data:dict=None):
 #http://localhost:5555/api/mint/
 @app.route('/api/mint/<count>/',methods=["POST"])
 def mint(count:str,data:dict=None):
+    """
+    API de création d'un token non fongible
+    :param count:
+    :param data:
+    :return:
+    """
     log("Appel du service de déploiement de contrat NFT")
 
     if data is None:
@@ -382,14 +388,14 @@ def mint(count:str,data:dict=None):
 
     uri=data["signature"]+res_visual
     price = int(float(data["price"]) * 1e18)
-    max_price=int(float(data["max_price"]) * 1e18)
-    min_price=int(float(data["min_price"]) * 1e18)
+    max_markup=int(float(data["max_price"]) * 100)
+    min_markup=int(float(data["min_price"]) * 100)
     owner_seller=int(data["owner_seller"])
     miner_ratio=int(data["miner_ratio"]*100)
 
     #TODO: ajouter ici un encodage du secret dont la clé est connu par le contrat
 
-    arguments=[int(count),"0x"+uri.encode().hex(),"0x"+secret.encode().hex(),price,max_price,min_price,owner_seller,miner_ratio]
+    arguments=[int(count),"0x"+uri.encode().hex(),"0x"+secret.encode().hex(),price,max_markup,min_markup,owner_seller,miner_ratio]
     result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,arguments)
     if len(result["scResults"])>0:
         return_string=str(base64.b64decode(result["scResults"][0]["data"]),"utf-8")
@@ -401,7 +407,7 @@ def mint(count:str,data:dict=None):
             for dealer in data["dealers"]:
                 for tokenid in tokenids:
                     _dealer=Account(address=dealer["address"])
-                    arguments=[tokenid,"0x"+_dealer.address.hex(),dealer["marge"]*100]
+                    arguments=[tokenid,"0x"+_dealer.address.hex()]
                     tx=bc.add_dealer(NETWORKS[bc.network_name]["nft"],pem_file,arguments)
 
         send(socketio, "refresh_nft")

@@ -8,6 +8,7 @@ import {Socket, SocketIoModule} from "ngx-socket-io";
 import {NewContactComponent} from "../new-contact/new-contact.component";
 import {ConfigService} from "../config.service";
 import {MatDialog} from "@angular/material/dialog";
+import {environment} from "../../environments/environment";
 
 @Component({
   selector: 'app-nfts-perso',
@@ -35,7 +36,6 @@ export class NftsPersoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     if (this.routes.snapshot.queryParamMap.has("index")) {
       this.selected.value=Number(this.routes.snapshot.queryParamMap.get("index"));
     }
@@ -45,11 +45,11 @@ export class NftsPersoComponent implements OnInit {
   }
 
    refresh() {
-    for(let tokenIdentifier of [0,1]){
-      let filters=["0x0","0x0"];
+    for(let tokenIdentifier of [0,1,2]){
+      let filters=["0x0","0x0","0x0"];
       filters[tokenIdentifier]=this.user.addr;
       this.message = "Chargement des tokens ...";
-      this.api._get("nfts/0x0/"+filters[0]+"/"+filters[1]+"/").subscribe((r: any) => {
+      this.api._get("nfts/"+filters[0]+"/"+filters[1]+"/"+filters[2]).subscribe((r: any) => {
         this.message = "";
         this.nfts[tokenIdentifier]=r;
       });
@@ -73,5 +73,9 @@ export class NftsPersoComponent implements OnInit {
             });
           }
         });
+  }
+
+  open_store() {
+    open("./assets/store.html?seller="+this.user.addr+"&server="+environment.domain_server+"&explorer="+this.config.server.explorer,"store");
   }
 }
