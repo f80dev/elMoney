@@ -1,5 +1,5 @@
- <div *ngIf="nfts.length>0" style="margin: 8px;padding:8px;" class="wrap-list" >
-    <mat-card class="app-card" style="width:300px;" *ngFor="let nft of nfts | filter:['uri',filter.value]">
+ <div *ngIf="nfts?.length>0" style="margin: 8px;padding:8px;" class="wrap-list" >
+    <mat-card class="app-card" style="width:300px;" *ngFor="let nft of nfts | filter:['visibility','visible']">
       <mat-card-header>
         <img mat-card-avatar src="./assets/icons/gift.png" class="image-icon">
         <mat-card-title>
@@ -17,7 +17,7 @@
           {{nft.price}} xEgld
         </span>
 
-        <div *ngIf="nft.visual.length>0 && nft.owner!=user.addr">
+        <div *ngIf="nft.visual?.length>0 && nft.owner!=user.addr">
           <img [src]="nft.visual" style="width:150px;">
         </div>
 
@@ -37,13 +37,22 @@
       <mat-card-actions class="app-card-action">
           <div *ngIf="nft.message?.length==0 && nft.open?.length==0">
             <button mat-raised-button mat-button class="app-button"
-                    *ngIf="nft.owner!=user.addr && nft.state==0"
+                    *ngIf="nft.owner!=user.addr && nft.state==0 && !nft.isDealer"
                     [title]="'Acheter ce token pour '+nft.price+' xEgld'"
                     (click)="buy(nft)">
               <mat-icon>shopping_cart</mat-icon>&nbsp;
               <small *ngIf="nft.price==0">Gratuit</small>
               <span *ngIf="nft.price>0" style="font-size: large;">{{nft.price | number:'1.0-2'}} <small>xEGld</small></span>
             </button>
+
+            <button mat-icon-button mat-flat-button
+                      title="Modifier le mark-up"
+                      *ngIf="nft?.isDealer"
+                      class="icon-button"
+                      (click)="update_markup(nft)">
+                <mat-icon>euro</mat-icon>
+              </button>
+
             <div *ngIf="nft.owner==user.addr" style="display: inline-block">
               <button mat-raised-button mat-button
                       color="primary"
@@ -54,13 +63,7 @@
                Ouvrir
               </button>
 
-<!--              <button mat-icon-button mat-flat-button-->
-<!--                      title="Modifier le prix"-->
-<!--                      *ngIf="nft.owner==user.addr"-->
-<!--                      class="icon-button"-->
-<!--                      (click)="update_price(nft)">-->
-<!--                <mat-icon>euro</mat-icon>-->
-<!--              </button>-->
+
 
 
               <button mat-icon-button mat-flat-button

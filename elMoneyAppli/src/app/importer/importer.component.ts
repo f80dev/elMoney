@@ -86,8 +86,8 @@ export class ImporterComponent implements OnInit {
       signature:this.uri,
       secret:this.secret,
       price:this.price,
-      max_price:this.max_price,
-      min_price:this.min_price,
+      max_markup:this.max_price,
+      min_markup:this.min_price,
       dealers:this.dataSource,
       owner_seller:owner_seller,
       miner_ratio:this.miner_ratio

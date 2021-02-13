@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
 import {showError, showMessage} from "../tools";
 import {environment} from "../../environments/environment";
 import {NgNavigatorShareService} from "ng-navigator-share";
@@ -15,10 +15,10 @@ import {MatDialog} from "@angular/material/dialog";
   templateUrl: './nfts.component.html',
   styleUrls: ['./nfts.component.sass']
 })
-export class NftsComponent implements OnInit {
+export class NftsComponent implements OnChanges {
 
   @Input("user") user:any;
-  @Input("filter") filter:any={value:""};
+  @Input("filter") filter:any={};
   @Input("nfts") nfts:any;
   @Input("seller") seller:string="0x0000000000000000000000000000000000000000000000000000000000000000";
   @Output("refresh") onrefresh:EventEmitter<any>=new EventEmitter();
@@ -36,8 +36,16 @@ export class NftsComponent implements OnInit {
   ) {
   }
 
-  ngOnInit(): void {
-
+  ngOnChanges(): void {
+    for(let nft of this.nfts){
+      nft.visibility='visible';
+      for(let k of Object.keys(this.filter)){
+        if(nft[k]!=this.filter[k]){
+          nft.visibility='hidden';
+          break;
+        }
+      }
+    }
   }
 
 
@@ -113,7 +121,7 @@ export class NftsComponent implements OnInit {
     this.ontransfer.emit(nft);
   }
 
-  update_price(nft: any) {
+  update_markup(nft: any) {
     this.dialog.open(PromptComponent, {
       data: {
         title: 'Modifier le prix',
@@ -128,7 +136,7 @@ export class NftsComponent implements OnInit {
         if(result!="no"){
           let obj={
             pem:this.user.pem.pem,
-            price:result,
+            price:Number(result),
           };
           nft.message="Mise a jour du prix";
           this.api._post("update_price/"+nft.token_id+"/","",obj).subscribe((r:any)=>{
@@ -147,4 +155,6 @@ export class NftsComponent implements OnInit {
 
 
   }
+
+
 }

@@ -51,6 +51,8 @@ export class NftsPersoComponent implements OnInit {
       this.message = "Chargement des tokens ...";
       this.api._get("nfts/"+filters[0]+"/"+filters[1]+"/"+filters[2]).subscribe((r: any) => {
         this.message = "";
+        for(let i=0;i<r.length;i++)
+          r[i].isDealer=(tokenIdentifier==0);
         this.nfts[tokenIdentifier]=r;
       });
     }
