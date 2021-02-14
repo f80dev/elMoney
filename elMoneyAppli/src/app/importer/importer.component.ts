@@ -130,8 +130,8 @@ export class ImporterComponent implements OnInit {
   }
 
   update_prices() {
-    if(this.max_price==0)this.max_price=this.price*1.1;
-    if(this.min_price==0 && this.price>0)this.min_price=this.price*0.9;
+    if(this.max_price==0)this.max_price=this.price*0.2;
+    if(this.min_price==0 && this.price>0)this.min_price=0;
   }
 
   open_store(elt:any) {

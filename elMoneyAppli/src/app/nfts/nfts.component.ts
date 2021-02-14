@@ -124,9 +124,9 @@ export class NftsComponent implements OnChanges {
   update_markup(nft: any) {
     this.dialog.open(PromptComponent, {
       data: {
-        title: 'Modifier le prix',
-        question: 'Indiquer le nouveau prix',
-        result:nft.price,
+        title: 'Marge vendeur',
+        question: 'Indiquer Votre marge',
+        result:nft.price*0.2,
         onlyConfirm: false,
         min:0,
         type:"number",

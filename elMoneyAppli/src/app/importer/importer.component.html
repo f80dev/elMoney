@@ -159,15 +159,15 @@
 
         <div *ngIf="owner_can_sell || dataSource.length>0">
           <br>
-          Le vendeur peut modifier le prix<br>
+          Marge autorisé par les revendeurs<br>
           <mat-form-field appearance="fill" class="app-field" style="max-width: 130px">
-            <mat-label>Prix minimum</mat-label>
+            <mat-label>Marge minimum</mat-label>
             <input matInput type="number" min="0" [max]="price" [(ngModel)]="min_price" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=3">
             <span matSuffix>xeGld</span>
           </mat-form-field>
           &nbsp;
           <mat-form-field appearance="fill" class="app-field" style="max-width: 130px">
-            <mat-label>Prix maximum</mat-label>
+            <mat-label>Marge maximum</mat-label>
             <input matInput type="number" [min]="price" [(ngModel)]="max_price" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=4">
             <span matSuffix>xeGld</span>
           </mat-form-field>
