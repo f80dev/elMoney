@@ -80,6 +80,8 @@
     <label id="label_button" for="upload_pem">Sélectionner un fichier PEM</label><br>
     <input type="file" name="upload_pem" id="upload_pem" accept=".pem" style="display: none;">
   </div>
+  <br><br>
+  <div id="lblBalance" style="font-size: x-large;color:cornflowerblue;"></div>
 
 
   <br><br><br>
@@ -162,8 +164,14 @@
     }
 
     var reader = new FileReader();
+    informe("Chargement du fichier d'identification");
     reader.onload = (event)=> {
+      informe("Identification terminée, vous pouvez achetez des tokens");
       pem= event.target.result;
+      let addr="erd"+pem.split("erd")[1].split("---")[0];
+      balance(addr,(bal)=>{
+        document.getElementById("lblBalance").innerHTML=bal+" xeGld";
+      });
       document.getElementById("label_button").innerHTML="Fichier: "+files[0].name;
     };
     reader.readAsText(files[0]);
@@ -174,8 +182,16 @@
   if (access_token == null) access_token = "demo_token";
 
 
-  function informe(html) {
+  function informe(html,delay=2000) {
     document.getElementById("message").innerHTML=html;
+    if(delay>0)setTimeout(()=>{informe("");},delay);
+  }
+
+  function balance(addr,func){
+    let elrond_api="https://"+getParam().network_name+"-api.elrond.com".replace("mainnet-","");
+    fetch(elrond_api+"/address/"+addr+"/balance").then(r=>r.json()).then(resp=>{
+      func(Number(resp.data.balance/1e18).toFixed(3));
+    });
   }
 
 
@@ -192,17 +208,22 @@
       .then(resp => {
         var html="<table style='width: 90vw;'>";
         for(let ticket of resp){
-          if(ticket.state==0)
+          if(ticket.state==0){
             html=html+"<tr style='width:100%;text-align:center;'><td>"+ticket.uri+"</td><td>"+ticket.price+" xEgld</td><td><a href='javascript:buy("+ticket.token_id+","+ticket.price+",\""+seller+"\")'>acheter</a></td></tr>";
+          }
+
         }
         html=html+"</table>";
         document.getElementById("tickets").innerHTML=html;
       });
   }
 
+
+
   function buy(token_id,price,seller){
     let url_api = domain + "/api/buy_nft/"+token_id+"/"+price+"/"+ seller + "/" + "?access_token=" + access_token;
     if(pem.length>0){
+      informe("Achat en cours ...",0);
       fetch(url_api,{
         method: 'post',
         body: JSON.stringify({pem:pem}),
@@ -211,13 +232,20 @@
           "access_token": access_token,
           "Content-Type": "application/json"
         }
-      }).then(r => r.json())
+      }).then(r => r.json(),(err)=>{informe(err.message);})
         .then(resp => {
-          informe("achat");
-          refresh(seller);
+          if(resp.status=="success"){
+            informe("Achat effectué");
+            refresh(seller);
+          } else {
+            informe("Problème technique ou solde insuffisant pour l'achat");
+          }
+
+        },(err)=>{
+          informe(err.message);
         });
     } else {
-      informe("Veuillez vous identifier");
+      informe("Veuillez vous identifier avant d'acheter");
     }
 
   }

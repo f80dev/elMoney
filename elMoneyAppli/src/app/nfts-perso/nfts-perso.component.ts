@@ -78,6 +78,6 @@ export class NftsPersoComponent implements OnInit {
   }
 
   open_store() {
-    open("./assets/store.html?seller="+this.user.addr+"&server="+environment.domain_server+"&explorer="+this.config.server.explorer,"store");
+    open("./assets/store.html?seller="+this.user.addr+"&server="+environment.domain_server+"&explorer="+this.config.server.explorer+"&network_name="+this.config.server.network,"store");
   }
 }
