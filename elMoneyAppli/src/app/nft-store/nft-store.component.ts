@@ -16,7 +16,7 @@ export class NftStoreComponent implements OnInit {
   nfts: any[] = [];
   message = "";
   transac_cost=environment.transac_cost;
-  filter: any={value:""};
+  filter: any={};
   filter_id: number=null;
   filter_ids: any[]=[];
 
@@ -63,6 +63,7 @@ export class NftStoreComponent implements OnInit {
       this.nfts = [];
       for (let item of r) {
         item.message = "";
+        item.search=item.uri+" "+item.price;
         item.open = "";
 
         if (!this.filter_id || this.filter_id == item.token_id) {

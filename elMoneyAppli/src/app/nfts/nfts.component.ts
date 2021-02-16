@@ -40,7 +40,7 @@ export class NftsComponent implements OnChanges {
     for(let nft of this.nfts){
       nft.visibility='visible';
       for(let k of Object.keys(this.filter)){
-        if(nft[k]!=this.filter[k]){
+        if(nft[k].indexOf(this.filter[k])==-1){
           nft.visibility='hidden';
           break;
         }

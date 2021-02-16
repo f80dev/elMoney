@@ -24,7 +24,7 @@ MAIN_URL="https://tf.f80.fr/assets/cmk.html"
 TOTAL_DEFAULT_UNITY=1000000
 CREDIT_FOR_NEWACCOUNT=200
 ESDT_CONTRACT="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
-LIMIT_GAS=60000000
+LIMIT_GAS=120000000
 
 IPFS_NODE="http://207.180.198.227:5001"
 
