@@ -9,6 +9,8 @@ import {NewContactComponent} from "../new-contact/new-contact.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {PromptComponent} from "../prompt/prompt.component";
 import {MatDialog} from "@angular/material/dialog";
+import {NewDealerComponent} from "../new-dealer/new-dealer.component";
+import {SellerProperties} from "../importer/importer.component";
 
 @Component({
   selector: 'app-nfts',
@@ -157,4 +159,23 @@ export class NftsComponent implements OnChanges {
   }
 
 
+  add_dealer(nft: any) {
+     this.dialog.open(NewDealerComponent, {
+       position:
+       {left: '5vw', top: '5vh'},
+       maxWidth: 400, width: '90vw', height: 'auto', data:{}
+              }).afterClosed().subscribe((result) => {
+        if (result && result.hasOwnProperty("addr")) {
+          let obj:any={
+            addr:result.addr,
+            name:result.name,
+            pem:this.user.pem
+          };
+          this.api._post("add_dealer/"+nft.token_id+"/","",obj).subscribe(()=>{
+            showMessage(this,"Distributeur ajouté");
+            this.onrefresh.emit();
+          })
+        }
+    });
+  }
 }

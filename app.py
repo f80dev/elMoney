@@ -430,6 +430,20 @@ def owner_of(contract,token):
 
 
 
+@app.route('/api/add_dealer/<token_id>/',methods=["POST"])
+def add_dealer(token_id:str,data:dict=None):
+    if data is None:
+        data = json.loads(str(request.data, encoding="utf-8"))
+    pem_file = get_pem_file(data["pem"])
+
+    _dealer = Account(address=data["addr"])
+    arguments = [int(token_id), "0x" + _dealer.address.hex()]
+    tx = bc.add_dealer(NETWORKS[bc.network_name]["nft"], pem_file, arguments)
+
+    return jsonify(tx), 200
+
+
+
 
 @app.route('/api/deploy/<name>/<unity>/<nbdec>/<amount>/',methods=["POST"])
 def deploy(name:str,unity:str,nbdec:str,amount:str,data:dict=None):
