@@ -39,15 +39,18 @@ export class NftsComponent implements OnChanges {
   }
 
   ngOnChanges(): void {
-    for(let nft of this.nfts){
-      nft.visibility='visible';
-      for(let k of Object.keys(this.filter)){
-        if(nft[k].indexOf(this.filter[k])==-1){
-          nft.visibility='hidden';
-          break;
+    if(this.nfts){
+      for(let nft of this.nfts){
+        nft.visibility='visible';
+        for(let k of Object.keys(this.filter)){
+          if(nft[k] && typeof nft[k]=="string" && nft[k].indexOf(this.filter[k])==-1){
+            nft.visibility='hidden';
+            break;
+          }
         }
       }
     }
+
   }
 
 
@@ -56,7 +59,7 @@ export class NftsComponent implements OnChanges {
         url:environment.domain_appli+"/store?id="+nft.token_id,
         message:"Acheter ce token",
         title:nft.uri
-    }});
+      }});
   }
 
   buy(nft: any) {
@@ -135,47 +138,47 @@ export class NftsComponent implements OnChanges {
         lbl_ok: 'Oui',
         lbl_cancel: 'Non'
       }}).afterClosed().subscribe((result:any) => {
-        if(result!="no"){
-          let obj={
-            pem:this.user.pem.pem,
-            price:Number(result),
-          };
-          nft.message="Mise a jour du prix";
-          this.api._post("update_price/"+nft.token_id+"/","",obj).subscribe((r:any)=>{
-            nft.message="";
-            let message=r.scResults[0].returnMessage;
-            if(message.length<5){
-              nft.price=result;
-              message="Le nouveau prix est fixé à "+result;
-            }
-            showMessage(this,message);
-          },(err)=>{
-            showError(this,err);
-          });
-        }
-      });
+      if(result!="no"){
+        let obj={
+          pem:this.user.pem.pem,
+          price:Number(result),
+        };
+        nft.message="Mise a jour du prix";
+        this.api._post("update_price/"+nft.token_id+"/","",obj).subscribe((r:any)=>{
+          nft.message="";
+          let message=r.scResults[0].returnMessage;
+          if(message.length<5){
+            nft.price=result;
+            message="Le nouveau prix est fixé à "+result;
+          }
+          showMessage(this,message);
+        },(err)=>{
+          showError(this,err);
+        });
+      }
+    });
 
 
   }
 
 
   add_dealer(nft: any) {
-     this.dialog.open(NewDealerComponent, {
-       position:
-       {left: '5vw', top: '5vh'},
-       maxWidth: 400, width: '90vw', height: 'auto', data:{}
-              }).afterClosed().subscribe((result) => {
-        if (result && result.hasOwnProperty("addr")) {
-          let obj:any={
-            addr:result.addr,
-            name:result.name,
-            pem:this.user.pem
-          };
-          this.api._post("add_dealer/"+nft.token_id+"/","",obj).subscribe(()=>{
-            showMessage(this,"Distributeur ajouté");
-            this.onrefresh.emit();
-          })
-        }
+    this.dialog.open(NewDealerComponent, {
+      position:
+        {left: '5vw', top: '5vh'},
+      maxWidth: 400, width: '90vw', height: 'auto', data:{}
+    }).afterClosed().subscribe((result) => {
+      if (result && result.hasOwnProperty("addr")) {
+        let obj:any={
+          addr:result.addr,
+          name:result.name,
+          pem:this.user.pem
+        };
+        this.api._post("add_dealer/"+nft.token_id+"/","",obj).subscribe(()=>{
+          showMessage(this,"Distributeur ajouté");
+          this.onrefresh.emit();
+        })
+      }
     });
   }
 }

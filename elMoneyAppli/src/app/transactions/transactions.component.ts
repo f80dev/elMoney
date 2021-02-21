@@ -1,0 +1,44 @@
+import { Component, OnInit } from '@angular/core';
+import {ApiService} from "../api.service";
+import {ActivatedRoute, Router} from "@angular/router";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {Socket} from "ngx-socket-io";
+import {UserService} from "../user.service";
+import {SellerProperties} from "../importer/importer.component";
+import {subscribe_socket} from "../tools";
+
+
+export interface I_Transaction {
+  data:string;
+  value:number;
+}
+
+@Component({
+  selector: 'app-transactions',
+  templateUrl: './transactions.component.html',
+  styleUrls: ['./transactions.component.sass']
+})
+export class TransactionsComponent implements OnInit {
+  displayedColumns: string[] = ['data', 'value'];
+  transactions:I_Transaction[]=[];
+
+  constructor(public api: ApiService,
+              public routes: ActivatedRoute,
+              public toast: MatSnackBar,
+              public socket: Socket,
+              public router: Router,
+              public user: UserService
+  ){ }
+
+  refresh(){
+    this.api._get("transactions/"+this.user.addr+"/").subscribe((ts:any)=>{
+      this.transactions=ts;
+    })
+  }
+
+  ngOnInit(): void {
+    subscribe_socket(this,"refresh_account",this.refresh);
+    this.refresh();
+  }
+
+}

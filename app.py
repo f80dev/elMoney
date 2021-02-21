@@ -8,6 +8,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 
 import yaml
 from erdpy.accounts import Account
+from erdpy.transactions import Transaction
 
 from flask import  Response, request, jsonify
 
@@ -336,7 +337,7 @@ def transfer_nft(token_id,dest,data:dict=None):
 @app.route('/api/buy_nft/<token_id>/<price>/<seller>/',methods=["POST"])
 def buy_nft(token_id,price,seller:str,data:dict=None):
     if data is None:
-       data = json.loads(str(request.data, encoding="utf-8"))
+        data = json.loads(str(request.data, encoding="utf-8"))
 
     pem_file=get_pem_file(data)
     if seller.startswith("erd"):seller="0x"+Account(address=seller).address.hex()
@@ -429,6 +430,41 @@ def owner_of(contract,token):
 
 
 
+@app.route('/api/transactions/<user>/',methods=["GET"])
+def transactions(user:str):
+    rc=[]
+    for addr in [NETWORKS[bc.network_name]["nft"]]:
+         for t in bc.getTransactions(addr):
+            try:
+                data = str(base64.b64decode(t["data"]), "utf-8")
+            except:
+                data=t["data"]
+
+            if data.startswith("bWludE"):data="Creation d'un token"
+            if data.startswith("add_dealer"):data= "Ajout d'un distributeur"
+            if data.startswith("YnV5QD"):data="Achat"
+            if data.startswith("price"): data = "Mise a jour du prix"
+            if data.startswith("burn"): data = "Destruction d'un token"
+            if data.startswith("setstate"): data = "Mise en vente"
+            if data.startswith("open"): data = "Ouverture"
+
+            if not "@" in data:
+                for tt in t["scResults"]:
+                    if tt["receiver"]==user or tt["sender"]==user:
+                        data2 = str(base64.b64decode(tt["data"]), "utf-8")
+                        if "@" in data2:data2=""
+                        rc.append({
+                            "data":data+":"+data2,
+                            "value":float(tt["value"])/1e18
+                        })
+            else:
+                print(data)
+
+
+    return jsonify(rc),200
+
+
+
 
 @app.route('/api/add_dealer/<token_id>/',methods=["POST"])
 def add_dealer(token_id:str,data:dict=None):
@@ -450,9 +486,9 @@ def deploy(name:str,unity:str,nbdec:str,amount:str,data:dict=None):
     log("Appel du service de déploiement d'ESDT de nom="+name+" unite="+unity)
 
     if data is None:
-       data = str(request.data, encoding="utf-8")
-       log("Les données de fabrication de la monnaie sont "+data)
-       data = json.loads(data)
+        data = str(request.data, encoding="utf-8")
+        log("Les données de fabrication de la monnaie sont "+data)
+        data = json.loads(data)
 
     log("Vérification de l'unicité du nom")
     if data["public"] and not dao.get_money_by_name(unity,bc._proxy.url) is None:

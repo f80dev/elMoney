@@ -65,6 +65,7 @@ import {MatGridListModule} from "@angular/material/grid-list";
 import {ImageCropperModule} from "ngx-image-cropper";
 import { SafePipe } from './safe.pipe';
 import { NewDealerComponent } from './new-dealer/new-dealer.component';
+import { TransactionsComponent } from './transactions/transactions.component';
 
 const config: SocketIoConfig = {
   url: environment.domain_server,
@@ -106,7 +107,8 @@ const config: SocketIoConfig = {
     PromoComponent,
     ImageSelectorComponent,
     SafePipe,
-    NewDealerComponent
+    NewDealerComponent,
+    TransactionsComponent
   ],
   imports: [
     MatButtonModule,

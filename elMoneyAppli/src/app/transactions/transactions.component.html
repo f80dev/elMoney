@@ -1,0 +1,22 @@
+<div class="mainform">
+  <table mat-table [dataSource]="transactions"
+         *ngIf="transactions.length>0"
+         class="mat-elevation-z8 app-table">
+
+    <ng-container matColumnDef="data"  style="margin:3px">
+      <th mat-header-cell *matHeaderCellDef>Description</th>
+      <td mat-cell *matCellDef="let element"> {{element.data}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="value"  style="margin:3px">
+      <th mat-header-cell *matHeaderCellDef>Valeur (xEgld)</th>
+      <td mat-cell *matCellDef="let element"> {{element.value}}</td>
+    </ng-container>
+
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+  </table>
+
+</div>

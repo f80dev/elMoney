@@ -13,14 +13,18 @@
       </button>
     </mat-tab>
 
+
+
     <mat-tab label="Les tokens possédés">
       <app-nfts [user]="user" [nfts]="nfts[1]"></app-nfts>
       <br>
       <button mat-raised-button mat-button class="app-button"
-              (click)="router.navigate(['importer'])">
-        Fabriquer un token
+              (click)="router.navigate(['store'])">
+        Acheter un token
       </button>
     </mat-tab>
+
+
 
     <mat-tab label="Les tokens fabriqués">
       <app-nfts [user]="user" [nfts]="nfts[2]"></app-nfts>

@@ -18,6 +18,7 @@ import {NftsPersoComponent} from "./nfts-perso/nfts-perso.component";
 import {PromoComponent} from "./promo/promo.component";
 import {RouterModule, Routes} from "@angular/router";
 import {NgModule} from "@angular/core";
+import {TransactionsComponent} from "./transactions/transactions.component";
 
 const routes: Routes = [
   { path: 'admin', component: AdminComponent},
@@ -36,6 +37,8 @@ const routes: Routes = [
   { path: 'faucet', component: FaucetComponent},
   { path: 'refund', component: FaucetComponent},
   { path: 'support', component: SupportComponent},
+  { path: 'transactions', component:TransactionsComponent},
+  { path: 'log', component:TransactionsComponent},
   { path: 'main', component: MainComponent},
   { path: 'wallet', component: MainComponent},
   { path: 'contacts', component: ContactsComponent},

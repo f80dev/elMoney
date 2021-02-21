@@ -15,7 +15,12 @@
   </small>
 
 
-  <br><br><br>
+  <br><br>
+
+  <a routerLink="/transactions">Voir mes transactions</a>
+
+  <br><br>
+
   _____
   <br>
   <br>
@@ -60,7 +65,7 @@
 
   <div *ngIf="api.tokenIdentifier">
   ______
-  <br><br><br>
+  <br><br>
 
 
       <app-elrond-addr label="Transactions du compte"
@@ -68,10 +73,6 @@
                    [addr]="user.addr">
       </app-elrond-addr>
 
-  <br><br>
-  <app-elrond-addr [label]="'Transactions sur \''+user.unity+'\''"
-                   type="address">
-  </app-elrond-addr>
 
   </div>
 

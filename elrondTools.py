@@ -342,7 +342,7 @@ class ElrondNet:
                         user,"issue",
                         value=5000000000000000000,
                         arguments=arguments,
-                        gas_limit=LIMIT_GAS*2,
+                        gas_limit=LIMIT_GAS,
                         timeout=timeout,
                         )
 
@@ -818,6 +818,11 @@ class ElrondNet:
                           )
 
         return tx
+
+    def getTransactions(self, user):
+        _user=Account(address=user)
+        rc=self._proxy.get_account_transactions(_user.address)
+        return rc
 
 
 
