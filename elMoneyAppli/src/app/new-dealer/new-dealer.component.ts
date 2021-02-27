@@ -1,6 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {DialogData} from "../prompt/prompt.component";
+import {UserService} from "../user.service";
 
 @Component({
   selector: 'app-new-dealer',
@@ -8,15 +9,15 @@ import {DialogData} from "../prompt/prompt.component";
   styleUrls: ['./new-dealer.component.sass']
 })
 export class NewDealerComponent implements OnInit {
-  dealer: any={addr:"erd18tudnj2z8vjh0339yu3vrkgzz2jpz8mjq0uhgnmklnap6z33qqeszq2yn4",name:"eve"};
+  dealer: any={addr:"",name:"moi-même"};
   focus_idx: number=0;
 
   constructor( public dialogRef: MatDialogRef<NewDealerComponent>,
+    public user:UserService,
     @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
 
   ngOnInit(): void {
-    if(localStorage.getItem("last_percent"))this.dealer.percent=Number(localStorage.getItem("last_percent"));
-    if(localStorage.getItem("last_name"))this.dealer.name=localStorage.getItem("last_name");
+    this.dealer.addr=this.user.addr;
   }
 
 }

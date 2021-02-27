@@ -103,7 +103,7 @@ export class ImporterComponent implements OnInit {
       })
       }
     },(err)=>{
-      showError(this,err);
+      showMessage(this,err.error);
     })
   }
 

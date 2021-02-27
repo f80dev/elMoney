@@ -398,24 +398,28 @@ def mint(count:str,data:dict=None):
 
     arguments=[int(count),"0x"+uri.encode().hex(),"0x"+secret.encode().hex(),price,min_markup,max_markup,owner_seller,miner_ratio]
     result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,arguments)
+
     if len(result["scResults"])>0:
-        return_string=str(base64.b64decode(result["scResults"][0]["data"]),"utf-8")
-        last_new_id=int(return_string.split("@")[2],16)
-        tokenids=range(last_new_id-int(count),last_new_id)
+        if result["status"] == "fail":
+            return result["scResults"][0]["returnMessage"],500
+        else:
+            return_string=str(base64.b64decode(result["scResults"][0]["data"]),"utf-8")
+            last_new_id=int(return_string.split("@")[2],16)
+            tokenids=range(last_new_id-int(count),last_new_id)
 
-        #TODO: a optimiser pour pouvoir passer plusieurs distributeurs à plusieurs billet
-        if "dealers" in data and len(data["dealers"])>0:
-            for dealer in data["dealers"]:
-                for tokenid in tokenids:
-                    _dealer=Account(address=dealer["address"])
-                    arguments=[tokenid,"0x"+_dealer.address.hex()]
-                    tx=bc.add_dealer(NETWORKS[bc.network_name]["nft"],pem_file,arguments)
+            #TODO: a optimiser pour pouvoir passer plusieurs distributeurs à plusieurs billet
+            if "dealers" in data and len(data["dealers"])>0:
+                for dealer in data["dealers"]:
+                    for tokenid in tokenids:
+                        _dealer=Account(address=dealer["address"])
+                        arguments=[tokenid,"0x"+_dealer.address.hex()]
+                        tx=bc.add_dealer(NETWORKS[bc.network_name]["nft"],pem_file,arguments)
 
-        send(socketio, "refresh_nft")
-        send(socketio,"refresh_balance",owner.address.bech32())
-        os.remove(pem_file)
+            send(socketio, "refresh_nft")
+            send(socketio,"refresh_balance",owner.address.bech32())
+            os.remove(pem_file)
 
-        return jsonify(result), 200
+            return jsonify(result), 200
     else:
         return "Probleme technique",500
 
