@@ -27,6 +27,6 @@ export class NewDealerComponent implements OnInit {
   onflash_event($event: any) {
     this.dealer.addr = $event.data;
     this.dealer.name="";
-    this.dialogRef.close(this.dealer.addr);
+    this.dialogRef.close(this.dealer);
   }
 }
