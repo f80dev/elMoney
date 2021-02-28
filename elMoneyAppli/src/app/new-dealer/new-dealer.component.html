@@ -25,6 +25,18 @@
     <input matInput type="text" [(ngModel)]="dealer.addr"
            [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=1">
   </mat-form-field>
+
+
+  <div style="width: 100%;text-align: center" *ngIf="showScanner">
+    <small>Pointez le QRCode du distributeur</small><br>
+    <app-scanner [size]="220"
+                 autofocus
+                 (click)="showScanner=false"
+                 (flash)="onflash_event($event)">
+    </app-scanner>
+    <br><br>
+  </div>
+
 </mat-dialog-content>
 <mat-dialog-actions style="text-align: right;width:100%;">
   <button id="cmdNo" class="app-button" mat-button mat-raised-button [mat-dialog-close]="{}">Annuler</button>

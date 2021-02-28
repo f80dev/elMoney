@@ -143,12 +143,12 @@ export class NftsComponent implements OnChanges {
           pem:this.user.pem.pem,
           price:Number(result),
         };
-        nft.message="Mise a jour du prix";
+        nft.message="Mise à jour du prix";
         this.api._post("update_price/"+nft.token_id+"/","",obj).subscribe((r:any)=>{
           nft.message="";
           let message=r.scResults[0].returnMessage;
-          if(message.length<5){
-            nft.price=result;
+          if(r.status=="success"){
+            this.onrefresh.emit();
             message="Le nouveau prix est fixé à "+result;
           }
           showMessage(this,message);

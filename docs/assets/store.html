@@ -85,7 +85,10 @@
 
 
   <br><br><br>
-  <h2>Les tokens en vente</h2>
+  <div title="Cliquer pour rafraichir" onclick="refresh()" style="cursor: pointer;">
+    <h2>Les tokens en vente</h2>
+  </div>
+
   <br>
   <div id="tickets" style="font-size: large;">
   </div>
@@ -195,7 +198,8 @@
   }
 
 
-  function refresh(seller) {
+  function refresh(seller=null) {
+    if(!seller)seller=getParam().seller;
     let api = domain + "/api/nfts";
     //api = api.replace("http//", "http://").replace("https//", "https://");
     let url_api = api + "/" + seller + "/" + "?access_token=" + access_token;

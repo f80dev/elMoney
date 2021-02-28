@@ -4,7 +4,7 @@
                  [selectedIndex]="selected.value">
 
     <mat-tab label="Les tokens distribués">
-      <app-nfts [user]="user" [nfts]="nfts[0]" [filter]="{state:0,isDealer:true}" (transfer)="transfer($event)"></app-nfts>
+      <app-nfts [user]="user" [nfts]="nfts[0]" [filter]="{state:0,isDealer:true}" (transfer)="transfer($event)" (refresh)="refresh()"></app-nfts>
 
       <br>
       <button mat-raised-button mat-button class="app-button"

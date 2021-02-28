@@ -57,7 +57,7 @@
               <button mat-raised-button mat-button
                       color="primary"
                       title="Ouvrir le token pour découvrir le secret"
-                      *ngIf="nft.state==1"
+                      *ngIf="nft.state==1 && user.add!=nft.miner"
                       class="app-button"
                       (click)="open(nft)">
                Ouvrir
