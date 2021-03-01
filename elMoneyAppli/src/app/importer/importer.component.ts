@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {showError, showMessage} from "../tools";
+import {showMessage} from "../tools";
 import {ApiService} from "../api.service";
 import {UserService} from "../user.service";
 import {ImageSelectorComponent} from "../image-selector/image-selector.component";
@@ -9,6 +9,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {NewDealerComponent} from "../new-dealer/new-dealer.component";
 import {ConfigService} from "../config.service";
 import {environment} from "../../environments/environment";
+import {MatTableDataSource} from "@angular/material/table";
 
 export interface SellerProperties {
   address: string;
@@ -37,7 +38,7 @@ export class ImporterComponent implements OnInit {
   focus_idx=0;
 
   displayedColumns: string[] = ['Address', 'name','delete'];
-  dataSource:SellerProperties[]=[];
+  dataSource = new MatTableDataSource<SellerProperties>([]);
   owner_can_sell: boolean=true;
   owner_can_transfer: boolean=true;
   miner_ratio: number = 0;
@@ -88,7 +89,7 @@ export class ImporterComponent implements OnInit {
       price:this.price,
       max_markup:this.max_price,
       min_markup:this.min_price,
-      dealers:this.dataSource,
+      dealers:this.dataSource.data,
       owner_seller:owner_seller,
       miner_ratio:this.miner_ratio
     };
@@ -145,10 +146,9 @@ export class ImporterComponent implements OnInit {
        maxWidth: 400, width: '90vw', height: 'auto', data:{}
               }).afterClosed().subscribe((result) => {
         if (result && result.hasOwnProperty("addr")) {
-          localStorage.setItem("last_name",result.name);
-          localStorage.setItem("last_percent",result.percent);
           let obj:SellerProperties={address:result.addr,name:result.name,marge:result.percent};
-          this.dataSource.push(obj);
+          this.dataSource.data.push(obj);
+          this.dataSource._updateChangeSubscription();
         }
     });
 
@@ -157,6 +157,11 @@ export class ImporterComponent implements OnInit {
   }
 
   delete_dealer(element: any) {
+    let idx=this.dataSource.data.indexOf(element);
+    if(idx>-1){
+      this.dataSource.data.splice(idx,1);
+      this.dataSource._updateChangeSubscription();
+    }
 
   }
 }
