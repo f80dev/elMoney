@@ -446,20 +446,28 @@ def transactions(user:str):
 
             if data.startswith("bWludE"):data="Creation d'un token"
             if data.startswith("add_dealer"):data= "Ajout d'un distributeur"
-            if data.startswith("YnV5QD"):data="Achat"
+            if data.startswith("YnV5QD") or data.startswith("YWRkX2"):data="Achat"
             if data.startswith("price"): data = "Mise a jour du prix"
+            if data.startswith("mint"): data = "Création d'un token"
             if data.startswith("burn"): data = "Destruction d'un token"
             if data.startswith("setstate"): data = "Mise en vente"
             if data.startswith("open"): data = "Ouverture"
 
             if not "@" in data:
-                for tt in t["scResults"]:
-                    if tt["receiver"]==user or tt["sender"]==user:
-                        data2 = str(base64.b64decode(tt["data"]), "utf-8")
-                        if "@" in data2:data2=""
+                if "scResults" in t:
+                    for tt in t["scResults"]:
+                        if tt["receiver"]==user or tt["sender"]==user:
+                            data2 = str(base64.b64decode(tt["data"]), "utf-8")
+                            if "@" in data2:data2=""
+                            rc.append({
+                                "data":data+":"+data2,
+                                "value":float(tt["value"])/1e18
+                            })
+                else:
+                    if t["receiver"]==user or t["sender"]==user:
                         rc.append({
-                            "data":data+":"+data2,
-                            "value":float(tt["value"])/1e18
+                            "data": data + ":" + data2,
+                            "value": float(t["value"]) / 1e18
                         })
             else:
                 print(data)
