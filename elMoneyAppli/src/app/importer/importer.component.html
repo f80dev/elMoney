@@ -13,8 +13,12 @@
 
   <div *ngIf="message.length==0" style="width:100%;">
 
-    <mat-vertical-stepper [linear]="true" style="width:90%;display: inline-block;max-width:700px;text-align: left;background: none;">
+    <mat-vertical-stepper (selectionChange)="update_idx($event)" [linear]="false" style="width:90%;display: inline-block;max-width:700px;text-align: left;background: none;">
       <mat-step>
+
+        <app-tuto *ngIf="idx_tab==0"
+                  label="TOKENFORGE permet de cacher un secret dans le token. Celui-ci ne peut être vue que par le propriétaire du token. Par exemple vous pouvez cacher un mot de passe, un lien youtube, un fichier"></app-tuto>
+
         <form>
           <ng-template matStepLabel>Embarquer dans le token</ng-template>
           <input #csvInput [hidden]="true"
@@ -44,7 +48,8 @@
 
       </mat-step>
 
-      <mat-step>
+      <mat-step >
+        <app-tuto *ngIf="idx_tab==1" label="Après fabrication, les tokens sont présentés sur une place de marché ou ils peuvent être achetés par les autres utilisateurs de TOKENFORGE"></app-tuto>
         <form>
           <ng-template matStepLabel>Présentation sur la marketplace</ng-template>
           <button mat-raised-button
@@ -85,7 +90,8 @@
         </form>
       </mat-step>
       <mat-step>
-
+        <app-tuto *ngIf="idx_tab==2"
+                  label="La vente des tokens peut être déléguée à des revendeurs qui peuvent prendre une commission suivant les limites fixées par le créateur du token."></app-tuto>
         <ng-template matStepLabel>Distribution</ng-template>
         <mat-tab-group
           animationDuration="1000ms">
@@ -104,7 +110,7 @@
           </mat-tab>
 
           <mat-tab label="Les revendeurs">
-            <div *ngIf="dataSource.length==0"><br>Aucun revendeur autorisé</div>
+            <div *ngIf="dataSource.data.length==0"><br>Aucun revendeur autorisé</div>
             <br>
             <button mat-raised-button
                     mat-button class="app-button"
@@ -118,10 +124,10 @@
                    *ngIf="dataSource.data.length>0"
                    class="mat-elevation-z8 app-table">
 
-              <ng-container matColumnDef="Address" style="margin:3px">
+              <ng-container matColumnDef="Address" style="margin:3px;">
                 <th mat-header-cell *matHeaderCellDef>Adresse</th>
                 <td mat-cell title="Ouvrir un exemple de store"
-                    style="cursor: pointer;"
+                    style="cursor: pointer;color:white"
                     *matCellDef="let element" (click)="open_store(element)"> {{element.address.substr(0,10)+'..'}} </td>
               </ng-container>
 
@@ -132,7 +138,7 @@
 
 
               <ng-container matColumnDef="delete" style="margin:3px">
-                <th mat-header-cell *matHeaderCellDef></th>
+                <th mat-header-cell *matHeaderCellDef>Commandes</th>
                 <td mat-cell *matCellDef="let element">
                   <mat-icon style="cursor: pointer" title="Enlever le revendeur" (click)="delete_dealer(element)">cancel</mat-icon>&nbsp;
                   <mat-icon style="cursor: pointer" title="Ouvrir un exemple de son store" (click)="open_store(element)">shopping_cart</mat-icon>
@@ -146,14 +152,7 @@
 
             <br>
 
-
-
-          </mat-tab>
-        </mat-tab-group>
-
-        <br>
-
-        <div *ngIf="owner_can_sell || dataSource.length>0">
+            <div *ngIf="dataSource.data.length>0">
           <br>
           Marge autorisé par les revendeurs<br>
           <mat-form-field appearance="fill" class="app-field" style="max-width: 130px">
@@ -178,18 +177,17 @@
 
         </div>
 
-        <div>
 
-
-        </div>
-
+          </mat-tab>
+        </mat-tab-group>
 
         <br>
-
+        <br>
 
       </mat-step>
 
       <mat-step>
+        <app-tuto *ngIf="idx_tab==3" label="Dés le token fabriqué, celui-ci est visible dans la place de marché de TOKEN FORGE"></app-tuto>
         <form>
           <ng-template matStepLabel>Fabrication</ng-template>
           <mat-form-field appearance="fill" class="app-field" style="max-width: 200px">

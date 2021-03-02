@@ -444,9 +444,12 @@ def transactions(user:str):
             except:
                 data=t["data"]
 
+            sign=-1
             if data.startswith("bWludE"):data="Creation d'un token"
             if data.startswith("add_dealer"):data= "Ajout d'un distributeur"
-            if data.startswith("YnV5QD") or data.startswith("YWRkX2"):data="Achat"
+            if data.startswith("YnV5QD") or data.startswith("YWRkX2"):
+                data="Achat"
+                sign=1
             if data.startswith("price"): data = "Mise a jour du prix"
             if data.startswith("mint"): data = "Création d'un token"
             if data.startswith("burn"): data = "Destruction d'un token"
@@ -459,15 +462,17 @@ def transactions(user:str):
                         if tt["receiver"]==user or tt["sender"]==user:
                             data2 = str(base64.b64decode(tt["data"]), "utf-8")
                             if "@" in data2:data2=""
+
                             rc.append({
                                 "data":data+":"+data2,
-                                "value":float(tt["value"])/1e18
+                                "value":sign*float(tt["value"])/1e18
                             })
                 else:
                     if t["receiver"]==user or t["sender"]==user:
+
                         rc.append({
                             "data": data + ":" + data2,
-                            "value": float(t["value"]) / 1e18
+                            "value":sign* float(t["value"]) / 1e18
                         })
             else:
                 print(data)

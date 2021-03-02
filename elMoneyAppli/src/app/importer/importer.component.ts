@@ -10,6 +10,7 @@ import {NewDealerComponent} from "../new-dealer/new-dealer.component";
 import {ConfigService} from "../config.service";
 import {environment} from "../../environments/environment";
 import {MatTableDataSource} from "@angular/material/table";
+import {StepperSelectionEvent} from "@angular/cdk/stepper";
 
 export interface SellerProperties {
   address: string;
@@ -42,6 +43,7 @@ export class ImporterComponent implements OnInit {
   owner_can_sell: boolean=true;
   owner_can_transfer: boolean=true;
   miner_ratio: number = 0;
+  idx_tab: number=0;
 
 
   constructor(public api:ApiService,
@@ -140,6 +142,7 @@ export class ImporterComponent implements OnInit {
   }
 
   add_seller() {
+    debugger
      this.dialog.open(NewDealerComponent, {
        position:
        {left: '5vw', top: '5vh'},
@@ -163,5 +166,9 @@ export class ImporterComponent implements OnInit {
       this.dataSource._updateChangeSubscription();
     }
 
+  }
+
+  update_idx($event: StepperSelectionEvent) {
+    this.idx_tab=$event.selectedIndex;
   }
 }

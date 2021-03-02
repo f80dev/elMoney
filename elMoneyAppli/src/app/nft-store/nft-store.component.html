@@ -6,23 +6,25 @@
 
 <div class="mainform">
 
-  <mat-form-field appearance="fill"
-                  *ngIf="nfts?.length>2"
-                  style="max-width:600px;width:60%;" autofocus>
-    <mat-label>Chercher un token à acheter</mat-label>
-    <input matInput matNativeControl
-           (keyup)="onQuery($event)"
-           placeholder="Un ou plusieurs mots du titre" [(ngModel)]="filter.search">
-    <mat-icon *ngIf="filter.value?.length>0"
-              matSuffix style="cursor: pointer"
-              (click)="clearQuery()">cancel</mat-icon>
-  </mat-form-field>
-  &nbsp;
+  <div *ngIf="nfts?.length>3">
+    <mat-form-field appearance="fill"
+                    style="max-width:600px;width:60%;" autofocus>
+      <mat-label>Chercher un token à acheter</mat-label>
+      <input matInput matNativeControl
+             (keyup)="onQuery($event)"
+             placeholder="Un ou plusieurs mots du titre" [(ngModel)]="filter.search">
+      <mat-icon *ngIf="filter.value?.length>0"
+                matSuffix style="cursor: pointer"
+                (click)="clearQuery()">cancel</mat-icon>
+    </mat-form-field>
+    &nbsp;
     <button mat-raised-button
-          mat-button class="app-button"
-          (click)="refresh(false)">
+            mat-button class="app-button"
+            (click)="refresh(false)">
       Rechercher
     </button>
+  </div>
+
   <br>
 
   <app-hourglass [message]="message"></app-hourglass>
