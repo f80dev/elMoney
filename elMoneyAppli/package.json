@@ -1,6 +1,6 @@
 {
   "name": "el-money-appli",
-  "version": "0.0.229",
+  "version": "0.0.230",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

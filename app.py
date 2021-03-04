@@ -391,12 +391,12 @@ def mint(count:str,data:dict=None):
     price = int(float(data["price"]) * 1e18)
     max_markup=int(float(data["max_markup"]) * 100)
     min_markup=int(float(data["min_markup"]) * 100)
-    owner_seller=int(data["owner_seller"])
+    properties=int(data["properties"])
     miner_ratio=int(data["miner_ratio"]*100)
 
     #TODO: ajouter ici un encodage du secret dont la clé est connu par le contrat
 
-    arguments=[int(count),"0x"+uri.encode().hex(),"0x"+secret.encode().hex(),price,min_markup,max_markup,owner_seller,miner_ratio]
+    arguments=[int(count),"0x"+uri.encode().hex(),"0x"+secret.encode().hex(),price,min_markup,max_markup,properties,miner_ratio]
     result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,arguments)
 
     if len(result["scResults"])>0:

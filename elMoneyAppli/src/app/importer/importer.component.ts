@@ -42,6 +42,7 @@ export class ImporterComponent implements OnInit {
   dataSource = new MatTableDataSource<SellerProperties>([]);
   owner_can_sell: boolean=true;
   owner_can_transfer: boolean=true;
+  direct_sell: boolean=true;
   miner_ratio: number = 0;
   idx_tab: number=0;
 
@@ -76,9 +77,11 @@ export class ImporterComponent implements OnInit {
 
 
   tokenizer() {
-    let owner_seller=0;
-    if(this.owner_can_transfer)owner_seller=owner_seller+1;
-    if(this.owner_can_sell)owner_seller=owner_seller+2;
+    //properties est stoké sur 8 bits : 00000<vente directe possible><le propriétaire peut vendre><le propriétaire peut offrir>
+    let properties:number=0b00000000;
+    if(this.owner_can_transfer)properties=properties+0b00000001;
+    if(this.owner_can_sell)properties=properties+0b00000010;
+    if(this.direct_sell)properties=properties+0b00000100;
 
     let obj={
       pem:this.user.pem["pem"],
@@ -92,7 +95,8 @@ export class ImporterComponent implements OnInit {
       max_markup:this.max_price,
       min_markup:this.min_price,
       dealers:this.dataSource.data,
-      owner_seller:owner_seller,
+      properties:properties,
+      direct_sell:this.direct_sell,
       miner_ratio:this.miner_ratio
     };
 

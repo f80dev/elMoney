@@ -76,7 +76,7 @@
 
 
               <button mat-icon-button mat-flat-button
-                      *ngIf="nft.state==0 && (nft.owner_seller==2 || nft.owner_seller==3 || nft.miner==user.addr)"
+                      *ngIf="nft.state==0 && (can_sell(nft.properties) || nft.miner==user.addr)"
                       title="Retirer de la vente"
                       class="icon-button"
                       (click)="setstate(nft,1,'retirer de la vente')">
@@ -84,7 +84,7 @@
               </button>
 
                <button mat-icon-button mat-flat-button class="icon-button"
-                      *ngIf="nft.state==1 && (nft.owner_seller==2 || nft.owner_seller==3  || nft.miner==user.addr)"
+                      *ngIf="nft.state==1 && (can_sell(nft.properties) || nft.miner==user.addr)"
                        title="Mettre en vente"
                       (click)="setstate(nft,0,'mise en vente')">
                 <mat-icon>shopping_cart</mat-icon>
@@ -92,7 +92,7 @@
 
               <button mat-icon-button mat-flat-button class="icon-button"
                       title="Offrir ce token"
-                      *ngIf="nft.state==1 && nft.owner==user.addr && (nft.owner_seller==1 || nft.owner_seller==3 || nft.miner==user.addr)"
+                      *ngIf="nft.state==1 && nft.owner==user.addr && (can_transfer(nft.properties) || nft.miner==user.addr)"
                       (click)="transfer(nft)">
                 <mat-icon>redeem</mat-icon>
               </button>

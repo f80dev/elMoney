@@ -83,7 +83,8 @@
 
           <mat-form-field appearance="fill" class="app-field" style="max-width: 200px">
             <mat-label>Prix de vente</mat-label>
-            <input matInput type="number" [(ngModel)]="price" [ngModelOptions]="{standalone: true}" (ngModelChange)="update_prices()">
+            <input matInput type="number" min="0" max="100"
+                   [(ngModel)]="price" [ngModelOptions]="{standalone: true}" (ngModelChange)="update_prices()">
             <span matSuffix>xeGld</span>
           </mat-form-field>
 
@@ -106,6 +107,12 @@
             <mat-slide-toggle
               color="primary"
               [(ngModel)]="owner_can_transfer">le propriétaire peut offrir
+            </mat-slide-toggle>
+
+             <br><br>
+            <mat-slide-toggle
+              color="primary"
+              [(ngModel)]="direct_sell">Disponible en vente directe
             </mat-slide-toggle>
           </mat-tab>
 

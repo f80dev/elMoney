@@ -174,11 +174,25 @@ export class NftsComponent implements OnChanges {
           name:result.name,
           pem:this.user.pem
         };
+        nft.message="Ajout du distributeur en cours";
         this.api._post("add_dealer/"+nft.token_id+"/","",obj).subscribe(()=>{
+          nft.message="";
           showMessage(this,"Distributeur ajouté");
           this.onrefresh.emit();
         })
       }
     });
   }
+
+  can_sell(properties: number) {
+    let b=properties & 0b00000010;
+    return (b>0);
+  }
+
+  can_transfer(properties: number) {
+    let b=properties & 0b00000001;
+    return (b>0);
+  }
+
+
 }

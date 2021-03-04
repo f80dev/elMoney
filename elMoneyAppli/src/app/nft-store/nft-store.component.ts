@@ -65,9 +65,9 @@ export class NftStoreComponent implements OnInit {
         item.message = "";
         item.search=item.uri+" "+item.price;
         item.open = "";
-
+        debugger
         if (!this.filter_id || this.filter_id == item.token_id) {
-          if (item.state == 0) {
+          if (item.state == 0 && (item.properties & 0b00000100) > 0) {
             this.nfts.push(item);
           }
         }
