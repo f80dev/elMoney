@@ -268,9 +268,12 @@ def open_nft(token_id:str,data:dict=None):
     os.remove(pem_file)
 
     if "scResults" in tx:
-        rc=str(base64.b64decode(tx["scResults"][0]["data"]))[3:]
-        if "@" in rc:rc=rc.split("@")[1]
-        rc=str(bytearray.fromhex(rc[0:len(rc)-1]),"utf-8")
+        if tx["status"]=="fail":
+            rc=tx["scResults"][0]["returnMessage"]
+        else:
+            rc=str(base64.b64decode(tx["scResults"][0]["data"]))[3:]
+            if "@" in rc:rc=rc.split("@")[1]
+            rc=str(bytearray.fromhex(rc[0:len(rc)-1]),"utf-8")
     else:
         rc="Impossible d'ouvrir le token"
     return jsonify({"response":rc,"cost":tx["cost"]})
