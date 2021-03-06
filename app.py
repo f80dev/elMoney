@@ -447,14 +447,18 @@ def transactions(user:str):
             except:
                 data=t["data"]
 
-            sign=-1
-            if data.startswith("bWludE"):data="Creation d'un token"
+            sign=0
+            if data.startswith("bWludE") or data.startswith("mint"):
+                data="Creation d'un token"
+
+
             if data.startswith("add_dealer"):data= "Ajout d'un distributeur"
             if data.startswith("YnV5QD") or data.startswith("YWRkX2"):
                 data="Achat"
                 sign=1
+
             if data.startswith("price"): data = "Mise a jour du prix"
-            if data.startswith("mint"): data = "Création d'un token"
+
             if data.startswith("burn"): data = "Destruction d'un token"
             if data.startswith("setstate"): data = "Mise en vente"
             if data.startswith("open"): data = "Ouverture"
@@ -472,7 +476,8 @@ def transactions(user:str):
                             rc.append({
                                 "data":data+":"+data2,
                                 "value":sign*float(tt["value"])/1e18,
-                                "gas":cost
+                                "gas":cost,
+                                "transaction":t["hash"]
                             })
                 else:
                     if t["receiver"]==user or t["sender"]==user:
@@ -480,7 +485,8 @@ def transactions(user:str):
                         rc.append({
                             "data": data + ":" + data2,
                             "value":sign*float(t["value"]) / 1e18,
-                            "gas": cost
+                            "gas": cost,
+                            "transaction": t["hash"]
                         })
             else:
                 print(data)

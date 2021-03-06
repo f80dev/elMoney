@@ -672,6 +672,9 @@ class ElrondNet:
                 max_markup = int(tokens[index:index + 4], 16)
                 index = index + 4
 
+                miner_ratio = int(tokens[index:index + 4], 16)
+                index = index + 4
+
                 id=int(tokens[index:index+16], 16)
                 index=index+16
 
@@ -689,7 +692,7 @@ class ElrondNet:
                 index=index+uri_len
 
                 obj=dict({"token_id": id, "uri": uri, "price": price,
-                          "min_markup":min_markup,"max_markup":max_markup,
+                          "min_markup":min_markup/100,"max_markup":max_markup/100,"miner_ratio":miner_ratio/100,
                           "state": state,"owner":owner_addr,"visual":visual,
                           "properties":properties
                           })

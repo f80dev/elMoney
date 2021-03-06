@@ -6,6 +6,8 @@ import {Socket} from "ngx-socket-io";
 import {UserService} from "../user.service";
 import {SellerProperties} from "../importer/importer.component";
 import {subscribe_socket} from "../tools";
+import {environment} from "../../environments/environment";
+import {ConfigService} from "../config.service";
 
 
 export interface I_Transaction {
@@ -19,11 +21,12 @@ export interface I_Transaction {
   styleUrls: ['./transactions.component.sass']
 })
 export class TransactionsComponent implements OnInit {
-  displayedColumns: string[] = ['data', 'value'];
+  displayedColumns: string[] = ['data', 'value','gas'];
   transactions:I_Transaction[]=[];
 
   constructor(public api: ApiService,
               public routes: ActivatedRoute,
+              public config:ConfigService,
               public toast: MatSnackBar,
               public socket: Socket,
               public router: Router,
@@ -41,4 +44,8 @@ export class TransactionsComponent implements OnInit {
     this.refresh();
   }
 
+  open_transaction(transact: any) {
+    let url=this.config.server.explorer+"/transactions/"+transact.transaction;
+    open(url);
+  }
 }

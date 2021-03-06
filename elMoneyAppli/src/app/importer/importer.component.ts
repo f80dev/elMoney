@@ -64,15 +64,22 @@ export class ImporterComponent implements OnInit {
      localStorage.setItem("last_screen","importer");
   }
 
+
    import(fileInputEvent: any,index_file=0) {
       var reader:any = new FileReader();
       this.message="Chargement du fichier";
-      this.filename=fileInputEvent.target.files[0].name;
-      reader.onload = ()=> {
-        this.files[index_file]=JSON.stringify(reader.result);
+      if(fileInputEvent.target.files[0].size<this.config.values.max_file_size){
+        this.filename=fileInputEvent.target.files[0].name;
+        reader.onload = ()=> {
+          this.files[index_file]=JSON.stringify(reader.result);
+          this.message="";
+        }
+        reader.readAsDataURL(fileInputEvent.target.files[0]);
+      } else {
+        showMessage(this,"La taille limite des fichier est de "+Math.round(this.config.values.max_file_size/1024)+" ko");
         this.message="";
       }
-      reader.readAsDataURL(fileInputEvent.target.files[0]);
+
   }
 
 

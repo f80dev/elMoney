@@ -6,18 +6,17 @@
               {{nft.uri}}
         </mat-card-title>
       </mat-card-header>
-  <!--    <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">-->
-      <mat-card-content style="min-height: 50px;text-align: center;color: white;">
+       <mat-card-content style="min-height: 50px;text-align: center;color: white;">
 
         <div *ngIf="nft.state!=0 && nft.owner!=user.addr">
           <img src="/assets/img/vendu.png" style="width:150px;">
         </div>
 
-        <span *ngIf="nft.price>0 && nft.state==0">
+        <span *ngIf="nft.price>0 && nft.state==0 && (nft.owner==user.addr || nft.isDealer)">
           {{nft.price}} xEgld
         </span>
 
-        <div *ngIf="nft.visual?.length>0 && nft.owner!=user.addr">
+        <div *ngIf="nft.visual?.length>0">
           <img [src]="nft.visual" style="width:150px;">
         </div>
 
@@ -46,7 +45,7 @@
             </button>
 
             <button mat-icon-button mat-flat-button
-                      title="Modifier le mark-up"
+                      title="Modifier votre commission"
                       *ngIf="nft?.isDealer"
                       class="icon-button"
                       (click)="update_markup(nft)">
