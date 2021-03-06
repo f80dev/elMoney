@@ -460,6 +460,9 @@ def transactions(user:str):
             if data.startswith("open"): data = "Ouverture"
 
             if not "@" in data:
+                cost=0
+                if t["sender"]==user:
+                    cost=-float(t["gasUsed"]*t["gasPrice"])/1e20
                 if "scResults" in t:
                     for tt in t["scResults"]:
                         if tt["receiver"]==user or tt["sender"]==user:
@@ -468,14 +471,16 @@ def transactions(user:str):
 
                             rc.append({
                                 "data":data+":"+data2,
-                                "value":sign*float(tt["value"])/1e18
+                                "value":sign*float(tt["value"])/1e18,
+                                "gas":cost
                             })
                 else:
                     if t["receiver"]==user or t["sender"]==user:
 
                         rc.append({
                             "data": data + ":" + data2,
-                            "value":sign* float(t["value"]) / 1e18
+                            "value":sign*float(t["value"]) / 1e18,
+                            "gas": cost
                         })
             else:
                 print(data)

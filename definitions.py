@@ -24,7 +24,7 @@ MAIN_URL="https://tf.f80.fr/assets/cmk.html"
 TOTAL_DEFAULT_UNITY=1000000
 CREDIT_FOR_NEWACCOUNT=200
 ESDT_CONTRACT="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
-LIMIT_GAS=120000000
+LIMIT_GAS=60000000
 
 IPFS_NODE="http://207.180.198.227:5001"
 
@@ -50,7 +50,7 @@ NETWORKS={
         "proxy":"https://devnet-api.elrond.com",
         "explorer":"https://devnet-explorer.elrond.com",
         "wallet":"https://devnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgq6ueremsrj0r34wl994p3fjq8w8uz2tfyd8sszda805",
+        "nft":"erd1qqqqqqqqqqqqqpgqfchak566s9f3lhxu9xu5ge0uxdtc9xqsd8ssqfn4u5",
     },
 
     "server":{
