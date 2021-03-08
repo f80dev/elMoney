@@ -7,6 +7,13 @@
 <div class="mainform">
 
   <h2>Fabriquer vos propres token</h2>
+
+  <small>
+    <a href="./assets/TokenForgeFromExcel.xlsm" download="TokenForge.xlsm" target="_blank">Créer des tokens depuis Excel</a>
+    </small>
+    <br>
+
+
   <app-tuto [if]="files[0].length>0"
             label="Le fichier est stocké dans le réseau IPFS de façon totalement sécurisé. Seul la clé permettant de le reconstituer est embarqué dans le token"></app-tuto>
   <app-hourglass [message]="message"></app-hourglass>
@@ -213,11 +220,7 @@
           </button>
         </form>
       </mat-step>
-
-
-    </mat-vertical-stepper>
-
-    &nbsp;
+    </mat-vertical-stepper>&nbsp;
 
   </div>
 

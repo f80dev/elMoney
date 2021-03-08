@@ -356,7 +356,7 @@ def buy_nft(token_id,price,seller:str,data:dict=None):
 
 
 
-#http://localhost:5555/api/mint/
+#http://localhost:6660/api/mint/
 @app.route('/api/mint/<count>/',methods=["POST"])
 def mint(count:str,data:dict=None):
     """

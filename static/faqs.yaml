@@ -106,8 +106,11 @@ content:
       Les applications des tokens non fongibles sont très nombreuses,
       <ul>
       <li>Désigner le propriétaire d'une oeuvre en attachant le token au fichier de l'oeuvre</li>
-      <li>Implémenter un service de billeterie, chaque billet étant représenté par un token</li>
-      <li>Représenter des petites annonces, la version {{appname}} permettant en plus l'achat et la vente des informations contenus dans l'annonce</li>
+      <li>Billeterie: Implémenter un service de billeterie, chaque billet étant représenté par un token</li>
+      <li>Petites annonces: Vendre directement des objets, le secret pouvant contenir la procédure pour récupérer l'objet après la vente</li>
+      <li>Jeux à gratter: certains tokens 'gagnant' peuvent contenir de l'argent</li>
+      <li>Tombolla: Le secret peut contenir la description du lot</li>
+      <li>Vente de contenu: le secret peut contenir un fichier, un lien non public vers une vidéo</li>
       </ul>
       </p>
       "

@@ -1,8 +1,26 @@
-FROM python:3.9.0-buster
+#Fichier docker d'installation du serveur
+
+#effacer toutes les images : docker rmi $(docker images -a -q)
+#effacer tous les containers : docker rm  $(docker ps -a -f status=exited -q)
+
+
+#install docker :
+#sudo curl -sSL get.docker.com | sh
+#systemctl start docker
+#systemctl enable --now docker
+#configurer le firewall via cockpit aver ouverture des port pour mongoDB & 6800
+#pour fedora 31 : https://linuxconfig.org/how-to-install-docker-on-fedora-31
+#dnf install -y grubby && grubby --update-kernel=ALL --args="systemd.unified_cgroup_hierarchy=0" && reboot
+
 
 #fabrication: docker build -t f80hub/elmoney . & docker push f80hub/elmoney:latest
 #installation: docker rm -f elmoney && docker pull f80hub/elmoney:latest
 #démarrage : docker rm -f elmoney && docker run --restart=always -v /root/certs:/certs -p 5555:5555 --name elmoney -d f80hub/elmoney:latest python3 app.py 5555 "http://161.97.75.165:7590" ssl
+
+
+FROM python:3.9.0-buster
+
+
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
