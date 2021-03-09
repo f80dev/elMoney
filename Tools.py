@@ -169,3 +169,9 @@ def send_mail(body:str,_to="paul.dudule@gmail.com",_from:str="reply@f80.fr",subj
         except Exception as inst:
             log("Echec de fonctionement du mail"+str(type(inst))+str(inst.args))
             return False
+
+
+def translate(text:str,d:dict):
+    for k in d.keys():
+        text=text.replace("@"+k+"@",d[k])
+    return text

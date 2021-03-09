@@ -44,6 +44,7 @@ export class NftsPersoComponent implements OnInit {
     localStorage.setItem("last_screen","nfts-perso");
   }
 
+
    refresh() {
     for(let tokenIdentifier of [0,1,2]){
       let filters=["0x0","0x0","0x0"];

@@ -17,7 +17,7 @@ from erdpy.environments import TestnetEnvironment
 from erdpy.transactions import Transaction
 from erdpy.wallet import generate_pair,derive_keys
 
-from Tools import log, base_alphabet_to_10, str_to_hex, hex_to_str, nbr_to_hex
+from Tools import log, base_alphabet_to_10, str_to_hex, hex_to_str, nbr_to_hex, translate
 from definitions import LIMIT_GAS, ESDT_CONTRACT,NETWORKS
 
 
@@ -672,6 +672,9 @@ class ElrondNet:
                 max_markup = int(tokens[index:index + 4], 16)
                 index = index + 4
 
+                markup= int(tokens[index:index + 4], 16)
+                index = index + 4
+
                 miner_ratio = int(tokens[index:index + 4], 16)
                 index = index + 4
 
@@ -690,8 +693,15 @@ class ElrondNet:
 
 
                 index=index+uri_len
+                _d={
+                    "owner":owner_addr,
+                    "miner":miner_filter,
+                    "price":str(price),
+                    "token":str(id),
+                }
+                uri=translate(uri,_d)
 
-                obj=dict({"token_id": id, "uri": uri, "price": price,
+                obj=dict({"token_id": id, "uri": uri, "price": price,"markup":markup/100,
                           "min_markup":min_markup/100,"max_markup":max_markup/100,"miner_ratio":miner_ratio/100,
                           "state": state,"owner":owner_addr,"visual":visual,
                           "properties":properties

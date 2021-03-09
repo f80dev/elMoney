@@ -20,6 +20,10 @@
 
   <div *ngIf="message.length==0" style="width:100%;">
 
+    <app-tuto [if]="focus_idx==1 || focus_idx==2"
+                    label="Vous pouvez utiliser certaines abrévations dans le secret comme par exemple @token@ pour rappeler la référence du token ou @owner@ pour avoir l'adresse du propriétaire"></app-tuto>
+
+
     <mat-vertical-stepper (selectionChange)="update_idx($event)" [linear]="false" style="width:90%;display: inline-block;max-width:700px;text-align: left;background: none;">
       <mat-step>
 

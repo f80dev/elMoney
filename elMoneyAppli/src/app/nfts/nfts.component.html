@@ -13,8 +13,12 @@
         </div>
 
         <span *ngIf="nft.price>0 && nft.state==0 && (nft.owner==user.addr || nft.isDealer)">
-          {{nft.price}} xEgld
+          {{nft.price | number:'1.0-2'}} xEgld
         </span>
+
+         <span *ngIf="nft.markup>0">
+           <small>(dont {{nft.markup | number:'1.0-2'}})</small>
+         </span>
 
         <div *ngIf="nft.visual?.length>0">
           <img [src]="nft.visual" style="width:150px;">

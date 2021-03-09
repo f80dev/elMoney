@@ -5,8 +5,10 @@
 
     <mat-tab label="Les tokens distribués" *ngIf="nfts[0]?.length>0">
       <app-tuto label="Retrouvez ici tout les tokens pour lesquels vous disposez d'un mandat de vente"></app-tuto>
-      <app-nfts [user]="user" [nfts]="nfts[0]" [filter]="{state:0,isDealer:true}" (transfer)="transfer($event)" (refresh)="refresh()"></app-nfts>
-
+      <app-nfts [user]="user" [nfts]="nfts[0]"
+                [filter]="{state:0,isDealer:true}"
+                (refresh)="refresh()">
+      </app-nfts>
       <br>
       <button mat-raised-button mat-button class="app-button"
               title="Affiche une version minimale de votre boutique de vente de vos billets"
@@ -18,7 +20,7 @@
 
 
     <mat-tab label="Vos tokens achetés">
-      <app-nfts [user]="user" [nfts]="nfts[1]"></app-nfts>
+      <app-nfts [user]="user" [nfts]="nfts[1]"  (transfer)="transfer($event)"></app-nfts>
       <br>
       <button mat-raised-button mat-button class="app-button"
               (click)="router.navigate(['store'])">
@@ -30,7 +32,7 @@
 
     <mat-tab label="Vos tokens fabriqués">
       <app-tuto label="L'ensemble des tokens que vous avez fabriqués sont listés ici. Vous pouvez ajouter des distributeurs, les retirer de la vente, en faire la promotion"></app-tuto>
-      <app-nfts [user]="user" [nfts]="nfts[2]"></app-nfts>
+      <app-nfts [user]="user" [nfts]="nfts[2]"  (transfer)="transfer($event)"></app-nfts>
 
       <br>
       <button mat-raised-button mat-button class="app-button" color="primary"

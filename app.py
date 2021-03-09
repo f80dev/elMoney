@@ -13,7 +13,7 @@ from erdpy.transactions import Transaction
 from flask import  Response, request, jsonify
 
 
-from Tools import  log, send_mail, open_html_file, now, send
+from Tools import log, send_mail, open_html_file, now, send, translate
 from apiTools import create_app
 
 from dao import DAO
@@ -274,6 +274,7 @@ def open_nft(token_id:str,data:dict=None):
             rc=str(base64.b64decode(tx["scResults"][0]["data"]))[3:]
             if "@" in rc:rc=rc.split("@")[1]
             rc=str(bytearray.fromhex(rc[0:len(rc)-1]),"utf-8")
+            rc=translate(rc,{"@owner@":Account(pem_file=pem_file).address.bech32(),"@token@":str(token_id)})
     else:
         rc="Impossible d'ouvrir le token"
     return jsonify({"response":rc,"cost":tx["cost"]})
