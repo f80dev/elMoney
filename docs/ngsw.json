@@ -1,0 +1,125 @@
+{
+  "configVersion": 1,
+  "timestamp": 1615326689323,
+  "index": "https://tf.f80.fr/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "https://tf.f80.fr/exif.js",
+        "https://tf.f80.fr/favicon.ico",
+        "https://tf.f80.fr/index.html",
+        "https://tf.f80.fr/main.js",
+        "https://tf.f80.fr/manifest.webmanifest",
+        "https://tf.f80.fr/polyfills.js",
+        "https://tf.f80.fr/runtime.js",
+        "https://tf.f80.fr/styles.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "https://tf.f80.fr/assets/TokenForgeFromExcel.xlsm",
+        "https://tf.f80.fr/assets/cmk.html",
+        "https://tf.f80.fr/assets/coin.png",
+        "https://tf.f80.fr/assets/icons/coin.png",
+        "https://tf.f80.fr/assets/icons/gift.png",
+        "https://tf.f80.fr/assets/icons/icon-128x128.png",
+        "https://tf.f80.fr/assets/icons/icon-144x144.png",
+        "https://tf.f80.fr/assets/icons/icon-152x152.png",
+        "https://tf.f80.fr/assets/icons/icon-192x192.png",
+        "https://tf.f80.fr/assets/icons/icon-384x384.png",
+        "https://tf.f80.fr/assets/icons/icon-512x512.png",
+        "https://tf.f80.fr/assets/icons/icon-72x72.png",
+        "https://tf.f80.fr/assets/icons/icon-96x96.png",
+        "https://tf.f80.fr/assets/icons/package.png",
+        "https://tf.f80.fr/assets/img/LinkedIn.png",
+        "https://tf.f80.fr/assets/img/anonymous.png",
+        "https://tf.f80.fr/assets/img/build.jpg",
+        "https://tf.f80.fr/assets/img/coin.png",
+        "https://tf.f80.fr/assets/img/elrond.png",
+        "https://tf.f80.fr/assets/img/hammer.png",
+        "https://tf.f80.fr/assets/img/items.jpg",
+        "https://tf.f80.fr/assets/img/moneys.jpg",
+        "https://tf.f80.fr/assets/img/send.jpg",
+        "https://tf.f80.fr/assets/img/tips.png",
+        "https://tf.f80.fr/assets/img/tokenforge.jpg",
+        "https://tf.f80.fr/assets/img/vendu.png",
+        "https://tf.f80.fr/assets/img/work.png",
+        "https://tf.f80.fr/assets/logo coinmaker.svg",
+        "https://tf.f80.fr/assets/store.html"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [],
+  "hashTable": {
+    "https://tf.f80.fr/assets/TokenForgeFromExcel.xlsm": "e76a3f8340b7a4719758cb846d52c855f6e3d399",
+    "https://tf.f80.fr/assets/cmk.html": "6f06383ca5f4552828853e7bd98e516195470229",
+    "https://tf.f80.fr/assets/coin.png": "9b5eb5e2fbadf0386fd6925a9e3b1b73fbfeafbc",
+    "https://tf.f80.fr/assets/icons/coin.png": "9b5eb5e2fbadf0386fd6925a9e3b1b73fbfeafbc",
+    "https://tf.f80.fr/assets/icons/gift.png": "df331c0067c6d81d7bb34a48a84a8b109c811590",
+    "https://tf.f80.fr/assets/icons/icon-128x128.png": "9981a8f161082e9e60cd3ad7f7f2a74b6f6d6690",
+    "https://tf.f80.fr/assets/icons/icon-144x144.png": "55e1d3fada76ba27aac058f82cc9bd4259b2467b",
+    "https://tf.f80.fr/assets/icons/icon-152x152.png": "d562611fb7cc8e00166ad379f9d6cf9c8748f332",
+    "https://tf.f80.fr/assets/icons/icon-192x192.png": "9eeb95494cc097a27fbe226c737961bcc5830bec",
+    "https://tf.f80.fr/assets/icons/icon-384x384.png": "852f1c5f55612a1ca836982cd5b8d7c7da3357c4",
+    "https://tf.f80.fr/assets/icons/icon-512x512.png": "b2e9d2693de52d19321d6d8b3dbea223e131b343",
+    "https://tf.f80.fr/assets/icons/icon-72x72.png": "70eb9e67c7ad207d26896f781b10219824db2f7e",
+    "https://tf.f80.fr/assets/icons/icon-96x96.png": "2de9dcc756f083da58b2dfb4a47919791529c97b",
+    "https://tf.f80.fr/assets/icons/package.png": "c7387850fe865694d2b85fdea03b21a78ad3eedb",
+    "https://tf.f80.fr/assets/img/LinkedIn.png": "dec770e0a226b15021d0b80154aa18841097a46e",
+    "https://tf.f80.fr/assets/img/anonymous.png": "c015f4d0bf7c81184706a840cfabef65c3f4e0c4",
+    "https://tf.f80.fr/assets/img/build.jpg": "5dc704939f3a00e2d8a8ee1719ae4e6fcb57388c",
+    "https://tf.f80.fr/assets/img/coin.png": "a4a110b9c6a43e94039a1605e7f55eb837ad1052",
+    "https://tf.f80.fr/assets/img/elrond.png": "aac2fd8bf932909c7f908af75ebf3ba755e7535d",
+    "https://tf.f80.fr/assets/img/hammer.png": "e9b7dc8d51d8b0c07e786d4fccc2ca2191253f19",
+    "https://tf.f80.fr/assets/img/items.jpg": "b7d629b44a00b3d688f555681ef38da09058bc64",
+    "https://tf.f80.fr/assets/img/moneys.jpg": "7da26d41d3b0241798f3421ebd96eae92132b27a",
+    "https://tf.f80.fr/assets/img/send.jpg": "5354f602290958104173369699c9790321c7e0a1",
+    "https://tf.f80.fr/assets/img/tips.png": "b7832ac8a831f94cd9b656f48bc0d75a5cd587ca",
+    "https://tf.f80.fr/assets/img/tokenforge.jpg": "1440e28adb87f2ce3fba08f16c92bbd90df10609",
+    "https://tf.f80.fr/assets/img/vendu.png": "508f0b23afafa2c0284dde1eb9a0ff448c0caa43",
+    "https://tf.f80.fr/assets/img/work.png": "817016b0bb4190f9715aae75cfab36a952359d53",
+    "https://tf.f80.fr/assets/logo coinmaker.svg": "7570bbf5d0cd79cdd7036b738632a641e0b3a850",
+    "https://tf.f80.fr/assets/store.html": "ec1fc9c1986d856d1cd208e4e26bcd12453e8e2a",
+    "https://tf.f80.fr/exif.js": "b5962aef35409d93f1ff55461045a6796e80343f",
+    "https://tf.f80.fr/favicon.ico": "22f6a4a3bcaafafb0254e0f2fa4ceb89e505e8b2",
+    "https://tf.f80.fr/index.html": "b0dc5d663ac9a98a4d801da0a95bcc1a6f780aab",
+    "https://tf.f80.fr/main.js": "89d75aa3942912a34876e445371f3864f072231c",
+    "https://tf.f80.fr/manifest.webmanifest": "4330747dd266363fb42bc9580c53a46b310d92cc",
+    "https://tf.f80.fr/polyfills.js": "e1b2e55679346bfd4fe23b63dc0ba38a7e8e2738",
+    "https://tf.f80.fr/runtime.js": "154c277c076cfc8ee335df5d9349395c6bf58db5",
+    "https://tf.f80.fr/styles.css": "5894d0567bb199ecdf975c935e4c1d67fa6b1545"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    }
+  ],
+  "navigationRequestStrategy": "performance"
+}
