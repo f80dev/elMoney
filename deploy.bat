@@ -1,5 +1,5 @@
 cd elMoneyAppli
-start npm run prod
+start npm run dev
 
 cd ..
 docker build -t f80hub/elmoney .
