@@ -5,6 +5,7 @@ import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ApiService} from "../api.service";
 import {ImageCroppedEvent} from "ngx-image-cropper";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-image-selector',
@@ -15,7 +16,6 @@ export class ImageSelectorComponent implements OnInit {
 
   icons=[];
   showIcons=false;
-  showEmoji=false;
   pictures=[];
   imagesearchengine_token="";
   ratio=1;
@@ -30,7 +30,6 @@ export class ImageSelectorComponent implements OnInit {
     public dialogRef: MatDialogRef<ImageSelectorComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
 
-    if(data.emoji==null)data.emoji=false;
     if(data.width!=null && data.width==data.height)data.square=true;
     data.title=data.title || "Sélectionner une image";
     if(data.square==null)data.square=true;
@@ -40,6 +39,8 @@ export class ImageSelectorComponent implements OnInit {
     if(data.square)data.height=data.width;
     if(data.width>data.maxsize)data.width=data.maxsize;
     if(data.height>data.maxsize)data.height=data.maxsize;
+    if(data.direct=="photo")this.onSelectFile({});
+    if(data.direct=="files")this.onSelectFile({});
 
     if(data.result.startsWith("http")){
       // this.api.convert(data.result).subscribe((r:any)=>{
@@ -50,20 +51,8 @@ export class ImageSelectorComponent implements OnInit {
 
   }
 
-  addIcons(){
-    var root="https://shifumix.com/avatars/";
-    if(this.icons.length==0){
-      for(var i=1;i<300;i++)
-        this.icons.push({photo:root+"file_emojis"+i+".png"});
-    }
-    this.showIcons=true;
-  }
 
-  selectEmoji(event){
-    this.data.result=event.emoji.native;
-    this.imageBase64=null;
-    this.showEmoji=false;
-  }
+
 
   onSelectFile(event:any) {
     selectFile(event,this.data.maxsize,this.data.quality,false,(res)=>{
@@ -87,15 +76,6 @@ export class ImageSelectorComponent implements OnInit {
     this.data.result=icon.photo;
   }
 
-  addEmoji() {
-    this.dialog.open(PromptComponent,{width: '250px',data: {title: "Utiliser un emoji", question: ""}
-    }).afterClosed().subscribe((result) => {
-      if(result){
-        this.data.result=result;
-        this.imageBase64=null;
-      }
-    });
-  }
 
   ngOnInit() {
   }

@@ -11,6 +11,7 @@ import {ConfigService} from "../config.service";
 import {environment} from "../../environments/environment";
 import {MatTableDataSource} from "@angular/material/table";
 import {StepperSelectionEvent} from "@angular/cdk/stepper";
+import {PromptComponent} from "../prompt/prompt.component";
 
 export interface SellerProperties {
   address: string;
@@ -27,10 +28,10 @@ export class ImporterComponent implements OnInit {
 
   message: string="";
   files:string[]=["",""];
-  count: any=1;
-  secret: any="";
-  price: any=0;
-  uri: any="Achetez mon super token";
+  count: number=1;
+  secret: string="";
+  price: number=0;
+  uri: string="Achetez mon NFT";
   cost=0;
   filename: string="";
   reseller: any=false;
@@ -61,24 +62,25 @@ export class ImporterComponent implements OnInit {
     //     this.cost=r.txGasUnits;
     //   }
     // })
-     localStorage.setItem("last_screen","importer");
+    localStorage.setItem("last_screen","importer");
   }
 
 
-   import(fileInputEvent: any,index_file=0) {
-      var reader:any = new FileReader();
-      this.message="Chargement du fichier";
-      if(fileInputEvent.target.files[0].size<this.config.values.max_file_size){
-        this.filename=fileInputEvent.target.files[0].name;
-        reader.onload = ()=> {
-          this.files[index_file]=JSON.stringify(reader.result);
-          this.message="";
-        }
-        reader.readAsDataURL(fileInputEvent.target.files[0]);
-      } else {
-        showMessage(this,"La taille limite des fichier est de "+Math.round(this.config.values.max_file_size/1024)+" ko");
+  import(fileInputEvent: any,index_file=0,func=null) {
+    var reader:any = new FileReader();
+    this.message="Chargement du fichier";
+    if(fileInputEvent.target.files[0].size<this.config.values.max_file_size){
+      this.filename=fileInputEvent.target.files[0].name;
+      reader.onload = ()=> {
+        this.files[index_file]=JSON.stringify(reader.result);
         this.message="";
+        if(func)func();
       }
+      reader.readAsDataURL(fileInputEvent.target.files[0]);
+    } else {
+      showMessage(this,"La taille limite des fichier est de "+Math.round(this.config.values.max_file_size/1024)+" ko");
+      this.message="";
+    }
 
   }
 
@@ -110,37 +112,39 @@ export class ImporterComponent implements OnInit {
     this.message="Enregistrement dans la blockchain";
     this.api._post("mint/"+this.count,"",obj).subscribe((r:any)=>{
       if(r){
-      this.message="";
-      showMessage(this,"Fichier tokeniser pour "+r.cost+" xEgld");
-      this.user.refresh_balance(()=>{
-        this.router.navigate(["nfts-perso"],{queryParams:{index:2}});
-      })
+        this.message="";
+        showMessage(this,"Fichier tokeniser pour "+r.cost+" xEgld");
+        this.user.refresh_balance(()=>{
+          this.router.navigate(["nfts-perso"],{queryParams:{index:2}});
+        })
       }
     },(err)=>{
       showMessage(this,err.error);
     })
   }
 
-  add_visual() {
-  this.dialog.open(ImageSelectorComponent, {position:
-          {left: '5vw', top: '5vh'},
-        maxWidth: 400, maxHeight: 700, width: '90vw', height: '600px', data:
-                  {
-                    result: this.files[1],
-                    checkCode: true,
-                    width: 200,
-                    height: 200,
-                    emoji: false,
-                    internet: false,
-                    ratio: 1,
-                    quality:0.7
-                  }
-              }).afterClosed().subscribe((result) => {
-        if (result) {
-          this.files[1]= result;
+  add_visual(func=null,index=1) {
+    this.dialog.open(ImageSelectorComponent, {position:
+        {left: '5vw', top: '5vh'},
+      maxWidth: 400, maxHeight: 700, width: '90vw', height: 'auto', data:
+        {
+          result: this.files[1],
+          checkCode: true,
+          width: 200,
+          height: 200,
+          emoji: false,
+          internet: false,
+          ratio: 1,
+          quality:0.7
         }
+    }).afterClosed().subscribe((result) => {
+      if (result) {
+        this.files[index]= result;
+        if(func)func(result);
+      } else {
+        if(func)func(null);
+      }
     });
-
   }
 
   update_prices() {
@@ -153,17 +157,16 @@ export class ImporterComponent implements OnInit {
   }
 
   add_seller() {
-    debugger
-     this.dialog.open(NewDealerComponent, {
-       position:
-       {left: '5vw', top: '5vh'},
-       maxWidth: 400, width: '90vw', height: 'auto', data:{}
-              }).afterClosed().subscribe((result) => {
-        if (result && result.hasOwnProperty("addr")) {
-          let obj:SellerProperties={address:result.addr,name:result.name,marge:result.percent};
-          this.dataSource.data.push(obj);
-          this.dataSource._updateChangeSubscription();
-        }
+    this.dialog.open(NewDealerComponent, {
+      position:
+        {left: '5vw', top: '5vh'},
+      maxWidth: 400, width: '90vw', height: 'auto', data:{}
+    }).afterClosed().subscribe((result) => {
+      if (result && result.hasOwnProperty("addr")) {
+        let obj:SellerProperties={address:result.addr,name:result.name,marge:result.percent};
+        this.dataSource.data.push(obj);
+        this.dataSource._updateChangeSubscription();
+      }
     });
 
 
@@ -181,5 +184,93 @@ export class ImporterComponent implements OnInit {
 
   update_idx($event: StepperSelectionEvent) {
     this.idx_tab=$event.selectedIndex;
+  }
+
+  ask_for_price(question="",func:Function=null){
+    this.dialog.open(PromptComponent,{width: '250px',data:
+        {
+          title: "Prix de vente",
+          question: question,
+          min:0,max:10,
+          type:"number",
+          onlyConfirm:false,
+          lbl_ok:"Ok",
+          lbl_cancel:"Annuler"
+        }
+    }).afterClosed().subscribe((price) => {
+      if(price){
+        this.price=Number(price);
+        this.min_price=0;this.max_price=0;this.miner_ratio=0;
+        if(func)func(); else this.tokenizer();
+      }
+    });
+  }
+
+  ask_for_text(title:string,question:string,func:Function){
+    this.dialog.open(PromptComponent,{width: '250px',
+      data:{title: title,question: question,type:"string",onlyConfirm:false,lbl_ok:"Ok",lbl_cancel:"Annuler"}})
+      .afterClosed().subscribe((rc) => {func(rc);});
+  }
+
+
+  quick_photo(index=0) {
+    this.add_visual((result:any)=>{
+      if(result){
+        this.ask_for_text("Présentation","Faite une présentation rapide de votre photo",(legende)=>{
+          if(legende){
+            this.uri=legende;
+            this.ask_for_price("Quel prix pour votre photo");
+          }
+        });
+      }
+    },index)
+  }
+
+  quick_secret(){
+    this.ask_for_text("Cacher un secret","Saisissez votre secret, mot de passe, code ...",(secret)=>{
+      if(secret){
+        this.secret=secret;
+        this.ask_for_text("Description","Entrez une breve description de votre token",(description)=>{
+          if(description){
+            this.uri=description;
+            this.ask_for_price("Quel prix pour votre secret");
+          }
+        })
+      }
+    })
+  }
+
+  quick_tickets($event:Event){
+    this.import($event,0,()=>{
+      this.ask_for_text("Titre de votre évenement","",(title)=> {
+        if (title) {
+          this.ask_for_text("Lieu et Date","Indiquer l'adresse et l'horaire",(desc)=> {
+            if (desc) {
+              this.secret=title+" - Billet: @id@ - "+desc;
+              this.ask_for_price("Prix unitaire du billet",(price)=>{
+                this.ask_for_text("Combien de billets à "+price,"Indiquer le nombre de billets à fabriquer",(num)=>{
+                  this.count=Number(num);
+                  this.min_price=this.min_price=0;
+                  this.price=Number(price);
+                  this.tokenizer();
+                });
+              })
+            }
+          });
+        }
+      });
+    });
+  }
+
+  quick_file($event: Event) {
+    this.import($event,0,()=>{
+      this.ask_for_text("Description pour les acheteurs","Une phrase courte pour donner envie de l'acheter",(desc)=>{
+        if(desc){
+          this.uri=desc;
+          this.ask_for_price("Quel est votre prix pour ce fichier");
+        }
+      })
+
+    });
   }
 }

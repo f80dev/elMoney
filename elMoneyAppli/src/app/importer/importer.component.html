@@ -6,226 +6,303 @@
 
 <div class="mainform">
 
-  <h2>Fabriquer vos propres token</h2>
+  <mat-tab-group animationDuration="1000ms">
 
-  <small>
-    <a href="./assets/TokenForgeFromExcel.xlsm" download="TokenForge.xlsm" target="_blank">Créer des tokens depuis Excel</a>
-    </small>
-    <br>
+    <mat-tab label="Token express">
 
-
-  <app-tuto [if]="files[0].length>0"
-            label="Le fichier est stocké dans le réseau IPFS de façon totalement sécurisé. Seul la clé permettant de le reconstituer est embarqué dans le token"></app-tuto>
-  <app-hourglass [message]="message"></app-hourglass>
-
-  <div *ngIf="message.length==0" style="width:100%;">
-
-    <app-tuto [if]="focus_idx==1 || focus_idx==2"
-                    label="Vous pouvez utiliser certaines abrévations dans le secret comme par exemple @token@ pour rappeler la référence du token ou @owner@ pour avoir l'adresse du propriétaire"></app-tuto>
+      <div style="width: 100%;text-align: center;">
 
 
-    <mat-vertical-stepper (selectionChange)="update_idx($event)" [linear]="false" style="width:90%;display: inline-block;max-width:700px;text-align: left;background: none;">
-      <mat-step>
+      <br>
+      Créer vos tokens en quelques clics en fonction de vos besoins
+      <br><br>
 
-        <app-tuto *ngIf="idx_tab==0"
-                  label="TOKENFORGE permet de cacher un secret dans le token. Celui-ci ne peut être vue que par le propriétaire du token. Par exemple vous pouvez cacher un mot de passe, un lien youtube, un fichier"></app-tuto>
+      <button mat-raised-button
+              mat-button class="square-button"
+              (click)="quick_photo(0)">
+        <mat-icon>camera</mat-icon><br>
+        <div class="bloc-bouton">Vendre<br>une photo</div>
+      </button>
 
-        <form>
-          <ng-template matStepLabel>Embarquer dans le token</ng-template>
-          <input #csvInput [hidden]="true"
-                 type="file" onclick="this.value=null"
-                 (change)="import($event,0)"
-                 accept="*"/>
+      <button mat-raised-button
+              mat-button class="square-button"
+              (click)="quick_photo(1)">
+        <mat-icon>person</mat-icon><br>
+        <div class="bloc-bouton">Tokeniser<br>une oeuvre</div>
+      </button>
 
-          <button mat-raised-button
-                  mat-button class="app-button"
-                  (click)="csvInput.click()">
-            Un fichier
-          </button>
 
-          <br><br>
-          <span *ngIf="files[0].length>0">'{{filename}}' est caché dans votre token</span>
+      <button mat-raised-button
+              mat-button class="square-button">
+      <label for="file_f" style="text-align: center;width: 100%">
+        <mat-icon>description</mat-icon><br>
+        <div class="bloc-bouton">Vendre<br>un fichier</div>
+      </label>
+      </button>
 
-          <strong *ngIf="files[0].length==0">ou</strong>
 
-          <br>
 
-          <mat-form-field appearance="fill" class="app-field" *ngIf="files[0].length==0">
-            <mat-label>Ecrire un secret</mat-label>
-            <input matInput type="text" (focusin)="focus_idx=1" maxlength="200" [(ngModel)]="secret" [ngModelOptions]="{standalone: true}">
-            <mat-hint *ngIf="focus_idx==1">un mot de passe, une adresse internet qui ne sera accessible qu'au propriétaire</mat-hint>
-          </mat-form-field>
-        </form>
+      <button mat-raised-button
+              mat-button class="square-button"
+              (click)="quick_secret()">
+        <mat-icon>lock</mat-icon><br>
+        <div class="bloc-bouton">Vendre<br>un secret</div>
+      </button>
 
-      </mat-step>
 
-      <mat-step >
-        <app-tuto *ngIf="idx_tab==1" label="Après fabrication, les tokens sont présentés sur une place de marché ou ils peuvent être achetés par les autres utilisateurs de TOKENFORGE"></app-tuto>
-        <form>
-          <ng-template matStepLabel>Présentation sur la marketplace</ng-template>
-          <button mat-raised-button
-                  mat-button class="app-button"
-                  (click)="add_visual()">
+      <button mat-raised-button
+              mat-button class="square-button">
+      <label for="file_ticket">
+        <mat-icon>label</mat-icon><br>
+        <div class="bloc-bouton">Billets<br>spectacles</div>
+      </label>
 
-            <div class="bloc-bouton">
-              <span *ngIf="files[1].length>0">Modifier le</span>
-              <span *ngIf="files[1].length==0">Ajouter un</span>
+      </button>
+        <br>
+
+        <input type="file" id="file_f" style="opacity: 0;"
+             (change)="quick_file($event)"
+             accept="" />
+
+
+        <input type="file" id="file_ticket" style="opacity: 0;"
+             (change)="quick_tickets($event)"
+             accept="" />
+
+
+      </div>
+
+
+    </mat-tab>
+
+    <mat-tab label="Token avancé">
+      <app-tuto [if]="files[0].length>0"
+                label="Le fichier est stocké dans le réseau IPFS de façon totalement sécurisé. Seul la clé permettant de le reconstituer est embarqué dans le token"></app-tuto>
+      <app-hourglass [message]="message"></app-hourglass>
+
+      <div *ngIf="message.length==0" style="width:100%;">
+
+        <app-tuto [if]="focus_idx==1 || focus_idx==2"
+                  label="Vous pouvez utiliser certaines abrévations dans le secret comme par exemple @token@ pour rappeler la référence du token ou @owner@ pour avoir l'adresse du propriétaire"></app-tuto>
+
+
+        <mat-vertical-stepper (selectionChange)="update_idx($event)" [linear]="false" style="width:90%;display: inline-block;max-width:700px;text-align: left;background: none;">
+          <mat-step>
+
+            <app-tuto *ngIf="idx_tab==0"
+                      label="TOKENFORGE permet de cacher un secret dans le token. Celui-ci ne peut être vue que par le propriétaire du token. Par exemple vous pouvez cacher un mot de passe, un lien youtube, un fichier"></app-tuto>
+
+            <form>
+              <ng-template matStepLabel>Embarquer dans le token</ng-template>
+              <input #csvInput [hidden]="true"
+                     type="file" onclick="this.value=null"
+                     (change)="import($event,0)"
+                     accept="*"/>
+
+              <button mat-raised-button
+                      mat-button class="app-button"
+                      (click)="csvInput.click()">
+                Un fichier
+              </button>
+
+              <br><br>
+              <span *ngIf="files[0].length>0">'{{filename}}' est caché dans votre token</span>
+
+              <strong *ngIf="files[0].length==0">ou</strong>
+
               <br>
-              visuel
-            </div>
-          </button>
-          <br>
+
+              <mat-form-field appearance="fill" class="app-field" *ngIf="files[0].length==0">
+                <mat-label>Ecrire un secret</mat-label>
+                <input matInput type="text" (focusin)="focus_idx=1" maxlength="200" [(ngModel)]="secret" [ngModelOptions]="{standalone: true}">
+                <mat-hint *ngIf="focus_idx==1">un mot de passe, une adresse internet qui ne sera accessible qu'au propriétaire</mat-hint>
+              </mat-form-field>
+            </form>
+
+          </mat-step>
+
+          <mat-step >
+            <app-tuto *ngIf="idx_tab==1" label="Après fabrication, les tokens sont présentés sur une place de marché ou ils peuvent être achetés par les autres utilisateurs de TOKENFORGE"></app-tuto>
+            <form>
+              <ng-template matStepLabel>Présentation sur la marketplace</ng-template>
+              <button mat-raised-button
+                      mat-button class="app-button"
+                      (click)="add_visual()">
+
+                <div class="bloc-bouton">
+                  <span *ngIf="files[1].length>0">Modifier le</span>
+                  <span *ngIf="files[1].length==0">Ajouter un</span>
+                  <br>
+                  visuel
+                </div>
+              </button>
+              <br>
 
 
-          <div *ngIf="files[1].length>0"  style="text-align: right;width:50%;">
-            <img class="mat-elevation-z4"
-                 [src]="files[1]"
-                 style="max-width:150px;border: white 1px solid">
-          </div>
+              <div *ngIf="files[1].length>0"  style="text-align: right;width:50%;">
+                <img class="mat-elevation-z4"
+                     [src]="files[1]"
+                     style="max-width:150px;border: white 1px solid">
+              </div>
 
-          <br>
-          <mat-form-field appearance="fill" class="app-field">
-            <mat-label>Intitulé du token</mat-label>
-            <input matInput type="text" maxlength="200" [(ngModel)]="uri" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=2">
-            <mat-hint *ngIf="focus_idx==2">Présenter votre token en quelques mots pour le vendre dans la marketplace</mat-hint>
-          </mat-form-field>
+              <br>
+              <mat-form-field appearance="fill" class="app-field">
+                <mat-label>Intitulé du token</mat-label>
+                <input matInput type="text" maxlength="200" [(ngModel)]="uri" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=2">
+                <mat-hint *ngIf="focus_idx==2">Présenter votre token en quelques mots pour le vendre dans la marketplace</mat-hint>
+              </mat-form-field>
 
-          <br><br>
+              <br><br>
 
-          <mat-form-field appearance="fill" class="app-field" style="max-width: 200px">
-            <mat-label>Prix de vente</mat-label>
-            <input matInput type="number" min="0" max="100"
-                   [(ngModel)]="price" [ngModelOptions]="{standalone: true}" (ngModelChange)="update_prices()">
-            <span matSuffix>xeGld</span>
-          </mat-form-field>
+              <mat-form-field appearance="fill" class="app-field" style="max-width: 200px">
+                <mat-label>Prix de vente</mat-label>
+                <input matInput type="number" min="0" max="100"
+                       [(ngModel)]="price" [ngModelOptions]="{standalone: true}" (ngModelChange)="update_prices()">
+                <span matSuffix>xeGld</span>
+              </mat-form-field>
 
-        </form>
-      </mat-step>
-      <mat-step>
-        <app-tuto *ngIf="idx_tab==2"
-                  label="La vente des tokens peut être déléguée à des revendeurs qui peuvent prendre une commission suivant les limites fixées par le créateur du token."></app-tuto>
-        <ng-template matStepLabel>Distribution</ng-template>
-        <mat-tab-group
-          animationDuration="1000ms">
-          <mat-tab label="Le propriétaire">
+            </form>
+          </mat-step>
+          <mat-step>
+            <app-tuto *ngIf="idx_tab==2"
+                      label="La vente des tokens peut être déléguée à des revendeurs qui peuvent prendre une commission suivant les limites fixées par le créateur du token."></app-tuto>
+            <ng-template matStepLabel>Distribution</ng-template>
+            <mat-tab-group
+              animationDuration="1000ms">
+              <mat-tab label="Le propriétaire">
+                <br>
+                <mat-slide-toggle
+                  color="primary"
+                  [(ngModel)]="owner_can_sell">le propriétaire peut revendre
+                </mat-slide-toggle>
+
+                <br><br>
+                <mat-slide-toggle
+                  color="primary"
+                  [(ngModel)]="owner_can_transfer">le propriétaire peut offrir
+                </mat-slide-toggle>
+
+                <br><br>
+                <mat-slide-toggle
+                  color="primary"
+                  title="Interdire la vente directe implique d'avoir au moins un distributeur déclaré"
+                  [disabled]="dataSource.data.length==0"
+                  [(ngModel)]="direct_sell">Disponible en vente directe
+                </mat-slide-toggle>
+              </mat-tab>
+
+              <mat-tab label="Les revendeurs">
+                <div *ngIf="dataSource.data.length==0"><br>Aucun revendeur autorisé</div>
+                <br>
+                <button mat-raised-button
+                        mat-button class="app-button"
+                        (click)="add_seller()">
+                  Ajouter
+                </button>
+
+                <br>
+
+                <table mat-table [dataSource]="dataSource"
+                       *ngIf="dataSource.data.length>0"
+                       class="mat-elevation-z8 app-table">
+
+                  <ng-container matColumnDef="Address" style="margin:3px;">
+                    <th mat-header-cell *matHeaderCellDef>Adresse</th>
+                    <td mat-cell title="Ouvrir un exemple de store"
+                        style="cursor: pointer;color:white"
+                        *matCellDef="let element" (click)="open_store(element)"> {{element.address.substr(0,10)+'..'}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="name"  style="margin:3px">
+                    <th mat-header-cell *matHeaderCellDef>Name</th>
+                    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                  </ng-container>
+
+
+                  <ng-container matColumnDef="delete" style="margin:3px">
+                    <th mat-header-cell *matHeaderCellDef>Commandes</th>
+                    <td mat-cell *matCellDef="let element">
+                      <mat-icon style="cursor: pointer" title="Enlever le revendeur" (click)="delete_dealer(element)">cancel</mat-icon>&nbsp;
+                      <mat-icon style="cursor: pointer" title="Ouvrir un exemple de son store" (click)="open_store(element)">shopping_cart</mat-icon>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                </table>
+
+                <br>
+
+                <div *ngIf="dataSource.data.length>0">
+                  <br>
+                  Marge autorisé par les revendeurs<br>
+                  <mat-form-field appearance="fill" class="app-field" style="max-width: 130px">
+                    <mat-label>Marge minimum</mat-label>
+                    <input matInput type="number" min="0" [max]="price" [(ngModel)]="min_price" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=3">
+                    <span matSuffix>xeGld</span>
+                  </mat-form-field>
+                  &nbsp;
+                  <mat-form-field appearance="fill" class="app-field" style="max-width: 130px">
+                    <mat-label>Marge maximum</mat-label>
+                    <input matInput type="number" [min]="price" [(ngModel)]="max_price" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=4">
+                    <span matSuffix>xeGld</span>
+                  </mat-form-field>
+
+                  <br>
+                  <mat-form-field appearance="fill" class="app-field" style="max-width: 200px" *ngIf="max_price>min_price">
+                    <mat-label>Marge du créateur</mat-label>
+                    <input matInput type="number" min="0" max="100" [(ngModel)]="miner_ratio" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=20">
+                    <span matSuffix>%</span>
+                    <mat-hint *ngIf="focus_idx==20">Percentage attribué au créateur du token sur le prix augmenté</mat-hint>
+                  </mat-form-field>
+
+                </div>
+
+
+              </mat-tab>
+            </mat-tab-group>
+
             <br>
-            <mat-slide-toggle
-              color="primary"
-              [(ngModel)]="owner_can_sell">le propriétaire peut revendre
-            </mat-slide-toggle>
-
-            <br><br>
-            <mat-slide-toggle
-              color="primary"
-              [(ngModel)]="owner_can_transfer">le propriétaire peut offrir
-            </mat-slide-toggle>
-
-             <br><br>
-            <mat-slide-toggle
-              color="primary"
-              title="Interdire la vente directe implique d'avoir au moins un distributeur déclaré"
-              [disabled]="dataSource.data.length==0"
-              [(ngModel)]="direct_sell">Disponible en vente directe
-            </mat-slide-toggle>
-          </mat-tab>
-
-          <mat-tab label="Les revendeurs">
-            <div *ngIf="dataSource.data.length==0"><br>Aucun revendeur autorisé</div>
-            <br>
-            <button mat-raised-button
-                    mat-button class="app-button"
-                    (click)="add_seller()">
-              Ajouter
-            </button>
-
             <br>
 
-            <table mat-table [dataSource]="dataSource"
-                   *ngIf="dataSource.data.length>0"
-                   class="mat-elevation-z8 app-table">
+          </mat-step>
 
-              <ng-container matColumnDef="Address" style="margin:3px;">
-                <th mat-header-cell *matHeaderCellDef>Adresse</th>
-                <td mat-cell title="Ouvrir un exemple de store"
-                    style="cursor: pointer;color:white"
-                    *matCellDef="let element" (click)="open_store(element)"> {{element.address.substr(0,10)+'..'}} </td>
-              </ng-container>
+          <mat-step>
+            <app-tuto *ngIf="idx_tab==3" label="Dés le token fabriqué, celui-ci est visible dans la place de marché de TOKEN FORGE"></app-tuto>
+            <form>
+              <ng-template matStepLabel>Fabrication</ng-template>
+              <mat-form-field appearance="fill" class="app-field" style="max-width: 200px">
+                <mat-label>Combien d'exemplaire</mat-label>
+                <input matInput type="number" min="1" max="1000" [(ngModel)]="count" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=10">
+                <mat-hint *ngIf="focus_idx==10">Attention le coût de fabrication dépend également du nombre de token fabriqués</mat-hint>
+              </mat-form-field>
+              <br><br>
+              <button mat-raised-button  color="primary"
+                      mat-button class="large-button"
+                      [disabled]="uri?.length==0 && files[0].length==0"
+                      (click)="tokenizer()">
+                Fabriquer !
+              </button>
+            </form>
+          </mat-step>
+        </mat-vertical-stepper>&nbsp;
+      </div>
+    </mat-tab>
 
-              <ng-container matColumnDef="name"  style="margin:3px">
-                <th mat-header-cell *matHeaderCellDef>Name</th>
-                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-              </ng-container>
+    <mat-tab label="Création automatique">
+      <br>
+      TokenForge propose une interface de création en masse de tokens. Cette interface repose sur un fichier Excel téléchargeable<br><br>
 
+      <a href="./assets/TokenForgeFromExcel.xlsm" download="TokenForge.xlsm" target="_blank">Télécharger le fichier</a>
 
-              <ng-container matColumnDef="delete" style="margin:3px">
-                <th mat-header-cell *matHeaderCellDef>Commandes</th>
-                <td mat-cell *matCellDef="let element">
-                  <mat-icon style="cursor: pointer" title="Enlever le revendeur" (click)="delete_dealer(element)">cancel</mat-icon>&nbsp;
-                  <mat-icon style="cursor: pointer" title="Ouvrir un exemple de son store" (click)="open_store(element)">shopping_cart</mat-icon>
-                </td>
-              </ng-container>
+      <br>
 
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-            </table>
-
-            <br>
-
-            <div *ngIf="dataSource.data.length>0">
-          <br>
-          Marge autorisé par les revendeurs<br>
-          <mat-form-field appearance="fill" class="app-field" style="max-width: 130px">
-            <mat-label>Marge minimum</mat-label>
-            <input matInput type="number" min="0" [max]="price" [(ngModel)]="min_price" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=3">
-            <span matSuffix>xeGld</span>
-          </mat-form-field>
-          &nbsp;
-          <mat-form-field appearance="fill" class="app-field" style="max-width: 130px">
-            <mat-label>Marge maximum</mat-label>
-            <input matInput type="number" [min]="price" [(ngModel)]="max_price" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=4">
-            <span matSuffix>xeGld</span>
-          </mat-form-field>
-
-          <br>
-          <mat-form-field appearance="fill" class="app-field" style="max-width: 200px" *ngIf="max_price>min_price">
-            <mat-label>Marge du créateur</mat-label>
-            <input matInput type="number" min="0" max="100" [(ngModel)]="miner_ratio" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=20">
-            <span matSuffix>%</span>
-            <mat-hint *ngIf="focus_idx==20">Percentage attribué au créateur du token sur le prix augmenté</mat-hint>
-          </mat-form-field>
-
-        </div>
+    </mat-tab>
 
 
-          </mat-tab>
-        </mat-tab-group>
 
-        <br>
-        <br>
+  </mat-tab-group>
 
-      </mat-step>
-
-      <mat-step>
-        <app-tuto *ngIf="idx_tab==3" label="Dés le token fabriqué, celui-ci est visible dans la place de marché de TOKEN FORGE"></app-tuto>
-        <form>
-          <ng-template matStepLabel>Fabrication</ng-template>
-          <mat-form-field appearance="fill" class="app-field" style="max-width: 200px">
-            <mat-label>Combien d'exemplaire</mat-label>
-            <input matInput type="number" min="1" max="1000" [(ngModel)]="count" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=10">
-            <mat-hint *ngIf="focus_idx==10">Attention le coût de fabrication dépend également du nombre de token fabriqués</mat-hint>
-          </mat-form-field>
-          <br><br>
-          <button mat-raised-button  color="primary"
-                  mat-button class="large-button"
-                  [disabled]="uri?.length==0 && files[0].length==0"
-                  (click)="tokenizer()">
-            Fabriquer !
-          </button>
-        </form>
-      </mat-step>
-    </mat-vertical-stepper>&nbsp;
-
-  </div>
 
 </div>

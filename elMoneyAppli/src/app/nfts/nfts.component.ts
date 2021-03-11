@@ -157,7 +157,7 @@ export class NftsComponent implements OnChanges {
         lbl_ok: 'Oui',
         lbl_cancel: 'Non'
       }}).afterClosed().subscribe((result:any) => {
-      if(result && result!="no"){
+      if(result){
         let obj={
           pem:this.user.pem.pem,
           price:Number(result),

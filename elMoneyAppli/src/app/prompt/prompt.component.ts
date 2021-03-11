@@ -8,6 +8,7 @@ export interface DialogData {
   question:string;
   onlyConfirm:boolean;
   min:number,
+  max:number,
   emojis:boolean;
   lbl_ok:string,
   type:string,
@@ -27,6 +28,7 @@ export class PromptComponent {
   showEmoji=false;
   _type="text";
   _min: number;
+  _max: number;
 
   constructor(
     public dialogRef: MatDialogRef<PromptComponent>,
@@ -34,7 +36,14 @@ export class PromptComponent {
   {
     if(data.hasOwnProperty("type"))this._type=data.type;
     if(data.onlyConfirm)data.result="yes";
-    if(data.min)this._min=data.min;
+    if(data.min){
+      this._min=data.min;
+      this._type="number";
+    }
+    if(data.max){
+      this._max=data.max;
+      this._type="number";
+    }
   }
 
   onNoClick(): void {
