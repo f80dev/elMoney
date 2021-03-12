@@ -8,6 +8,9 @@
       </mat-card-header>
        <mat-card-content style="min-height: 50px;text-align: center;color: white;">
 
+         <app-tuto [if]="nft.owner!=user.addr && nft.has_secret==1"
+                   label="Devenez propriétaire de ce NFT pour accèder à son contenu."></app-tuto>
+
         <div *ngIf="nft.state!=0 && nft.owner!=user.addr">
           <img src="/assets/img/vendu.png" style="width:150px;">
         </div>
@@ -60,7 +63,7 @@
               <button mat-raised-button mat-button
                       color="primary"
                       title="Ouvrir le token pour découvrir le secret"
-                      *ngIf="nft.state==1 && user.add!=nft.miner"
+                      *ngIf="nft.state==1 && user.add!=nft.miner && nft.has_secret==1"
                       class="app-button"
                       (click)="open(nft)">
                Ouvrir

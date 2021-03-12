@@ -660,6 +660,9 @@ class ElrondNet:
                 owner_addr = _u.address.bech32()
                 index=index+64
 
+                has_secret = int(tokens[index:index + 2], 16)
+                index = index + 2
+
                 state = int(tokens[index:index+2], 16)
                 index = index + 2
 
@@ -701,7 +704,7 @@ class ElrondNet:
                 }
                 uri=translate(uri,_d)
 
-                obj=dict({"token_id": id, "uri": uri, "price": price,"markup":markup/100,
+                obj=dict({"token_id": id, "uri": uri, "price": price,"markup":markup/100,"has_secret":has_secret,
                           "min_markup":min_markup/100,"max_markup":max_markup/100,"miner_ratio":miner_ratio/100,
                           "state": state,"owner":owner_addr,"visual":visual,
                           "properties":properties

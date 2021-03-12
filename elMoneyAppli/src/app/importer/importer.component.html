@@ -6,11 +6,21 @@
 
 <div class="mainform">
 
+  <app-hourglass [message]="message"></app-hourglass>
+  <br>
+
   <mat-tab-group animationDuration="1000ms">
 
     <mat-tab label="Token express">
 
-      <div style="width: 100%;text-align: center;">
+      <br>
+        <app-upload-file *ngIf="show_zone_upload"
+                         [maxsize]="config.values.max_file_size"
+                         (uploaded)="onupload($event)">
+          {{prompt}}
+        </app-upload-file>
+
+      <div *ngIf="!show_zone_upload" style="width: 100%;text-align: center;">
 
 
       <br>
@@ -33,11 +43,12 @@
 
 
       <button mat-raised-button
+              (click)="show_fileupload(1,'Téléverser le fichier à embarquer dans votre token')"
               mat-button class="square-button">
-      <label for="file_f" style="text-align: center;width: 100%">
+
         <mat-icon>description</mat-icon><br>
         <div class="bloc-bouton">Vendre<br>un fichier</div>
-      </label>
+
       </button>
 
 
@@ -51,23 +62,15 @@
 
 
       <button mat-raised-button
+              (click)="show_fileupload(2,'Téléverser le visuel de votre invitation')"
               mat-button class="square-button">
-      <label for="file_ticket">
+
         <mat-icon>label</mat-icon><br>
         <div class="bloc-bouton">Billets<br>spectacles</div>
-      </label>
+
 
       </button>
         <br>
-
-        <input type="file" id="file_f" style="opacity: 0;"
-             (change)="quick_file($event)"
-             accept="" />
-
-
-        <input type="file" id="file_ticket" style="opacity: 0;"
-             (change)="quick_tickets($event)"
-             accept="" />
 
 
       </div>
@@ -78,13 +81,12 @@
     <mat-tab label="Token avancé">
       <app-tuto [if]="files[0].length>0"
                 label="Le fichier est stocké dans le réseau IPFS de façon totalement sécurisé. Seul la clé permettant de le reconstituer est embarqué dans le token"></app-tuto>
-      <app-hourglass [message]="message"></app-hourglass>
+
 
       <div *ngIf="message.length==0" style="width:100%;">
 
         <app-tuto [if]="focus_idx==1 || focus_idx==2"
                   label="Vous pouvez utiliser certaines abrévations dans le secret comme par exemple @token@ pour rappeler la référence du token ou @owner@ pour avoir l'adresse du propriétaire"></app-tuto>
-
 
         <mat-vertical-stepper (selectionChange)="update_idx($event)" [linear]="false" style="width:90%;display: inline-block;max-width:700px;text-align: left;background: none;">
           <mat-step>
@@ -96,7 +98,7 @@
               <ng-template matStepLabel>Embarquer dans le token</ng-template>
               <input #csvInput [hidden]="true"
                      type="file" onclick="this.value=null"
-                     (change)="import($event,0)"
+                     (change)="import($event,0,'Commençons par charger le fichier dans le NFC')"
                      accept="*"/>
 
               <button mat-raised-button

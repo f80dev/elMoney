@@ -66,6 +66,8 @@ import {ImageCropperModule} from "ngx-image-cropper";
 import { SafePipe } from './safe.pipe';
 import { NewDealerComponent } from './new-dealer/new-dealer.component';
 import { TransactionsComponent } from './transactions/transactions.component';
+import {AngularFileUploaderModule} from "angular-file-uploader";
+import { UploadFileComponent } from './upload-file/upload-file.component';
 
 const config: SocketIoConfig = {
   url: environment.domain_server,
@@ -108,7 +110,8 @@ const config: SocketIoConfig = {
     ImageSelectorComponent,
     SafePipe,
     NewDealerComponent,
-    TransactionsComponent
+    TransactionsComponent,
+    UploadFileComponent
   ],
   imports: [
     MatButtonModule,

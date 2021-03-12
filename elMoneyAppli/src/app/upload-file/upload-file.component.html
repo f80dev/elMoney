@@ -1,0 +1,18 @@
+<ng-content></ng-content>
+<br>
+<app-hourglass [message]="message"></app-hourglass>
+<br>
+<input #csvInput [hidden]="true"
+       type="file" onclick="this.value=null"
+       (change)="import($event)"
+       accept="*"/>
+
+<button mat-raised-button
+        mat-button class="app-button"
+        (click)="csvInput.click()">
+  Un fichier
+</button>
+<br>
+{{filename}}
+
+

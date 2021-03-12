@@ -46,6 +46,9 @@ export class ImporterComponent implements OnInit {
   direct_sell: boolean=true;
   miner_ratio: number = 0;
   idx_tab: number=0;
+  show_zone_upload: boolean=false;
+  redirect: number=0;
+  prompt: string="";
 
 
   constructor(public api:ApiService,
@@ -66,22 +69,19 @@ export class ImporterComponent implements OnInit {
   }
 
 
-  import(fileInputEvent: any,index_file=0,func=null) {
-    var reader:any = new FileReader();
-    this.message="Chargement du fichier";
-    if(fileInputEvent.target.files[0].size<this.config.values.max_file_size){
-      this.filename=fileInputEvent.target.files[0].name;
-      reader.onload = ()=> {
-        this.files[index_file]=JSON.stringify(reader.result);
-        this.message="";
-        if(func)func();
-      }
-      reader.readAsDataURL(fileInputEvent.target.files[0]);
-    } else {
-      showMessage(this,"La taille limite des fichier est de "+Math.round(this.config.values.max_file_size/1024)+" ko");
-      this.message="";
-    }
+  import(fileInputEvent: any,index_file=0,prompt="",func=null) {
+    this.dialog.open(PromptComponent,{width: '250px',data:
+        {
+          title: prompt,
+          onlyConfirm:true,
+          lbl_ok:"Continuer",
+          lbl_cancel:"Annuler"
+        }
+    }).afterClosed().subscribe((rep) => {
+      if (rep) {
 
+      }
+    });
   }
 
 
@@ -207,7 +207,7 @@ export class ImporterComponent implements OnInit {
   }
 
   ask_for_text(title:string,question:string,func:Function){
-    this.dialog.open(PromptComponent,{width: '250px',
+    this.dialog.open(PromptComponent,{width: '320px',
       data:{title: title,question: question,type:"string",onlyConfirm:false,lbl_ok:"Ok",lbl_cancel:"Annuler"}})
       .afterClosed().subscribe((rc) => {func(rc);});
   }
@@ -240,8 +240,9 @@ export class ImporterComponent implements OnInit {
     })
   }
 
-  quick_tickets($event:Event){
-    this.import($event,0,()=>{
+  quick_tickets($event:any){
+      this.files[1]=$event.file;
+      this.filename=$event.filename;
       this.ask_for_text("Titre de votre évenement","",(title)=> {
         if (title) {
           this.ask_for_text("Lieu et Date","Indiquer l'adresse et l'horaire",(desc)=> {
@@ -259,18 +260,27 @@ export class ImporterComponent implements OnInit {
           });
         }
       });
-    });
   }
 
-  quick_file($event: Event) {
-    this.import($event,0,()=>{
+  quick_file($event: any) {
+      this.files[0]=$event.file;
+      this.filename=$event.filename;
       this.ask_for_text("Description pour les acheteurs","Une phrase courte pour donner envie de l'acheter",(desc)=>{
         if(desc){
           this.uri=desc;
           this.ask_for_price("Quel est votre prix pour ce fichier");
         }
       })
+  }
 
-    });
+  show_fileupload(redirect: number,prompt:string) {
+    this.show_zone_upload=true;
+    this.prompt=prompt;
+    this.redirect=redirect;
+  }
+
+  onupload($event: any) {
+    if(this.redirect==1)this.quick_file($event);
+    if(this.redirect==2)this.quick_tickets($event);
   }
 }
