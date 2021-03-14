@@ -12,7 +12,7 @@ export class FilterPipe implements PipeTransform {
       return items.filter(item => item==args[0]);
     }
     else{
-      if(args[1]=="")return items;
+      if(args[1]=="" || args[1]=="*")return items;
 
       return items.filter(item => !item.hasOwnProperty(args[0]) || (item[args[0]].toLowerCase().indexOf(args[1].toLowerCase())!==-1));
     }

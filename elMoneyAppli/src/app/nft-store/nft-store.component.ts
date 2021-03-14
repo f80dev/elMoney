@@ -16,7 +16,7 @@ export class NftStoreComponent implements OnInit {
   nfts: any[] = [];
   message = "";
   transac_cost=environment.transac_cost;
-  filter: any={};
+  filter: string="";
   filter_id: number=null;
   filter_ids: any[]=[];
 
@@ -81,7 +81,7 @@ export class NftStoreComponent implements OnInit {
 
 
   clearQuery() {
-    this.filter.value='';
+    this.filter='';
     if(this.nfts.length>100) {
       this.refresh(false);
     }

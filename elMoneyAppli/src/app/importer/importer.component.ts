@@ -119,11 +119,12 @@ export class ImporterComponent implements OnInit {
         })
       }
     },(err)=>{
+      this.message="";
       showMessage(this,err.error);
     })
   }
 
-  add_visual(func=null,index=1) {
+  add_visual(func=null,index=1,title:string="Ma photo") {
     this.dialog.open(ImageSelectorComponent, {position:
         {left: '5vw', top: '5vh'},
       maxWidth: 400, maxHeight: 700, width: '90vw', height: 'auto', data:
@@ -135,7 +136,8 @@ export class ImporterComponent implements OnInit {
           emoji: false,
           internet: false,
           ratio: 1,
-          quality:0.7
+          quality:0.7,
+          title:title
         }
     }).afterClosed().subscribe((result) => {
       if (result) {
@@ -200,8 +202,9 @@ export class ImporterComponent implements OnInit {
     }).afterClosed().subscribe((price) => {
       if(price){
         this.price=Number(price);
-        this.min_price=0;this.max_price=0;this.miner_ratio=0;
-        if(func)func(); else this.tokenizer();
+        this.min_price=0;this.max_price=0;
+        this.miner_ratio=0;
+        if(func)func(price); else this.tokenizer();
       }
     });
   }
@@ -240,19 +243,18 @@ export class ImporterComponent implements OnInit {
     })
   }
 
-  quick_tickets($event:any){
-      this.files[1]=$event.file;
-      this.filename=$event.filename;
-      this.ask_for_text("Titre de votre évenement","",(title)=> {
+  quick_tickets(title:string){
+    this.add_visual((result:any)=> {
+      this.ask_for_text("Titre de votre évenement", "", (title) => {
         if (title) {
-          this.ask_for_text("Lieu et Date","Indiquer l'adresse et l'horaire",(desc)=> {
+          this.uri=title;
+          this.ask_for_text("Lieu et Date", "Indiquer l'adresse et l'horaire", (desc) => {
             if (desc) {
-              this.secret=title+" - Billet: @id@ - "+desc;
-              this.ask_for_price("Prix unitaire du billet",(price)=>{
-                this.ask_for_text("Combien de billets à "+price,"Indiquer le nombre de billets à fabriquer",(num)=>{
-                  this.count=Number(num);
-                  this.min_price=this.min_price=0;
-                  this.price=Number(price);
+              this.secret = title + " - Billet: @id@ - " + desc;
+              this.ask_for_price("Prix unitaire du billet", (price) => {
+                this.ask_for_text("Combien de billets à " + price, "Indiquer le nombre de billets à fabriquer", (num) => {
+                  this.count = Number(num);
+                  showMessage(this,"Billets en cours de création");
                   this.tokenizer();
                 });
               })
@@ -260,6 +262,7 @@ export class ImporterComponent implements OnInit {
           });
         }
       });
+    },1,title);
   }
 
   quick_file($event: any) {
@@ -281,6 +284,5 @@ export class ImporterComponent implements OnInit {
 
   onupload($event: any) {
     if(this.redirect==1)this.quick_file($event);
-    if(this.redirect==2)this.quick_tickets($event);
   }
 }

@@ -20,7 +20,7 @@ import {SellerProperties} from "../importer/importer.component";
 export class NftsComponent implements OnChanges {
 
   @Input("user") user:any;
-  @Input("filter") filter:any={};
+  @Input("filter") filter:string="*";
   @Input("nfts") nfts:any;
   @Input("seller") seller:string="0x0000000000000000000000000000000000000000000000000000000000000000";
   @Output("refresh") onrefresh:EventEmitter<any>=new EventEmitter();
