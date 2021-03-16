@@ -14,8 +14,8 @@
       <mat-label>Chercher un token à acheter</mat-label>
       <input matInput matNativeControl
              (keyup)="onQuery($event)"
-             placeholder="Un ou plusieurs mots du titre" [(ngModel)]="filter.search">
-      <mat-icon *ngIf="filter.value?.length>0"
+             placeholder="Un ou plusieurs mots du titre" [(ngModel)]="filter">
+      <mat-icon *ngIf="filter?.length>0"
                 matSuffix style="cursor: pointer"
                 (click)="clearQuery()">cancel</mat-icon>
     </mat-form-field>
