@@ -8,7 +8,6 @@ from apscheduler.schedulers.background import BackgroundScheduler
 
 import yaml
 from erdpy.accounts import Account
-from erdpy.transactions import Transaction
 
 from flask import  Response, request, jsonify
 
@@ -19,7 +18,7 @@ from apiTools import create_app
 from dao import DAO
 from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, \
     MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, IPFS_NODE, \
-    MAIN_NAME, MAIN_DECIMALS, NETWORKS, ESDT_CONTRACT
+    MAIN_NAME, MAIN_DECIMALS, NETWORKS, ESDT_CONTRACT, LIMIT_GAS
 from elrondTools import ElrondNet
 from ipfs import IPFS
 
@@ -401,9 +400,9 @@ def mint(count:str,data:dict=None):
     #TODO: ajouter ici un encodage du secret dont la clé est connu par le contrat
 
     arguments=[int(count),"0x"+uri.encode().hex(),"0x"+secret.encode().hex(),price,min_markup,max_markup,properties,miner_ratio]
-    result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,arguments)
+    result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,arguments,gas_limit=int(LIMIT_GAS*(1+int(count)/4)))
 
-    if len(result["scResults"])>0:
+    if not result is None and len(result["scResults"])>0:
         if result["status"] == "fail":
             return result["scResults"][0]["returnMessage"],500
         else:
@@ -715,6 +714,9 @@ def getname(contract:str):
 if __name__ == '__main__':
     _port=int(sys.argv[1])
     scheduler.start()
+    #vérifier la connexion avec IPFS
+    client:IPFS = IPFS(IPFS_NODE)
+    log("Adresse du client IPFS: "+client.addr)
 
     if "debug" in sys.argv:
         socketio.run(app,host="0.0.0.0", port=_port, debug=True)

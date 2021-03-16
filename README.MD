@@ -40,6 +40,7 @@ Il peut se connecter à différente blocchaine suivant l'adresse indiquer au pro
 <pre>docker rm -f elmoney && docker run --restart=always -v /root/certs:/certs -p 5555:5555 --name elmoney -d f80hub/elmoney:latest python3 app.py 5555 "https://api.elrond.com" ssl</pre>
 
 ##Lancement du noeud IPFS
+Le répertoire /ipfs contient le docker-compose du noeud
 <pre>
 firewall-cmd --zone=public --add-port=5001/tcp
 firewall-cmd --zone=public --add-port=4001/tcp
@@ -48,6 +49,7 @@ mkdir /root/ipfs
 mkdir /root/ipfs/staging
 mkdir /root/ipfs/data
 cd /root/ipfs
+docker-compose up -d
 </pre>
 
 Récupération du fichier 

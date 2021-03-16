@@ -742,7 +742,7 @@ class ElrondNet:
 
 
 
-    def mint(self, contract, user_from,arguments):
+    def mint(self, contract, user_from,arguments,gas_limit=LIMIT_GAS):
         """
         Fabriquer un NFT
         :param contract:
@@ -751,7 +751,7 @@ class ElrondNet:
         :return:
         """
         log("Minage avec "+str(arguments))
-        tx=self.execute(contract,user_from,"mint",arguments)
+        tx=self.execute(contract,user_from,"mint",arguments,gas_limit=gas_limit)
         return tx
 
 

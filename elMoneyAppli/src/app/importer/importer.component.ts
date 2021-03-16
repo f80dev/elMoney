@@ -179,12 +179,15 @@ export class ImporterComponent implements OnInit {
       this.dataSource.data.splice(idx,1);
       this.dataSource._updateChangeSubscription();
     }
-
   }
+
+
 
   update_idx($event: StepperSelectionEvent) {
     this.idx_tab=$event.selectedIndex;
   }
+
+
 
   ask_for_price(question="",func:Function=null){
     this.dialog.open(PromptComponent,{width: '250px',data:
@@ -201,15 +204,19 @@ export class ImporterComponent implements OnInit {
       if(price){
         this.price=Number(price);
         this.min_price=0;this.max_price=0;this.miner_ratio=0;
-        if(func)func(); else this.tokenizer();
+        if(func)func(this.price); else this.tokenizer();
       }
     });
   }
 
-  ask_for_text(title:string,question:string,func:Function){
+
+
+  ask_for_text(title:string,question:string,func:Function,_type="string",_max=0){
     this.dialog.open(PromptComponent,{width: '320px',
-      data:{title: title,question: question,type:"string",onlyConfirm:false,lbl_ok:"Ok",lbl_cancel:"Annuler"}})
-      .afterClosed().subscribe((rc) => {func(rc);});
+      data:{title: title,question: question,type:_type,max:_max,onlyConfirm:false,lbl_ok:"Ok",lbl_cancel:"Annuler"}})
+      .afterClosed().subscribe((rc) => {
+        func(rc);
+      });
   }
 
 
@@ -225,6 +232,8 @@ export class ImporterComponent implements OnInit {
       }
     },index)
   }
+
+
 
   quick_secret(){
     this.ask_for_text("Cacher un secret","Saisissez votre secret, mot de passe, code ...",(secret)=>{
@@ -249,18 +258,24 @@ export class ImporterComponent implements OnInit {
             if (desc) {
               this.secret=title+" - Billet: @id@ - "+desc;
               this.ask_for_price("Prix unitaire du billet",(price)=>{
-                this.ask_for_text("Combien de billets à "+price,"Indiquer le nombre de billets à fabriquer",(num)=>{
+                this.ask_for_text("Combien de billets","Indiquer le nombre de billets à fabriquer (maximum 30)",(num)=>{
                   this.count=Number(num);
                   this.min_price=this.min_price=0;
                   this.price=Number(price);
-                  this.tokenizer();
-                });
+                  if(this.count<31)
+                    this.tokenizer();
+                  else {
+                    showMessage(this,"Maximum 30 billets en une seule fois");
+                  }
+                },"number",30);
               })
             }
           });
         }
       });
   }
+
+
 
   quick_file($event: any) {
       this.files[0]=$event.file;
@@ -273,11 +288,14 @@ export class ImporterComponent implements OnInit {
       })
   }
 
+
   show_fileupload(redirect: number,prompt:string) {
     this.show_zone_upload=true;
     this.prompt=prompt;
     this.redirect=redirect;
   }
+
+
 
   onupload($event: any) {
     if(this.redirect==1)this.quick_file($event);

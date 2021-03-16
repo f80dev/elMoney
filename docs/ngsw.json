@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1615544667981,
+  "timestamp": 1615920633941,
   "index": "https://tf.f80.fr/index.html",
   "assetGroups": [
     {
@@ -65,7 +65,7 @@
   ],
   "dataGroups": [],
   "hashTable": {
-    "https://tf.f80.fr/assets/TokenForgeFromExcel.xlsm": "e76a3f8340b7a4719758cb846d52c855f6e3d399",
+    "https://tf.f80.fr/assets/TokenForgeFromExcel.xlsm": "98c8b81ce8001bcfc8898de7718ecb2156c697e2",
     "https://tf.f80.fr/assets/cmk.html": "6f06383ca5f4552828853e7bd98e516195470229",
     "https://tf.f80.fr/assets/coin.png": "9b5eb5e2fbadf0386fd6925a9e3b1b73fbfeafbc",
     "https://tf.f80.fr/assets/icons/coin.png": "9b5eb5e2fbadf0386fd6925a9e3b1b73fbfeafbc",
@@ -97,7 +97,7 @@
     "https://tf.f80.fr/exif.js": "b5962aef35409d93f1ff55461045a6796e80343f",
     "https://tf.f80.fr/favicon.ico": "22f6a4a3bcaafafb0254e0f2fa4ceb89e505e8b2",
     "https://tf.f80.fr/index.html": "b0dc5d663ac9a98a4d801da0a95bcc1a6f780aab",
-    "https://tf.f80.fr/main.js": "c86e15a36a5f8394d65827cc349f70c932f58666",
+    "https://tf.f80.fr/main.js": "a7f62df469740807ddbd8a0291f2cb3487f10b3f",
     "https://tf.f80.fr/manifest.webmanifest": "4330747dd266363fb42bc9580c53a46b310d92cc",
     "https://tf.f80.fr/polyfills.js": "e1b2e55679346bfd4fe23b63dc0ba38a7e8e2738",
     "https://tf.f80.fr/runtime.js": "154c277c076cfc8ee335df5d9349395c6bf58db5",

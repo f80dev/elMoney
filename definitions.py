@@ -26,7 +26,8 @@ CREDIT_FOR_NEWACCOUNT=200
 ESDT_CONTRACT="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
 LIMIT_GAS=60000000
 
-IPFS_NODE="http://207.180.198.227:5001"
+#IPFS_NODE="http://207.180.198.227:5001" Server main
+IPFS_NODE="http://161.97.75.165:5001"
 
 NETWORKS={
     "testnet":{
