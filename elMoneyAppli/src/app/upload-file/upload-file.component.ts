@@ -13,6 +13,7 @@ export class UploadFileComponent implements OnInit {
   message:string="";
   filename:string="";
   @Input("filter") filter:any={};
+  @Input("label") label:string="Sélectionner un fichier";
   @Input("maxsize") maxsize:number=1000000;
   @Output("uploaded") onupload:EventEmitter<any>=new EventEmitter();
   @Output("canceled") oncancel:EventEmitter<any>=new EventEmitter();

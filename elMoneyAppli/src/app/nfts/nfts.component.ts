@@ -168,7 +168,7 @@ export class NftsComponent implements OnChanges {
           let message=r.scResults[0].returnMessage;
           if(r.status=="success"){
             this.onrefresh.emit();
-            message="Le nouveau prix est fixé à "+result;
+            message="Votre commision est fixée à "+result;
           }
           showMessage(this,message);
         },(err)=>{
