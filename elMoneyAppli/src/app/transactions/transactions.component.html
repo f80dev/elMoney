@@ -28,5 +28,9 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
   </table>
+  <br><br>
+  <app-elrond-addr [addr]="config.server.nft_contract" type="address" label="Voir toutes les transactions">
+
+  </app-elrond-addr>
 
 </div>
