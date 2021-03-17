@@ -46,6 +46,7 @@ export class NftsPersoComponent implements OnInit {
 
 
    refresh() {
+    this.user.refresh_balance();
     for(let tokenIdentifier of [0,1,2]){
       let filters=["0x0","0x0","0x0"];
       filters[tokenIdentifier]=this.user.addr;

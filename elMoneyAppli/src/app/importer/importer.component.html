@@ -9,7 +9,7 @@
   <app-hourglass [message]="message"></app-hourglass>
   <br>
 
-  <mat-tab-group animationDuration="1000ms">
+  <mat-tab-group animationDuration="1000ms" *ngIf="message?.length==0">
 
     <mat-tab label="Token express">
 

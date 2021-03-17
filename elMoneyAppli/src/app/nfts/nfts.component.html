@@ -23,7 +23,7 @@
          <div *ngIf="nft.markup>0 && nft.state==0" style="font-size: small;text-align: left;">
            dont:
            <ul style="padding:0;margin:0;margin-left:20px;line-height: 90%;">
-             <li>{{nft.markup*nft.miner_ratio/100 | number:'1.0-2'}} pour le createur</li>
+             <li *ngIf="nft?.miner_ratio>0">{{nft.markup*nft.miner_ratio/100 | number:'1.0-2'}} pour le createur</li>
              <li>{{nft.markup*(1-nft.miner_ratio/100) | number:'1.0-2'}} pour le distributeur</li>
            </ul>
          </div>
