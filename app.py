@@ -344,6 +344,8 @@ def buy_nft(token_id,price,seller:str,data:dict=None):
 
     pem_file=get_pem_file(data)
     if seller.startswith("erd"):seller="0x"+Account(address=seller).address.hex()
+    if type(price)==str and "," in price:price=price.replace(",",".")
+
     rc=bc.nft_buy(NETWORKS[bc.network_name]["nft"],pem_file,token_id,float(price),seller)
     os.remove(pem_file)
     if not rc is None:
@@ -391,7 +393,7 @@ def mint(count:str,data:dict=None):
     #nft_contract_owner=Account(pem_file="./PEM/"+NETWORKS[bc.network_name]["bank"]+".pem")
 
     uri=data["signature"]+res_visual
-    price = int(float(data["price"]) * 1e18)
+    price = int(float(data["price"]) * 1e4)
     max_markup=int(float(data["max_markup"]) * 100)
     min_markup=int(float(data["min_markup"]) * 100)
     properties=int(data["properties"])

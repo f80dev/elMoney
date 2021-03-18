@@ -566,7 +566,7 @@ class ElrondNet:
 
 
 
-    def execute(self,_contract,_user,function,arguments=[],value=None,gas_limit=LIMIT_GAS,timeout=60):
+    def execute(self,_contract,_user,function,arguments=[],value:int=None,gas_limit=LIMIT_GAS,timeout=60):
         if type(_contract) == str: _contract = SmartContract(_contract)
         if type(_user)==str:
             if ".pem" in _user:
@@ -575,6 +575,7 @@ class ElrondNet:
                 _user=Account(address=_user)
 
         _user.sync_nonce(self._proxy)
+        if not value is None:value=int(value)
         try:
             tx = self.environment.execute_contract(_contract,_user,
                                                    function=function,
@@ -653,9 +654,10 @@ class ElrondNet:
                 uri_len=int(tokens[index:index + 8], 16)*2
 
                 index=index+8
-                price = int(tokens[index:index+20], 16) / 1e18
 
-                index=index+20
+                price = int(tokens[index:index+8], 16) / 1e4
+                index=index+8
+
                 _u = SmartContract(address=tokens[index:index+64])
                 owner_addr = _u.address.bech32()
                 index=index+64
@@ -769,7 +771,7 @@ class ElrondNet:
 
 
     def nft_buy(self, contract, pem_file, token_id,price,seller):
-        value=int(1e18*price)
+        value=int(1e7*price)*1e11
         tr = self.execute(
                contract,pem_file,
                function="buy",

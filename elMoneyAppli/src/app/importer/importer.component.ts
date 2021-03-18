@@ -91,7 +91,6 @@ export class ImporterComponent implements OnInit {
     if(this.owner_can_transfer)properties=properties+0b00000001;
     if(this.owner_can_sell)properties=properties+0b00000010;
     if(this.direct_sell)properties=properties+0b00000100;
-
     let obj={
       pem:this.user.pem["pem"],
       owner:this.user.addr,
@@ -124,11 +123,12 @@ export class ImporterComponent implements OnInit {
     })
   }
 
-  add_visual(func=null,index=1) {
+  add_visual(func=null,index=1,title="") {
     this.dialog.open(ImageSelectorComponent, {position:
         {left: '5vw', top: '5vh'},
       maxWidth: 400, maxHeight: 700, width: '90vw', height: 'auto', data:
         {
+          title:title,
           result: this.files[1],
           checkCode: true,
           width: 200,
@@ -251,18 +251,16 @@ export class ImporterComponent implements OnInit {
   }
 
   quick_tickets($event:any){
-      this.files[1]=$event.file;
-      this.filename=$event.filename;
+     this.add_visual((visual:any)=>{
       this.ask_for_text("Titre de votre évenement","",(title)=> {
         if (title) {
           this.ask_for_text("Lieu et Date","Indiquer l'adresse et l'horaire",(desc)=> {
             if (desc) {
-              this.secret=title+" - Billet: @id@ - "+desc;
+              this.uri=title+" - "+desc;
+              this.secret="Billet: @id@";
               this.ask_for_price("Prix unitaire du billet",(price)=>{
                 this.ask_for_text("Combien de billets","Indiquer le nombre de billets à fabriquer (maximum 30)",(num)=>{
                   this.count=Number(num);
-                  this.min_price=this.min_price=0;
-                  this.price=Number(price);
                   if(this.count<31)
                     this.tokenizer();
                   else {
@@ -274,6 +272,8 @@ export class ImporterComponent implements OnInit {
           });
         }
       });
+     },1,"Visuel de votre invitation");
+
   }
 
 
