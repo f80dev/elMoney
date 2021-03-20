@@ -85,7 +85,7 @@ export class ImporterComponent implements OnInit {
   }
 
 
-  tokenizer() {
+  tokenizer(fee=0) {
     //properties est stoké sur 8 bits : 00000<vente directe possible><le propriétaire peut vendre><le propriétaire peut offrir>
     let properties:number=0b00000000;
     if(this.owner_can_transfer)properties=properties+0b00000001;
@@ -100,6 +100,7 @@ export class ImporterComponent implements OnInit {
       signature:this.uri,
       secret:this.secret,
       price:this.price,
+      fee:fee,
       max_markup:this.max_price,
       min_markup:this.min_price,
       dealers:this.dataSource.data,
@@ -190,7 +191,7 @@ export class ImporterComponent implements OnInit {
 
 
 
-  ask_for_price(question="",func:Function=null){
+  ask_for_price(question="",func:Function=null,fee=0){
     this.dialog.open(PromptComponent,{width: '250px',data:
         {
           title: "Prix de vente",
@@ -205,7 +206,7 @@ export class ImporterComponent implements OnInit {
       if(price){
         this.price=Number(price);
         this.min_price=0;this.max_price=0;this.miner_ratio=0;
-        if(func)func(this.price); else this.tokenizer();
+        if(func)func(this.price); else this.tokenizer(fee);
       }
     });
   }
@@ -227,7 +228,7 @@ export class ImporterComponent implements OnInit {
         this.ask_for_text("Présentation","Faite une présentation rapide de votre photo",(legende)=>{
           if(legende){
             this.uri=legende;
-            this.ask_for_price("Quel prix pour votre photo");
+            this.ask_for_price("Quel prix pour votre photo",null,0.0001);
           }
         });
       }
@@ -237,13 +238,13 @@ export class ImporterComponent implements OnInit {
 
 
   quick_secret(){
-    this.ask_for_text("Cacher un secret","Saisissez votre secret, mot de passe, code ...",(secret)=>{
+    this.ask_for_text("Cacher un secret","Saisissez votre secret, mot de passe ...",(secret)=>{
       if(secret){
         this.secret=secret;
         this.ask_for_text("Description","Entrez une breve description de votre token",(description)=>{
           if(description){
             this.uri=description;
-            this.ask_for_price("Quel prix pour votre secret");
+            this.ask_for_price("Quel prix pour votre secret",null,0.002);
           }
         })
       }
@@ -262,7 +263,7 @@ export class ImporterComponent implements OnInit {
                 this.ask_for_text("Combien de billets","Indiquer le nombre de billets à fabriquer (maximum 30)",(num)=>{
                   this.count=Number(num);
                   if(this.count<31)
-                    this.tokenizer();
+                    this.tokenizer(0.001);
                   else {
                     showMessage(this,"Maximum 30 billets en une seule fois");
                   }
@@ -284,7 +285,7 @@ export class ImporterComponent implements OnInit {
       this.ask_for_text("Description pour les acheteurs","Une phrase courte pour donner envie de l'acheter",(desc)=>{
         if(desc){
           this.uri=desc;
-          this.ask_for_price("Quel est votre prix pour ce fichier");
+          this.ask_for_price("Quel est votre prix pour ce fichier",null,0.001);
         }
       })
   }

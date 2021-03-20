@@ -566,7 +566,7 @@ class ElrondNet:
 
 
 
-    def execute(self,_contract,_user,function,arguments=[],value:int=None,gas_limit=LIMIT_GAS,timeout=60):
+    def execute(self,_contract,_user,function,arguments=[],value:int=None,gas_limit=LIMIT_GAS,timeout=60,gas_price_factor=1):
         if type(_contract) == str: _contract = SmartContract(_contract)
         if type(_user)==str:
             if ".pem" in _user:
@@ -580,7 +580,7 @@ class ElrondNet:
             tx = self.environment.execute_contract(_contract,_user,
                                                    function=function,
                                                    arguments=arguments,
-                                                   gas_price=config.DEFAULT_GAS_PRICE,
+                                                   gas_price=config.DEFAULT_GAS_PRICE*gas_price_factor,
                                                    gas_limit=gas_limit,
                                                    value=value,
                                                    chain=self.chain_id,
@@ -744,7 +744,7 @@ class ElrondNet:
 
 
 
-    def mint(self, contract, user_from,arguments,gas_limit=LIMIT_GAS):
+    def mint(self, contract, user_from,arguments,gas_limit=LIMIT_GAS,value=0,factor=1):
         """
         Fabriquer un NFT
         :param contract:
@@ -753,7 +753,7 @@ class ElrondNet:
         :return:
         """
         log("Minage avec "+str(arguments))
-        tx=self.execute(contract,user_from,"mint",arguments,gas_limit=gas_limit)
+        tx=self.execute(contract,user_from,"mint",arguments,gas_limit=gas_limit,gas_price_factor=factor,value=value)
         return tx
 
 
@@ -776,7 +776,7 @@ class ElrondNet:
                contract,pem_file,
                function="buy",
                arguments=[token_id,seller],
-               value=value
+               value=value,gas_price_factor=2
         )
         return tr
 

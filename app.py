@@ -220,6 +220,7 @@ def burn(token_id,data:dict=None):
     os.remove(pem_file)
 
     send(socketio,"refresh_nft",rc["sender"])
+    send(socketio, "refresh_nft", data["miner"])
 
     #TODO: ajouter la destruction du fichier
 
@@ -273,7 +274,7 @@ def open_nft(token_id:str,data:dict=None):
             rc=str(base64.b64decode(tx["scResults"][0]["data"]))[3:]
             if "@" in rc:rc=rc.split("@")[1]
             rc=str(bytearray.fromhex(rc[0:len(rc)-1]),"utf-8")
-            rc=translate(rc,{"@owner@":Account(pem_file=pem_file).address.bech32(),"@token@":str(token_id)})
+            rc=translate(rc,{"@token@":str(token_id)})
     else:
         rc="Impossible d'ouvrir le token"
     return jsonify({"response":rc,"cost":tx["cost"]})
@@ -398,11 +399,12 @@ def mint(count:str,data:dict=None):
     min_markup=int(float(data["min_markup"]) * 100)
     properties=int(data["properties"])
     miner_ratio=int(data["miner_ratio"]*100)
+    fee=int(data["fee"]*1e18)
 
     #TODO: ajouter ici un encodage du secret dont la clé est connu par le contrat
 
     arguments=[int(count),"0x"+uri.encode().hex(),"0x"+secret.encode().hex(),price,min_markup,max_markup,properties,miner_ratio]
-    result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,arguments,gas_limit=int(LIMIT_GAS*(1+int(count)/4)))
+    result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,arguments,gas_limit=int(LIMIT_GAS*(1+int(count)/4)),value=fee)
 
     if not result is None and len(result["scResults"])>0:
         if result["status"] == "fail":
@@ -421,7 +423,7 @@ def mint(count:str,data:dict=None):
                         tx=bc.add_dealer(NETWORKS[bc.network_name]["nft"],pem_file,arguments)
 
             send(socketio, "refresh_nft")
-            send(socketio,"refresh_balance",owner.address.bech32())
+            send(socketio, "refresh_balance",owner.address.bech32())
             os.remove(pem_file)
 
             return jsonify(result), 200
@@ -450,48 +452,45 @@ def transactions(user:str):
                 data=t["data"]
 
             sign=0
+            cost = -float(t["fee"]) / 1e20
+            value = float(t["value"]) / 1e18
+
             if data.startswith("bWludE") or data.startswith("mint"):
                 data="Creation d'un token"
+                sign=-1
 
 
             if data.startswith("add_dealer"):data= "Ajout d'un distributeur"
             if data.startswith("YnV5QD") or data.startswith("YWRkX2"):
-                data="Achat"
+                data="Achat token"
                 sign=1
 
             if data.startswith("price"): data = "Mise a jour du prix"
-
             if data.startswith("burn"): data = "Destruction d'un token"
             if data.startswith("setstate"): data = "Mise en vente"
             if data.startswith("open"): data = "Ouverture"
 
-            if not "@" in data:
-                cost=0
-                if t["sender"]==user:
-                    cost=-float(t["gasUsed"]*t["gasPrice"])/1e20
-                if "scResults" in t:
-                    for tt in t["scResults"]:
-                        if tt["receiver"]==user or tt["sender"]==user:
-                            data2 = str(base64.b64decode(tt["data"]), "utf-8")
-                            if "@" in data2:data2=""
+            if t["sender"]==user:
+                rc.append({
+                    "data": data,
+                    "value": sign * value,
+                    "gas": cost,
+                    "transaction": t["hash"]
+                })
 
+            if "scResults" in t:
+                for tt in t["scResults"]:
+                    if tt["receiver"]==user or tt["sender"]==user:
+                        data2 = str(base64.b64decode(tt["data"]), "utf-8")
+                        if "@" in data2:data2=""
+
+                        if len(data2)>0:
                             rc.append({
-                                "data":data+":"+data2,
+                                "data":data+": "+data2,
                                 "value":sign*float(tt["value"])/1e18,
                                 "gas":cost,
                                 "transaction":t["hash"]
                             })
-                else:
-                    if t["receiver"]==user or t["sender"]==user:
-
-                        rc.append({
-                            "data": data + ":" + data2,
-                            "value":sign*float(t["value"]) / 1e18,
-                            "gas": cost,
-                            "transaction": t["hash"]
-                        })
-            else:
-                print(data)
 
 
     return jsonify(rc),200

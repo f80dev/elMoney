@@ -1,8 +1,8 @@
 {
-  "name": "TokenForge",
+  "name": "Token Forge",
   "short_name": "TokenForge",
-  "theme_color": "#1976d2",
-  "background_color": "#fafafa",
+  "theme_color": "#545454",
+  "background_color": "#545454",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",

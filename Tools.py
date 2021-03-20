@@ -172,6 +172,7 @@ def send_mail(body:str,_to="paul.dudule@gmail.com",_from:str="reply@f80.fr",subj
 
 
 def translate(text:str,d:dict):
+    if d is None:return ""
     for k in d.keys():
         text=text.replace("@"+k+"@",d[k])
     return text
