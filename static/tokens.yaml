@@ -1,0 +1,50 @@
+version: 1
+date: 04/09/2020
+test: http://localhost:5555/api/faqs
+
+#content va contenir le corpus des FAQ
+#chaque faq contient différent champs, pas forcément obligatoire:
+#- index (obligatoire) doit être unique, il peut être utilisé au sein de l'interface client pour directement renvoyer vers une FAQ
+#- tags va permettre de mettre en place un filtrage éventuel
+#- title contient la question de la FAQ
+#- content peut être du texte simple, de l'HTML ou directement désigner une page HTML
+#- format est optionnel et par défaut à txt, il peut être à HTML si 'content\" contient des balises
+
+content:
+  - index: photo
+    title: Vendre<br>une photo
+    icon: camera
+    description: Prenez une photo ou sélectionner une photo déjà prise, faite une description et fixer un prix. Cette photo ne pourrat être vu que par l'acheteur
+    fee: 0.002
+    transac: 0.00015
+
+  - index: pow
+    title: Tokeniser<br>une oeuvre
+    icon: person
+    description: Envoyer une photo et attachez y votre identité (email, passeport) en tant qu'auteur
+    fee: 0.001
+    transac: 0.00015
+
+  - index: file
+    title: Vendre<br>un fichier
+    icon: description
+    description: ""
+    fee: 0.002
+    transac: 0.00015
+
+  - index: secret
+    title: Vendre<br>un secret
+    icon: lock
+    description: Prenez une photo ou sélectionner une photo déjà prise, faite une description et fixer un prix. Cette photo ne pourrat être vu que par l'acheteur
+    fee: 0.001
+    transac: 0.00015
+
+  - index: tickets
+    title: Billeterie
+    icon: label
+    description: Générer et vendez des billets d'accès à un evénement de tout type
+    fee: 0.002
+    transac: 0.00015
+
+
+

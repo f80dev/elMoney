@@ -14,63 +14,34 @@
     <mat-tab label="Token express">
 
       <br>
-        <app-upload-file *ngIf="show_zone_upload"
-                         [maxsize]="config.values.max_file_size"
-                         (uploaded)="onupload($event)">
-          {{prompt}}
-        </app-upload-file>
+      <app-upload-file *ngIf="show_zone_upload"
+                       [maxsize]="config.values.max_file_size"
+                       (uploaded)="onupload($event)">
+        {{prompt}}
+      </app-upload-file>
 
       <div *ngIf="!show_zone_upload" style="width: 100%;text-align: center;">
 
 
-      <br>
-      Créer vos tokens en quelques clics en fonction de vos besoins
-      <br><br>
-
-      <button mat-raised-button
-              mat-button class="square-button"
-              (click)="quick_photo(0)">
-        <mat-icon>camera</mat-icon><br>
-        <div class="bloc-bouton">Vendre<br>une photo</div>
-      </button>
-
-      <button mat-raised-button
-              mat-button class="square-button"
-              (click)="quick_photo(1)">
-        <mat-icon>person</mat-icon><br>
-        <div class="bloc-bouton">Tokeniser<br>une oeuvre</div>
-      </button>
-
-
-      <button mat-raised-button
-              (click)="show_fileupload(1,'Téléverser le fichier à embarquer dans votre token')"
-              mat-button class="square-button">
-
-        <mat-icon>description</mat-icon><br>
-        <div class="bloc-bouton">Vendre<br>un fichier</div>
-
-      </button>
-
-
-
-      <button mat-raised-button
-              mat-button class="square-button"
-              (click)="quick_secret()">
-        <mat-icon>lock</mat-icon><br>
-        <div class="bloc-bouton">Vendre<br>un secret</div>
-      </button>
-
-
-      <button mat-raised-button
-              (click)="quick_tickets('Téléverser le visuel de votre invitation')"
-              mat-button class="square-button">
-
-        <mat-icon>label</mat-icon><br>
-        <div class="bloc-bouton">Billets<br>spectacles</div>
-
-
-      </button>
         <br>
+        Créer vos tokens en quelques clics en fonction de vos besoins
+        <br><br>
+
+        <div *ngFor="let token of tokens" style="display: inline-block;text-align: center;">
+
+          <button mat-raised-button
+                  mat-button class="square-button"
+                  [title]="token.description"
+                  (click)="create_token(token)">
+            <mat-icon>{{token.icon}}</mat-icon><br>
+            <div class="bloc-bouton" [innerHTML]="token.title"></div>
+          </button>
+          <br>
+          <span style="font-size: xx-small">
+            {{token.fee}}+{{token.transac}} xeGld
+          </span>
+
+        </div>
 
 
       </div>

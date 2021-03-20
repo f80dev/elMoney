@@ -49,6 +49,7 @@ export class ImporterComponent implements OnInit {
   show_zone_upload: boolean=false;
   redirect: number=0;
   prompt: string="";
+  tokens: any[]=[];
 
 
   constructor(public api:ApiService,
@@ -66,6 +67,7 @@ export class ImporterComponent implements OnInit {
     //   }
     // })
     localStorage.setItem("last_screen","importer");
+    this.api.getyaml("tokens").subscribe((r:any)=>{this.tokens=r.content;})
   }
 
 
@@ -222,13 +224,13 @@ export class ImporterComponent implements OnInit {
   }
 
 
-  quick_photo(index=0) {
+  quick_photo(index=0,token) {
     this.add_visual((result:any)=>{
       if(result){
         this.ask_for_text("Présentation","Faite une présentation rapide de votre photo",(legende)=>{
           if(legende){
             this.uri=legende;
-            this.ask_for_price("Quel prix pour votre photo",null,0.0001);
+            this.ask_for_price("Quel prix pour votre photo",null,token.fee);
           }
         });
       }
@@ -237,21 +239,21 @@ export class ImporterComponent implements OnInit {
 
 
 
-  quick_secret(){
+  quick_secret(token){
     this.ask_for_text("Cacher un secret","Saisissez votre secret, mot de passe ...",(secret)=>{
       if(secret){
         this.secret=secret;
         this.ask_for_text("Description","Entrez une breve description de votre token",(description)=>{
           if(description){
             this.uri=description;
-            this.ask_for_price("Quel prix pour votre secret",null,0.002);
+            this.ask_for_price("Quel prix pour votre secret",null,token.fee);
           }
         })
       }
     })
   }
 
-  quick_tickets($event:any){
+  quick_tickets($event:any,token:any){
      this.add_visual((visual:any)=>{
       this.ask_for_text("Titre de votre évenement","",(title)=> {
         if (title) {
@@ -263,7 +265,7 @@ export class ImporterComponent implements OnInit {
                 this.ask_for_text("Combien de billets","Indiquer le nombre de billets à fabriquer (maximum 30)",(num)=>{
                   this.count=Number(num);
                   if(this.count<31)
-                    this.tokenizer(0.001);
+                    this.tokenizer(token.fee);
                   else {
                     showMessage(this,"Maximum 30 billets en une seule fois");
                   }
@@ -279,19 +281,19 @@ export class ImporterComponent implements OnInit {
 
 
 
-  quick_file($event: any) {
+  quick_file($event: any,token:any) {
       this.files[0]=$event.file;
       this.filename=$event.filename;
       this.ask_for_text("Description pour les acheteurs","Une phrase courte pour donner envie de l'acheter",(desc)=>{
         if(desc){
           this.uri=desc;
-          this.ask_for_price("Quel est votre prix pour ce fichier",null,0.001);
+          this.ask_for_price("Quel est votre prix pour ce fichier",null,token.fee);
         }
       })
   }
 
 
-  show_fileupload(redirect: number,prompt:string) {
+  show_fileupload(redirect: number,prompt:string,token:any) {
     this.show_zone_upload=true;
     this.prompt=prompt;
     this.redirect=redirect;
@@ -300,7 +302,15 @@ export class ImporterComponent implements OnInit {
 
 
   onupload($event: any) {
-    if(this.redirect==1)this.quick_file($event);
-    if(this.redirect==2)this.quick_tickets($event);
+    if(this.redirect==1)this.quick_file($event,this.tokens[2]);
+    if(this.redirect==2)this.quick_tickets($event,this.tokens[4]);
+  }
+
+  create_token(token: any) {
+    if(token.index=="photo")this.quick_photo(0,token);
+    if(token.index=="pow")this.quick_photo(1,token);
+    if(token.index=="file")this.show_fileupload(1,'Téléverser le fichier à embarquer dans votre token',token);
+    if(token.index=="secret")this.quick_secret(token);
+    if(token.index=="tickets")this.quick_tickets('Téléverser le visuel de votre invitation',token);
   }
 }
