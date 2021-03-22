@@ -90,10 +90,18 @@ export class ImporterComponent implements OnInit {
 
   tokenizer(fee=0,func=null,func_error=null) {
     //properties est stoké sur 8 bits : 00000<vente directe possible><le propriétaire peut vendre><le propriétaire peut offrir>
+    if(this.min_price<0 || this.max_price<0 || this.price<0){
+      showMessage(this,"Données incorrectes");
+      if(func_error)func_error();
+      return;
+    }
+
     let properties:number=0b00000000;
     if(this.owner_can_transfer)properties=properties+0b00000001;
     if(this.owner_can_sell)properties=properties+0b00000010;
     if(this.direct_sell)properties=properties+0b00000100;
+
+
     let obj={
       pem:this.user.pem["pem"],
       owner:this.user.addr,
@@ -223,16 +231,16 @@ export class ImporterComponent implements OnInit {
     this.dialog.open(PromptComponent,{width: '320px',
       data:{title: title,question: question,type:_type,max:_max,onlyConfirm:false,lbl_ok:"Ok",lbl_cancel:"Annuler"}})
       .afterClosed().subscribe((rc) => {
-        if(rc=="no")rc=null;
-        func(rc);
-      });
+      if(rc=="no")rc=null;
+      func(rc);
+    });
   }
 
 
   quick_photo(index=0,token) {
     this.add_visual((result:any)=>{
       if(result){
-        this.ask_for_text("Présentation","Faite une présentation rapide de votre photo",(legende)=>{
+        this.ask_for_text("Présentation","Rédigez une présentation rapide de votre photo pour la marketplace",(legende)=>{
           if(legende){
             this.uri=legende;
             this.ask_for_price("Quel prix pour votre photo",null,token.fee);
@@ -260,24 +268,28 @@ export class ImporterComponent implements OnInit {
 
 
   quick_loterie(token:any){
-       this.add_visual((visual:any)=> {
-         this.ask_for_text("Nombre de billet","",(num_billets)=> {
-           this.ask_for_text("Montant du billet gagnant","",(gift)=> {
-              this.ask_for_price("Prix unitaire du billet",(price)=>{
-                this.count=num_billets-1;
-                this.gift=0;
-                this.secret="Désolé ! Perdu";
-                this.tokenizer(token.fee,(result)=>{
-                  this.message="Fabrication du billet gagnant";
-                  this.count=1;
+    this.add_visual((visual:any)=> {
+      if(visual){
+        this.ask_for_text("Nombre de billet","",(num_billets)=> {
+          if(num_billets)
+            this.ask_for_text("Montant du billet gagnant","",(gift)=> {
+              if(gift)
+                this.ask_for_price("Prix unitaire du billet",(price)=>{
+                  this.count=num_billets-1;
+                  this.gift=0;
+                  this.secret="Désolé ! Perdu";
+                  this.tokenizer(token.fee,(result)=>{
+                    this.message="Fabrication du billet gagnant";
+                    this.count=1;
                     this.gift=gift;
                     this.secret="Vous avez gagné "+gift+" xEgld";
                     this.tokenizer(token.fee);
+                  });
                 });
-              });
             },"number",20);
-         },"number",20);
-       },1,"Visuel de vos billets");
+        },"number",20);
+      }
+    },1,"Visuel de vos billets");
   }
 
 
@@ -285,42 +297,45 @@ export class ImporterComponent implements OnInit {
 
 
   quick_tickets($event:any,token:any){
-     this.add_visual((visual:any)=>{
-      this.ask_for_text("Titre de votre évenement","",(title)=> {
-        if (title) {
-          this.ask_for_text("Lieu et Date","Indiquer l'adresse et l'horaire",(desc)=> {
-            if (desc) {
-              this.uri=title+" - "+desc;
-              this.secret="Billet: @id@";
-              this.ask_for_price("Prix unitaire du billet",(price)=>{
-                this.ask_for_text("Combien de billets","Indiquer le nombre de billets à fabriquer (maximum 30)",(num)=>{
-                  this.count=Number(num);
-                  if(this.count<31)
-                    this.tokenizer(token.fee);
-                  else {
-                    showMessage(this,"Maximum 30 billets en une seule fois");
-                  }
-                },"number",30);
-              })
-            }
-          });
-        }
-      });
-     },1,"Visuel de votre invitation");
+    this.add_visual((visual:any)=>{
+      if(visual){
+        this.ask_for_text("Titre de votre évenement","",(title)=> {
+          if (title) {
+            this.ask_for_text("Lieu et Date","Indiquer l'adresse et l'horaire",(desc)=> {
+              if (desc) {
+                this.uri=title+" - "+desc;
+                this.secret="Billet: @id@";
+                this.ask_for_price("Prix unitaire du billet",(price)=>{
+                  this.ask_for_text("Combien de billets","Indiquer le nombre de billets à fabriquer (maximum 30)",(num)=>{
+                    this.count=Number(num);
+                    if(this.count<31)
+                      this.tokenizer(token.fee);
+                    else {
+                      showMessage(this,"Maximum 30 billets en une seule fois");
+                    }
+                  },"number",30);
+                })
+              }
+            });
+          }
+        });
+      }
+
+    },1,"Visuel de votre invitation");
 
   }
 
 
 
   quick_file($event: any,token:any) {
-      this.files[0]=$event.file;
-      this.filename=$event.filename;
-      this.ask_for_text("Description pour les acheteurs","Une phrase courte pour donner envie de l'acheter",(desc)=>{
-        if(desc){
-          this.uri=desc;
-          this.ask_for_price("Quel est votre prix pour ce fichier",null,token.fee);
-        }
-      })
+    this.files[0]=$event.file;
+    this.filename=$event.filename;
+    this.ask_for_text("Description","Rédigez une courte phrase pour donner envie de l'acheter",(desc)=>{
+      if(desc){
+        this.uri=desc;
+        this.ask_for_price("Quel est votre prix pour ce fichier",null,token.fee);
+      }
+    })
   }
 
 
@@ -343,6 +358,6 @@ export class ImporterComponent implements OnInit {
     if(token.index=="file")this.show_fileupload(1,'Téléverser le fichier à embarquer dans votre token',token);
     if(token.index=="secret")this.quick_secret(token);
     if(token.index=="tickets")this.quick_tickets('Téléverser le visuel de votre invitation',token);
-    if(token.index=="lotterie")this.quick_loterie(token);
+    if(token.index=="loterie")this.quick_loterie(token);
   }
 }

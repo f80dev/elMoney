@@ -38,7 +38,7 @@
           </button>
           <br>
           <span style="font-size: xx-small">
-            {{token.fee}}+{{token.transac}} xeGld
+            Frais: {{token.fee+token.transac}} xeGld
           </span>
 
         </div>
@@ -89,6 +89,13 @@
                 <mat-label>Ecrire un secret</mat-label>
                 <input matInput type="text" (focusin)="focus_idx=1" maxlength="200" [(ngModel)]="secret" [ngModelOptions]="{standalone: true}">
                 <mat-hint *ngIf="focus_idx==1">un mot de passe, une adresse internet qui ne sera accessible qu'au propriétaire</mat-hint>
+              </mat-form-field>
+
+
+              <mat-form-field appearance="fill" class="app-field">
+                <mat-label>Récompense à l'ouverture</mat-label>
+                <input matInput type="number" (focusin)="focus_idx=1.5" min="0" [max]="user.gas/1e18" [(ngModel)]="gift" [ngModelOptions]="{standalone: true}">
+                <mat-hint *ngIf="focus_idx==1.5">La somme sera créditer sur le compte de l'acheteur dés l'ouverture du token</mat-hint>
               </mat-form-field>
             </form>
 
@@ -211,13 +218,13 @@
                   <br>
                   Marge autorisé par les revendeurs<br>
                   <mat-form-field appearance="fill" class="app-field" style="max-width: 130px">
-                    <mat-label>Marge minimum</mat-label>
+                    <mat-label>Commission vendeur minimum</mat-label>
                     <input matInput type="number" min="0" [max]="price" [(ngModel)]="min_price" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=3">
                     <span matSuffix>xeGld</span>
                   </mat-form-field>
                   &nbsp;
                   <mat-form-field appearance="fill" class="app-field" style="max-width: 130px">
-                    <mat-label>Marge maximum</mat-label>
+                    <mat-label>Commission vendeur maximum</mat-label>
                     <input matInput type="number" [min]="price" [(ngModel)]="max_price" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=4">
                     <span matSuffix>xeGld</span>
                   </mat-form-field>
