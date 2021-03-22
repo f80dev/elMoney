@@ -273,7 +273,8 @@ def open_nft(token_id:str,data:dict=None):
         else:
             rc=str(base64.b64decode(tx["scResults"][0]["data"]))[3:]
             if "@" in rc:rc=rc.split("@")[1]
-            rc=str(bytearray.fromhex(rc[0:len(rc)-1]),"utf-8")
+            rc=int(int(rc[0:len(rc)-1],16)/2)
+            rc=str(bytearray.fromhex(hex(rc).replace("0x","")),"utf-8")
             rc=translate(rc,{"@token@":str(token_id)})
     else:
         rc="Impossible d'ouvrir le token"
@@ -402,9 +403,11 @@ def mint(count:str,data:dict=None):
     fee=int(data["fee"]*1e18)
     gift=int(data["gift"])*100
 
-    #TODO: ajouter ici un encodage du secret dont la clé est connu par le contrat
 
-    arguments=[int(count),"0x"+uri.encode().hex(),"0x"+secret.encode().hex(),price,min_markup,max_markup,properties,miner_ratio,gift]
+    #TODO: ajouter ici un encodage du secret dont la clé est connu par le contrat
+    secret = hex(int(secret.encode().hex(),base=16)*2)
+
+    arguments=[int(count),"0x"+uri.encode().hex(),secret,price,min_markup,max_markup,properties,miner_ratio,gift]
     result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,
                    arguments=arguments,
                    gas_limit=int(LIMIT_GAS*(1+int(count)/4)),
