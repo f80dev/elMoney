@@ -127,7 +127,7 @@
 
               <br>
               <mat-form-field appearance="fill" class="app-field">
-                <mat-label>Intitulé du token</mat-label>
+                <mat-label>Intitulé du NFT</mat-label>
                 <input matInput type="text" maxlength="200" [(ngModel)]="uri" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=2">
                 <mat-hint *ngIf="focus_idx==2">Présenter votre token en quelques mots pour le vendre dans la marketplace</mat-hint>
                 <mat-icon *ngIf="uri?.length>0"
