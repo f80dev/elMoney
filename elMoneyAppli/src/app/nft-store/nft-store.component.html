@@ -8,7 +8,7 @@
 
   <h2>Place de marché en vente directe</h2>
 
-  <div *ngIf="nfts?.length>3">
+  <div *ngIf="nfts?.length>2">
     <mat-form-field appearance="fill"
                     style="max-width:600px;width:60%;" autofocus>
       <mat-label>Chercher un token à acheter</mat-label>
@@ -20,14 +20,7 @@
                 (click)="clearQuery()">cancel</mat-icon>
     </mat-form-field>
     &nbsp;
-    <button mat-raised-button
-            mat-button class="app-button"
-            (click)="refresh(false)">
-      Rechercher
-    </button>
   </div>
-
-  <br>
 
   <app-hourglass [message]="message"></app-hourglass>
   <div *ngIf="nfts.length==0 && message.length==0">

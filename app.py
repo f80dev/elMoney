@@ -400,11 +400,15 @@ def mint(count:str,data:dict=None):
     properties=int(data["properties"])
     miner_ratio=int(data["miner_ratio"]*100)
     fee=int(data["fee"]*1e18)
+    gift=int(data["gift"])*100
 
     #TODO: ajouter ici un encodage du secret dont la clé est connu par le contrat
 
-    arguments=[int(count),"0x"+uri.encode().hex(),"0x"+secret.encode().hex(),price,min_markup,max_markup,properties,miner_ratio]
-    result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,arguments,gas_limit=int(LIMIT_GAS*(1+int(count)/4)),value=fee)
+    arguments=[int(count),"0x"+uri.encode().hex(),"0x"+secret.encode().hex(),price,min_markup,max_markup,properties,miner_ratio,gift]
+    result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,
+                   arguments=arguments,
+                   gas_limit=int(LIMIT_GAS*(1+int(count)/4)),
+                   value=fee+gift*1e16)
 
     if not result is None and len(result["scResults"])>0:
         if result["status"] == "fail":

@@ -5,10 +5,8 @@ test: http://localhost:5555/api/faqs
 #content va contenir le corpus des FAQ
 #chaque faq contient différent champs, pas forcément obligatoire:
 #- index (obligatoire) doit être unique, il peut être utilisé au sein de l'interface client pour directement renvoyer vers une FAQ
-#- tags va permettre de mettre en place un filtrage éventuel
-#- title contient la question de la FAQ
-#- content peut être du texte simple, de l'HTML ou directement désigner une page HTML
-#- format est optionnel et par défaut à txt, il peut être à HTML si 'content\" contient des balises
+#- title contient le titre du token affiché dans le bouto
+#- description apparait quand la souris reste au dessus du bouton
 
 content:
   - index: photo
@@ -35,9 +33,10 @@ content:
   - index: secret
     title: Vendre<br>un secret
     icon: lock
-    description: Prenez une photo ou sélectionner une photo déjà prise, faite une description et fixer un prix. Cette photo ne pourrat être vu que par l'acheteur
+    description: Vendre un mot de passe, un numéro de license, un code secret de coffre, un code promo
     fee: 0.001
     transac: 0.00015
+    help: Utiliser la commande "ouvrir" pour découvrir le secret que contient ce token
 
   - index: tickets
     title: Billeterie
@@ -45,6 +44,15 @@ content:
     description: Générer et vendez des billets d'accès à un evénement de tout type
     fee: 0.002
     transac: 0.00015
+    help: Présenter votre code perso à l'entrée de l'événement pour contrôle du billet
+
+  - index: loterie
+    title: Loterie
+    icon: casino
+    description: Organiser une loterie, des cartes à grater en récompensant le gagnant en eGold
+    fee: 0.003
+    transac: 0.00015
+    help: Après achat, ouvrer ce token pour découvrir si vous avez gagné. Si c'est le cas le gain est immédiatement versé sur votre compte
 
 
 

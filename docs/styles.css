@@ -2241,7 +2241,7 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
 .square-button {
   margin: 5px !important;
   width: 100px !important;
-  height: 110px !important;
+  height: 100px !important;
   background-color: #646464;
   color: white;
 }

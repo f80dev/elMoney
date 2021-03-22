@@ -776,7 +776,8 @@ class ElrondNet:
                contract,pem_file,
                function="buy",
                arguments=[token_id,seller],
-               value=value,gas_price_factor=2
+               value=value,
+            gas_price_factor=2
         )
         return tr
 

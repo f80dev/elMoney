@@ -29,6 +29,7 @@ export class ImporterComponent implements OnInit {
   message: string="";
   files:string[]=["",""];
   count: number=1;
+  gift:number=0;
   secret: string="";
   price: number=0;
   uri: string="Achetez mon NFT";
@@ -87,7 +88,7 @@ export class ImporterComponent implements OnInit {
   }
 
 
-  tokenizer(fee=0) {
+  tokenizer(fee=0,func=null,func_error=null) {
     //properties est stoké sur 8 bits : 00000<vente directe possible><le propriétaire peut vendre><le propriétaire peut offrir>
     let properties:number=0b00000000;
     if(this.owner_can_transfer)properties=properties+0b00000001;
@@ -103,6 +104,7 @@ export class ImporterComponent implements OnInit {
       secret:this.secret,
       price:this.price,
       fee:fee,
+      gift:this.gift,
       max_markup:this.max_price,
       min_markup:this.min_price,
       dealers:this.dataSource.data,
@@ -118,11 +120,13 @@ export class ImporterComponent implements OnInit {
         showMessage(this,"Fichier tokeniser pour "+r.cost+" xEgld");
         this.user.refresh_balance(()=>{
           this.router.navigate(["nfts-perso"],{queryParams:{index:2}});
-        })
+        });
+        if(func)func();
       }
     },(err)=>{
       this.message="";
       showMessage(this,err.error);
+      if(func_error)func_error();
     })
   }
 
@@ -219,6 +223,7 @@ export class ImporterComponent implements OnInit {
     this.dialog.open(PromptComponent,{width: '320px',
       data:{title: title,question: question,type:_type,max:_max,onlyConfirm:false,lbl_ok:"Ok",lbl_cancel:"Annuler"}})
       .afterClosed().subscribe((rc) => {
+        if(rc=="no")rc=null;
         func(rc);
       });
   }
@@ -252,6 +257,32 @@ export class ImporterComponent implements OnInit {
       }
     })
   }
+
+
+  quick_loterie(token:any){
+       this.add_visual((visual:any)=> {
+         this.ask_for_text("Nombre de billet","",(num_billets)=> {
+           this.ask_for_text("Montant du billet gagnant","",(gift)=> {
+              this.ask_for_price("Prix unitaire du billet",(price)=>{
+                this.count=num_billets-1;
+                this.gift=0;
+                this.secret="Désolé ! Perdu";
+                this.tokenizer(token.fee,(result)=>{
+                  this.message="Fabrication du billet gagnant";
+                  this.count=1;
+                    this.gift=gift;
+                    this.secret="Vous avez gagné "+gift+" xEgld";
+                    this.tokenizer(token.fee);
+                });
+              });
+            },"number",20);
+         },"number",20);
+       },1,"Visuel de vos billets");
+  }
+
+
+
+
 
   quick_tickets($event:any,token:any){
      this.add_visual((visual:any)=>{
@@ -312,5 +343,6 @@ export class ImporterComponent implements OnInit {
     if(token.index=="file")this.show_fileupload(1,'Téléverser le fichier à embarquer dans votre token',token);
     if(token.index=="secret")this.quick_secret(token);
     if(token.index=="tickets")this.quick_tickets('Téléverser le visuel de votre invitation',token);
+    if(token.index=="lotterie")this.quick_loterie(token);
   }
 }

@@ -5,6 +5,7 @@
         <img mat-card-avatar src="./assets/icons/gift.png" class="image-icon">
         <mat-card-title>
               {{nft.uri}}
+          <span *ngIf="nft?.count && nft?.count>1">({{nft.count}})</span>
         </mat-card-title>
       </mat-card-header>
        <mat-card-content style="min-height: 50px;text-align: center;color: white;">

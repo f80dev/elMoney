@@ -32,14 +32,14 @@ IPFS_NODE="http://161.97.75.165:5001"
 NETWORKS={
     "testnet":{
         "tokenIdentifier":"",
-        "new_account":float(10*1e18),
+        "new_account":float(2*1e18),
         "bank":"bob",
         "unity":"tEgld",
         "faucet":"https://r3d4.fr/elrond/testnet/index.php",
         "proxy":"https://testnet-api.elrond.com",
         "explorer":"https://testnet-explorer.elrond.com",
         "wallet":"https://testnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgq2j4t5v0lu0cvrwapl9z5zr88zfcepvjsd8ssc6sfq6"
+        "nft":"erd1qqqqqqqqqqqqqpgqj5zftf3ef3gqm3gklcetpmxwg43rh8z2d8ss2e49aq"
     },
 
     "devnet":{
@@ -51,7 +51,7 @@ NETWORKS={
         "proxy":"https://devnet-api.elrond.com",
         "explorer":"https://devnet-explorer.elrond.com",
         "wallet":"https://devnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqv2r86rvsrd70r486tcjfu7urkudqxujrd8sspw2znd"
+        "nft":"erd1qqqqqqqqqqqqqpgqak8zt22wl2ph4tswtyc39namqx6ysa2sd8ss4xmlj3"
     },
 
     "server":{

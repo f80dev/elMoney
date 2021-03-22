@@ -38,7 +38,11 @@ export class NftStoreComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.routes.snapshot.queryParamMap.has("filter")) {
-      this.filter = "token:"+this.routes.snapshot.queryParamMap.get("filter");
+      this.filter_id = Number(this.routes.snapshot.queryParamMap.get("filter"));
+    }
+
+    if (this.routes.snapshot.queryParamMap.has("q")) {
+      this.filter = this.routes.snapshot.queryParamMap.get("q");
     }
 
     if (this.routes.snapshot.queryParamMap.has("id")) {
@@ -66,11 +70,23 @@ export class NftStoreComponent implements OnInit {
         item.search=item.uri+" "+item.price;
         item.open = "";
 
-        if (!this.filter_id || this.filter_id == item.token_id) {
+        let same_item=null;
+        for(let i of this.nfts){
+          if(i.uri==item.uri && i.miner==item.miner && i.price==item.price && i.state==item.state)
+            same_item=i;
+        }
+
+        if(same_item){
+          same_item.count=same_item.count+1;
+        } else {
+          item.count=1;
+          if (!this.filter_id || this.filter_id == item.token_id) {
           if (item.state == 0 && item.properties>=4) {
             this.nfts.push(item);
           }
         }
+        }
+
       }
     });
   }

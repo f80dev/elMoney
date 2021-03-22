@@ -46,6 +46,8 @@ export class AppComponent implements OnInit,OnDestroy {
 
       $$("Initialisation de l'utilisateur")
       let addr=this.routes.snapshot.queryParamMap.get("user");
+      let q=this.routes.snapshot.queryParamMap.get("q");
+      let filter=this.routes.snapshot.queryParamMap.get("filter");
       let pem_key=localStorage.getItem("pem");
       if(pem_key)pem_key=JSON.parse(pem_key);
 
@@ -54,10 +56,11 @@ export class AppComponent implements OnInit,OnDestroy {
           if(localStorage.getItem("last_screen"))
             this.router.navigate([localStorage.getItem("last_screen")]);
           else{
-            if(this.config.hasESDT())
+
+            if(this.config.hasESDT() && !q && !filter)
               this.router.navigate(["main"]);
             else
-              this.router.navigate(["store"]);
+              this.router.navigate(["store"],{queryParams:{q:q,filter:filter}});
           }
         },
         (err)=>{

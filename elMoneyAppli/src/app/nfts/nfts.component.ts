@@ -57,7 +57,7 @@ export class NftsComponent implements OnChanges {
 
   share(nft){
     this.router.navigate(["promo"],{queryParams:{
-        url:environment.domain_appli+"/store?id="+nft.token_id,
+        url:environment.domain_appli+"/?filter="+nft.token_id,
         message:"Acheter ce token",
         title:nft.uri
       }});
@@ -102,8 +102,8 @@ export class NftsComponent implements OnChanges {
     nft.message = message;
     this.api._post("state_nft/" + nft.token_id + "/" + new_state, "", this.user.pem).subscribe((r: any) => {
       nft.message = "";
-      let mes="Votre token n'est plus en vente. ";
-      if(new_state==0)mes="Votre token est en vente. "
+      let mes="Votre token n'est plus en vente";
+      if(new_state==0)mes="Votre token est en vente"
       showMessage(this, mes+"Frais de service " + (r.cost) + " xEgld");
       this.user.refresh_balance(() => {
         this.onrefresh.emit();
