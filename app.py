@@ -400,7 +400,7 @@ def mint(count:str,data:dict=None):
     min_markup=int(float(data["min_markup"]) * 100)
     properties=int(data["properties"])
     miner_ratio=int(data["miner_ratio"]*100)
-    fee=int(data["fee"]*1e18)
+    fee=int(float(data["fee"])*1e18)
     gift=int(data["gift"])*100
 
 

@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1616410010272,
+  "timestamp": 1616420073295,
   "index": "https://tf.f80.fr/index.html",
   "assetGroups": [
     {
@@ -65,7 +65,7 @@
   ],
   "dataGroups": [],
   "hashTable": {
-    "https://tf.f80.fr/assets/TokenForgeFromExcel.xlsm": "98c8b81ce8001bcfc8898de7718ecb2156c697e2",
+    "https://tf.f80.fr/assets/TokenForgeFromExcel.xlsm": "8c468b91dea8356b5afc237fb4ebfc2227855dcc",
     "https://tf.f80.fr/assets/cmk.html": "6f06383ca5f4552828853e7bd98e516195470229",
     "https://tf.f80.fr/assets/coin.png": "9b5eb5e2fbadf0386fd6925a9e3b1b73fbfeafbc",
     "https://tf.f80.fr/assets/icons/coin.png": "8d066c2ff9ec582b7143b25b45a4a627276aff71",
