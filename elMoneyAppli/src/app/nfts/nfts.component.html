@@ -1,14 +1,15 @@
  <div *ngIf="nfts?.length>0" style="margin: 8px;padding:8px;" class="wrap-list" >
-    <mat-card class="app-card" style="width:300px;"
+    <mat-card class="app-card" style="width:300px;padding:12px;padding-bottom:17px;margin:8px;"
               *ngFor="let nft of nfts | filter: ['search',filter]">
-      <mat-card-header>
+      <mat-card-header *ngIf="nft.uri?.length>0">
         <img mat-card-avatar src="./assets/icons/gift.png" class="image-icon">
         <mat-card-title>
               {{nft.uri}}
           <span *ngIf="nft?.count && nft?.count>1">({{nft.count}})</span>
         </mat-card-title>
       </mat-card-header>
-       <mat-card-content style="min-height: 50px;text-align: center;color: white;">
+
+       <mat-card-content style="min-height: 50px;text-align: center;color: white;margin:0px;">
 
          <app-tuto [if]="nft.owner!=user.addr && nft.has_secret==1"
                    label="Devenez propriétaire de ce NFT pour accèder à son contenu."></app-tuto>
@@ -29,8 +30,12 @@
            </ul>
          </div>
 
-        <div *ngIf="nft.visual?.length>0">
+        <div *ngIf="nft.visual?.length>0 && nft.uri.length>0">
           <img [src]="nft.visual" style="width:150px;">
+        </div>
+
+        <div *ngIf="nft.visual?.length>0 && nft.uri.length==0">
+          <img [src]="nft.visual" style="width:100%;">
         </div>
 
 

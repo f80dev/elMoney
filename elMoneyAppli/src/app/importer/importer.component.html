@@ -130,6 +130,9 @@
                 <mat-label>Intitulé du token</mat-label>
                 <input matInput type="text" maxlength="200" [(ngModel)]="uri" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=2">
                 <mat-hint *ngIf="focus_idx==2">Présenter votre token en quelques mots pour le vendre dans la marketplace</mat-hint>
+                <mat-icon *ngIf="uri?.length>0"
+                matSuffix style="cursor: pointer"
+                (click)="uri=''">cancel</mat-icon>
               </mat-form-field>
 
               <br><br>
@@ -260,7 +263,7 @@
               <br><br>
               <button mat-raised-button  color="primary"
                       mat-button class="large-button"
-                      [disabled]="uri?.length==0 && files[0].length==0"
+                      [disabled]="uri?.length==0 && files[1].length==0"
                       (click)="tokenizer()">
                 Fabriquer !
               </button>
