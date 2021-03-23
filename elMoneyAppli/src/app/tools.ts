@@ -7,7 +7,7 @@ export const ADMIN_PASSWORD="hh4271";
 export function showError(vm:any,err:any=null){
   $$("!Error ",err);
   if(vm.hasOwnProperty("message"))vm.message="";
-  showMessage(vm,"L'application est en cours de maintenance, Merci de réessayer l'opération dans quelques instants");
+  showMessage(vm,"L'application ne répond pas. Veuillez vérifier l'état de votre connexion et recommencer d'ici quelques instants");
 }
 
 

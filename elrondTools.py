@@ -838,11 +838,15 @@ class ElrondNet:
 
         return tx
 
+
     def getTransactions(self, user):
         _user=Account(address=user)
         rc=self._proxy.get_account_transactions(_user.address)
         return rc
 
+    def getTransactionsByRest(self,addr):
+        rc=rq.get(self._proxy.url+"/transactions/"+addr).json()
+        return rc
 
 
 

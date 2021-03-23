@@ -6,17 +6,17 @@
          *ngIf="transactions.length>0"
          class="mat-elevation-z8 app-table">
 
-    <ng-container matColumnDef="transac"  style="margin:3px;">
+    <ng-container matColumnDef="transac"  style="margin:1px;">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell style="cursor:pointer;text-align: left;" *matCellDef="let element">
         <mat-icon (click)="open_transaction(element)" style="cursor: pointer">visibility</mat-icon>
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="data"  style="margin:3px;">
+    <ng-container matColumnDef="data"  style="margin:3px;font-size: small">
       <th mat-header-cell *matHeaderCellDef>Description</th>
       <td mat-cell style="cursor:pointer;text-align: left;" *matCellDef="let element" (click)="open_transaction(element)">
-        {{element.data}}
+        <small>{{element.data}}</small>
       </td>
     </ng-container>
 
@@ -28,7 +28,7 @@
   <ng-container matColumnDef="gas"  style="margin:3px">
       <th mat-header-cell title="Frais de transactions (lié à l'usage du réseau Elrond)" *matHeaderCellDef>Transaction (xEgld)</th>
       <td mat-cell *matCellDef="let element">
-        {{element.gas | number:'1.0-5'}}
+        {{element.fee | number:'1.0-5'}}
       </td>
     </ng-container>
 

@@ -69,7 +69,7 @@ export class UserService {
           if(func_error)
             func_error(err.error);
           else
-            func();
+            if(func)func();
         });
     return true;
   }

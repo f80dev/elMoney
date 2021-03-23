@@ -120,7 +120,6 @@ export class NftsComponent implements OnChanges {
       nft.open = r.response;
       if(nft.open.length==46)nft.open="https://ipfs.io/ipfs/"+nft.open;
 
-      showMessage(this, "Coût de la transaction: " + r.cost+" xEgld");
       this.user.refresh_balance(() => {});
     });
   }

@@ -453,54 +453,53 @@ def owner_of(contract,token):
     return jsonify(rc),200
 
 
-
+#http://localhost:6660/api/transactions/erd1zez3nsz9jyeh0dca64377ra7xhnl4n2ll0tqskf7krnw0x5k3d2s5l6sf6
 @app.route('/api/transactions/<user>/',methods=["GET"])
 def transactions(user:str):
     rc=[]
     for addr in [NETWORKS[bc.network_name]["nft"]]:
-         for t in bc.getTransactions(addr):
+        for t in bc.getTransactions(addr):
+            t=bc.getTransactionsByRest(t["hash"])
             try:
                 data = str(base64.b64decode(t["data"]), "utf-8")
             except:
                 data=t["data"]
 
             sign=0
-            cost = int(t["fee"])
-
-            if "scResults" in t:
-                for tt in t["scResults"]:
-                    if tt["receiver"]==user:
-                        cost=cost-int(tt["value"])
-
-
+            fee = -float(t["fee"])/1e18
             value = float(t["value"]) / 1e18
 
-            if data.startswith("bWludE") or data.startswith("mint"):
-                data="Creation d'un token"
-                sign=-1
+            # if "scResults" in t:
+            #     for tt in t["scResults"]:
+            #         if tt["receiver"]==user:
+            #             cost=cost-int(tt["value"])
+            if t["sender"]==user:sign=-1
+            if t["receiver"]==user:sign=+1
 
-
+            if data.startswith("mint"):data="Creation d'un token"
             if data.startswith("add_dealer"):data= "Ajout d'un distributeur"
-            if data.startswith("YnV5QD") or data.startswith("YWRkX2"):
-                data="Achat token"
-                sign=1
-
             if data.startswith("price"): data = "Mise a jour du prix"
             if data.startswith("burn"): data = "Destruction d'un token"
             if data.startswith("setstate"): data = "Mise en vente"
-            if data.startswith("open"): data = "Ouverture"
+            if data.startswith("open"):
+                data = "Révéler le secret"
+                if "scResults" in t and len(t["scResults"])>1:sign=0
+            if data.startswith("buy"):data="Achat d'un NFT"
 
-            if t["sender"]==user:
+
+            if sign!=0:
                 rc.append({
                     "data": data,
                     "value": sign * value,
-                    "gas": cost/float(t["gasPrice"]),
-                    "transaction": t["hash"]
+                    "fee": fee,
+                    "transaction": t["txHash"]
                 })
 
             if "scResults" in t:
                 for tt in t["scResults"]:
                     if tt["receiver"]==user or tt["sender"]==user:
+                        if tt["receiver"]==user:sign=1
+                        if tt["sender"] == user: sign = -1
                         data2 = str(base64.b64decode(tt["data"]), "utf-8")
                         if "@" in data2:data2=""
 
@@ -508,10 +507,9 @@ def transactions(user:str):
                             rc.append({
                                 "data":data+": "+data2,
                                 "value":sign*float(tt["value"])/1e18,
-                                "gas":cost/float(t["gasPrice"]),
-                                "transaction":t["hash"]
+                                "fee":0,
+                                "transaction":t["txHash"]
                             })
-
 
     return jsonify(rc),200
 
