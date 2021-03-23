@@ -1,5 +1,6 @@
 <div class="mainform">
   <app-tuto label="Retrouvez ici l'ensemble des transactions effectuées"></app-tuto>
+  <app-hourglass [message]="message"></app-hourglass><br>
   <span *ngIf="transactions?.length==0">Aucune transaction effectuée</span>
   <table mat-table [dataSource]="transactions"
          *ngIf="transactions.length>0"

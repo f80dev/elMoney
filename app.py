@@ -237,7 +237,7 @@ def burn(token_id,data:dict=None):
 def nfts(seller_filter="0x0",owner_filter="0x0",miner_filter="0x0"):
     rc=[]
 
-    for uri in bc.get_uris(NETWORKS[bc.network_name]["nft"],seller_filter,owner_filter,miner_filter):
+    for uri in bc.get_tokens(NETWORKS[bc.network_name]["nft"],seller_filter,owner_filter,miner_filter):
         rc.append(uri)
 
     return jsonify(rc),200
@@ -274,8 +274,11 @@ def open_nft(token_id:str,data:dict=None):
             rc=str(base64.b64decode(tx["scResults"][0]["data"]))[3:]
             if "@" in rc:rc=rc.split("@")[1]
             rc=int(int(rc[0:len(rc)-1],16)/2)
-            rc=str(bytearray.fromhex(hex(rc).replace("0x","")),"utf-8")
-            rc=translate(rc,{"@token@":str(token_id)})
+            if rc>0:
+                rc=str(bytearray.fromhex(hex(rc).replace("0x","")),"utf-8")
+                rc=translate(rc,{"@token@":str(token_id)})
+            else:
+                rc=""
     else:
         rc="Impossible d'ouvrir le token"
     return jsonify({"response":rc,"cost":tx["cost"]})
@@ -385,6 +388,10 @@ def mint(count:str,data:dict=None):
     else:
         secret = data["secret"]
 
+    # TODO: ajouter ici un encodage du secret dont la clé est connu par le contrat
+    if len(secret)==0:secret=" ";
+    secret = hex(int(secret.encode().hex(), base=16) * 2)
+
     res_visual = ""
     if "visual" in data and len(data["visual"])>0:
         res_visual = "%%" + client.add(data["visual"])
@@ -404,8 +411,6 @@ def mint(count:str,data:dict=None):
     gift=int(data["gift"])*100
 
 
-    #TODO: ajouter ici un encodage du secret dont la clé est connu par le contrat
-    secret = hex(int(secret.encode().hex(),base=16)*2)
 
     arguments=[int(count),"0x"+uri.encode().hex(),secret,price,min_markup,max_markup,properties,miner_ratio,gift]
     result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,
@@ -413,21 +418,22 @@ def mint(count:str,data:dict=None):
                    gas_limit=int(LIMIT_GAS*(1+int(count)/4)),
                    value=fee+gift*1e16)
 
-    if not result is None and len(result["scResults"])>0:
+    if not result is None:
         if result["status"] == "fail":
             return result["scResults"][0]["returnMessage"],500
         else:
-            return_string=str(base64.b64decode(result["scResults"][0]["data"]),"utf-8")
-            last_new_id=int(return_string.split("@")[2],16)
-            tokenids=range(last_new_id-int(count),last_new_id)
+            if "scResults" in result and len(result["scResults"])>0:
+                return_string=str(base64.b64decode(result["scResults"][0]["data"]),"utf-8")
+                last_new_id=int(return_string.split("@")[2],16)
+                tokenids=range(last_new_id-int(count),last_new_id)
 
-            #TODO: a optimiser pour pouvoir passer plusieurs distributeurs à plusieurs billet
-            if "dealers" in data and len(data["dealers"])>0:
-                for dealer in data["dealers"]:
-                    for tokenid in tokenids:
-                        _dealer=Account(address=dealer["address"])
-                        arguments=[tokenid,"0x"+_dealer.address.hex()]
-                        tx=bc.add_dealer(NETWORKS[bc.network_name]["nft"],pem_file,arguments)
+                #TODO: a optimiser pour pouvoir passer plusieurs distributeurs à plusieurs billet
+                if "dealers" in data and len(data["dealers"])>0:
+                    for dealer in data["dealers"]:
+                        for tokenid in tokenids:
+                            _dealer=Account(address=dealer["address"])
+                            arguments=[tokenid,"0x"+_dealer.address.hex()]
+                            tx=bc.add_dealer(NETWORKS[bc.network_name]["nft"],pem_file,arguments)
 
             send(socketio, "refresh_nft")
             send(socketio, "refresh_balance",owner.address.bech32())

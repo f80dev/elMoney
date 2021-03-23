@@ -253,6 +253,10 @@ export function subscribe_socket(vm:any,event_name:string,func=null){
 
 
 
+export function openFAQ(vm:any,id:string){
+  vm.router.navigate(["faqs"],{queryParams:{open:id}});
+}
+
 
 
 export function $$(s: string, obj: any= null) {

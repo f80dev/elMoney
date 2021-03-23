@@ -44,6 +44,7 @@ export class PromptComponent {
       this._max=data.max;
       this._type="number";
     }
+    if(!data.result)data.result="";
   }
 
   onNoClick(): void {

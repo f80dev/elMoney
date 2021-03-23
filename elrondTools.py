@@ -623,7 +623,7 @@ class ElrondNet:
 
 
 
-    def get_uris(self, contract,seller_filter,owner_filter,miner_filter):
+    def get_tokens(self, contract,seller_filter,owner_filter,miner_filter):
         _contract=SmartContract(contract)
         rc = list()
 

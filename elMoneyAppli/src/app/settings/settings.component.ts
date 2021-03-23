@@ -20,6 +20,7 @@ export class SettingsComponent implements OnInit {
   contrat="";
 
   message: string="";
+  filename: string="";
 
   constructor(public router:Router,
               public user:UserService,
@@ -58,5 +59,20 @@ export class SettingsComponent implements OnInit {
 
   informe_clipboard() {
     showMessage(this,"Adresse est dans le presse papier");
+  }
+
+
+
+  set_filename() {
+     this.dialog.open(PromptComponent, {
+      data: {
+        title: 'Enregistrer votre compte',
+        question: 'Donner un pseudo à votre compte',
+        onlyConfirm: false,
+        _type:"text"
+      }
+    }).afterClosed().subscribe((result) => {
+       if(result)this.filename=result+".pem";
+    });
   }
 }

@@ -101,7 +101,6 @@ export class ImporterComponent implements OnInit {
     if(this.owner_can_sell)properties=properties+0b00000010;
     if(this.direct_sell)properties=properties+0b00000100;
 
-
     let obj={
       pem:this.user.pem["pem"],
       owner:this.user.addr,
@@ -210,6 +209,7 @@ export class ImporterComponent implements OnInit {
         {
           title: "Prix de vente",
           question: question,
+          result:0,
           min:0,max:10,
           type:"number",
           onlyConfirm:false,
@@ -241,7 +241,7 @@ export class ImporterComponent implements OnInit {
     this.add_visual((result:any)=>{
       if(result){
         this.ask_for_text("Présentation","Rédigez une présentation rapide de votre photo pour la marketplace",(legende)=>{
-          if(legende){
+          if(legende!=null){
             this.uri=legende;
             this.ask_for_price("Quel prix pour votre photo",null,token.fee);
           }

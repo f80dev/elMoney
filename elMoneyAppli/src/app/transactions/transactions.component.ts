@@ -5,7 +5,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {Socket} from "ngx-socket-io";
 import {UserService} from "../user.service";
 import {SellerProperties} from "../importer/importer.component";
-import {subscribe_socket} from "../tools";
+import {showError, subscribe_socket} from "../tools";
 import {environment} from "../../environments/environment";
 import {ConfigService} from "../config.service";
 
@@ -23,6 +23,7 @@ export interface I_Transaction {
 export class TransactionsComponent implements OnInit {
   displayedColumns: string[] = ['data', 'value','gas'];
   transactions:I_Transaction[]=[];
+  message: string="";
 
   constructor(public api: ApiService,
               public routes: ActivatedRoute,
@@ -34,9 +35,11 @@ export class TransactionsComponent implements OnInit {
   ){ }
 
   refresh(){
+    this.message="Chargement du journal des transactions";
     this.api._get("transactions/"+this.user.addr+"/").subscribe((ts:any)=>{
+      this.message="";
       this.transactions=ts;
-    })
+    },()=>{showError(this);})
   }
 
   ngOnInit(): void {

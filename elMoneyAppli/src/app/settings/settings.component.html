@@ -5,13 +5,21 @@
 
   <br>
 
+  <button mat-raised-button mat-button
+          class="app-button"
+          *ngIf="filename.length==0"
+          (click)="set_filename()">
+    <div class="bloc-bouton">Sauvegardez<br>votre compte</div>
+  </button>
+
+
   <a [href]="fileUrl"
      title="Ce fichier est strictement confidentiel, il ne doit être communiquer à personne et conserver précieusement."
-     *ngIf="user.pem"
-     download="elrond_key.pem">Télécharger votre clé privée</a>
+     *ngIf="user.pem && filename.length>0"
+     [download]="filename">Télécharger votre clé privée</a>
   <br>
   <small>
-    pour accéder à votre compte depuis le <a href="https://testnet-wallet.elrond.com/unlock/pem" target="_blank">wallet Elrond</a>
+    pour pouvoir y accéder depuis le <a [href]="config.server.wallet" target="_blank">wallet Elrond</a> par exemple
   </small>
 
 
@@ -29,7 +37,7 @@
   <button mat-raised-button mat-button
           class="app-button"
           (click)="router.navigate(['private'])">
-    <div class="bloc-bouton">Utiliser une<br>clé privée</div>
+    <div class="bloc-bouton">Utiliser un<br>autre compte</div>
   </button>
   &nbsp;
   <button mat-raised-button mat-button

@@ -1,5 +1,5 @@
 import {Component, OnInit } from '@angular/core';
-import {showError, showMessage} from "../tools";
+import {showError, showMessage,openFAQ} from "../tools";
 import {ConfigService} from "../config.service";
 import {Location} from "@angular/common";
 import {Router} from "@angular/router";
@@ -59,9 +59,6 @@ export class PrivateComponent implements OnInit {
     reader.readAsDataURL(fileInputEvent.target.files[0]);
   }
 
-  openFAQ() {
-    //TODO a connecter
-  }
 
   confirm_new(r:any){
     this.message="";
@@ -76,8 +73,9 @@ export class PrivateComponent implements OnInit {
             }
           }).afterClosed().subscribe((result_code) => {
             if (result_code == "yes") {
-              this.user.init(r.address, {pem: r.pem});
-              window.location.reload();
+              this.user.init(r.address, {pem: r.pem},()=>{
+                window.location.reload();
+              });
             }
           });
   }
@@ -89,5 +87,11 @@ export class PrivateComponent implements OnInit {
       },()=>{
         showMessage(this,"Probléme technique de changement de profil");
       });
+  }
+
+
+
+  _faq(index: string) {
+    openFAQ(this,index);
   }
 }
