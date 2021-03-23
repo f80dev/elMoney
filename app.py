@@ -220,7 +220,7 @@ def burn(token_id,data:dict=None):
     os.remove(pem_file)
 
     send(socketio,"refresh_nft",rc["sender"])
-    send(socketio, "refresh_nft", data["miner"])
+    #TODO ajouter la notification du mineur
 
     #TODO: ajouter la destruction du fichier
 
@@ -465,7 +465,14 @@ def transactions(user:str):
                 data=t["data"]
 
             sign=0
-            cost = -float(t["fee"]) / 1e20
+            cost = int(t["fee"])
+
+            if "scResults" in t:
+                for tt in t["scResults"]:
+                    if tt["receiver"]==user:
+                        cost=cost-int(tt["value"])
+
+
             value = float(t["value"]) / 1e18
 
             if data.startswith("bWludE") or data.startswith("mint"):
@@ -487,7 +494,7 @@ def transactions(user:str):
                 rc.append({
                     "data": data,
                     "value": sign * value,
-                    "gas": cost,
+                    "gas": cost/float(t["gasPrice"]),
                     "transaction": t["hash"]
                 })
 
@@ -501,7 +508,7 @@ def transactions(user:str):
                             rc.append({
                                 "data":data+": "+data2,
                                 "value":sign*float(tt["value"])/1e18,
-                                "gas":cost,
+                                "gas":cost/float(t["gasPrice"]),
                                 "transaction":t["hash"]
                             })
 

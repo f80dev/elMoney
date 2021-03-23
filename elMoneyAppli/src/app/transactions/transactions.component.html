@@ -6,9 +6,18 @@
          *ngIf="transactions.length>0"
          class="mat-elevation-z8 app-table">
 
+    <ng-container matColumnDef="transac"  style="margin:3px;">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell style="cursor:pointer;text-align: left;" *matCellDef="let element">
+        <mat-icon (click)="open_transaction(element)" style="cursor: pointer">visibility</mat-icon>
+      </td>
+    </ng-container>
+
     <ng-container matColumnDef="data"  style="margin:3px;">
       <th mat-header-cell *matHeaderCellDef>Description</th>
-      <td mat-cell style="cursor:pointer;text-align: left;" *matCellDef="let element" (click)="open_transaction(element)"> {{element.data}} </td>
+      <td mat-cell style="cursor:pointer;text-align: left;" *matCellDef="let element" (click)="open_transaction(element)">
+        {{element.data}}
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="value"  style="margin:3px">

@@ -21,7 +21,7 @@ export interface I_Transaction {
   styleUrls: ['./transactions.component.sass']
 })
 export class TransactionsComponent implements OnInit {
-  displayedColumns: string[] = ['data', 'value','gas'];
+  displayedColumns: string[] = ['transac','data', 'value','gas'];
   transactions:I_Transaction[]=[];
   message: string="";
 
