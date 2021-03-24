@@ -104,6 +104,15 @@ export class NftStoreComponent implements OnInit {
   }
 
   handle:any;
+  options:any[]=[
+    {label:"Standard",style:{width:"300px",height:"auto",fontsize:"medium",with_icon:true}},
+    {label:"Condensé",style:{width:"fit-content",height:"fit-content",fontsize:"small",with_icon:false}},
+    {label:"Large",style:{width:"100%",height:"500px",fontsize:"large",with_icon:true}},
+    {label:"Carré",style:{width:"300px",height:"300px",fontsize:"normal",with_icon:false}},
+    ]
+
+  selected_mode: any=this.options[0].style;
+
   onQuery($event: KeyboardEvent) {
     if(this.nfts.length>100){
       clearTimeout(this.handle);

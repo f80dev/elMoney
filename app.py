@@ -271,14 +271,16 @@ def open_nft(token_id:str,data:dict=None):
         if tx["status"]=="fail":
             rc=tx["scResults"][0]["returnMessage"]
         else:
-            rc=str(base64.b64decode(tx["scResults"][0]["data"]))[3:]
+            rc=str(base64.b64decode(tx["scResults"][0]["data"]))[2:]
             if "@" in rc:rc=rc.split("@")[1]
-            rc=int(int(rc[0:len(rc)-1],16)/2)
-            if rc>0:
-                rc=str(bytearray.fromhex(hex(rc).replace("0x","")),"utf-8")
-                rc=translate(rc,{"@token@":str(token_id)})
-            else:
-                rc=""
+            if len(rc)>0:rc=rc[0:len(rc) - 1]
+            try:
+                rc=int(int(rc,16)/2)
+                if rc > 0:
+                    rc = str(bytearray.fromhex(hex(rc).replace("0x", "")), "utf-8")
+                    rc = translate(rc, {"@token@": str(token_id)})
+            except:
+                pass
     else:
         rc="Impossible d'ouvrir le token"
     return jsonify({"response":rc,"cost":tx["cost"]})
@@ -408,15 +410,14 @@ def mint(count:str,data:dict=None):
     properties=int(data["properties"])
     miner_ratio=int(data["miner_ratio"]*100)
     fee=int(float(data["fee"])*1e18)
-    gift=int(data["gift"])*100
-
+    gift=int(float(data["gift"])*100)
 
 
     arguments=[int(count),"0x"+uri.encode().hex(),secret,price,min_markup,max_markup,properties,miner_ratio,gift]
     result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,
                    arguments=arguments,
                    gas_limit=int(LIMIT_GAS*(1+int(count)/4)),
-                   value=fee+gift*1e16)
+                   value=fee+int(count)*gift*1e16)
 
     if not result is None:
         if result["status"] == "fail":
@@ -485,7 +486,6 @@ def transactions(user:str):
                 data = "Révéler le secret"
                 if "scResults" in t and len(t["scResults"])>1:sign=0
             if data.startswith("buy"):data="Achat d'un NFT"
-
 
             if sign!=0:
                 rc.append({

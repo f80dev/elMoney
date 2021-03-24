@@ -255,15 +255,18 @@
             <app-tuto *ngIf="idx_tab==3" label="Dés le token fabriqué, celui-ci est visible dans la place de marché de TOKEN FORGE"></app-tuto>
             <form>
               <ng-template matStepLabel>Fabrication</ng-template>
-              <mat-form-field appearance="fill" class="app-field" style="max-width: 200px">
+              <mat-form-field appearance="fill" class="app-field" style="max-width: 250px;width:80%;">
                 <mat-label>Combien d'exemplaire (max 30)</mat-label>
                 <input matInput type="number" min="1" max="30" [(ngModel)]="count" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=10">
                 <mat-hint *ngIf="focus_idx==10">Attention le coût de fabrication dépend également du nombre de token fabriqués</mat-hint>
               </mat-form-field>
               <br><br>
+              Cout de fabrication: {{count*gift}} + frais de transaction&nbsp;
+              <span *ngIf="count*gift>user.gas/1e18">(Solde insuffisant)</span>
+              <br>
               <button mat-raised-button  color="primary"
                       mat-button class="large-button"
-                      [disabled]="uri?.length==0 && files[1].length==0"
+                      [disabled]="(uri?.length==0 && files[1].length==0) || count*gift>user.gas/1e18"
                       (click)="tokenizer()">
                 Fabriquer !
               </button>

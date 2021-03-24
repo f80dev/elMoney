@@ -22,6 +22,10 @@ export class NftsComponent implements OnChanges {
   @Input("user") user:any;
   @Input("filter") filter:string="*";
   @Input("nfts") nfts:any;
+  @Input("fontsize") fontsize:string="normal";
+  @Input("with_icon") with_icon:boolean=true;
+  @Input("width") _w:string="350px";
+  @Input("height") _h:string="auto"
   @Input("seller") seller:string="0x0000000000000000000000000000000000000000000000000000000000000000";
   @Output("refresh") onrefresh:EventEmitter<any>=new EventEmitter();
   @Output("buy") onbuy:EventEmitter<any>=new EventEmitter();
@@ -213,4 +217,7 @@ export class NftsComponent implements OnChanges {
   }
 
 
+  show_fullscreen(nft: any) {
+    open(nft.visual,"fullscreen");
+  }
 }

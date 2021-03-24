@@ -19,7 +19,13 @@
                 matSuffix style="cursor: pointer"
                 (click)="clearQuery()">cancel</mat-icon>
     </mat-form-field>
-    &nbsp;
+    &nbsp;&nbsp;
+    <mat-form-field appearance="fill" style="width:100px;color:white;">
+      <mat-label>Affichage</mat-label>
+     <mat-select [(value)]="selected_mode">
+      <mat-option *ngFor="let option of options" [value]="option.style">{{option.label}}</mat-option>
+     </mat-select>
+    </mat-form-field>
   </div>
 
   <app-hourglass [message]="message"></app-hourglass>
@@ -30,10 +36,14 @@
   </div>
 
 
-  <app-nfts [nfts]="nfts" [user]="user" [filter]="filter"
+  <app-nfts [nfts]="nfts"
+            [user]="user" [filter]="filter"
+            [height]="selected_mode.height"
+            [width]="selected_mode.width"
+            [fontsize]="selected_mode.fontsize"
+            [with_icon]="selected_mode.with_icon"
             (refresh)="refresh(true)"
             (buy)="on_buy($event)">
-
   </app-nfts>
 
 

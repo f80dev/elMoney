@@ -1,15 +1,15 @@
- <div *ngIf="nfts?.length>0" style="margin: 8px;padding:8px;" class="wrap-list" >
-    <mat-card class="app-card" style="width:300px;padding:12px;padding-bottom:17px;margin:8px;"
+ <div *ngIf="nfts?.length>0" style="margin: 8px;padding:8px;width:100%;text-align: center;" class="wrap-list" >
+    <mat-card class="app-card" [ngStyle]="{height: _h,width:_w,padding:'12px','padding-bottom':'17px','margin':'8px'}"
               *ngFor="let nft of nfts | filter: ['search',filter]">
       <mat-card-header *ngIf="nft.uri?.length>0">
-        <img mat-card-avatar src="./assets/icons/gift.png" class="image-icon">
-        <mat-card-title>
+        <img *ngIf="with_icon" mat-card-avatar src="./assets/icons/gift.png" class="image-icon">
+        <mat-card-title [ngStyle]="{'font-size':fontsize}">
               {{nft.uri}}
           <span *ngIf="nft?.count && nft?.count>1">({{nft.count}})</span>
         </mat-card-title>
       </mat-card-header>
 
-       <mat-card-content style="min-height: 50px;text-align: center;color: white;margin:0px;">
+       <mat-card-content style="min-height: 70px;height:77%;text-align: center;color: white;margin:0px;">
 
          <app-tuto [if]="nft.owner!=user.addr && nft.has_secret==1"
                    label="Devenez propriétaire de ce NFT pour accèder à son contenu."></app-tuto>
@@ -31,11 +31,11 @@
          </div>
 
         <div *ngIf="nft.visual?.length>0 && nft.uri.length>0">
-          <img [src]="nft.visual" style="width:150px;">
+          <img [src]="nft.visual" style="width:60%;cursor: pointer;" (click)="show_fullscreen(nft)">
         </div>
 
         <div *ngIf="nft.visual?.length>0 && nft.uri.length==0">
-          <img [src]="nft.visual" style="width:100%;">
+          <img [src]="nft.visual" style="min-width:100px;width:100%;">
         </div>
 
 
@@ -51,7 +51,7 @@
         <app-tuto [if]="nft.state==1"
                   label="Vous pouvez ouvrir les tokens que vous posséder pour voir ce qu'ils contiennent. Vous pouvez également les remettre en vente ou les détruire."></app-tuto>
       </mat-card-content>
-      <mat-card-actions class="app-card-action">
+      <mat-card-actions class="app-card-action" style="position: absolute;bottom:16px;width:96%;text-align: right;">
           <div *ngIf="nft.message?.length==0 && nft.open?.length==0">
             <button mat-raised-button mat-button class="app-button"
                     *ngIf="nft.owner!=user.addr && nft.state==0 && !nft.isDealer"
@@ -59,7 +59,7 @@
                     (click)="buy(nft)">
               <mat-icon>shopping_cart</mat-icon>&nbsp;
               <small *ngIf="nft.price==0">Gratuit</small>
-              <span *ngIf="nft.price>0" style="font-size: large;">{{nft.price | number:'1.1-3'}} <small>xEGld</small></span>
+              <span *ngIf="nft.price>0" >{{nft.price | number:'1.1-3'}} <small>xEGld</small></span>
             </button>
 
             <button mat-icon-button mat-flat-button

@@ -1,5 +1,7 @@
 <div class="mainform">
+
   <app-tuto label="Consulter l'ensemble des tokens que vous avez achetés ou fabriqués"></app-tuto>
+
   <mat-tab-group animationDuration="1000ms"
                  [selectedIndex]="selected.value">
 
@@ -7,9 +9,10 @@
       <app-tuto label="Retrouvez ici tout les tokens pour lesquels vous disposez d'un mandat de vente"></app-tuto>
       <app-nfts [user]="user" [nfts]="nfts[0]"
                 [filter]="{state:0,isDealer:true}"
+                [with_icon]="false"
+                height="200px"
                 (refresh)="refresh()">
       </app-nfts>
-      <br>
       <button mat-raised-button mat-button class="app-button"
               title="Affiche une version minimale de votre boutique de vente de vos billets"
               (click)="open_store()">
@@ -20,8 +23,11 @@
 
 
     <mat-tab label="Vos tokens achetés">
-      <app-nfts [user]="user" [nfts]="nfts[1]"  (transfer)="transfer($event)"></app-nfts>
-      <br>
+      <app-nfts [user]="user" [nfts]="nfts[1]"
+                [with_icon]="false"
+                height="auto"
+                (transfer)="transfer($event)">
+      </app-nfts>
       <button mat-raised-button mat-button class="app-button"
               (click)="router.navigate(['store'])">
         Acheter un token
@@ -32,9 +38,12 @@
 
     <mat-tab label="Vos tokens fabriqués">
       <app-tuto label="L'ensemble des tokens que vous avez fabriqués sont listés ici. Vous pouvez ajouter des distributeurs, les retirer de la vente, en faire la promotion"></app-tuto>
-      <app-nfts [user]="user" [nfts]="nfts[2]"  (transfer)="transfer($event)"></app-nfts>
+      <app-nfts [user]="user" [nfts]="nfts[2]"
+                [with_icon]="false"
+                height="auto"
+                (transfer)="transfer($event)"></app-nfts>
 
-      <br>
+
       <button mat-raised-button mat-button class="app-button" color="primary"
               (click)="router.navigate(['importer'])">
         Fabriquer un token
