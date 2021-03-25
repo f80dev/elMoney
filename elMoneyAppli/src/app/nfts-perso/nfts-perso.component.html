@@ -38,11 +38,20 @@
 
     <mat-tab label="Vos tokens fabriqués">
       <app-tuto label="L'ensemble des tokens que vous avez fabriqués sont listés ici. Vous pouvez ajouter des distributeurs, les retirer de la vente, en faire la promotion"></app-tuto>
+      <br>
+      <mat-form-field appearance="fill" style="width:200px;color:white;">
+        <mat-label>Filtrer</mat-label>
+        <mat-select [(value)]="filter">
+          <mat-option *ngFor="let f of filters" [value]="f.filter">{{f.label}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
       <app-nfts [user]="user" [nfts]="nfts[2]"
                 [with_icon]="false"
                 height="auto"
                 (transfer)="transfer($event)"></app-nfts>
 
+      <br>
 
       <button mat-raised-button mat-button class="app-button" color="primary"
               (click)="router.navigate(['importer'])">

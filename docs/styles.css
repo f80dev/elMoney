@@ -2213,9 +2213,9 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
 /* You can add global styles to this file, and also import other style files */
 .mainform {
   text-align: center;
-  min-height: 90vh;
+  min-height: 100vh;
   overflow: hidden;
-  background-color: #545454;
+  background-color: #404040;
   color: lightgray;
   padding: 10px;
 }
@@ -2226,6 +2226,7 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
   margin: 4px !important;
   min-width: 100px !important;
   background-color: #646464;
+  padding: 2px;
   color: lightgray;
 }
 .small-button {

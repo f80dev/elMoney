@@ -1,6 +1,10 @@
 <div class="mainform">
 
-  <h2>Utiliser une clé privée</h2>
+  <h2>Changer de compte</h2>
+
+  <app-tuto label="Charger le fichier PEM du compte que vous souhaitez utiliser avec TokenForge ou utiliser un compte de test"></app-tuto>
+  <br>
+
   <app-hourglass [message]="message"></app-hourglass>
 
   <div *ngIf="message.length==0">
@@ -20,6 +24,9 @@
   <mat-icon (click)="_faq('private_key')" style="font-size: small;cursor: pointer;">help</mat-icon>
   </div>
   <br><br>
+  ____
+  <br>
+
   <app-tuto label="Il est possible d'utiliser des comptes pour tester cette application. En revanche plusieurs personnes pouvant utiliser les mêmes comptes, il est possible que le comportement soit parfois imprevisible"></app-tuto>
   <mat-form-field class="app-field" style="max-width: 200px;">
       <mat-label>Profils de test</mat-label>

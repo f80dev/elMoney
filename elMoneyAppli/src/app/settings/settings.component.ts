@@ -63,16 +63,16 @@ export class SettingsComponent implements OnInit {
 
 
 
-  set_filename() {
-     this.dialog.open(PromptComponent, {
-      data: {
-        title: 'Enregistrer votre compte',
-        question: 'Donner un pseudo à votre compte',
-        onlyConfirm: false,
-        _type:"text"
-      }
-    }).afterClosed().subscribe((result) => {
-       if(result)this.filename=result+".pem";
-    });
-  }
+  // set_filename() {
+  //    this.dialog.open(PromptComponent, {
+  //     data: {
+  //       title: 'Enregistrer votre compte',
+  //       question: 'Donner un pseudo à votre compte',
+  //       onlyConfirm: false,
+  //       _type:"text"
+  //     }
+  //   }).afterClosed().subscribe((result) => {
+  //      if(result)this.filename=result+".pem";
+  //   });
+  // }
 }

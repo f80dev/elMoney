@@ -19,6 +19,11 @@ export class NftsPersoComponent implements OnInit {
   message: string="";
   nfts: any[][]=[[],[]];
   selected:any = new FormControl(0);
+  filters: any[]=[
+    {label:"Aucun filtre",filter:{}},
+    {label:"Supprimer les vendus",filter:{key:"state",value:0}},
+  ];
+  filter:any=this.filters[0].filter;
 
   constructor(
     public routes:ActivatedRoute,
@@ -40,6 +45,7 @@ export class NftsPersoComponent implements OnInit {
       this.selected.value=Number(this.routes.snapshot.queryParamMap.get("index"));
     }
 
+    this.filter = this.filters[0].option;
     this.refresh();
     localStorage.setItem("last_screen","nfts-perso");
   }
@@ -55,7 +61,15 @@ export class NftsPersoComponent implements OnInit {
         this.message = "";
         for(let i=0;i<r.length;i++)
           r[i].isDealer=(tokenIdentifier==0);
-        this.nfts[tokenIdentifier]=r;
+
+        let rc=[];
+        for(let i of r){
+          if(tokenIdentifier!=2 || this.filter=={} || i[this.filter.key]==this.filter.value) {
+            rc.push(i);
+          }
+        }
+
+        this.nfts[tokenIdentifier]=rc;
       });
     }
   }
