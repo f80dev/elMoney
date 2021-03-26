@@ -28,6 +28,7 @@
                 height="auto"
                 (transfer)="transfer($event)">
       </app-nfts>
+      <br>
       <button mat-raised-button mat-button class="app-button"
               (click)="router.navigate(['store'])">
         Acheter un token
@@ -39,7 +40,7 @@
     <mat-tab label="Vos tokens fabriqués">
       <app-tuto label="L'ensemble des tokens que vous avez fabriqués sont listés ici. Vous pouvez ajouter des distributeurs, les retirer de la vente, en faire la promotion"></app-tuto>
       <br>
-      <mat-form-field appearance="fill" style="width:200px;color:white;">
+      <mat-form-field appearance="fill" style="width:200px;color:white;" *ngIf="nfts[2]?.length>4">
         <mat-label>Filtrer</mat-label>
         <mat-select [(value)]="filter">
           <mat-option *ngFor="let f of filters" [value]="f.filter">{{f.label}}</mat-option>

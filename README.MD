@@ -52,6 +52,8 @@ cd /root/ipfs
 docker-compose up -d
 </pre>
 
+L'interface de gestion est disponible sur http://161.97.75.165/#/
+
 Récupération du fichier 
 
 

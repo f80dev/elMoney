@@ -7,6 +7,8 @@
 <div class="mainform">
 
   <h2>Place de marché en vente directe</h2>
+  <app-tuto [if]="nfts?.length>0"
+            label="Ici, vous pouvez acheter des NFTs vendu directement par les propriétaires. Si vous ne disposez pas de fonds suffisants, il est possible de recharger votre compte"></app-tuto>
 
   <div *ngIf="nfts?.length>2">
     <mat-form-field appearance="fill"
@@ -45,13 +47,12 @@
             (refresh)="refresh(true)"
             (buy)="on_buy($event)">
   </app-nfts>
-
-
-  <br><br>
+  <br>
   <button mat-raised-button
           mat-button class="app-button"
           (click)="router.navigate(['importer'])">
     Fabriquer des tokens
   </button>
+  <br><br><br>
 
 </div>

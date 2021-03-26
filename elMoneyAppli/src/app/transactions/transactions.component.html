@@ -9,7 +9,7 @@
     <ng-container matColumnDef="transac"  style="margin:1px;">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell style="cursor:pointer;text-align: left;" *matCellDef="let element">
-        <mat-icon (click)="open_transaction(element)" style="cursor: pointer">visibility</mat-icon>
+        <mat-icon (click)="open_transaction(element)" style="cursor: pointer">visibility</mat-icon>&nbsp;
       </td>
     </ng-container>
 
@@ -31,8 +31,6 @@
         {{element.fee | number:'1.0-5'}}
       </td>
     </ng-container>
-
-
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
