@@ -1,7 +1,7 @@
-<app-tuto title="<br><br><br><br><br><strong>Les tokens</strong>"
+<app-tuto title="<br><br><br><br><br><strong>Les NFTs</strong>"
           color="white"
           image=""
-          subtitle="Retrouvez tous les tokens en vente ainsi que les votres (ceux que vous possédez et ceux que vous avez fabriqués)"
+          subtitle="Retrouvez tous les NFTs en vente ainsi que les votres (ceux que vous possédez et ceux que vous avez fabriqués)"
           background="./assets/img/items.jpg"></app-tuto>
 
 <div class="mainform">
@@ -22,15 +22,16 @@
                 (click)="clearQuery()">cancel</mat-icon>
     </mat-form-field>
     &nbsp;&nbsp;
-    <mat-form-field appearance="fill" style="width:100px;color:white;">
+    <mat-form-field appearance="fill" style="width:130px;color:white;">
       <mat-label>Affichage</mat-label>
-     <mat-select [(value)]="selected_mode">
+     <mat-select [(value)]="selected_mode" style="color: white;">
       <mat-option *ngFor="let option of options" [value]="option.style">{{option.label}}</mat-option>
      </mat-select>
     </mat-form-field>
   </div>
 
   <app-hourglass [message]="message"></app-hourglass>
+
   <div *ngIf="nfts.length==0 && message.length==0">
     Aucun token disponible pour l'instant
     &nbsp;<mat-icon style="font-size: small;" (click)="refresh()">refresh</mat-icon>

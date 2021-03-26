@@ -1,12 +1,12 @@
 <div class="mainform">
 
-  <app-tuto label="Consulter l'ensemble des tokens que vous avez achetés ou fabriqués"></app-tuto>
+  <app-tuto label="Consulter l'ensemble des NFTs que vous avez achetés ou fabriqués"></app-tuto>
 
   <mat-tab-group animationDuration="1000ms"
                  [selectedIndex]="selected.value">
 
-    <mat-tab label="Les tokens distribués" *ngIf="nfts[0]?.length>0">
-      <app-tuto label="Retrouvez ici tout les tokens pour lesquels vous disposez d'un mandat de vente"></app-tuto>
+    <mat-tab label="Les NFTs distribués" *ngIf="nfts[0]?.length>0">
+      <app-tuto label="Retrouvez ici tout les NFTs pour lesquels vous disposez d'un mandat de vente"></app-tuto>
       <app-nfts [user]="user" [nfts]="nfts[0]"
                 [filter]="{state:0,isDealer:true}"
                 [with_icon]="false"
@@ -21,24 +21,26 @@
     </mat-tab>
 
 
-
-    <mat-tab label="Vos tokens achetés">
+    <mat-tab label="Vos NFTs achetés"  style="height: 100vh;padding: 0 !important;margin: 0 !important;">
+      <br>
+      <app-tuto [if]="nfts[1].length>0" label="Les NFT achetés peuvent être remis en vente, détruit, ouvert s'ils contiennent un secret ou directement offer"></app-tuto>
       <app-nfts [user]="user" [nfts]="nfts[1]"
                 [with_icon]="false"
                 height="auto"
                 (transfer)="transfer($event)">
       </app-nfts>
       <br>
-      <button mat-raised-button mat-button class="app-button"
+      <button mat-raised-button mat-button
+              class="app-button"
               (click)="router.navigate(['store'])">
-        Acheter un token
+        Acheter un NFT
       </button>
+      <br><br>
     </mat-tab>
 
 
-
-    <mat-tab label="Vos tokens fabriqués">
-      <app-tuto label="L'ensemble des tokens que vous avez fabriqués sont listés ici. Vous pouvez ajouter des distributeurs, les retirer de la vente, en faire la promotion"></app-tuto>
+    <mat-tab label="Vos NFTs fabriqués">
+      <app-tuto label="L'ensemble des NFTs que vous avez fabriqués sont listés ici. Vous pouvez ajouter des distributeurs, les retirer de la vente, en faire la promotion"></app-tuto>
       <br>
       <mat-form-field appearance="fill" style="width:200px;color:white;" *ngIf="nfts[2]?.length>4">
         <mat-label>Filtrer</mat-label>
@@ -56,10 +58,11 @@
 
       <button mat-raised-button mat-button class="app-button" color="primary"
               (click)="router.navigate(['importer'])">
-        Fabriquer un token
+        Fabriquer un NFT
       </button>
     </mat-tab>
 
   </mat-tab-group>
+
 
 </div>

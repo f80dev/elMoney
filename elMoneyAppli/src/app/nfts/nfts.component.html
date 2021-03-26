@@ -49,13 +49,13 @@
           </div>
 
         <app-tuto [if]="nft.state==1"
-                  label="Vous pouvez ouvrir les tokens que vous posséder pour voir ce qu'ils contiennent. Vous pouvez également les remettre en vente ou les détruire."></app-tuto>
+                  label="Vous pouvez ouvrir les NFTs que vous posséder pour voir ce qu'ils contiennent. Vous pouvez également les remettre en vente ou les détruire."></app-tuto>
       </mat-card-content>
       <mat-card-actions class="app-card-action" style="position: absolute;bottom:16px;width:96%;text-align: right;">
           <div *ngIf="nft.message?.length==0 && nft.open?.length==0">
             <button mat-raised-button mat-button class="app-button"
                     *ngIf="nft.owner!=user.addr && nft.state==0 && !nft.isDealer"
-                    [title]="'Acheter ce token pour '+nft.price+' xEgld'"
+                    [title]="'Acheter ce NFT pour '+nft.price+' xEgld'"
                     (click)="buy(nft)">
               <mat-icon>shopping_cart</mat-icon>&nbsp;
               <small *ngIf="nft.price==0">Gratuit</small>
@@ -73,7 +73,7 @@
             <div *ngIf="nft.owner==user.addr" style="display: inline-block">
               <button mat-raised-button mat-button
                       color="primary"
-                      title="Ouvrir le token pour découvrir le secret"
+                      title="Ouvrir le NFT pour découvrir le secret"
                       *ngIf="nft.state==1 && user.add!=nft.miner && nft.has_secret==1"
                       class="app-button"
                       (click)="open(nft)">

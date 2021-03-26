@@ -39,13 +39,13 @@
     </a>
 
 
-    <a title="Voir mes tokens"
+    <a title="Voir mes NFTs"
        routerLink="nfts-perso"
        [queryParams]="{only_perso:false}"
        mat-list-item
        id="cmdPerso">
       <mat-icon>person</mat-icon>&nbsp;
-      Mes tokens (NFT)
+      Mes NFTs
     </a>
 
     <br>
@@ -55,7 +55,7 @@
        mat-list-item
        id="cmdTokenizer">
       <mat-icon>category</mat-icon>&nbsp;
-      Fabriquer des tokens
+      Fabriquer des NFTs
     </a>
 
     <a title="Store des tokens"
@@ -64,7 +64,7 @@
        mat-list-item
        id="cmdStore">
       <mat-icon>shopping_cart</mat-icon>&nbsp;
-      Acheter des tokens
+      Acheter des NFTs
     </a>
 
 
@@ -98,18 +98,21 @@
       Changer de monnaie
     </a>
 
-    <a title="Accéder à vos contacts"
+  </div>
+
+
+
+
+
+  <div style="width:100%;text-align: center;margin:10px;">____</div>
+
+  <a title="Accéder à vos contacts"
        routerLink="contacts"
        mat-list-item
        id="cmdAddPerson">
       <mat-icon>person_add</mat-icon>&nbsp;
       Gérer les contacts
     </a>
-  </div>
-
-
-
-  <div style="width:100%;text-align: center;margin:10px;">____</div>
 
   <a title="Modifier vos préférences"
      routerLink="settings"

@@ -1,7 +1,7 @@
-<app-tuto title="<br><br><br><br><br><strong>Les tokens</strong>"
+<app-tuto title="<br><br><br><br><br><strong>Les NFTs</strong>"
           color="white"
           image=""
-          subtitle="Fabriquer vos propres tokens a partir d'un fichier, fixez un prix et vendez-les !"
+          subtitle="Fabriquer vos propres NFTs a partir d'un fichier, fixez un prix et vendez-les !"
           background="./assets/img/build.jpg"></app-tuto>
 
 <div class="mainform">
@@ -11,7 +11,7 @@
 
   <mat-tab-group animationDuration="1000ms" *ngIf="message?.length==0">
 
-    <mat-tab label="Token express">
+    <mat-tab label="NFT express">
 
       <br>
       <app-upload-file *ngIf="show_zone_upload"
@@ -24,7 +24,7 @@
 
 
         <br>
-        Créer vos tokens en quelques clics en fonction de vos besoins
+        Créer vos NFTs en quelques clics en fonction de vos besoins
         <br><br>
 
         <div *ngFor="let token of tokens" style="display: inline-block;text-align: center;">
@@ -49,9 +49,9 @@
 
     </mat-tab>
 
-    <mat-tab label="Token avancé">
+    <mat-tab label="NFT avancé">
       <app-tuto [if]="files[0].length>0"
-                label="Le fichier est stocké dans le réseau IPFS de façon totalement sécurisé. Seul la clé permettant de le reconstituer est embarqué dans le token"></app-tuto>
+                label="Le fichier est stocké dans le réseau IPFS de façon totalement sécurisé. Seul la clé permettant de le reconstituer est embarqué dans le NFT"></app-tuto>
 
 
       <div *ngIf="message.length==0" style="width:100%;">
@@ -63,10 +63,10 @@
           <mat-step>
 
             <app-tuto *ngIf="idx_tab==0"
-                      label="TOKENFORGE permet de cacher un secret dans le token. Celui-ci ne peut être vue que par le propriétaire du token. Par exemple vous pouvez cacher un mot de passe, un lien youtube, un fichier"></app-tuto>
+                      label="TOKENFORGE permet de cacher un secret dans le NFT. Celui-ci ne peut être vue que par le propriétaire du NFT. Par exemple vous pouvez cacher un mot de passe, un lien youtube, un fichier"></app-tuto>
 
             <form>
-              <ng-template matStepLabel>Embarquer dans le token</ng-template>
+              <ng-template matStepLabel>Embarquer dans le NFT</ng-template>
               <input #csvInput [hidden]="true"
                      type="file" onclick="this.value=null"
                      (change)="import($event,0,'Commençons par charger le fichier dans le NFC')"
@@ -79,7 +79,7 @@
               </button>
 
               <br><br>
-              <span *ngIf="files[0].length>0">'{{filename}}' est caché dans votre token</span>
+              <span *ngIf="files[0].length>0">'{{filename}}' est caché dans votre NFT</span>
 
               <strong *ngIf="files[0].length==0">ou</strong>
 
@@ -95,14 +95,14 @@
               <mat-form-field appearance="fill" class="app-field">
                 <mat-label>Récompense à l'ouverture</mat-label>
                 <input matInput type="number" (focusin)="focus_idx=1.5" min="0" [max]="user.gas/1e18" [(ngModel)]="gift" [ngModelOptions]="{standalone: true}">
-                <mat-hint *ngIf="focus_idx==1.5">La somme sera créditer sur le compte de l'acheteur dés l'ouverture du token</mat-hint>
+                <mat-hint *ngIf="focus_idx==1.5">La somme sera créditer sur le compte de l'acheteur dés l'ouverture du NFT</mat-hint>
               </mat-form-field>
             </form>
 
           </mat-step>
 
           <mat-step >
-            <app-tuto *ngIf="idx_tab==1" label="Après fabrication, les tokens sont présentés sur une place de marché ou ils peuvent être achetés par les autres utilisateurs de TOKENFORGE"></app-tuto>
+            <app-tuto *ngIf="idx_tab==1" label="Après fabrication, les NFTs sont présentés sur une place de marché ou ils peuvent être achetés par les autres utilisateurs de TOKENFORGE"></app-tuto>
             <form>
               <ng-template matStepLabel>Présentation sur la marketplace</ng-template>
               <button mat-raised-button
@@ -129,7 +129,7 @@
               <mat-form-field appearance="fill" class="app-field">
                 <mat-label>Intitulé du NFT</mat-label>
                 <input matInput type="text" maxlength="200" [(ngModel)]="uri" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=2">
-                <mat-hint *ngIf="focus_idx==2">Présenter votre token en quelques mots pour le vendre dans la marketplace</mat-hint>
+                <mat-hint *ngIf="focus_idx==2">Présenter votre NFT en quelques mots pour le vendre dans la marketplace</mat-hint>
                 <mat-icon *ngIf="uri?.length>0"
                 matSuffix style="cursor: pointer"
                 (click)="uri=''">cancel</mat-icon>
@@ -148,7 +148,7 @@
           </mat-step>
           <mat-step>
             <app-tuto *ngIf="idx_tab==2"
-                      label="La vente des tokens peut être déléguée à des revendeurs qui peuvent prendre une commission suivant les limites fixées par le créateur du token."></app-tuto>
+                      label="La vente des NFTs peut être déléguée à des revendeurs qui peuvent prendre une commission suivant les limites fixées par le créateur du NFT."></app-tuto>
             <ng-template matStepLabel>Distribution</ng-template>
             <mat-tab-group
               animationDuration="1000ms">
@@ -237,7 +237,7 @@
                     <mat-label>Marge du créateur</mat-label>
                     <input matInput type="number" min="0" max="100" [(ngModel)]="miner_ratio" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=20">
                     <span matSuffix>%</span>
-                    <mat-hint *ngIf="focus_idx==20">Percentage attribué au créateur du token sur le prix augmenté</mat-hint>
+                    <mat-hint *ngIf="focus_idx==20">Percentage attribué au créateur du NFT sur le prix augmenté</mat-hint>
                   </mat-form-field>
 
                 </div>
@@ -252,13 +252,13 @@
           </mat-step>
 
           <mat-step>
-            <app-tuto *ngIf="idx_tab==3" label="Dés le token fabriqué, celui-ci est visible dans la place de marché de TOKEN FORGE"></app-tuto>
+            <app-tuto *ngIf="idx_tab==3" label="Dés le NFT fabriqué, celui-ci est visible dans la place de marché de TOKEN FORGE"></app-tuto>
             <form>
               <ng-template matStepLabel>Fabrication</ng-template>
               <mat-form-field appearance="fill" class="app-field" style="max-width: 250px;width:80%;">
                 <mat-label>Combien d'exemplaire (max 30)</mat-label>
                 <input matInput type="number" min="1" max="30" [(ngModel)]="count" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=10">
-                <mat-hint *ngIf="focus_idx==10">Attention le coût de fabrication dépend également du nombre de token fabriqués</mat-hint>
+                <mat-hint *ngIf="focus_idx==10">Attention le coût de fabrication dépend également du nombre de NFT fabriqués</mat-hint>
               </mat-form-field>
               <br><br>
               Cout de fabrication: {{count*gift}} + frais de transaction&nbsp;
@@ -278,7 +278,7 @@
 
     <mat-tab label="Création automatique">
       <br>
-      TokenForge propose une interface de création en masse de tokens. Cette interface repose sur un fichier Excel téléchargeable<br><br>
+      TokenForge propose une interface de création en masse de NFTs. Cette interface repose sur un fichier Excel téléchargeable<br><br>
 
       <a href="./assets/TokenForgeFromExcel.xlsm" download="TokenForge.xlsm" target="_blank">Télécharger le fichier</a>
 

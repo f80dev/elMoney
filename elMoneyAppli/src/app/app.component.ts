@@ -57,10 +57,18 @@ export class AppComponent implements OnInit,OnDestroy {
             this.router.navigate([localStorage.getItem("last_screen")]);
           else{
 
+
+
             if(this.config.hasESDT() && !q && !filter)
               this.router.navigate(["main"]);
-            else
-              this.router.navigate(["store"],{queryParams:{q:q,filter:filter}});
+            else{
+              if(addr)
+                this.router.navigate(["nfts-perso"]);
+              else {
+                this.router.navigate(["store"],{queryParams:{q:q,filter:filter}});
+              }
+            }
+
           }
         },
         (err)=>{

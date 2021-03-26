@@ -116,6 +116,27 @@ def refund(dest:str):
         return Response("probleme de rechargement",500)
 
 
+def convert_email_to_addr(dest:str,html_email:str):
+    addr_dest = None
+    if "@" in dest:
+        _u = dao.find_contact(dest)
+        if not _u is None: addr_dest = _u["addr"]
+    else:
+        addr_dest = dest
+
+    if addr_dest is None:
+        log("Le destinataire n'a pas encore d'adresse elrond")
+        _dest,pem_dest=bc.create_account(NETWORKS[bc.network_name]["new_account"])
+        html_email = html_email.replace("#addr#",_dest.address.bech32())
+        send_mail(html_email, _to=dest, subject="Transfert",attach=pem_dest)
+        dao.add_contact(email=dest,addr=_dest.address.bech32())
+    else:
+        _dest=Account(address=addr_dest)
+
+    return _dest
+
+
+
 
 #test http://localhost:5000/api/transfer
 @app.route('/api/transfer/<idx>/<dest>/<amount>/<unity>/',methods=["POST"])
@@ -124,27 +145,14 @@ def transfer(idx:str,dest:str,amount:str,unity:str):
     _money=dao.get_money_by_idx(idx)
     if _money is None:return "Monnaie inconnue",500
 
-    addr_dest=None
-    if "@" in dest:
-        _u=dao.find_contact(dest)
-        if not _u is None: addr_dest=_u["addr"]
-    else:
-        addr_dest=dest
-
-    if addr_dest is None:
-        log("Le destinataire n'a pas encore d'adresse elrond")
-        _dest,pem_dest=bc.create_account(NETWORKS[bc.network_name]["new_account"])
-        send_mail(open_html_file("share", {
+    _dest=convert_email_to_addr(dest,open_html_file("share", {
             "email": dest,
             "amount": str(amount),
             "appname":APPNAME,
             "unity": unity.lower(),
-            "url_appli": DOMAIN_APPLI + "?contract=" + idx + "&user=" + _dest.address.bech32(),
+            "url_appli": DOMAIN_APPLI + "?contract=" + idx + "&user=#addr#",
             "signature": SIGNATURE
-        }), _to=dest, subject="Transfert",attach=pem_dest)
-        dao.add_contact(email=dest,addr=_dest.address.bech32())
-    else:
-        _dest=Account(address=addr_dest)
+        }))
 
     log("Demande de transfert vers "+_dest.address.bech32()+" de "+amount+" "+unity)
 
@@ -329,12 +337,21 @@ def sendtokenbyemail(dests:str):
 
 
 @app.route('/api/transfer_nft/<token_id>/<dest>/',methods=["POST"])
-def transfer_nft(token_id,dest,data:dict=None):
-    if data is None:
-        data = json.loads(str(request.data, encoding="utf-8"))
+def transfer_nft(token_id,dest):
+    data = json.loads(str(request.data, encoding="utf-8"))
+    pem_file=get_pem_file(data["pem"])
 
-    pem_file=get_pem_file(data)
-    rc=bc.nft_transfer(NETWORKS[bc.network_name]["nft"],pem_file,token_id,dest)
+    _dest = convert_email_to_addr(dest,open_html_file("transfer_nft", {
+                                      "appname": APPNAME,
+                                      "signature": SIGNATURE,
+                                      "title": data["title"],
+                                      "from":data["from"],
+                                      "url_appli": DOMAIN_APPLI + "/?user=#addr#",
+                                      "message":data["message"]
+                                  })
+    )
+
+    rc=bc.nft_transfer(NETWORKS[bc.network_name]["nft"],pem_file,token_id,_dest)
     os.remove(pem_file)
     if not rc is None:
         send(socketio,"refresh_nft")

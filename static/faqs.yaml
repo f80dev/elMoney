@@ -27,14 +27,13 @@ content:
         un outil de création de nouvelles monnaies (sur la base du protocol ERC20),
       </li>
       <li>
-        un outil de création de
-              token (Token non fongible) permettant de vendre des fichiers ou des secrets accessibles uniquement au propriétaire.
+        un outil de création de NFT permettant de vendre des fichiers ou des secrets accessibles uniquement au propriétaire.
       </li>
       <li>
-        une marketplace de tokens à acheter
+        une marketplace de NFTs à acheter
       </li>
       <li>
-        un système de contrôle de propriété des tokens (par exemple pour l'usage de token comme billet spectacle)
+        un système de contrôle de propriété des NFTs (par exemple pour l'usage de NFT comme billet spectacle)
       </li>
 
       </ul>
@@ -47,8 +46,8 @@ content:
     format: html
     content: "
       <p>
-      Techniquement {{appname}} s'appuie sur les API ESDT et un smartcontract déployé sur la blockchaine de test en charge de la gestion des tokens.<br>
-      Ce smartcontract respect la norme ERC721 et ajoute quelques fonctionnalités pour gérer une logique d'achat / vente via un prix fixé par le créateur (mineur) du token.
+      Techniquement {{appname}} s'appuie sur les API ESDT et un smartcontract déployé sur la blockchaine de test en charge de la gestion des NFTs.<br>
+      Ce smartcontract respect la norme ERC721 et ajoute quelques fonctionnalités pour gérer une logique d'achat / vente via un prix fixé par le créateur (mineur) du NFT.
       </p>
       "
 
@@ -65,8 +64,8 @@ content:
       <ul>
         <li>un transfert coûte en moyenne 0.01 eGLD</li>
         <li>la création d'une monnaie coûte 5 eGLD</li>
-        <li>la création d'un token coûte 0.04 eGLD</li>
-        <li>l'ouverture d'un token ou sa mise en vente, coûte environ 0,01 eGld</li>
+        <li>la création d'un NFT coûte 0.04 eGLD</li>
+        <li>l'ouverture d'un NFT ou sa mise en vente, coûte environ 0,01 eGld</li>
       </ul>
 
       </p>
@@ -86,14 +85,14 @@ content:
       "
 
   - index: token
-    title: Qu'est-ce qu'un token ?
+    title: Qu'est-ce qu'un NFT ?
     order: 1
     format: html
     content: "
       <p>
       {{appname}} permet de frabriquer des 'objets' virtuels attribuables à un propriétaire, associés à un prix
       (donc commercialisables) et pouvant contenir un secret uniquement visible par le propriétaire.
-      Dans la terminologie habituellement utilisée, on désigne ces objets par Token non fongibles, ou NFT (Non fugible token).
+      Dans la terminologie habituellement utilisée, on désigne ces objets par NFT (Non fugible token).
       </p>
       "
 
@@ -103,12 +102,12 @@ content:
     format: html
     content: "
       <p>
-      Les applications des tokens non fongibles sont très nombreuses,
+      Les applications des NFTs sont très nombreuses,
       <ul>
-      <li>Désigner le propriétaire d'une oeuvre en attachant le token au fichier de l'oeuvre</li>
-      <li>Billeterie: Implémenter un service de billeterie, chaque billet étant représenté par un token</li>
+      <li>Désigner le propriétaire d'une oeuvre en attachant le NFT au fichier de l'oeuvre</li>
+      <li>Billeterie: Implémenter un service de billeterie, chaque billet étant représenté par un NFT</li>
       <li>Petites annonces: Vendre directement des objets, le secret pouvant contenir la procédure pour récupérer l'objet après la vente</li>
-      <li>Jeux à gratter: certains tokens 'gagnant' peuvent contenir de l'argent</li>
+      <li>Jeux à gratter: certains NFTs 'gagnant' peuvent contenir de l'argent</li>
       <li>Tombolla: Le secret peut contenir la description du lot</li>
       <li>Vente de contenu: le secret peut contenir un fichier, un lien non public vers une vidéo</li>
       </ul>
@@ -127,15 +126,15 @@ content:
 
 
   - index: receive
-    title: Comment recevoir des tokens, des fonds dans les monnaies disponibles, des eGolds ?
+    title: Comment recevoir des NFTs, des fonds dans les monnaies disponibles, des eGolds ?
     order: 1
     format: html
     content: "
       <p>
-      {{appname}} propose plusieurs façons de recevoir des tokens ou des fonds.
+      {{appname}} propose plusieurs façons de recevoir des NFTs ou des fonds.
       Le principe repose sur l'utilisation de l'adresse Elrond de votre wallet. Celle ci peut être partagé avec l'envoyeur par copier / coller ou
       via flashcode. <br>
-      Si votre wallet est associé à votre adresse mail, il est possible de recevoir des tokens ou des fonds simplement lorsque l'envoyeur indique votre
+      Si votre wallet est associé à votre adresse mail, il est possible de recevoir des NFTs ou des fonds simplement lorsque l'envoyeur indique votre
       adresse mail.
       </p>
       "
@@ -164,19 +163,19 @@ content:
       "
 
   - index: validate
-    title: Peut-on contrôler la propriété d'un token ?
+    title: Peut-on contrôler la propriété d'un NFT ?
     order: 1
     format: html
     content: "
      <p>
-     {{appname}} permet de retrouver tous les tokens que vous avez fabriqués en posséssion d'une personne donnée, identifiée par l'adresse
-     de son wallet. Ce système peut être très utile pour des tokens représentant des billets de concert ou d'un événement quelconque.
+     {{appname}} permet de retrouver tous les NFTs que vous avez fabriqués en posséssion d'une personne donnée, identifiée par l'adresse
+     de son wallet. Ce système peut être très utile pour des NFTs représentant des billets de concert ou d'un événement quelconque.
      Dans ce cas on va juste chercher à contrôler la propriété du billet pour autoriser l'accès à l'événement.
      </p>
      "
 
   - index: ipfs
-    title: Ou sont conservé les fichiers de mes tokens ?
+    title: Ou sont conservé les fichiers de mes NFTs ?
     order: 3
     format: html
     content: "
@@ -184,8 +183,11 @@ content:
         Pour des raisons de coût, il est impossible de stoker un fichier comme une image ou de la musique directement dans la blockchain.
         Pour cela {{appname}} utilise la technologie décentralisée
         IPFS pour stocker le fichier sans divulger son adresses de stockage.
-        Le principe consiste a cacher dans le token le code unique d'accès au fichier.
-        Seul l'ouverture du token (possible uniquement par le propriétaire), permet de lire le fichier.
+        Le principe consiste a cacher dans le NFT le code unique d'accès au fichier.
+        Seul l'ouverture du NFT (possible uniquement par le propriétaire), permet de lire le fichier.
+        <br>
+        Retrouver une description détaillée d'IPFS en suivant :
+        <a href='https://docs.ipfs.io/concepts/what-is-ipfs/#decentralization'>Documentation IPFS</a>
       </p>
       "
 

@@ -2440,5 +2440,8 @@ mat-card-content {
   width: 35px;
   height: 35px;
 }
+.mat-form-field-type-mat-select .mat-form-field-label, .mat-select-value {
+  color: white;
+}
 
 /*# sourceMappingURL=styles.css.map*/

@@ -760,8 +760,7 @@ class ElrondNet:
 
 
 
-    def nft_transfer(self, contract, pem_file, token_id, dest):
-        _dest=Account(address=dest)
+    def nft_transfer(self, contract, pem_file, token_id, _dest):
         tr = self.execute(contract, pem_file,
                           function="transfer",
                           arguments=[token_id,"0x"+_dest.address.hex()],
