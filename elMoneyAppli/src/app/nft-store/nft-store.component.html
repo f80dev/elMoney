@@ -10,7 +10,8 @@
             label="Ici, vous pouvez acheter des NFTs vendu directement par les propriétaires. Si vous ne disposez pas de fonds suffisants, il est possible de recharger votre compte"></app-tuto>
 
 
-    <mat-form-field appearance="fill" *ngIf="nfts?.length>2"
+  <div *ngIf="nfts?.length>2">
+    <mat-form-field appearance="fill"
                     style="max-width:600px;width:60%;margin-right: 10px;" autofocus>
       <mat-label>Chercher un token à acheter</mat-label>
       <input matInput matNativeControl
@@ -23,12 +24,14 @@
 
 
 
-  <mat-form-field appearance="fill" style="width:130px;color:white;">
+    <mat-form-field appearance="fill" style="width:130px;color:white;">
       <mat-label>Affichage</mat-label>
-     <mat-select [(value)]="selected_mode" style="color: white;">
-      <mat-option *ngFor="let option of options" [value]="option.style">{{option.label}}</mat-option>
-     </mat-select>
+      <mat-select [(value)]="selected_mode" style="color: white;">
+        <mat-option *ngFor="let option of options" [value]="option.style">{{option.label}}</mat-option>
+      </mat-select>
     </mat-form-field>
+  </div>
+
 
   <app-hourglass [message]="message"></app-hourglass>
 

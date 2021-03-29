@@ -54,7 +54,6 @@ export class ImporterComponent implements OnInit {
   tokens: any[]=[];
   full_flyer: boolean=true;
 
-
   constructor(public api:ApiService,
               public user:UserService,
               public config:ConfigService,
@@ -70,7 +69,9 @@ export class ImporterComponent implements OnInit {
     //   }
     // })
     localStorage.setItem("last_screen","importer");
-    this.api.getyaml("tokens").subscribe((r:any)=>{this.tokens=r.content;})
+    this.api.getyaml("tokens").subscribe((r:any)=>{
+      this.tokens=r.content;
+    })
   }
 
 

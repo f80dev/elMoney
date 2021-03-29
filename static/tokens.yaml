@@ -15,7 +15,7 @@ content:
     description: Prenez une photo ou sélectionner une photo déjà prise, faite une description et fixer un prix. Cette photo ne pourrat être vu que par l'acheteur
     fee: 0.002
     transac: 0.00015
-    production: True
+    production: true
 
   - index: pow
     title: Tokeniser<br>une oeuvre
@@ -23,7 +23,7 @@ content:
     description: Envoyer une photo et attachez y votre identité (email, passeport) en tant qu'auteur
     fee: 0.001
     transac: 0.00015
-    production: True
+    production: true
 
   - index: file
     title: Vendre<br>un fichier
@@ -31,7 +31,7 @@ content:
     description: ""
     fee: 0.002
     transac: 0.00015
-    production: True
+    production: true
 
   - index: secret
     title: Vendre<br>un secret
@@ -40,7 +40,7 @@ content:
     fee: 0.001
     transac: 0.00015
     help: Utiliser la commande "ouvrir" pour découvrir le secret que contient ce token
-    production: True
+    production: true
 
   - index: tickets
     title: Billeterie
@@ -49,7 +49,7 @@ content:
     fee: 0.002
     transac: 0.00015
     help: Présenter votre code perso à l'entrée de l'événement pour contrôle du billet
-    production: True
+    production: true
 
   - index: loterie
     title: Loterie
@@ -58,7 +58,7 @@ content:
     fee: 0.003
     transac: 0.00015
     help: Après achat, ouvrer ce token pour découvrir si vous avez gagné. Si c'est le cas le gain est immédiatement versé sur votre compte
-    production: False
+    production: false
 
 
 

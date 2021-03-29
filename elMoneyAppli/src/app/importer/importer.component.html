@@ -22,7 +22,6 @@
 
       <div *ngIf="!show_zone_upload" style="width: 100%;text-align: center;">
 
-
         <br>
         Créer vos NFTs en quelques clics en fonction de vos besoins
         <br><br>
@@ -31,7 +30,7 @@
              style="display: inline-block;text-align: center;">
 
           <button mat-raised-button
-                  *ngIf="token.production || !config.isProd()"
+                  *ngIf="token.production=='true' || !config.isProd()"
                   mat-button class="square-button"
                   [title]="token.description"
                   (click)="create_token(token)">
@@ -39,9 +38,10 @@
             <div class="bloc-bouton" [innerHTML]="token.title"></div>
           </button>
           <br>
-          <span style="font-size: xx-small;color:orangered;font-weight: bold;">
+          <div style="font-size: xx-small;color:orangered;font-weight: bold;"
+               *ngIf="token.production=='true' || !config.isProd()">
             -{{token.fee+token.transac}} xeGld
-          </span>
+          </div>
 
         </div>
 

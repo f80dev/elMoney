@@ -1,3 +1,10 @@
+#build: docker-compose up -d
+#firewall-cmd --zone=public --add-port=5001/tcp
+#firewall-cmd --zone=public --add-port=4001/tcp
+#firewall-cmd --zone=public --add-port=8080/tcp
+#firewall-cmd --zone=public --add-port=80/tcp
+
+
 version: "2.1"
 services:
   ipfs:

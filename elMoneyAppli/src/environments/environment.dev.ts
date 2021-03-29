@@ -2,7 +2,7 @@
 import { version } from '../../package.json';
 
 export const environment = {
-  production: true,
+  production: false,
   domain_server: "https://server.f80.fr:7777",
   config_file: "config",
   domain_appli: "https://tf.f80.fr",
