@@ -28,6 +28,7 @@
               "src/exif.js",
               "src/CNAME",
               "src/favicon.ico",
+              "src/favicon.png",
               "src/assets",
               "src/manifest.webmanifest"
             ],
