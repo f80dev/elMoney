@@ -27,9 +27,11 @@
         Créer vos NFTs en quelques clics en fonction de vos besoins
         <br><br>
 
-        <div *ngFor="let token of tokens" style="display: inline-block;text-align: center;">
+        <div *ngFor="let token of tokens"
+             style="display: inline-block;text-align: center;">
 
           <button mat-raised-button
+                  *ngIf="token.production || !config.isProd()"
                   mat-button class="square-button"
                   [title]="token.description"
                   (click)="create_token(token)">
@@ -105,6 +107,25 @@
             <app-tuto *ngIf="idx_tab==1" label="Après fabrication, les NFTs sont présentés sur une place de marché ou ils peuvent être achetés par les autres utilisateurs de TOKENFORGE"></app-tuto>
             <form>
               <ng-template matStepLabel>Présentation sur la marketplace</ng-template>
+
+              <mat-form-field appearance="fill" class="app-field">
+                <mat-label>Intitulé du NFT</mat-label>
+                <input matInput type="text" maxlength="200" [(ngModel)]="title" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=2">
+                <mat-hint *ngIf="focus_idx==2">Une accroche choc et courte pour la marketplace</mat-hint>
+                <mat-icon *ngIf="title?.length>0" matSuffix style="cursor: pointer" (click)="title=''">cancel</mat-icon>
+              </mat-form-field>
+
+              <br>
+
+              <div *ngIf="files[1]?.length>0"  style="text-align: right;width:50%;">
+                <img class="mat-elevation-z4"
+                     [src]="files[1]"
+                     style="max-width:150px;border: white 1px solid">
+              </div>
+              <br>
+
+              <table><tr>
+                <td>
               <button mat-raised-button
                       mat-button class="app-button"
                       (click)="add_visual()">
@@ -116,24 +137,26 @@
                   visuel
                 </div>
               </button>
+                </td>
+                <td>
+                   <mat-slide-toggle
+                     *ngIf="files[1]?.length>0"
+                      color="primary"
+                      [(ngModel)]="full_flyer">Afficher uniquement le visuel
+                </mat-slide-toggle>
+                </td>
+              </tr></table>
+
+
               <br>
 
-
-              <div *ngIf="files[1]?.length>0"  style="text-align: right;width:50%;">
-                <img class="mat-elevation-z4"
-                     [src]="files[1]"
-                     style="max-width:150px;border: white 1px solid">
-              </div>
-
-              <br>
               <mat-form-field appearance="fill" class="app-field">
-                <mat-label>Intitulé du NFT</mat-label>
-                <input matInput type="text" maxlength="200" [(ngModel)]="uri" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=2">
-                <mat-hint *ngIf="focus_idx==2">Présenter votre NFT en quelques mots pour le vendre dans la marketplace</mat-hint>
-                <mat-icon *ngIf="uri?.length>0"
-                matSuffix style="cursor: pointer"
-                (click)="uri=''">cancel</mat-icon>
+                <mat-label>Description du NFT</mat-label>
+                <input matInput type="text" maxlength="200" [(ngModel)]="desc" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=2.5">
+                <mat-hint *ngIf="focus_idx==2.5">Présenter votre NFT en quelques mots</mat-hint>
+                <mat-icon *ngIf="desc?.length>0" matSuffix style="cursor: pointer"  (click)="desc=''">cancel</mat-icon>
               </mat-form-field>
+
 
               <br><br>
 
@@ -266,7 +289,7 @@
               <br>
               <button mat-raised-button  color="primary"
                       mat-button class="large-button"
-                      [disabled]="(uri?.length==0 && files[1].length==0) || count*gift>user.gas/1e18"
+                      [disabled]="title?.length==0 || count*gift>user.gas/1e18"
                       (click)="tokenizer()">
                 Fabriquer !
               </button>

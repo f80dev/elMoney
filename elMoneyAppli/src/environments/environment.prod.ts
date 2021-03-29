@@ -3,7 +3,7 @@ import { version } from '../../package.json';
 
 export const environment = {
   production: true,
-  domain_server: "https://server.f80.fr:7777",
+  domain_server: "https://server.f80.fr:5555",
   config_file: "config",
   domain_appli: "https://tokenforge.f80.fr",
   appVersion: version,

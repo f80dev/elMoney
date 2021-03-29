@@ -96,6 +96,10 @@ export class ConfigService {
     return(this.server["default_money"]!=null);
   }
 
+  public isProd() : boolean {
+    return environment.production;
+  }
+
 
   init_user(func_success=null,func_anonyme=null) {
     $$("Initialisation de l'utilisateur");
@@ -114,6 +118,8 @@ export class ConfigService {
     //     }
     //  });
   }
+
+
 
 
 }

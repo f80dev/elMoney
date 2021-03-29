@@ -5,14 +5,13 @@
           background="./assets/img/items.jpg"></app-tuto>
 
 <div class="mainform">
-
   <h2>Place de marché en vente directe</h2>
   <app-tuto [if]="nfts?.length>0"
             label="Ici, vous pouvez acheter des NFTs vendu directement par les propriétaires. Si vous ne disposez pas de fonds suffisants, il est possible de recharger votre compte"></app-tuto>
 
-  <div *ngIf="nfts?.length>2">
-    <mat-form-field appearance="fill"
-                    style="max-width:600px;width:60%;" autofocus>
+
+    <mat-form-field appearance="fill" *ngIf="nfts?.length>2"
+                    style="max-width:600px;width:60%;margin-right: 10px;" autofocus>
       <mat-label>Chercher un token à acheter</mat-label>
       <input matInput matNativeControl
              (keyup)="onQuery($event)"
@@ -21,14 +20,15 @@
                 matSuffix style="cursor: pointer"
                 (click)="clearQuery()">cancel</mat-icon>
     </mat-form-field>
-    &nbsp;&nbsp;
-    <mat-form-field appearance="fill" style="width:130px;color:white;">
+
+
+
+  <mat-form-field appearance="fill" style="width:130px;color:white;">
       <mat-label>Affichage</mat-label>
      <mat-select [(value)]="selected_mode" style="color: white;">
       <mat-option *ngFor="let option of options" [value]="option.style">{{option.label}}</mat-option>
      </mat-select>
     </mat-form-field>
-  </div>
 
   <app-hourglass [message]="message"></app-hourglass>
 
@@ -48,7 +48,7 @@
             (refresh)="refresh(true)"
             (buy)="on_buy($event)">
   </app-nfts>
-  <br>
+  <br><br>
   <button mat-raised-button
           mat-button class="app-button"
           (click)="router.navigate(['importer'])">

@@ -20,7 +20,7 @@ export class NftsPersoComponent implements OnInit {
   nfts: any[][]=[[],[]];
   selected:any = new FormControl(0);
   filters: any[]=[
-    {label:"Aucun filtre",filter:{}},
+    {label:"Aucun filtre",filter:{key:"",value:""}},
     {label:"Supprimer les vendus",filter:{key:"state",value:0}},
   ];
   filter:any=this.filters[0].filter;
@@ -59,12 +59,15 @@ export class NftsPersoComponent implements OnInit {
       this.message = "Chargement des tokens ...";
       this.api._get("nfts/"+filters[0]+"/"+filters[1]+"/"+filters[2]).subscribe((r: any) => {
         this.message = "";
-        for(let i=0;i<r.length;i++)
+        for(let i=0;i<r.length;i++){
           r[i].isDealer=(tokenIdentifier==0);
+          r[i].fullscreen=false;
+        }
+
 
         let rc=[];
         for(let i of r){
-          if(tokenIdentifier!=2 || this.filter=={} || i[this.filter.key]==this.filter.value) {
+          if(!this.filter || tokenIdentifier!=2 || this.filter.key=="" || i[this.filter.key]==this.filter.value) {
             rc.push(i);
           }
         }

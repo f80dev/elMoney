@@ -4,6 +4,7 @@ import os
 import ssl
 import sys
 
+from AesEverywhere import aes256
 from apscheduler.schedulers.background import BackgroundScheduler
 
 import yaml
@@ -18,7 +19,7 @@ from apiTools import create_app
 from dao import DAO
 from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, \
     MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, IPFS_NODE, \
-    MAIN_NAME, MAIN_DECIMALS, NETWORKS, ESDT_CONTRACT, LIMIT_GAS
+    MAIN_NAME, MAIN_DECIMALS, NETWORKS, ESDT_CONTRACT, LIMIT_GAS, SECRET_KEY
 from elrondTools import ElrondNet
 from ipfs import IPFS
 
@@ -280,15 +281,9 @@ def open_nft(token_id:str,data:dict=None):
             rc=tx["scResults"][0]["returnMessage"]
         else:
             rc=str(base64.b64decode(tx["scResults"][0]["data"]))[2:]
-            if "@" in rc:rc=rc.split("@")[1]
+            if "@" in rc:rc=rc.split("@")[2]
             if len(rc)>0:rc=rc[0:len(rc) - 1]
-            try:
-                rc=int(int(rc,16)/2)
-                if rc > 0:
-                    rc = str(bytearray.fromhex(hex(rc).replace("0x", "")), "utf-8")
-                    rc = translate(rc, {"@token@": str(token_id)})
-            except:
-                pass
+            rc=str(aes256.decrypt(bytearray.fromhex(rc),SECRET_KEY),"utf8")
     else:
         rc="Impossible d'ouvrir le token"
     return jsonify({"response":rc,"cost":tx["cost"]})
@@ -409,18 +404,20 @@ def mint(count:str,data:dict=None):
 
     # TODO: ajouter ici un encodage du secret dont la clé est connu par le contrat
     if len(secret)==0:secret=" ";
-    secret = hex(int(secret.encode().hex(), base=16) * 2)
+    secret = aes256.encrypt(secret, SECRET_KEY)
 
     res_visual = ""
     if "visual" in data and len(data["visual"])>0:
         res_visual = "%%" + client.add(data["visual"])
+        if data["fullscreen"]:res_visual=res_visual.replace("%%","!!")
 
     pem_file=get_pem_file(data)
     owner = Account(pem_file=pem_file)
 
     #nft_contract_owner=Account(pem_file="./PEM/"+NETWORKS[bc.network_name]["bank"]+".pem")
 
-    uri=data["signature"]+res_visual
+    title=data["signature"]
+    desc=data["description"]+res_visual
     price = int(float(data["price"]) * 1e4)
     max_markup=int(float(data["max_markup"]) * 100)
     min_markup=int(float(data["min_markup"]) * 100)
@@ -429,8 +426,15 @@ def mint(count:str,data:dict=None):
     fee=int(float(data["fee"])*1e18)
     gift=int(float(data["gift"])*100)
 
+    arguments=[int(count),
+               "0x"+title.encode().hex(),
+               "0x"+desc.encode().hex(),
+               "0x"+secret.hex(),
+               price,min_markup,max_markup,
+               properties,
+               miner_ratio,
+               gift]
 
-    arguments=[int(count),"0x"+uri.encode().hex(),secret,price,min_markup,max_markup,properties,miner_ratio,gift]
     result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,
                    arguments=arguments,
                    gas_limit=int(LIMIT_GAS*(1+int(count)/4)),
@@ -459,6 +463,7 @@ def mint(count:str,data:dict=None):
 
             return jsonify(result), 200
     else:
+        os.remove(pem_file)
         return "Probleme technique",500
 
 

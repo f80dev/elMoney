@@ -32,7 +32,8 @@ export class ImporterComponent implements OnInit {
   gift:number=0;
   secret: string="";
   price: number=0;
-  uri: string="Achetez mon NFT";
+  title: string="Mon NFT pour vous";
+  desc: string="Achetez mon NFT";
   cost=0;
   filename: string="";
   reseller: any=false;
@@ -51,6 +52,7 @@ export class ImporterComponent implements OnInit {
   redirect: number=0;
   prompt: string="";
   tokens: any[]=[];
+  full_flyer: boolean=true;
 
 
   constructor(public api:ApiService,
@@ -107,11 +109,13 @@ export class ImporterComponent implements OnInit {
       file:this.files[0],
       visual:this.files[1],
       filename:this.filename,
-      signature:this.uri,
+      signature:this.title,
       secret:this.secret,
       price:this.price,
       fee:fee,
+      description:this.desc,
       gift:this.gift,
+      fullscreen:this.full_flyer,
       max_markup:this.max_price,
       min_markup:this.min_price,
       dealers:this.dataSource.data,
@@ -239,14 +243,17 @@ export class ImporterComponent implements OnInit {
 
   quick_photo(index=0,token) {
     this.add_visual((result:any)=>{
-      if(result){
-        this.ask_for_text("Présentation","Rédigez une présentation rapide de votre photo pour la marketplace",(legende)=>{
-          if(legende!=null){
-            this.uri=legende;
-            this.ask_for_price("Quel prix pour votre photo",null,token.fee);
-          }
-        });
-      }
+      this.ask_for_text("Titre","Donner un titre à votre NFC",(title)=>{
+        if(title && title.length>0){
+          this.ask_for_text("Présentation","Rédigez une présentation rapide de votre photo pour la marketplace",(legende)=>{
+            if(legende!=null){
+              this.title=title;
+              this.desc=legende;
+              this.ask_for_price("Quel prix pour votre photo",null,token.fee);
+            }
+          });
+        }
+      });
     },index)
   }
 
@@ -256,12 +263,17 @@ export class ImporterComponent implements OnInit {
     this.ask_for_text("Cacher un secret","Saisissez votre secret, mot de passe ...",(secret)=>{
       if(secret){
         this.secret=secret;
-        this.ask_for_text("Description","Entrez une breve description de votre token",(description)=>{
-          if(description){
-            this.uri=description;
-            this.ask_for_price("Quel prix pour votre secret",null,token.fee);
-          }
-        })
+        this.ask_for_text("Un titre","Entrez un titre pour votre annonce",(title)=> {
+          if(title)
+            this.ask_for_text("Description","Faites une breve description de votre token",(description)=>{
+              if(description){
+                this.desc=description;
+                this.title=title;
+                this.ask_for_price("Quel prix pour votre secret",null,token.fee);
+              }
+            })
+        });
+
       }
     })
   }
@@ -303,7 +315,7 @@ export class ImporterComponent implements OnInit {
           if (title) {
             this.ask_for_text("Lieu et Date","Indiquer l'adresse et l'horaire",(desc)=> {
               if (desc) {
-                this.uri=title+" - "+desc;
+                this.title=title+" - "+desc;
                 this.secret="Billet: @id@";
                 this.ask_for_price("Prix unitaire du billet",(price)=>{
                   this.ask_for_text("Combien de billets","Indiquer le nombre de billets à fabriquer (maximum 30)",(num)=>{
@@ -330,12 +342,17 @@ export class ImporterComponent implements OnInit {
   quick_file($event: any,token:any) {
     this.files[0]=$event.file;
     this.filename=$event.filename;
-    this.ask_for_text("Description","Rédigez une courte phrase pour donner envie de l'acheter",(desc)=>{
-      if(desc){
-        this.uri=desc;
-        this.ask_for_price("Quel est votre prix pour ce fichier",null,token.fee);
+    this.ask_for_text("Titre","Titre de votre annonce",(title)=>{
+      if(title) {
+        this.ask_for_text("Description","Rédigez une courte phrase pour donner envie de l'acheter",(desc)=>{
+          if(desc){
+            this.desc=desc;
+            this.title=title;
+            this.ask_for_price("Quel est votre prix pour ce fichier",null,token.fee);
+          }
+        })
       }
-    })
+    });
   }
 
 

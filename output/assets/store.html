@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <title>Minimal store sample</title>
+  <style type="text/css">
+    label {
+      min-width: 200px;
+      background-color: gray;
+      padding: 10px;
+      border-radius: 15px;
+      color: white;
+      margin: 5px;
+      margin-right: 10px;
+      font-variant: titling-caps;
+      font-size: large;
+    }
+
+    button {
+      padding: 5px;
+      border: none;
+      font-family: Arial;
+      background-color: #7a7a96;
+      border-radius: 10px;
+      color: white;
+      font-size: medium;
+      width: 150px;
+    }
+
+    input, select {
+      border: lightgrey solid thin;
+      font-size: large;
+      padding: 5px;
+    }
+  </style>
+
+  <script>
+
+  function getParam() {
+    var vars = {};
+    window.location.href.replace(location.hash, '').replace(/[?&]+([^=&]+)=?([^&]*)?/gi, function (m, key, value) { vars[key] = value !== undefined ? value : ''; });
+    return vars;
+  }
+
+
+    function open_explorer() {
+    window.open(getParam().explorer+"/address/"+getParam().seller);
+    }
+  </script>
+
+
+
+</head>
+
+
+
+
+
+
+<body onload="onload()">
+
+
+<!--Zone d'affichage des message-->
+<div id="message" style="width: 100%;text-align: center;color: red;"></div>
+
+<!--Section principale de la boutique-->
+<div style="width:100vw;text-align: center;" id="store_zone">
+  <div id="zone_title">
+    <h3>Billeterie</h3>
+  </div>
+
+  <button onclick="open_explorer()">Voir les transactions</button>
+  <br>
+  <br>
+  <br>
+  <div>
+    Le client doit s'identifier avec son fichier PEM pour acheter les places<br><br>
+    <label id="label_button" for="upload_pem">Sélectionner un fichier PEM</label><br>
+    <input type="file" name="upload_pem" id="upload_pem" accept=".pem" style="display: none;">
+  </div>
+  <br><br>
+  <div id="lblBalance" style="font-size: x-large;color:cornflowerblue;"></div>
+
+
+  <br><br><br>
+  <div title="Cliquer pour rafraichir" onclick="refresh()" style="cursor: pointer;">
+    <h2>Les NFTs en vente</h2>
+  </div>
+
+  <br>
+  <div id="tickets" style="font-size: large;">
+  </div>
+</div>
+
+<hr>
+<!--Section lié à la documentation de l'API-->
+<!--    <div id="faq">-->
+<!--      <h2>Questions Fréquentes</h2>-->
+<!--      <iframe-->
+<!--              src="https://server.f80.fr:6800/api/faqs/extern_store,api_add_ticket,all_api,api_build_event,dev_token?format=html&summary=True&sort=False"-->
+<!--              style="border:none;overflow:hidden;height:600px;width:100%;background: none;font-family: Arial;">-->
+<!--      </iframe>-->
+<!--      <br>-->
+<!--    </div>-->
+</body>
+
+<script>
+
+
+
+  //Méthodes outils ________________________________________________________________________________________________________________________________________________
+  //Récupére les paramétres passés dans l'url
+
+  var domain=getParam().server;
+  var api="";
+  var pem="";
+
+
+  //Méthode d'affichage dans la console
+  function $$(s,obj) {
+    if(s!=null && s.startsWith("!")){
+      debugger;
+    }
+    var lg = new Date().getHours() + ':' + new Date().getMinutes() + ' -> ' + s;
+    if (obj != null) {
+      obj = JSON.stringify(obj);
+    } else {
+      obj = '';
+    }
+    console.log(lg + ' ' + obj);
+    if (lg.indexOf('!!') > -1) {alert(lg); }
+  }
+
+
+
+
+
+  //______________________________________________________________________________________________________________________________
+  /**
+   * Fonction appelée à l'ouverture de la page
+   */
+  function onload() {
+    //Cet exemple intégre la récupération de certains paramètre passés via l'url pour pouvoir servir d'exemple
+    //a plusieurs événement. Dans une configuration normale, la billeterie externe n'a aucun paramètre à récupérer
+
+    //faq consiste à afficher de l'aide
+    //if (!getParam().hasOwnProperty("faq"))document.getElementById("faq").style.display = "none";
+
+    //permet un pré-remplissage de l'identité du client
+    if (getParam().seller != null) seller = getParam().seller;
+    if (getParam().domain != null) domain = getParam().domain;
+
+    refresh(seller);
+
+  }
+
+
+
+  document.getElementById('upload_pem').addEventListener('change', readFileAsString)
+  function readFileAsString() {
+    var files = this.files;
+    if (files.length === 0) {
+      console.log('No file is selected');
+      return;
+    }
+
+    var reader = new FileReader();
+    informe("Chargement du fichier d'identification");
+    reader.onload = (event)=> {
+      informe("Identification terminée, vous pouvez achetez des tokens");
+      pem= event.target.result;
+      let addr="erd"+pem.split("erd")[1].split("---")[0];
+      balance(addr,(bal)=>{
+        document.getElementById("lblBalance").innerHTML=bal+" xeGld";
+      });
+      document.getElementById("label_button").innerHTML="Fichier: "+files[0].name;
+    };
+    reader.readAsText(files[0]);
+  }
+
+
+  var access_token = getParam().access_token;
+  if (access_token == null) access_token = "demo_token";
+
+
+  function informe(html,delay=2000) {
+    document.getElementById("message").innerHTML=html;
+    if(delay>0)setTimeout(()=>{informe("");},delay);
+  }
+
+  function balance(addr,func){
+    let elrond_api="https://"+getParam().network_name+"-api.elrond.com".replace("mainnet-","");
+    fetch(elrond_api+"/address/"+addr+"/balance").then(r=>r.json()).then(resp=>{
+      func(Number(resp.data.balance/1e18).toFixed(3));
+    });
+  }
+
+
+  function refresh(seller=null) {
+    if(!seller)seller=getParam().seller;
+    let api = domain + "/api/nfts";
+    //api = api.replace("http//", "http://").replace("https//", "https://");
+    let url_api = api + "/" + seller + "/" + "?access_token=" + access_token;
+    fetch(url_api,
+      {
+        method: 'get',
+        mode: 'cors',
+        headers: {"access_token": access_token}
+      }).then(r => r.json())
+      .then(resp => {
+        var html="<table style='width: 90vw;'>";
+        for(let ticket of resp){
+          if(ticket.state==0){
+            html=html+"<tr style='width:100%;text-align:center;'><td>"+ticket.uri+"</td><td>"+ticket.price+" xEgld</td><td><a href='javascript:buy("+ticket.token_id+","+ticket.price+",\""+seller+"\")'>acheter</a></td></tr>";
+          }
+
+        }
+        html=html+"</table>";
+        document.getElementById("tickets").innerHTML=html;
+      });
+  }
+
+
+
+  function buy(token_id,price,seller){
+    let url_api = domain + "/api/buy_nft/"+token_id+"/"+price+"/"+ seller + "/" + "?access_token=" + access_token;
+    if(pem.length>0){
+      informe("Achat en cours ...",0);
+      fetch(url_api,{
+        method: 'post',
+        body: JSON.stringify({pem:pem}),
+        mode: 'cors',
+        headers: {
+          "access_token": access_token,
+          "Content-Type": "application/json"
+        }
+      }).then(r => r.json(),(err)=>{informe(err.message);})
+        .then(resp => {
+          if(resp.status=="success"){
+            informe("Achat effectué");
+            refresh(seller);
+          } else {
+            informe("Problème technique ou solde insuffisant pour l'achat");
+          }
+
+        },(err)=>{
+          informe(err.message);
+        });
+    } else {
+      informe("Veuillez vous identifier avant d'acheter");
+    }
+
+  }
+
+
+  /**
+   * Fonction appelée pour créer le billet
+   *
+   * http://localhost:8080/assets/store.html
+   */
+  function send(){
+    var access_token=getParam().access_token;
+    if(access_token==null)access_token="demo_token";
+
+    if(seller==0)seller=document.getElementById("seller").value;
+    api=domain+"/api/tokens/"+seller+"/";
+    api=api.replace("http//","http://").replace("https//","https://");
+
+    window.scrollTo(0,0);
+
+    var params=new FormData(document.getElementById('frm'));
+
+
+    //http://localhost:6800/api/add_ticket/last/paul.dudule@gmail.com/tkt3/10/+30
+    var delay=Math.round((new Date(params.get("date")).getTime()-new Date().getTime())/(3600*1000));
+    for(var i=0;i<params.get("tickets");i++) {
+
+      setTimeout(function (i) {
+        var ref_ticket = new Date().getTime().toString(32).toUpperCase();
+        var url_api = api + "/" + params.get("email") + "/" + ref_ticket + "/" + params.get("price") + "/+" + delay + "?access_token=" + access_token;
+        $$("Appel de " + url_api);
+        fetch(url_api,
+          {
+            method: 'get',
+            mode: 'no-cors',
+            headers: {"access_token": access_token}
+          }).then(function (r) {
+          r.text().then(function (resp) {
+            var email = document.getElementById("email").value;
+            informe("Vous billets sont en cours de réservation. Retrouvez les dans l'application <a href='https://app.kerberus.tech/?email=" + email + "' target='_blank'>KERBERUS</a>");
+          });
+        }, function (r) {
+          informe("Problème technique, veuillez recommencer l'opération");
+          console.log(r);
+        });
+      }, i * 1000 + 100);
+    }
+  }
+
+</script>
+
+</html>

@@ -25,8 +25,7 @@
       <br>
       <app-tuto [if]="nfts[1].length>0" label="Les NFT achetés peuvent être remis en vente, détruit, ouvert s'ils contiennent un secret ou directement offer"></app-tuto>
       <app-nfts [user]="user" [nfts]="nfts[1]"
-                [with_icon]="false"
-                height="auto"
+                [with_icon]="true" height="250px"
                 (transfer)="transfer($event)">
       </app-nfts>
       <br>
@@ -50,8 +49,7 @@
       </mat-form-field>
 
       <app-nfts [user]="user" [nfts]="nfts[2]"
-                [with_icon]="false"
-                height="auto"
+                [with_icon]="false" height="250px"
                 (transfer)="transfer($event)"></app-nfts>
 
       <br>

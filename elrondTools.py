@@ -510,9 +510,9 @@ class ElrondNet:
             rc=json.loads(txt)
             gasUsed=0
             if "gasUsed" in rc:gasUsed=rc["gasUsed"]
-            rc["cost"] = (rc["gasPrice"] * gasUsed) / 1e18
+            rc["cost"] = float(rc["fee"]) / 1e18
         else:
-            rc["cost"]=rc["gasPrice"]*rc["gasLimit"]/1e18
+            rc["cost"]=float(rc["fee"])/1e18
 
         log("Transaction executé "+str(rc))
         if timeout<=0:log("Timeout de "+self.getExplorer(tx)+" "+field+" est a "+str(rc[field]))
@@ -560,7 +560,6 @@ class ElrondNet:
             log("On transfere un peu d'eGold pour assurer les premiers transferts"+str(fund))
             tx=self.credit(self.bank,_u,"%.0f" % fund)
             if tx["status"]!="Success":log("Le compte "+_u.address.bech32()+" n'a pas recu d'eGld pour les transactions")
-
 
         return _u,pem
 
@@ -651,8 +650,10 @@ class ElrondNet:
             while len(tokens)-index>112 :
                 index=index+8
                 log("Traitement à partir de "+tokens[index:])
-                uri_len=int(tokens[index:index + 8], 16)*2
+                title_len=int(tokens[index:index + 8], 16)*2
+                index=index+8
 
+                desc_len=int(tokens[index:index + 8], 16)*2
                 index=index+8
 
                 price = int(tokens[index:index+8], 16) / 1e4
@@ -686,29 +687,35 @@ class ElrondNet:
                 id=int(tokens[index:index+16], 16)
                 index=index+16
 
-                uri = ""
+                title = ""
                 visual=""
                 try:
-                    uri:str = str(bytearray.fromhex(tokens[index:index+uri_len]), "utf-8")
-                    if "%%" in uri:
-                        visual = "https://ipfs.io/ipfs/" + uri.split("%%")[1]
-                        uri=uri.split("%%")[0]
+                    title:str = str(bytearray.fromhex(tokens[index:index+title_len]), "utf-8")
+                    index=index+title_len
+
+                    desc:str=str(bytearray.fromhex(tokens[index:index+desc_len]), "utf-8")
+                    index = index + desc_len
+
+                    fullscreen=("!!" in desc)
+                    desc=desc.replace("!!","%%")
+                    if "%%" in desc:
+                        visual = "https://ipfs.io/ipfs/" + desc.split("%%")[1]
+                        desc=desc.split("%%")[0]
                 except:
-                    log(tokens[index:index+uri_len]+" n'est pas une chaine de caractères")
+                    log(tokens[index:index+title_len]+" n'est pas une chaine de caractères")
 
-
-                index=index+uri_len
                 _d={
                     "owner":owner_addr,
                     "miner":miner_filter,
                     "price":str(price),
                     "token":str(id),
                 }
-                uri=translate(uri,_d)
+                title=translate(title,_d)
+                desc=translate(desc,_d)
 
-                obj=dict({"token_id": id, "uri": uri, "price": price,"markup":markup/100,"has_secret":has_secret,
+                obj=dict({"token_id": id, "title": title,"description":desc, "price": price,"markup":markup/100,"has_secret":has_secret,
                           "min_markup":min_markup/100,"max_markup":max_markup/100,"miner_ratio":miner_ratio/100,
-                          "state": state,"owner":owner_addr,"visual":visual,
+                          "state": state,"owner":owner_addr,"visual":visual,"fullscreen":fullscreen,
                           "properties":properties
                           })
                 if miner_filter!="0x0000000000000000000000000000000000000000000000000000000000000000":
