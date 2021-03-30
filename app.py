@@ -452,10 +452,13 @@ def mint(count:str,data:dict=None):
                 #TODO: a optimiser pour pouvoir passer plusieurs distributeurs à plusieurs billet
                 if "dealers" in data and len(data["dealers"])>0:
                     for dealer in data["dealers"]:
+                        i=0
                         for tokenid in tokenids:
                             _dealer=Account(address=dealer["address"])
-                            arguments=[tokenid,"0x"+_dealer.address.hex()]
+                            name="Dealer"+str(i)
+                            arguments=[tokenid,"0x"+_dealer.address.hex(),"0x"+name.encode().hex()]
                             tx=bc.add_dealer(NETWORKS[bc.network_name]["nft"],pem_file,arguments)
+                            i=i+1
 
             send(socketio, "refresh_nft")
             send(socketio, "refresh_balance",owner.address.bech32())
@@ -545,7 +548,8 @@ def add_dealer(token_id:str,data:dict=None):
     pem_file = get_pem_file(data["pem"])
 
     _dealer = Account(address=data["addr"])
-    arguments = [int(token_id), "0x" + _dealer.address.hex()]
+    name=data["name"]
+    arguments = [int(token_id), "0x" + _dealer.address.hex(),"0x"+name.encode().hex()]
     tx = bc.add_dealer(NETWORKS[bc.network_name]["nft"], pem_file, arguments)
 
     return jsonify(tx), 200
