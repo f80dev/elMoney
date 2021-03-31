@@ -40,17 +40,32 @@ Il peut se connecter à différente blocchaine suivant l'adresse indiquer au pro
 <pre>docker rm -f elmoney && docker run --restart=always -v /root/certs:/certs -p 5555:5555 --name elmoney -d f80hub/elmoney:latest python3 app.py 5555 "https://api.elrond.com" ssl</pre>
 
 ##Lancement du noeud IPFS
+###Ouverture du firewall
 Le répertoire /ipfs contient le docker-compose du noeud
 <pre>
 firewall-cmd --zone=public --add-port=5001/tcp
 firewall-cmd --zone=public --add-port=4001/tcp
 firewall-cmd --zone=public --add-port=8080/tcp
+</pre>
+###Configuration des répertoires
+<pre>
 mkdir /root/ipfs
 mkdir /root/ipfs/staging
 mkdir /root/ipfs/data
 cd /root/ipfs
-docker-compose up -d
+export ipfs_staging=/root/ipfs/staging
+export ipfs_data=/root/ipfs/data
+docker rm -f ipfs_host
+docker run -d --name ipfs_host -v $ipfs_staging:/export -v $ipfs_data:/data/ipfs -p 4001:4001 -p 127.0.0.1:8080:8080 -p 127.0.0.1:5001:5001 ipfs/go-ipfs:latest
 </pre>
+
+###Gérer la problématique de CORS
+<pre>
+docker exec ipfs_host ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["http://localhost:3000", "https://webui.ipfs.io", "http://127.0.0.1:5001"]'
+docker exec ipfs_host ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '["POST"]'
+docker logs -f ipfs_host
+</pre>
+
 
 L'interface de gestion est disponible sur http://161.97.75.165/#/
 
