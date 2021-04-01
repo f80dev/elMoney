@@ -7,7 +7,6 @@ import requests as rq
 from datetime import datetime
 
 from time import sleep
-from urllib import parse
 
 from erdpy.proxy import ElrondProxy
 from erdpy import config
@@ -15,7 +14,7 @@ from erdpy.accounts import Account, AccountsRepository, Address
 from erdpy.contracts import SmartContract
 from erdpy.environments import TestnetEnvironment
 from erdpy.transactions import Transaction
-from erdpy.wallet import generate_pair,derive_keys
+from erdpy.wallet import derive_keys
 
 from Tools import log, base_alphabet_to_10, str_to_hex, hex_to_str, nbr_to_hex, translate
 from definitions import LIMIT_GAS, ESDT_CONTRACT,NETWORKS
@@ -596,8 +595,8 @@ class ElrondNet:
 
 
 
-    def query(self,_contract,function_name,arguments=None,isnumber=True,n_try=3):
-        if type(_contract)==str: _contract=SmartContract(_contract)
+    def query(self,function_name,arguments=None,isnumber=True,n_try=3):
+        _contract=SmartContract(address=NETWORKS[self.network_name]["nft"])
 
         d = None
         for i in range(n_try):
@@ -615,15 +614,14 @@ class ElrondNet:
 
 
 
-    def owner_of(self, contract,token):
-        lst = self.query(SmartContract(address=contract), "tokenOwner",arguments=[token])
-        return lst
+    # def owner_of(self,token):
+    #     lst = self.query("tokenOwner",arguments=[token])
+    #     return lst
 
 
 
 
-    def get_tokens(self, contract,seller_filter,owner_filter,miner_filter):
-        _contract=SmartContract(contract)
+    def get_tokens(self,seller_filter,owner_filter,miner_filter):
         rc = list()
 
         if owner_filter=="0x0":
@@ -641,7 +639,7 @@ class ElrondNet:
         else:
             miner_filter="0x"+str(Account(address=miner_filter).address.hex())
 
-        tokens = self.query(_contract, "tokens", arguments=[seller_filter,owner_filter,miner_filter],isnumber=True,n_try=1)
+        tokens = self.query( "tokens", arguments=[seller_filter,owner_filter,miner_filter],isnumber=True,n_try=1)
 
         if not tokens is None and len(tokens)>0 and tokens[0]!="":
             tokens=tokens[0].hex
@@ -815,10 +813,10 @@ class ElrondNet:
 
 
     #http://localhost:6660/api/validate/erd1lzlf9clpzvetunqdtrmnr3dq0jpqxuf64lzxa0lerd86lmrutuqszvmk5w/erd19e6gkufmeav2u4q6ltagarxeqag4d62maey8vunnfs52fk75jd8s390nfn/
-    def validate(self, contract, owner, miner):
+    def validate(self, owner, miner):
         _owner=Account(address=owner)
         _miner=Account(address=miner)
-        rc=self.query(contract,"validate",["0x"+_owner.address.hex(),"0x"+_miner.address.hex()],isnumber=False)
+        rc=self.query("validate",["0x"+_owner.address.hex(),"0x"+_miner.address.hex()],isnumber=False)
         l=[]
         for i in range(0,len(rc),8):
             l.append(int.from_bytes(rc[i:i+8],"big"))
@@ -841,7 +839,22 @@ class ElrondNet:
                           function="add_dealer",
                           arguments=arguments,
                           )
+        return tx
 
+    def add_miner(self, contract, pem_file, arguments):
+        tx = self.execute(contract, pem_file,
+                          function="add_miner",
+                          arguments=arguments,
+                          )
+        return tx
+
+
+
+    def new_dealer(self, contract, pem_file, arguments):
+        tx = self.execute(contract, pem_file,
+                          function="new_dealer",
+                          arguments=arguments,
+                          )
         return tx
 
 
@@ -853,6 +866,23 @@ class ElrondNet:
     def getTransactionsByRest(self,addr):
         rc=rq.get(self._proxy.url+"/transactions/"+addr).json()
         return rc
+
+
+    def miners(self, seller):
+        tx = self.query("miners",["0x"+Account(seller).address.hex()])
+        rc=[]
+        for i in range(0,len(tx[0].hex),64):
+            rc.append(tx[0].hex[i,i+63])
+        return rc
+
+
+    def dealers(self):
+        tx = self.query("dealers")
+        rc = []
+        for i in range(0, len(tx[0].hex), 64):
+            rc.append(tx[0].hex[i, i + 63])
+        return rc
+
 
 
 

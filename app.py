@@ -246,7 +246,7 @@ def burn(token_id,data:dict=None):
 def nfts(seller_filter="0x0",owner_filter="0x0",miner_filter="0x0"):
     rc=[]
 
-    for uri in bc.get_tokens(NETWORKS[bc.network_name]["nft"],seller_filter,owner_filter,miner_filter):
+    for uri in bc.get_tokens(seller_filter,owner_filter,miner_filter):
         rc.append(uri)
 
     return jsonify(rc),200
@@ -472,11 +472,11 @@ def mint(count:str,data:dict=None):
 
 
 
-
-@app.route('/api/owner_of/<contract>/<token>/',methods=["GET"])
-def owner_of(contract,token):
-    rc=bc.owner_of(contract,token)
-    return jsonify(rc),200
+#
+# @app.route('/api/owner_of/<contract>/<token>/',methods=["GET"])
+# def owner_of(contract,token):
+#     rc=bc.owner_of(token)
+#     return jsonify(rc),200
 
 
 #http://localhost:6660/api/transactions/erd1zez3nsz9jyeh0dca64377ra7xhnl4n2ll0tqskf7krnw0x5k3d2s5l6sf6
@@ -540,17 +540,46 @@ def transactions(user:str):
 
 
 
-
+@app.route('/api/add_dealer/',methods=["POST"])
 @app.route('/api/add_dealer/<token_id>/',methods=["POST"])
-def add_dealer(token_id:str,data:dict=None):
+def add_dealer(token_id:str=None,data:dict=None):
     if data is None:
         data = json.loads(str(request.data, encoding="utf-8"))
     pem_file = get_pem_file(data["pem"])
 
     _dealer = Account(address=data["addr"])
     name=data["name"]
-    arguments = [int(token_id), "0x" + _dealer.address.hex(),"0x"+name.encode().hex()]
-    tx = bc.add_dealer(NETWORKS[bc.network_name]["nft"], pem_file, arguments)
+
+    tx=bc.new_dealer(NETWORKS[bc.network_name]["nft"],pem_file,["0x" + _dealer.address.hex(),"0x"+name.encode().hex()])
+
+    if not token_id is None:
+        arguments = [int(token_id), "0x" + _dealer.address.hex()]
+        tx = bc.add_dealer(NETWORKS[bc.network_name]["nft"], pem_file, arguments)
+
+    return jsonify(tx), 200
+
+
+@app.route('/api/miners/<seller>/',methods=["GET"])
+def get_miners(seller:str):
+    miners = bc.miners(seller)
+    return jsonify(miners), 200
+
+@app.route('/api/dealers/',methods=["GET"])
+def get_dealers():
+    return jsonify(bc.dealers()), 200
+
+
+@app.route('/api/add_miner/',methods=["POST"])
+def add_miner(data:dict=None):
+    if data is None:
+        data = json.loads(str(request.data, encoding="utf-8"))
+    pem_file = get_pem_file(data["pem"])
+
+    _miner = Account(address=data["address"])
+
+    tx=bc.add_miner(NETWORKS[bc.network_name]["nft"],
+                    pem_file,["0x" + _miner.address.hex()]
+                    )
 
     return jsonify(tx), 200
 
@@ -740,7 +769,7 @@ def raz(password:str):
 
 @app.route('/api/validate/<owner>/<miner>/')
 def validate(owner:str,miner:str):
-    rc=bc.validate(NETWORKS[bc.network_name]["nft"],owner,miner)
+    rc=bc.validate(owner,miner)
     return jsonify(rc)
 
 

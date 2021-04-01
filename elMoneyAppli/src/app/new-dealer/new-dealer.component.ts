@@ -20,7 +20,7 @@ export class NewDealerComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
 
   ngOnInit(): void {
-    this.dealer.addr=this.user.addr;
+    this.dealer.addr=this.data.result;
     this.showScanner=this.config.webcamsAvailable>0;
   }
 

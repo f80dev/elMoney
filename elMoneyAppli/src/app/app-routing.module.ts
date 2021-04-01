@@ -19,6 +19,7 @@ import {PromoComponent} from "./promo/promo.component";
 import {RouterModule, Routes} from "@angular/router";
 import {NgModule} from "@angular/core";
 import {TransactionsComponent} from "./transactions/transactions.component";
+import {MinersComponent} from "./miners/miners.component";
 
 const routes: Routes = [
   { path: 'admin', component: AdminComponent},
@@ -32,6 +33,7 @@ const routes: Routes = [
   { path: 'validate', component: ValidateComponent},
   { path: 'nfts-perso', component: NftsPersoComponent},
   { path: 'importer', component: ImporterComponent},
+  { path: 'miners', component: MinersComponent},
   { path: 'store', component: NftStoreComponent},
   { path: 'promo', component: PromoComponent},
   { path: 'faucet', component: FaucetComponent},
