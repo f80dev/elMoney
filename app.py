@@ -456,7 +456,7 @@ def mint(count:str,data:dict=None):
                         for tokenid in tokenids:
                             _dealer=Account(address=dealer["address"])
                             name="Dealer"+str(i)
-                            arguments=[tokenid,"0x"+_dealer.address.hex(),"0x"+name.encode().hex()]
+                            arguments=[tokenid,"0x"+_dealer.address.hex()]
                             tx=bc.add_dealer(NETWORKS[bc.network_name]["nft"],pem_file,arguments)
                             i=i+1
 
@@ -504,6 +504,8 @@ def transactions(user:str):
 
             if data.startswith("mint"):data="Creation d'un token"
             if data.startswith("add_dealer"):data= "Ajout d'un distributeur"
+            if data.startswith("new_dealer"):data= "Se déclarer commme distributeur"
+            if data.startswith("add_miner"):data= "Approuver un fabricant"
             if data.startswith("price"): data = "Mise a jour du prix"
             if data.startswith("burn"): data = "Destruction d'un token"
             if data.startswith("setstate"): data = "Mise en vente"
@@ -540,21 +542,28 @@ def transactions(user:str):
 
 
 
-@app.route('/api/add_dealer/',methods=["POST"])
+@app.route('/api/new_dealer/',methods=["POST"])
+def new_dealer(data:dict=None):
+    if data is None:
+        data = json.loads(str(request.data, encoding="utf-8"))
+    pem_file = get_pem_file(data["pem"])
+    _dealer = Account(address=data["addr"])
+    name=data["name"]
+    tx=bc.new_dealer(NETWORKS[bc.network_name]["nft"],pem_file,["0x" + _dealer.address.hex(),"0x"+name.encode().hex()])
+    return jsonify(tx), 200
+
+
+
 @app.route('/api/add_dealer/<token_id>/',methods=["POST"])
-def add_dealer(token_id:str=None,data:dict=None):
+def add_dealer(token_id:str,data:dict=None):
     if data is None:
         data = json.loads(str(request.data, encoding="utf-8"))
     pem_file = get_pem_file(data["pem"])
 
     _dealer = Account(address=data["addr"])
-    name=data["name"]
 
-    tx=bc.new_dealer(NETWORKS[bc.network_name]["nft"],pem_file,["0x" + _dealer.address.hex(),"0x"+name.encode().hex()])
-
-    if not token_id is None:
-        arguments = [int(token_id), "0x" + _dealer.address.hex()]
-        tx = bc.add_dealer(NETWORKS[bc.network_name]["nft"], pem_file, arguments)
+    arguments = [int(token_id), "0x" + _dealer.address.hex()]
+    tx = bc.add_dealer(NETWORKS[bc.network_name]["nft"], pem_file, arguments)
 
     return jsonify(tx), 200
 

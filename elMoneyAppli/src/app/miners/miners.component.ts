@@ -4,6 +4,7 @@ import {UserService} from "../user.service";
 import {NewDealerComponent} from "../new-dealer/new-dealer.component";
 import {showMessage} from "../tools";
 import {MatDialog} from "@angular/material/dialog";
+import {ConfigService} from "../config.service";
 
 @Component({
   selector: 'app-miners',
@@ -12,25 +13,29 @@ import {MatDialog} from "@angular/material/dialog";
 })
 export class MinersComponent implements OnInit {
   miners: any[]=[];
+  message: string="";
 
   constructor(
     public api:ApiService,
     public user:UserService,
-    public dialog:MatDialog
+    public dialog:MatDialog,
+    public config:ConfigService
   ) { }
 
   ngOnInit(): void {
     this.refresh();
     let isDealer=localStorage.getItem("isDealer");
     if(!isDealer || isDealer!="true"){
-      this.api._post("add_dealer/","",{pem:this.user.pem,name:"moi",addr:this.user.addr}).subscribe((r:any)=>{
+      this.api._post("new_dealer/","",{pem:this.user.pem,name:"moi",addr:this.user.addr}).subscribe((r:any)=>{
       localStorage.setItem("isDealer","true");
     });
     }
   }
 
   refresh(){
+    this.message="Récupération de la liste des fabricants validés";
      this.api._get("miners/"+this.user.addr,"").subscribe((r:any)=>{
+       this.message="";
       this.miners=r;
     });
   }
@@ -47,9 +52,10 @@ export class MinersComponent implements OnInit {
           address:result.addr,
           pem:this.user.pem
         };
-
+        this.message="Approbation d'un fabricant";
         this.api._post("add_miner/","",obj).subscribe(()=>{
           showMessage(this,"Mineur ajoute");
+          this.message="";
           this.refresh();
         })
       }

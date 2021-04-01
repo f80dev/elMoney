@@ -869,10 +869,14 @@ class ElrondNet:
 
 
     def miners(self, seller):
-        tx = self.query("miners",["0x"+Account(seller).address.hex()])
+        seller_addr=Account(seller).address.hex()
+        tx = self.query("miners",["0x"+seller_addr])
         rc=[]
-        for i in range(0,len(tx[0].hex),64):
-            rc.append(tx[0].hex[i,i+63])
+        if len(tx)>0 and len(tx[0].hex)>=64:
+            for i in range(0,len(tx[0].hex),64):
+                addr=str(tx[0].hex)[i:i+64].upper()
+                _acc=Account(address=addr)
+                rc.append({"address":_acc.address.bech32()})
         return rc
 
 

@@ -180,7 +180,10 @@ export class ImporterComponent implements OnInit {
     this.dialog.open(NewDealerComponent, {
       position:
         {left: '5vw', top: '5vh'},
-      maxWidth: 400, width: '90vw', height: 'auto', data:{}
+      maxWidth: 400, width: '90vw', height: 'auto', data:{
+        title:"Ajouter un distributeur",
+        result:this.user.addr
+      }
     }).afterClosed().subscribe((result) => {
       if (result && result.hasOwnProperty("addr")) {
         let obj:SellerProperties={address:result.addr,name:result.name,marge:result.percent};

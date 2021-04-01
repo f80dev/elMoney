@@ -188,7 +188,10 @@ export class NftsComponent implements OnChanges {
     this.dialog.open(NewDealerComponent, {
       position:
         {left: '5vw', top: '5vh'},
-      maxWidth: 400, width: '90vw', height: 'auto', data:{}
+      maxWidth: 400, width: '90vw', height: 'auto', data:{
+        title:"Ajouter un distributeur",
+        result:this.user.addr
+      }
     }).afterClosed().subscribe((result) => {
       if (result && result.hasOwnProperty("addr")) {
         let obj:any={
@@ -197,10 +200,19 @@ export class NftsComponent implements OnChanges {
           pem:this.user.pem
         };
         nft.message="Ajout du distributeur en cours";
-        this.api._post("add_dealer/"+nft.token_id+"/","",obj).subscribe(()=>{
+
+        this.api._post("add_dealer/"+nft.token_id+"/","",obj).subscribe((r:any)=>{
           nft.message="";
-          showMessage(this,"Distributeur ajouté");
-          this.onrefresh.emit();
+          debugger
+          if(r.status!="fail"){
+            showMessage(this,"Distributeur ajouté");
+            this.onrefresh.emit();
+          } else {
+            showMessage(this,r.scResults[0].returnMessage);
+          }
+        },(err)=>{
+          nft.message="";
+          showError(this,err);
         })
       }
     });
