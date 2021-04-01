@@ -21,9 +21,12 @@ export class MinersComponent implements OnInit {
 
   ngOnInit(): void {
     this.refresh();
-     this.api._post("add_dealer/","",{pem:this.user.pem,name:"moi",addr:this.user.addr}).subscribe((r:any)=>{
-      debugger
+    let isDealer=localStorage.getItem("isDealer");
+    if(!isDealer || isDealer!="true"){
+      this.api._post("add_dealer/","",{pem:this.user.pem,name:"moi",addr:this.user.addr}).subscribe((r:any)=>{
+      localStorage.setItem("isDealer","true");
     });
+    }
   }
 
   refresh(){
