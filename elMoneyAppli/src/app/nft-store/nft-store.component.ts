@@ -19,6 +19,7 @@ export class NftStoreComponent implements OnInit {
   filter: string="";
   filter_id: number=null;
   filter_ids: any[]=[];
+  dealers:any[]=[];
 
   constructor(public api: ApiService,
               public routes: ActivatedRoute,
@@ -53,6 +54,12 @@ export class NftStoreComponent implements OnInit {
       this.filter_ids = this.routes.snapshot.queryParamMap.get("ids").split(",");
     }
 
+    this.api._get("dealers/","").subscribe((dealers:any)=>{
+      this.dealers=dealers;
+      this.dealers.push({address:"0x0"});
+    })
+
+    this.selected_dealer="0x0";
     this.refresh();
     localStorage.setItem("last_screen","store");
   }
@@ -62,17 +69,17 @@ export class NftStoreComponent implements OnInit {
 
   refresh(withMessage = true) {
     if (withMessage) this.message = "Chargement des tokens ...";
-    this.api._get("nfts/").subscribe((r: any) => {
+    this.api._get("nfts/"+this.selected_dealer+"/").subscribe((r: any) => {
       this.message = "";
       this.nfts = [];
       for (let item of r) {
         item.message = "";
         item.search=item.title+" "+item.price;
         item.open = "";
-        if(item.owner==this.user.addr || item.miner==this.user.addr)item.fullscreen=false;
 
         let same_item=null;
         for(let i of this.nfts){
+
           if(i.title==item.title && i.description==item.description && i.miner==item.miner && i.price==item.price && i.state==item.state)
             same_item=i;
         }
@@ -82,7 +89,7 @@ export class NftStoreComponent implements OnInit {
         } else {
           item.count=1;
           if (!this.filter_id || this.filter_id == item.token_id) {
-          if (item.state == 0 && item.properties>=4) {
+          if (item.state == 0 && item.properties>=4 && item.owner!=this.user.addr) {
             this.nfts.push(item);
           }
         }
@@ -112,6 +119,8 @@ export class NftStoreComponent implements OnInit {
     ]
 
   selected_mode: any=this.options[0].style;
+  selected_dealer: any;
+
 
   onQuery($event: KeyboardEvent) {
     if(this.nfts.length>100){

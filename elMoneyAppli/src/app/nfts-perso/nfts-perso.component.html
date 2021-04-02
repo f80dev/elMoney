@@ -5,7 +5,7 @@
   <mat-tab-group animationDuration="1000ms"
                  [selectedIndex]="selected.value">
 
-    <mat-tab label="Les NFTs distribués" *ngIf="nfts[0]?.length>0">
+    <mat-tab label="Les NFTs distribués" *ngIf="nfts[0]?.length>0" >
       <app-tuto label="Retrouvez ici tout les NFTs pour lesquels vous disposez d'un mandat de vente"></app-tuto>
       <app-nfts [user]="user" [nfts]="nfts[0]"
                 [filter]="{state:0,isDealer:true}"
@@ -21,7 +21,7 @@
     </mat-tab>
 
 
-    <mat-tab label="Vos NFTs achetés"  style="height: 100vh;padding: 0 !important;margin: 0 !important;">
+    <mat-tab label="Vos NFTs achetés"  style="height: 100vh;width:90%;overflow: hidden">
       <br>
       <app-tuto [if]="nfts[1].length>0" label="Les NFT achetés peuvent être remis en vente, détruit, ouvert s'ils contiennent un secret ou directement offer"></app-tuto>
       <app-nfts [user]="user" [nfts]="nfts[1]"

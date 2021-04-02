@@ -6,6 +6,7 @@
     <h2>Liste des fabricants approuvés</h2>
     <div *ngFor="let miner of miners">
       <a [href]="config.server.explorer+'/accounts/'+miner.address" target="_blank">{{miner.address}}</a>
+      <mat-icon (click)="remove(miner)">cancel</mat-icon>
     </div>
   </div>
 

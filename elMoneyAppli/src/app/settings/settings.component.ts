@@ -18,6 +18,10 @@ import {ApiService} from "../api.service";
 export class SettingsComponent implements OnInit {
   fileUrl;
   contrat="";
+  focus_idx: number;
+  pseudo: any;
+  description: any;
+  website: any;
 
   message: string="";
   filename: string="";
@@ -75,4 +79,6 @@ export class SettingsComponent implements OnInit {
   //      if(result)this.filename=result+".pem";
   //   });
   // }
+
+
 }

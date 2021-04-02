@@ -54,6 +54,33 @@
 
   <br>
 
+  _______
+
+  <br><br>
+  <h3>Votre profil</h3>
+
+
+   <mat-form-field appearance="fill" class="app-field">
+      <mat-label>Votre nom / pseudo</mat-label>
+      <input matInput type="text" (focusin)="focus_idx=1" maxlength="200" [(ngModel)]="pseudo" [ngModelOptions]="{standalone: true}">
+      <mat-hint *ngIf="focus_idx==1">Votre pseudo pourrat être associé à vos NFTs si vous le souhaitez</mat-hint>
+   </mat-form-field>
+  <br>
+
+  <mat-form-field appearance="fill" class="app-field">
+      <mat-label>Votre parcours</mat-label>
+    <textarea matInput matInput type="text" (focusin)="focus_idx=2" maxlength="400" [(ngModel)]="description" [ngModelOptions]="{standalone: true}"></textarea>
+      <mat-hint *ngIf="focus_idx==2">Décrivez brievement votre parcours</mat-hint>
+   </mat-form-field>
+<br>
+
+   <mat-form-field appearance="fill" class="app-field">
+      <mat-label>L'adresse de votre site</mat-label>
+      <input matInput type="url" (focusin)="focus_idx=3" maxlength="200" [(ngModel)]="website" [ngModelOptions]="{standalone: true}">
+      <mat-hint *ngIf="focus_idx==3">L'adresse de votre site internet</mat-hint>
+   </mat-form-field>
+
+
 
 
   <br><br>

@@ -5,6 +5,7 @@ import {NewDealerComponent} from "../new-dealer/new-dealer.component";
 import {showMessage} from "../tools";
 import {MatDialog} from "@angular/material/dialog";
 import {ConfigService} from "../config.service";
+import {PromptComponent} from "../prompt/prompt.component";
 
 @Component({
   selector: 'app-miners',
@@ -65,5 +66,27 @@ export class MinersComponent implements OnInit {
   }
 
 
-
+  remove(miner: any) {
+    this.dialog.open(PromptComponent,{width: '250px',data:
+        {
+          title: "Supprimer ce créateur ?",
+          onlyConfirm:true,
+          lbl_ok:"Continuer",
+          lbl_cancel:"Annuler"
+        }
+    }).afterClosed().subscribe((result) => {
+      if (result == "yes") {
+        let obj:any={
+          address:result.addr,
+          pem:this.user.pem
+        };
+        this.message="Suppression en cours";
+        this.api._post("del_miner/","",obj).subscribe(()=>{
+          showMessage(this,"Créateur supprimé");
+          this.message="";
+          this.refresh();
+        })
+      }
+    });
+  }
 }

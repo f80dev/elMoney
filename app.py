@@ -550,6 +550,8 @@ def new_dealer(data:dict=None):
     _dealer = Account(address=data["addr"])
     name=data["name"]
     tx=bc.new_dealer(NETWORKS[bc.network_name]["nft"],pem_file,["0x" + _dealer.address.hex(),"0x"+name.encode().hex()])
+    os.remove(pem_file)
+
     return jsonify(tx), 200
 
 
@@ -564,6 +566,7 @@ def add_dealer(token_id:str,data:dict=None):
 
     arguments = [int(token_id), "0x" + _dealer.address.hex()]
     tx = bc.add_dealer(NETWORKS[bc.network_name]["nft"], pem_file, arguments)
+    os.remove(pem_file)
 
     return jsonify(tx), 200
 
@@ -589,6 +592,22 @@ def add_miner(data:dict=None):
     tx=bc.add_miner(NETWORKS[bc.network_name]["nft"],
                     pem_file,["0x" + _miner.address.hex()]
                     )
+    os.remove(pem_file)
+
+    return jsonify(tx), 200
+
+
+
+@app.route('/api/del_miner/',methods=["POST"])
+def del_miner(data:dict=None):
+    if data is None:
+        data = json.loads(str(request.data, encoding="utf-8"))
+    pem_file = get_pem_file(data["pem"])
+
+    _miner = Account(address=data["address"])
+    tx=bc.execute(NETWORKS[bc.network_name]["nft"],pem_file,"del_miner",["0x" + _miner.address.hex()])
+
+    os.remove(pem_file)
 
     return jsonify(tx), 200
 

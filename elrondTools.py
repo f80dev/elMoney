@@ -883,8 +883,9 @@ class ElrondNet:
     def dealers(self):
         tx = self.query("dealers")
         rc = []
-        for i in range(0, len(tx[0].hex), 64):
-            rc.append(tx[0].hex[i, i + 63])
+        if len(tx)>0 and len(tx[0].hex)>0:
+            for i in range(0, len(tx[0].hex), 64):
+                rc.append({"address":str(tx[0].hex)[i: i + 64]})
         return rc
 
 
