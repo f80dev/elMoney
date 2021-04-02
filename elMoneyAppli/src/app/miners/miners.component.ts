@@ -26,9 +26,11 @@ export class MinersComponent implements OnInit {
     this.refresh();
     let isDealer=localStorage.getItem("isDealer");
     if(!isDealer || isDealer!="true"){
+      this.message="Ouverture de votre statut de distributeur";
       this.api._post("new_dealer/","",{pem:this.user.pem,name:"moi",addr:this.user.addr}).subscribe((r:any)=>{
-      localStorage.setItem("isDealer","true");
-    });
+        localStorage.setItem("isDealer","true");
+        this.message="";
+      });
     }
   }
 

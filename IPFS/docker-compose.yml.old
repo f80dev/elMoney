@@ -1,0 +1,25 @@
+#build: docker-compose up -d
+#firewall-cmd --zone=public --add-port=5001/tcp
+#firewall-cmd --zone=public --add-port=4001/tcp
+#firewall-cmd --zone=public --add-port=8080/tcp
+#firewall-cmd --zone=public --add-port=80/tcp
+
+
+version: "2.1"
+services:
+  ipfs:
+    image: ghcr.io/linuxserver/ipfs
+    container_name: ipfs
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - /root/ipfs/config:/config
+    ports:
+      - 80:80
+      - 4001:4001
+      - 5001:5001
+      - 8080:8080
+      - 443:443 #optional
+    restart: unless-stopped
