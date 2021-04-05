@@ -219,6 +219,22 @@ def evalprice(sender,data="",value=0):
 
 
 
+@app.route('/api/users/',methods=["POST"])
+def post_user(data:dict=None):
+    data = json.loads(str(request.data, encoding="utf-8"))
+    dao.save_user(data["addr"],data)
+    return jsonify({"reponse": "ok"})
+
+
+
+@app.route('/api/users/<addr>/',methods=["GET"])
+def get_user(addr:str):
+    data = dao.get_user(addr)
+    del data["_id"]
+    return jsonify(data)
+
+
+
 @app.route('/api/burn/<token_id>/',methods=["POST"])
 def burn(token_id,data:dict=None):
     if data is None:
@@ -548,8 +564,9 @@ def new_dealer(data:dict=None):
         data = json.loads(str(request.data, encoding="utf-8"))
     pem_file = get_pem_file(data["pem"])
     _dealer = Account(address=data["addr"])
-    name=data["name"]
-    tx=bc.new_dealer(NETWORKS[bc.network_name]["nft"],pem_file,["0x" + _dealer.address.hex(),"0x"+name.encode().hex()])
+
+    ipfs=client.add(json.dump(data["profil"]))
+    tx=bc.new_dealer(NETWORKS[bc.network_name]["nft"],pem_file,["0x" + _dealer.address.hex(),"0x"+ipfs.encode().hex()])
     os.remove(pem_file)
 
     return jsonify(tx), 200

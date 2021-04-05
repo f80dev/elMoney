@@ -12,10 +12,10 @@
 
   <mat-form-field appearance="legacy"
                     style="max-width:150px;font-size: medium;">
-      <mat-label>Rayons</mat-label>
+      <mat-label>Vendeurs</mat-label>
       <mat-select id="selOrder" [(ngModel)]="selected_dealer" (selectionChange)="refresh()">
         <mat-option *ngFor="let dealer of dealers" [value]="dealer.address">
-          {{dealer.address}}
+          {{dealer.name}}
         </mat-option>
       </mat-select>
     </mat-form-field>

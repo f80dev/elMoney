@@ -18,6 +18,7 @@ export class ConfigService {
   webcamsAvailable: any;
   width_screen: number;
   ready=false;
+  dealers:any[]=[];
 
   query_cache: any[]; //Conserve le contenu de la dernière requete
   unity: string ="";
@@ -83,6 +84,8 @@ export class ConfigService {
         this.api._get("server_config").subscribe((is:any)=>{
           this.server=is;
           $$("Chargement des infos serveur ok",is)
+
+          this.refresh_dealers();
           if(func!=null)func(this.values);
         })
       },()=>{
@@ -90,6 +93,14 @@ export class ConfigService {
         if(func_error!=null)func_error();
       });
 
+  }
+
+
+  refresh_dealers(){
+    this.api._get("dealers/","").subscribe((deals:any)=>{
+            this.dealers=deals;
+            $$("Chargement des dealers")
+          });
   }
 
   public hasESDT() : boolean {

@@ -5,12 +5,12 @@
 
   <br>
 
-<!--  <button mat-raised-button mat-button-->
-<!--          class="app-button"-->
-<!--          *ngIf="filename.length==0"-->
-<!--          (click)="set_filename()">-->
-<!--    <div class="bloc-bouton">Sauvegardez<br>votre compte</div>-->
-<!--  </button>-->
+  <!--  <button mat-raised-button mat-button-->
+  <!--          class="app-button"-->
+  <!--          *ngIf="filename.length==0"-->
+  <!--          (click)="set_filename()">-->
+  <!--    <div class="bloc-bouton">Sauvegardez<br>votre compte</div>-->
+  <!--  </button>-->
 
 
   <a [href]="fileUrl"
@@ -60,26 +60,47 @@
   <h3>Votre profil</h3>
 
 
-   <mat-form-field appearance="fill" class="app-field">
-      <mat-label>Votre nom / pseudo</mat-label>
-      <input matInput type="text" (focusin)="focus_idx=1" maxlength="200" [(ngModel)]="pseudo" [ngModelOptions]="{standalone: true}">
-      <mat-hint *ngIf="focus_idx==1">Votre pseudo pourrat être associé à vos NFTs si vous le souhaitez</mat-hint>
-   </mat-form-field>
+  <mat-form-field appearance="fill" class="app-field">
+    <mat-label>Votre nom / pseudo</mat-label>
+    <input matInput type="text" (focusin)="focus_idx=1" maxlength="200" [(ngModel)]="user.pseudo" [ngModelOptions]="{standalone: true}">
+    <mat-hint *ngIf="focus_idx==1">Votre pseudo pourrat être associé à vos NFTs si vous le souhaitez</mat-hint>
+  </mat-form-field>
+
+  <div *ngIf="user.visual"  style="text-align: right;width:50%;">
+    <img class="mat-elevation-z4"
+         (click)="change_visual('visual')"
+         [src]="user.visual"
+         style="max-width:150px;border: white 1px solid">
+  </div>
   <br>
 
   <mat-form-field appearance="fill" class="app-field">
-      <mat-label>Votre parcours</mat-label>
-    <textarea matInput matInput type="text" (focusin)="focus_idx=2" maxlength="400" [(ngModel)]="description" [ngModelOptions]="{standalone: true}"></textarea>
-      <mat-hint *ngIf="focus_idx==2">Décrivez brievement votre parcours</mat-hint>
-   </mat-form-field>
-<br>
+    <mat-label>Votre parcours</mat-label>
+    <textarea matInput matInput type="text" (focusin)="focus_idx=2" maxlength="400" [(ngModel)]="user.description" [ngModelOptions]="{standalone: true}"></textarea>
+    <mat-hint *ngIf="focus_idx==2">Décrivez brievement votre parcours</mat-hint>
+  </mat-form-field>
+  <br>
 
-   <mat-form-field appearance="fill" class="app-field">
-      <mat-label>L'adresse de votre site</mat-label>
-      <input matInput type="url" (focusin)="focus_idx=3" maxlength="200" [(ngModel)]="website" [ngModelOptions]="{standalone: true}">
-      <mat-hint *ngIf="focus_idx==3">L'adresse de votre site internet</mat-hint>
-   </mat-form-field>
+  <mat-form-field appearance="fill" class="app-field">
+    <mat-label>L'adresse de votre site</mat-label>
+    <input matInput type="url" (focusin)="focus_idx=3" maxlength="200" [(ngModel)]="user.website" [ngModelOptions]="{standalone: true}">
+    <mat-hint *ngIf="focus_idx==3">L'adresse de votre site internet</mat-hint>
+  </mat-form-field>
 
+
+  <mat-form-field appearance="fill" class="app-field">
+    <mat-label>Votre nom de distributeur</mat-label>
+    <input matInput type="url" (focusin)="focus_idx=4" maxlength="200" [(ngModel)]="user.shop_name" [ngModelOptions]="{standalone: true}">
+    <mat-hint *ngIf="focus_idx==4">L'adresse de votre site internet</mat-hint>
+  </mat-form-field>
+  <br>
+
+  <div *ngIf="user.shop_visual"  style="text-align: right;width:50%;">
+    <img class="mat-elevation-z4"
+         (click)="change_visual('shop_visual')"
+         [src]="user.shop_visual"
+         style="max-width:150px;border: white 1px solid">
+  </div>
 
 
 
@@ -101,7 +122,7 @@
 
   <br>
   <app-tuto label="Votre adresse publique peut être flashé pour recevoir des fonds, vérifier que vous êtes le propriétaire d'un NFT, être déclaré comme distributeur ... et pleins d'autres choses encore"></app-tuto>
-<br>
+  <br>
   <br>
   <a routerLink="/transactions">Voir mes transactions</a>
 

@@ -2,10 +2,10 @@
   <app-tuto label="Le distributeur est garant de la qualité des NFTs qu'il vend. Ainsi, vous devez approuver chaque fabriquant qui souhaite distribuer ces tokens chez vous"></app-tuto>
   <app-hourglass [message]="message"></app-hourglass>
   <br>
-  <div *ngIf="miners.length>0">
+  <div *ngIf="miners?.length>0">
     <h2>Liste des fabricants approuvés</h2>
     <div *ngFor="let miner of miners">
-      <a [href]="config.server.explorer+'/accounts/'+miner.address" target="_blank">{{miner.address}}</a>
+      <a [href]="config.server.explorer+'/accounts/'+miner.address" target="_blank">{{miner?.address}}</a>
       <mat-icon (click)="remove(miner)">cancel</mat-icon>
     </div>
   </div>

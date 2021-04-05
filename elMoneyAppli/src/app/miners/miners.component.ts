@@ -6,6 +6,7 @@ import {showMessage} from "../tools";
 import {MatDialog} from "@angular/material/dialog";
 import {ConfigService} from "../config.service";
 import {PromptComponent} from "../prompt/prompt.component";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-miners',
@@ -17,6 +18,7 @@ export class MinersComponent implements OnInit {
   message: string="";
 
   constructor(
+    public router:Router,
     public api:ApiService,
     public user:UserService,
     public dialog:MatDialog,
@@ -24,15 +26,29 @@ export class MinersComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.refresh();
-    let isDealer=localStorage.getItem("isDealer");
-    if(!isDealer || isDealer!="true"){
-      this.message="Ouverture de votre statut de distributeur";
-      this.api._post("new_dealer/","",{pem:this.user.pem,name:"moi",addr:this.user.addr}).subscribe((r:any)=>{
-        localStorage.setItem("isDealer","true");
-        this.message="";
-      });
+    let isDealer=false;
+    for(let d of this.config.dealers){
+      if(this.user.addr==d.address){
+        isDealer=true;
+        this.user.pseudo=d.name;
+      }
     }
+
+    if(!isDealer){
+      if(!this.user.pseudo || this.user.pseudo.length==0){
+        showMessage(this,"Vous devez renseigné un pseudo pour avoir le statut de distributeur");
+        this.router.navigate(["settings"]);
+      } else {
+        this.message="Ouverture de votre statut de distributeur";
+      this.api._post("new_dealer/","",{pem:this.user.pem,name:this.user.pseudo,addr:this.user.addr}).subscribe((r:any)=>{
+        localStorage.setItem("isDealer","true");
+        this.refresh();
+      });
+      }
+
+    } else this.refresh();
+
+
   }
 
   refresh(){

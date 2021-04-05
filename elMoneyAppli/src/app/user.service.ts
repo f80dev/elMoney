@@ -18,6 +18,12 @@ export class UserService {
   selected_money="";
   gas: number=0;
 
+  pseudo: any;
+  description:any;
+  website:any;
+  visual:any;
+  shop_visual:string="";
+  shop_name:string="";
 
   constructor(public api:ApiService,
               public socket:Socket,
@@ -25,6 +31,21 @@ export class UserService {
     subscribe_socket(this,"refresh_account",()=>{this.refresh_balance();})
     if(localStorage.getItem("contacts"))this.contacts=JSON.parse(localStorage.getItem("contacts"));
   };
+
+
+
+  load_user(){
+    $$("Chargement de l'utilisateur");
+    this.api._get("users/"+this.addr).subscribe((body:any)=>{
+      this.contacts=body.contacts;
+      this.pseudo=body.pseudo
+      this.visual=body.visual;
+      this.description=body.description;
+      this.shop_name=body.shop_name;
+      this.shop_visual=body.shop_visual;
+      this.pem=body.pem;
+    });
+  }
 
 
 
@@ -36,13 +57,27 @@ export class UserService {
       return false;
     }
     $$("Chargement de compte ok depuis le device, adresse de l'utilisateur "+this.addr);
-
-    if(localStorage.getItem("contacts"))this.contacts=JSON.parse(localStorage.getItem("contacts"));
-    if(localStorage.getItem("pem"))this.pem=JSON.parse(localStorage.getItem("pem"));
-
-    $$("Chargement du fichier PEM=",this.pem);
-
+    this.load_user();
     return true;
+  }
+
+
+  save_user(){
+    let body={
+      addr:this.addr,
+      contacts:this.contacts,
+      description:this.description,
+      pseudo:this.pseudo,
+      visual:this.visual,
+      shop_visual:this.shop_visual,
+      shop_name:this.shop_name,
+      pem:this.pem
+    };
+
+    this.api._post("users/","",body).subscribe((id:any)=>{
+      $$("Enregistrement de l'utilisateur");
+    })
+
   }
 
 
@@ -76,10 +111,8 @@ export class UserService {
 
   saveOnDevice(){
     $$("Enregistrement de "+this.addr+" sur le device");
-    localStorage.setItem("contacts",JSON.stringify(this.contacts));
-    localStorage.setItem("email",this.email);
     if(this.addr)localStorage.setItem("addr",this.addr);
-    localStorage.setItem("pem",JSON.stringify(this.pem));
+    this.save_user();
   }
 
   add_contact(email: string,pseudo=null) {
@@ -98,6 +131,7 @@ export class UserService {
       if(c.email==email)
         this.contacts.splice(this.contacts.indexOf(c),1);
     }
+    this.save_user();
   }
 
 
@@ -132,8 +166,10 @@ export class UserService {
       $$("Initialisation de l'utilisateur à l'adresse ",addr);
 
       this.addr=addr;
+      this.visual=environment.domain_appli+"/assets/img/anonymous.jpg";
+      this.shop_visual=environment.domain_appli+"/assets/img/shop.png";
       this.pem=pem;
-      this.saveOnDevice();
+      this.load_user();
       if(this.config.hasESDT()){
         if(this.selected_money.length==0)this.selected_money=this.api.tokenIdentifier;
         this.refresh_balance(func,func_error);

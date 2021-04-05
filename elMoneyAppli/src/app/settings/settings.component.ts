@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {ConfigService} from "../config.service";
 import {DomSanitizer} from "@angular/platform-browser";
@@ -9,19 +9,18 @@ import {MatDialog} from "@angular/material/dialog";
 import {showError, showMessage} from "../tools";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ApiService} from "../api.service";
+import {ImageSelectorComponent} from "../image-selector/image-selector.component";
 
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.sass']
 })
-export class SettingsComponent implements OnInit {
+export class SettingsComponent implements OnInit,OnDestroy {
   fileUrl;
   contrat="";
   focus_idx: number;
-  pseudo: any;
-  description: any;
-  website: any;
+
 
   message: string="";
   filename: string="";
@@ -81,4 +80,33 @@ export class SettingsComponent implements OnInit {
   // }
 
 
+
+
+  change_visual(field:string) {
+ this.dialog.open(ImageSelectorComponent, {position:
+        {left: '5vw', top: '5vh'},
+      maxWidth: 400, maxHeight: 700, width: '90vw', height: 'auto', data:
+        {
+          title:'Votre visuel',
+          result: this.user.visual,
+          checkCode: true,
+          width: 200,
+          height: 200,
+          emoji: false,
+          internet: false,
+          ratio: 1,
+          quality:0.7
+        }
+    }).afterClosed().subscribe((result) => {
+      if (result) {
+        this.user[field]= result;
+      } else {
+
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.user.save_user();
+  }
 }

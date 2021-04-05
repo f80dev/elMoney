@@ -84,3 +84,11 @@ class DAO:
 
     def get_nftcontract_by_owner(self,addr):
         return self.db["nfts"].find_one({"owner":addr})
+
+    def save_user(self, addr, body):
+        return self.db["users"].replace_one(filter={"addr": addr}, replacement=body, upsert=True)
+
+    def get_user(self, addr):
+        return self.db["users"].find_one(filter={"addr": addr})
+
+

@@ -17,7 +17,8 @@ from erdpy.transactions import Transaction
 from erdpy.wallet import derive_keys
 
 from Tools import log, base_alphabet_to_10, str_to_hex, hex_to_str, nbr_to_hex, translate
-from definitions import LIMIT_GAS, ESDT_CONTRACT,NETWORKS
+from definitions import LIMIT_GAS, ESDT_CONTRACT, NETWORKS, IPFS_NODE
+from ipfs import IPFS
 
 
 def toFiat(crypto,fiat=8):
@@ -41,6 +42,7 @@ class ElrondNet:
     bank=None
     chain_id=None
     network_name="devnet"
+    ipfs=IPFS(IPFS_NODE)
 
 
     def __init__(self,network_name="devnet"):
@@ -884,8 +886,10 @@ class ElrondNet:
         tx = self.query("dealers")
         rc = []
         if len(tx)>0 and len(tx[0].hex)>0:
-            for i in range(0, len(tx[0].hex), 64):
-                rc.append({"address":str(tx[0].hex)[i: i + 64]})
+            for dealer in str(tx[0].hex).split("000000"):
+                address=dealer[0:64]
+                content=self.ipfs.get_dict(bytes.fromhex(dealer[64:]).decode("utf-8"))
+                rc.append({"address":address,"content":content})
         return rc
 
 

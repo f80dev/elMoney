@@ -1,4 +1,5 @@
 import base64
+import json
 import os
 from datetime import datetime
 
@@ -27,4 +28,15 @@ class IPFS:
         result=r.json()
 
         return result["Hash"]
+
+
+
+    def get_dict(self,token):
+        if len(token)!=46: return token
+        url="https://ipfs.io/ipfs/"+token
+        r=requests.get(url).content
+        try:
+            return json.loads(str(r,"utf8"))
+        except:
+            return r
 
