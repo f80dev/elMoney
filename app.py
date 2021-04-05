@@ -200,10 +200,10 @@ def get_pem_file(data):
     if not "pem" in data:
         rc="./PEM/"+NETWORKS[bc.network_name]["bank"]+".pem"
     else:
-        if not ".pem" in data["pem"]:
+        if type(data["pem"])==dict and "pem" in data["pem"]:
             rc="./PEM/temp"+str(now()*1000)+".pem"
             log("Fabrication d'un fichier PEM pour la signature et enregistrement sur " + rc)
-            with open(rc, "w") as file:file.write(data["pem"])
+            with open(rc, "w") as file:file.write(data["pem"]["pem"])
         else:
             rc="./PEM/"+data["pem"]
 
@@ -230,7 +230,8 @@ def post_user(data:dict=None):
 @app.route('/api/users/<addr>/',methods=["GET"])
 def get_user(addr:str):
     data = dao.get_user(addr)
-    del data["_id"]
+    if data is None:return Response("User unknow",404)
+    if "_id" in data: del data["_id"]
     return jsonify(data)
 
 

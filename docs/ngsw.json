@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1617380716139,
+  "timestamp": 1617656429993,
   "index": "https://tf.f80.fr/index.html",
   "assetGroups": [
     {
@@ -45,6 +45,7 @@
         "https://tf.f80.fr/assets/icons/icon-96x96.png",
         "https://tf.f80.fr/assets/icons/package.png",
         "https://tf.f80.fr/assets/img/LinkedIn.png",
+        "https://tf.f80.fr/assets/img/anonymous.jpg",
         "https://tf.f80.fr/assets/img/anonymous.png",
         "https://tf.f80.fr/assets/img/build.jpg",
         "https://tf.f80.fr/assets/img/coin.png",
@@ -53,6 +54,7 @@
         "https://tf.f80.fr/assets/img/items.jpg",
         "https://tf.f80.fr/assets/img/moneys.jpg",
         "https://tf.f80.fr/assets/img/send.jpg",
+        "https://tf.f80.fr/assets/img/shop.png",
         "https://tf.f80.fr/assets/img/tips.png",
         "https://tf.f80.fr/assets/img/tokenforge.jpg",
         "https://tf.f80.fr/assets/img/vendu.png",
@@ -81,6 +83,7 @@
     "https://tf.f80.fr/assets/icons/icon-96x96.png": "80dbedb633ec6d564779ad195130aaced87da8de",
     "https://tf.f80.fr/assets/icons/package.png": "c7387850fe865694d2b85fdea03b21a78ad3eedb",
     "https://tf.f80.fr/assets/img/LinkedIn.png": "dec770e0a226b15021d0b80154aa18841097a46e",
+    "https://tf.f80.fr/assets/img/anonymous.jpg": "6e0a5813f4fa89595e9496d73b9f4f39cdeb9a56",
     "https://tf.f80.fr/assets/img/anonymous.png": "c015f4d0bf7c81184706a840cfabef65c3f4e0c4",
     "https://tf.f80.fr/assets/img/build.jpg": "5dc704939f3a00e2d8a8ee1719ae4e6fcb57388c",
     "https://tf.f80.fr/assets/img/coin.png": "8d066c2ff9ec582b7143b25b45a4a627276aff71",
@@ -89,6 +92,7 @@
     "https://tf.f80.fr/assets/img/items.jpg": "b7d629b44a00b3d688f555681ef38da09058bc64",
     "https://tf.f80.fr/assets/img/moneys.jpg": "7da26d41d3b0241798f3421ebd96eae92132b27a",
     "https://tf.f80.fr/assets/img/send.jpg": "5354f602290958104173369699c9790321c7e0a1",
+    "https://tf.f80.fr/assets/img/shop.png": "4c80df3da81ddc4cbf78b8385a33b2c0d22930ca",
     "https://tf.f80.fr/assets/img/tips.png": "b7832ac8a831f94cd9b656f48bc0d75a5cd587ca",
     "https://tf.f80.fr/assets/img/tokenforge.jpg": "1440e28adb87f2ce3fba08f16c92bbd90df10609",
     "https://tf.f80.fr/assets/img/vendu.png": "508f0b23afafa2c0284dde1eb9a0ff448c0caa43",
@@ -99,7 +103,7 @@
     "https://tf.f80.fr/favicon.ico": "c3bbe9dfa628852d8131849561b7fd52194f4d8d",
     "https://tf.f80.fr/favicon.png": "9d07b4062b45b028a517877c4b51af7a330eab1a",
     "https://tf.f80.fr/index.html": "bbdb9ec9f49027b3d810e5938caec155170ad309",
-    "https://tf.f80.fr/main.js": "c7ff0d25364548b28d4102c1940a318f89527805",
+    "https://tf.f80.fr/main.js": "418f9a7dfc456c435dd39a480501f5c5278d0939",
     "https://tf.f80.fr/manifest.webmanifest": "8291133aeacc475e061eb544514d2c1e8c02c576",
     "https://tf.f80.fr/polyfills.js": "e1b2e55679346bfd4fe23b63dc0ba38a7e8e2738",
     "https://tf.f80.fr/runtime.js": "154c277c076cfc8ee335df5d9349395c6bf58db5",

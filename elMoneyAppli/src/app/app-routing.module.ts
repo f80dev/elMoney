@@ -20,6 +20,7 @@ import {RouterModule, Routes} from "@angular/router";
 import {NgModule} from "@angular/core";
 import {TransactionsComponent} from "./transactions/transactions.component";
 import {MinersComponent} from "./miners/miners.component";
+import {PublicMinerComponent} from "./public-miner/public-miner.component";
 
 const routes: Routes = [
   { path: 'admin', component: AdminComponent},
@@ -41,6 +42,7 @@ const routes: Routes = [
   { path: 'support', component: SupportComponent},
   { path: 'transactions', component:TransactionsComponent},
   { path: 'log', component:TransactionsComponent},
+  { path: 'miner', component:PublicMinerComponent},
   { path: 'main', component: MainComponent},
   { path: 'wallet', component: MainComponent},
   { path: 'contacts', component: ContactsComponent},

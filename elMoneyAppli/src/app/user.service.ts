@@ -34,7 +34,7 @@ export class UserService {
 
 
 
-  load_user(){
+  load_user(func,func_error=null){
     $$("Chargement de l'utilisateur");
     this.api._get("users/"+this.addr).subscribe((body:any)=>{
       this.contacts=body.contacts;
@@ -44,6 +44,10 @@ export class UserService {
       this.shop_name=body.shop_name;
       this.shop_visual=body.shop_visual;
       this.pem=body.pem;
+      func(body);
+    },(err)=>{
+      if(err.status==404)$$("Impossible de charger l'user");
+      if(func_error)func_error();
     });
   }
 
@@ -57,7 +61,6 @@ export class UserService {
       return false;
     }
     $$("Chargement de compte ok depuis le device, adresse de l'utilisateur "+this.addr);
-    this.load_user();
     return true;
   }
 
@@ -98,21 +101,20 @@ export class UserService {
         this.gas=r.egld.balance;
         if(func)func(r);
       }
-        },(err)=>{
-          $$("!Erreur de récupération de la balance pour "+this.addr);
-          this.moneys=[];
-          if(func_error)
-            func_error(err.error);
-          else
-            if(func)func();
-        });
+    },(err)=>{
+      $$("!Erreur de récupération de la balance pour "+this.addr);
+      this.moneys=[];
+      if(func_error)
+        func_error(err.error);
+      else
+      if(func)func();
+    });
     return true;
   }
 
   saveOnDevice(){
     $$("Enregistrement de "+this.addr+" sur le device");
     if(this.addr)localStorage.setItem("addr",this.addr);
-    this.save_user();
   }
 
   add_contact(email: string,pseudo=null) {
@@ -123,7 +125,7 @@ export class UserService {
       if(c.email==email)return false;
     }
     this.contacts.push({pseudo:pseudo,email:email});
-    this.saveOnDevice();
+    this.save_user();
   }
 
   del_contact(email: any) {
@@ -156,8 +158,8 @@ export class UserService {
     if(!addr) {
       if(vm)vm.message="Ouverture d'un nouveau compte sur le "+this.config.server.network+". Cela prendra moins de 1 minute, le temps de créditer quelques eGold pour les transactions et quelques 'TFC', la monnaie par défaut de l'application";
       this.create_new_account((r)=>{
-        if(vm)vm.message="";
-        this.init(r.address, {pem:r.pem},func,func_error);},
+          if(vm)vm.message="";
+          this.init(r.address, {pem:r.pem},func,func_error);},
         ()=>{
           $$("Probleme de fabrication du nouveau compte")
           func_error();
@@ -165,17 +167,25 @@ export class UserService {
     } else {
       $$("Initialisation de l'utilisateur à l'adresse ",addr);
 
-      this.addr=addr;
-      this.visual=environment.domain_appli+"/assets/img/anonymous.jpg";
-      this.shop_visual=environment.domain_appli+"/assets/img/shop.png";
-      this.pem=pem;
-      this.load_user();
       if(this.config.hasESDT()){
         if(this.selected_money.length==0)this.selected_money=this.api.tokenIdentifier;
         this.refresh_balance(func,func_error);
       }
-      else
+
+      this.addr=addr;
+
+      this.load_user(()=>{
         func();
+      },()=>{
+        this.saveOnDevice();
+        this.visual=environment.domain_appli+"/assets/img/anonymous.jpg";
+        this.shop_visual=environment.domain_appli+"/assets/img/shop.png";
+        this.pem=pem;
+        func();
+      });
+
+
+
     }
 
   }
@@ -197,7 +207,7 @@ export class UserService {
 
   get_gas() {
     this.api._get("gas/"+this.addr).subscribe((r:any)=>{
-       this.gas=r;
-     })
+      this.gas=r;
+    })
   }
 }

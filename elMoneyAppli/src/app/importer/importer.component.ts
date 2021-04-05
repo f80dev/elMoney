@@ -105,7 +105,7 @@ export class ImporterComponent implements OnInit {
     if(this.direct_sell)properties=properties+0b00000100;
 
     let obj={
-      pem:this.user.pem["pem"],
+      pem:this.user.pem,
       owner:this.user.addr,
       file:this.files[0],
       visual:this.files[1],

@@ -60,24 +60,40 @@
   <h3>Votre profil</h3>
 
 
+  <button mat-raised-button mat-button
+          class="app-button"
+          (click)="router.navigate(['miner'],{queryParams:{addr:user.addr}})">
+    <div class="bloc-bouton">Page publique<br>de créateur</div>
+  </button>
+
+  <button mat-raised-button mat-button
+          class="app-button"
+          (click)="router.navigate(['dealer'],{queryParams:{addr:user.addr}})">
+    <div class="bloc-bouton">Page publique<br>de distributeur</div>
+  </button>
+
+
   <mat-form-field appearance="fill" class="app-field">
     <mat-label>Votre nom / pseudo</mat-label>
     <input matInput type="text" (focusin)="focus_idx=1" maxlength="200" [(ngModel)]="user.pseudo" [ngModelOptions]="{standalone: true}">
     <mat-hint *ngIf="focus_idx==1">Votre pseudo pourrat être associé à vos NFTs si vous le souhaitez</mat-hint>
   </mat-form-field>
 
-  <div *ngIf="user.visual"  style="text-align: right;width:50%;">
-    <img class="mat-elevation-z4"
-         (click)="change_visual('visual')"
-         [src]="user.visual"
-         style="max-width:150px;border: white 1px solid">
+  <div *ngIf="user.visual" style="display: inline-block;text-align: center;width: 100%">
+    <h4>Visuel de votre profil</h4>
+
+      <img class="mat-elevation-z4"
+           (click)="change_visual('visual')"
+           [src]="user.visual"
+           style="max-width:150px;">
+
   </div>
   <br>
 
   <mat-form-field appearance="fill" class="app-field">
     <mat-label>Votre parcours</mat-label>
     <textarea matInput matInput type="text" (focusin)="focus_idx=2" maxlength="400" [(ngModel)]="user.description" [ngModelOptions]="{standalone: true}"></textarea>
-    <mat-hint *ngIf="focus_idx==2">Décrivez brievement votre parcours</mat-hint>
+    <mat-hint *ngIf="focus_idx==2">Décrivez brievement votre parcours, ce texte est surtout utiliser pour profil de créateur</mat-hint>
   </mat-form-field>
   <br>
 
@@ -95,11 +111,12 @@
   </mat-form-field>
   <br>
 
-  <div *ngIf="user.shop_visual"  style="text-align: right;width:50%;">
-    <img class="mat-elevation-z4"
-         (click)="change_visual('shop_visual')"
-         [src]="user.shop_visual"
-         style="max-width:150px;border: white 1px solid">
+  <div *ngIf="user.shop_visual" style="display: inline-block;text-align: center;width: 100%">
+    <h4>Visuel de votre marketplace</h4>
+      <img class="mat-elevation-z4"
+           (click)="change_visual('shop_visual')"
+           [src]="user.shop_visual"
+           style="max-width:150px;">
   </div>
 
 
