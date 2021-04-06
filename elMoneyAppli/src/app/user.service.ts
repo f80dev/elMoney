@@ -24,6 +24,8 @@ export class UserService {
   visual:any;
   shop_visual:string="";
   shop_name:string="";
+  shop_description: string="";
+  shop_website: string="";
 
   constructor(public api:ApiService,
               public socket:Socket,
@@ -74,6 +76,8 @@ export class UserService {
       visual:this.visual,
       shop_visual:this.shop_visual,
       shop_name:this.shop_name,
+      shop_description:this.shop_description,
+      shop_website:this.shop_website,
       pem:this.pem
     };
 

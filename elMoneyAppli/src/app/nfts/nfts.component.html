@@ -84,6 +84,15 @@
           <mat-icon>euro</mat-icon>
         </button>
 
+        <button mat-icon-button mat-flat-button
+                title="En savoir plus sur le créateur"
+                *ngIf="nft.miner!=user.addr"
+                class="icon-button"
+                routerLink="miner" [queryParams]="{addr:nft.miner}">
+          <mat-icon>person</mat-icon>
+        </button>
+
+
         <div *ngIf="nft.owner==user.addr" style="display: inline-block">
           <button mat-raised-button mat-button
                   color="primary"

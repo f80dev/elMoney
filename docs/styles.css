@@ -2364,6 +2364,8 @@ h3 {
 .app-panel {
   width: 96%;
   margin: 2%;
+  background-color: #323232;
+  color: white;
 }
 .app-mat-panel-description {
   font-weight: lighter;

@@ -12,118 +12,135 @@
   <!--    <div class="bloc-bouton">Sauvegardez<br>votre compte</div>-->
   <!--  </button>-->
 
+  <mat-accordion style="width:96%;display: inline-block;">
 
-  <a [href]="fileUrl"
-     title="Ce fichier est strictement confidentiel, il ne doit être communiquer à personne et conserver précieusement."
-     *ngIf="user.pem"
-     download="macle.pem">
 
-    <table class="app-button" style="display: inline-block;width:200px;"><tr>
-      <td><mat-icon>download</mat-icon></td>
-      <td>Télécharger votre clé privée</td>
-    </tr></table>
+    <mat-expansion-panel class="app-panel">
+      <mat-expansion-panel-header>Changer de compte</mat-expansion-panel-header>
 
-  </a>
+       <a [href]="fileUrl"
+         title="Ce fichier est strictement confidentiel, il ne doit être communiquer à personne et conserver précieusement."
+         *ngIf="user.pem"
+         download="macle.pem">
+       </a>
+
+
+        <table class="app-button" style="display: inline-block;width:200px;border-radius: 7px;"><tr>
+          <td><mat-icon>download</mat-icon></td>
+          <td>Télécharger votre clé privée</td>
+        </tr></table>
+
+      <br>
+        pour pouvoir y accéder depuis le <a [href]="config.server.wallet" target="_blank">wallet Elrond</a> par exemple
+
+
+      <br>_____<br>
+      <h3>Changer de compte</h3>
+
+      <button mat-raised-button mat-button
+              class="app-button"
+              (click)="router.navigate(['private'])">
+        <div class="bloc-bouton">Utiliser un<br>autre compte</div>
+      </button>
+      &nbsp;
+      <button mat-raised-button mat-button
+              class="app-button"
+              (click)="raz_account()">
+        <div class="bloc-bouton">Nouveau<br>compte</div>
+      </button>
+    </mat-expansion-panel>
+
+
+    <mat-expansion-panel class="app-panel">
+      <mat-expansion-panel-header>Modifier votre profil</mat-expansion-panel-header>
+
+      <button mat-raised-button mat-button
+              class="app-button"
+              (click)="router.navigate(['miner'],{queryParams:{addr:user.addr}})">
+        <div class="bloc-bouton">Page publique<br>de créateur</div>
+      </button>
+
+      <button mat-raised-button mat-button
+              class="app-button"
+              (click)="router.navigate(['dealer'],{queryParams:{addr:user.addr}})">
+        <div class="bloc-bouton">Page publique<br>de distributeur</div>
+      </button>
+
+      <br>
+
+
+      <mat-form-field appearance="fill" class="app-field">
+        <mat-label>Votre nom / pseudo</mat-label>
+        <input matInput type="text" (focusin)="focus_idx=1" maxlength="200" [(ngModel)]="user.pseudo" [ngModelOptions]="{standalone: true}">
+        <mat-hint *ngIf="focus_idx==1">Votre pseudo pourrat être associé à vos NFTs si vous le souhaitez</mat-hint>
+      </mat-form-field>
+
+      <div *ngIf="user.visual" style="display: inline-block;text-align: center;width: 100%">
+        <h4>Visuel de votre profil</h4>
+
+        <img class="mat-elevation-z4"
+             (click)="change_visual('visual')"
+             [src]="user.visual"
+             style="max-width:150px;">
+
+      </div>
+      <br>
+
+      <mat-form-field appearance="fill" class="app-field">
+        <mat-label>Votre parcours</mat-label>
+        <textarea matInput matInput type="text" (focusin)="focus_idx=2" maxlength="400" [(ngModel)]="user.description" [ngModelOptions]="{standalone: true}"></textarea>
+        <mat-hint *ngIf="focus_idx==2">Décrivez brievement votre parcours, ce texte est surtout utiliser pour profil de créateur</mat-hint>
+      </mat-form-field>
+      <br>
+
+      <mat-form-field appearance="fill" class="app-field">
+        <mat-label>L'adresse de votre site</mat-label>
+        <input matInput type="url" (focusin)="focus_idx=3" maxlength="200" [(ngModel)]="user.website" [ngModelOptions]="{standalone: true}">
+        <mat-hint *ngIf="focus_idx==3">L'adresse de votre site internet</mat-hint>
+      </mat-form-field>
+
+
+
+
+    </mat-expansion-panel>
+
+
+    <mat-expansion-panel class="app-panel">
+      <mat-expansion-panel-header>Distribuer des NFTs</mat-expansion-panel-header>
+      <mat-form-field appearance="fill" class="app-field">
+        <mat-label>Votre nom de distributeur</mat-label>
+        <input matInput type="url" (focusin)="focus_idx=4" maxlength="200" [(ngModel)]="user.shop_name" [ngModelOptions]="{standalone: true}">
+        <mat-hint *ngIf="focus_idx==4">L'adresse de votre site internet</mat-hint>
+      </mat-form-field>
+      <br>
+
+      <div *ngIf="user.shop_visual" style="display: inline-block;text-align: center;width: 100%">
+        <h4>Visuel de votre marketplace</h4>
+        <img class="mat-elevation-z4"
+             (click)="change_visual('shop_visual')"
+             [src]="user.shop_visual"
+             style="max-width:150px;">
+      </div>
+
+       <mat-form-field appearance="fill" class="app-field">
+        <mat-label>Description de votre marketplace</mat-label>
+        <textarea matInput matInput type="text" (focusin)="focus_idx=5" maxlength="400" [(ngModel)]="user.shop_description" [ngModelOptions]="{standalone: true}"></textarea>
+        <mat-hint *ngIf="focus_idx==5">La description permet à vos clients de savoir quel type de NFT vous distribuez</mat-hint>
+      </mat-form-field>
+      <br>
+
+       <mat-form-field appearance="fill" class="app-field">
+        <mat-label>L'adresse internet de votre marketplace</mat-label>
+        <input matInput type="url" (focusin)="focus_idx=6" maxlength="200" [(ngModel)]="user.shop_website" [ngModelOptions]="{standalone: true}">
+        <mat-hint *ngIf="focus_idx==6">Votre market place peut être accessible en dehors de TokenForge</mat-hint>
+      </mat-form-field>
+
+    </mat-expansion-panel>
+
+  </mat-accordion>
+
 
   <br><br>
-
-  <small>
-    pour pouvoir y accéder depuis le <a [href]="config.server.wallet" target="_blank">wallet Elrond</a> par exemple
-  </small>
-
-  <br><br>
-
-
-  _____
-  <br>
-  <br>
-
-  <h2>Changement de compte</h2>
-  <button mat-raised-button mat-button
-          class="app-button"
-          (click)="router.navigate(['private'])">
-    <div class="bloc-bouton">Utiliser un<br>autre compte</div>
-  </button>
-  &nbsp;
-  <button mat-raised-button mat-button
-          class="app-button"
-          (click)="raz_account()">
-    <div class="bloc-bouton">Nouveau<br>compte</div>
-  </button>
-
-
-  <br>
-
-  _______
-
-  <br><br>
-  <h3>Votre profil</h3>
-
-
-  <button mat-raised-button mat-button
-          class="app-button"
-          (click)="router.navigate(['miner'],{queryParams:{addr:user.addr}})">
-    <div class="bloc-bouton">Page publique<br>de créateur</div>
-  </button>
-
-  <button mat-raised-button mat-button
-          class="app-button"
-          (click)="router.navigate(['dealer'],{queryParams:{addr:user.addr}})">
-    <div class="bloc-bouton">Page publique<br>de distributeur</div>
-  </button>
-
-
-  <mat-form-field appearance="fill" class="app-field">
-    <mat-label>Votre nom / pseudo</mat-label>
-    <input matInput type="text" (focusin)="focus_idx=1" maxlength="200" [(ngModel)]="user.pseudo" [ngModelOptions]="{standalone: true}">
-    <mat-hint *ngIf="focus_idx==1">Votre pseudo pourrat être associé à vos NFTs si vous le souhaitez</mat-hint>
-  </mat-form-field>
-
-  <div *ngIf="user.visual" style="display: inline-block;text-align: center;width: 100%">
-    <h4>Visuel de votre profil</h4>
-
-      <img class="mat-elevation-z4"
-           (click)="change_visual('visual')"
-           [src]="user.visual"
-           style="max-width:150px;">
-
-  </div>
-  <br>
-
-  <mat-form-field appearance="fill" class="app-field">
-    <mat-label>Votre parcours</mat-label>
-    <textarea matInput matInput type="text" (focusin)="focus_idx=2" maxlength="400" [(ngModel)]="user.description" [ngModelOptions]="{standalone: true}"></textarea>
-    <mat-hint *ngIf="focus_idx==2">Décrivez brievement votre parcours, ce texte est surtout utiliser pour profil de créateur</mat-hint>
-  </mat-form-field>
-  <br>
-
-  <mat-form-field appearance="fill" class="app-field">
-    <mat-label>L'adresse de votre site</mat-label>
-    <input matInput type="url" (focusin)="focus_idx=3" maxlength="200" [(ngModel)]="user.website" [ngModelOptions]="{standalone: true}">
-    <mat-hint *ngIf="focus_idx==3">L'adresse de votre site internet</mat-hint>
-  </mat-form-field>
-
-
-  <mat-form-field appearance="fill" class="app-field">
-    <mat-label>Votre nom de distributeur</mat-label>
-    <input matInput type="url" (focusin)="focus_idx=4" maxlength="200" [(ngModel)]="user.shop_name" [ngModelOptions]="{standalone: true}">
-    <mat-hint *ngIf="focus_idx==4">L'adresse de votre site internet</mat-hint>
-  </mat-form-field>
-  <br>
-
-  <div *ngIf="user.shop_visual" style="display: inline-block;text-align: center;width: 100%">
-    <h4>Visuel de votre marketplace</h4>
-      <img class="mat-elevation-z4"
-           (click)="change_visual('shop_visual')"
-           [src]="user.shop_visual"
-           style="max-width:150px;">
-  </div>
-
-
-
-  <br><br>
-  ______
-  <br><br><br>
 
   <small>Votre adresse publique</small>:<br>
   <qrcode

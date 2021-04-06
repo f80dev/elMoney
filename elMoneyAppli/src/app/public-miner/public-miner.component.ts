@@ -9,6 +9,7 @@ import {ActivatedRoute} from "@angular/router";
 })
 export class PublicMinerComponent implements OnInit {
   miner: any;
+  nfts: any;
 
   constructor(
     public api:ApiService,
@@ -19,6 +20,10 @@ export class PublicMinerComponent implements OnInit {
     let addr=this.routes.snapshot.queryParamMap.get("addr");
     this.api._get("users/"+addr+"/","").subscribe((data:any)=>{
       this.miner=data;
+    });
+
+    this.api._get("nfts/0x0/0x0/"+addr+"/").subscribe((r: any) => {
+      this.nfts=r;
     });
   }
 
