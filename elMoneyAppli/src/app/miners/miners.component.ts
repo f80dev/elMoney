@@ -26,24 +26,16 @@ export class MinersComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    let isDealer=false;
-    for(let d of this.config.dealers){
-      if(this.user.addr==d.address){
-        isDealer=true;
-        this.user.pseudo=d.name;
-      }
-    }
-
-    if(!isDealer){
+    if(!this.user.isDealer()){
       if(!this.user.pseudo || this.user.pseudo.length==0){
         showMessage(this,"Vous devez renseigné un pseudo pour avoir le statut de distributeur");
         this.router.navigate(["settings"]);
       } else {
         this.message="Ouverture de votre statut de distributeur";
-      this.api._post("new_dealer/","",{pem:this.user.pem,name:this.user.pseudo,addr:this.user.addr}).subscribe((r:any)=>{
-        localStorage.setItem("isDealer","true");
-        this.refresh();
-      });
+        this.user.new_dealer(()=>{
+          this.refresh();
+        })
+
       }
 
     } else this.refresh();

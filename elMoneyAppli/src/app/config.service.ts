@@ -25,45 +25,45 @@ export class ConfigService {
   server: any={bank:""};
   private device: { isDesktop: any; isTablet: any; isMobile: any; infos: any };
 
-    constructor(private location: Location,
+  constructor(private location: Location,
               private http: HttpClient,
               public deviceService: DeviceDetectorService,
               public platform:Platform,
               public api:ApiService) {
 
-      this.device={
-        isMobile:this.deviceService.isMobile(),
-        isTablet:this.deviceService.isTablet(),
-        isDesktop:this.deviceService.isDesktop(),
-        infos:this.deviceService.getDeviceInfo()
-      }
-
+    this.device={
+      isMobile:this.deviceService.isMobile(),
+      isTablet:this.deviceService.isTablet(),
+      isDesktop:this.deviceService.isDesktop(),
+      infos:this.deviceService.getDeviceInfo()
     }
 
+  }
 
 
-   public async getJson(jsonFile:string): Promise<any> {
+
+  public async getJson(jsonFile:string): Promise<any> {
     return Promise.resolve((await this.http.get(jsonFile).toPromise()));
-    }
+  }
 
 
-    public hasPerm(perms:string,comments=""):boolean {
-      if(!this.user)return false;
-      if(!this.user.perm)return false;
-      for(let p of perms.split(" ")){
-        if(!this.user.perm || this.user.perm.indexOf(p)==-1){
-          return false;
-        }
+  public hasPerm(perms:string,comments=""):boolean {
+    if(!this.user)return false;
+    if(!this.user.perm)return false;
+    for(let p of perms.split(" ")){
+      if(!this.user.perm || this.user.perm.indexOf(p)==-1){
+        return false;
       }
-      return true;
     }
+    return true;
+  }
 
 
-   private async getConfig(): Promise<any> {
-      if (!this.config) {
-        this.config = (await this.api.getyaml(environment.config_file).toPromise());
-      }
-      return Promise.resolve(this.config);
+  private async getConfig(): Promise<any> {
+    if (!this.config) {
+      this.config = (await this.api.getyaml(environment.config_file).toPromise());
+    }
+    return Promise.resolve(this.config);
   }
 
   /**
@@ -77,30 +77,30 @@ export class ConfigService {
     initAvailableCameras((res)=>{this.webcamsAvailable=res;});
     $$("Chargement des jobs");
     this.getConfig().then(r=>{
-        this.values=r;
-        this.ready=true;
-        $$("Chargement du fichier de configuration ok",r);
+      this.values=r;
+      this.ready=true;
+      $$("Chargement du fichier de configuration ok",r);
 
-        this.api._get("server_config").subscribe((is:any)=>{
-          this.server=is;
-          $$("Chargement des infos serveur ok",is)
+      this.api._get("server_config").subscribe((is:any)=>{
+        this.server=is;
+        $$("Chargement des infos serveur ok",is)
 
-          this.refresh_dealers();
-          if(func!=null)func(this.values);
-        })
-      },()=>{
-        $$("Probléme de chargement de la configuration")
-        if(func_error!=null)func_error();
-      });
+        this.refresh_dealers();
+        if(func!=null)func(this.values);
+      })
+    },()=>{
+      $$("Probléme de chargement de la configuration")
+      if(func_error!=null)func_error();
+    });
 
   }
 
 
   refresh_dealers(){
+    $$("Chargement des dealers");
     this.api._get("dealers/","").subscribe((deals:any)=>{
-            this.dealers=deals;
-            $$("Chargement des dealers")
-          });
+      this.dealers=deals;
+    });
   }
 
   public hasESDT() : boolean {

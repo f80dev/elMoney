@@ -852,12 +852,6 @@ class ElrondNet:
 
 
 
-    def new_dealer(self, contract, pem_file, arguments):
-        tx = self.execute(contract, pem_file,
-                          function="new_dealer",
-                          arguments=arguments,
-                          )
-        return tx
 
 
     def getTransactions(self, user):

@@ -108,5 +108,10 @@ export class SettingsComponent implements OnInit,OnDestroy {
 
   ngOnDestroy(): void {
     this.user.save_user();
+    if(this.user.shop_website.length+this.user.shop_name.length+this.user.shop_description.length>0){
+      this.user.new_dealer(()=>{
+        showMessage(this,"Vous avez été ajouté comme distributeur");
+      });
+    }
   }
 }

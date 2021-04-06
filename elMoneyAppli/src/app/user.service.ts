@@ -18,7 +18,7 @@ export class UserService {
   selected_money="";
   gas: number=0;
 
-  pseudo: any;
+  pseudo: any="";
   description:any;
   website:any;
   visual:any;
@@ -35,23 +35,17 @@ export class UserService {
   };
 
 
-
-  load_user(func,func_error=null){
-    $$("Chargement de l'utilisateur");
-    this.api._get("users/"+this.addr).subscribe((body:any)=>{
-      this.contacts=body.contacts;
-      this.pseudo=body.pseudo
-      this.visual=body.visual;
-      this.description=body.description;
-      this.shop_name=body.shop_name;
-      this.shop_visual=body.shop_visual;
-      this.pem=body.pem;
-      func(body);
-    },(err)=>{
-      if(err.status==404)$$("Impossible de charger l'user");
-      if(func_error)func_error();
-    });
+  isDealer(){
+    $$("Evaluation du fait que l'utilisateur est dealer");
+    for(let d of this.config.dealers){
+      if(this.addr==d.address){
+        return true;
+      }
+    }
+    return false;
   }
+
+
 
 
 
@@ -116,10 +110,6 @@ export class UserService {
     return true;
   }
 
-  saveOnDevice(){
-    $$("Enregistrement de "+this.addr+" sur le device");
-    if(this.addr)localStorage.setItem("addr",this.addr);
-  }
 
   add_contact(email: string,pseudo=null) {
     if(email.indexOf("@")==-1 && (!email.startsWith("erd") || !pseudo))return;
@@ -177,18 +167,29 @@ export class UserService {
       }
 
       this.addr=addr;
+      $$("Enregistrement de "+this.addr+" sur le device");
+      localStorage.setItem("addr",this.addr);
+      this.visual=environment.domain_appli+"/assets/img/anonymous.jpg";
+      this.shop_visual=environment.domain_appli+"/assets/img/shop.png";
+      this.pem=pem;
 
-      this.load_user(()=>{
-        func();
-      },()=>{
-        this.saveOnDevice();
-        this.visual=environment.domain_appli+"/assets/img/anonymous.jpg";
-        this.shop_visual=environment.domain_appli+"/assets/img/shop.png";
-        this.pem=pem;
-        func();
+      $$("Chargement de l'utilisateur");
+      this.api._get("users/"+this.addr).subscribe((body:any)=>{
+        this.contacts=body.contacts;
+        this.pseudo=body.pseudo
+        this.visual=body.visual;
+        this.description=body.description;
+        this.shop_name=body.shop_name;
+        this.shop_visual=body.shop_visual;
+        this.pem=body.pem;
+        func(body);
+      },(err)=>{
+        if(err.status==404) {
+          $$("Impossible de charger l'user");
+          this.save_user();
+        }
+        if(func_error)func_error();
       });
-
-
 
     }
 
@@ -213,5 +214,22 @@ export class UserService {
     this.api._get("gas/"+this.addr).subscribe((r:any)=>{
       this.gas=r;
     })
+  }
+
+  new_dealer(func: () => void) {
+    let body={
+      pem:this.pem,
+      shop:{
+        description:this.shop_description,
+        name:this.shop_name,
+        website:this.shop_website,
+        visual: this.shop_visual,
+      },
+      pseudo:this.pseudo,
+      addr:this.addr
+    }
+    this.api._post("new_dealer/","",body).subscribe((r:any)=>{
+      func();
+    });
   }
 }

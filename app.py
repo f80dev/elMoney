@@ -3,6 +3,7 @@ import json
 import os
 import ssl
 import sys
+from io import StringIO
 
 from AesEverywhere import aes256
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -147,13 +148,13 @@ def transfer(idx:str,dest:str,amount:str,unity:str):
     if _money is None:return "Monnaie inconnue",500
 
     _dest=convert_email_to_addr(dest,open_html_file("share", {
-            "email": dest,
-            "amount": str(amount),
-            "appname":APPNAME,
-            "unity": unity.lower(),
-            "url_appli": DOMAIN_APPLI + "?contract=" + idx + "&user=#addr#",
-            "signature": SIGNATURE
-        }))
+        "email": dest,
+        "amount": str(amount),
+        "appname":APPNAME,
+        "unity": unity.lower(),
+        "url_appli": DOMAIN_APPLI + "?contract=" + idx + "&user=#addr#",
+        "signature": SIGNATURE
+    }))
 
     log("Demande de transfert vers "+_dest.address.bech32()+" de "+amount+" "+unity)
 
@@ -354,14 +355,14 @@ def transfer_nft(token_id,dest):
     pem_file=get_pem_file(data["pem"])
 
     _dest = convert_email_to_addr(dest,open_html_file("transfer_nft", {
-                                      "appname": APPNAME,
-                                      "signature": SIGNATURE,
-                                      "title": data["title"],
-                                      "from":data["from"],
-                                      "url_appli": DOMAIN_APPLI + "/?user=#addr#",
-                                      "message":data["message"]
-                                  })
-    )
+        "appname": APPNAME,
+        "signature": SIGNATURE,
+        "title": data["title"],
+        "from":data["from"],
+        "url_appli": DOMAIN_APPLI + "/?user=#addr#",
+        "message":data["message"]
+    })
+                                  )
 
     rc=bc.nft_transfer(NETWORKS[bc.network_name]["nft"],pem_file,token_id,_dest)
     os.remove(pem_file)
@@ -566,8 +567,12 @@ def new_dealer(data:dict=None):
     pem_file = get_pem_file(data["pem"])
     _dealer = Account(address=data["addr"])
 
-    ipfs=client.add(json.dump(data["profil"]))
-    tx=bc.new_dealer(NETWORKS[bc.network_name]["nft"],pem_file,["0x" + _dealer.address.hex(),"0x"+ipfs.encode().hex()])
+    ipfs=client.add(json.dump(StringIO(data["shop"])))
+    tx=bc.execute(NETWORKS[bc.network_name]["nft"],
+                  pem_file,
+                 function="new_dealer",
+                 arguments=["0x"+ipfs.encode().hex()],
+                 )
     os.remove(pem_file)
 
     return jsonify(tx), 200

@@ -88,7 +88,7 @@
                 title="En savoir plus sur le créateur"
                 *ngIf="nft.miner!=user.addr"
                 class="icon-button"
-                routerLink="miner" [queryParams]="{addr:nft.miner}">
+                routerLink="/miner" [queryParams]="{addr:nft.miner}">
           <mat-icon>person</mat-icon>
         </button>
 

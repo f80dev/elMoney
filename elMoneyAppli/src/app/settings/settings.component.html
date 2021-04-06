@@ -61,7 +61,7 @@
       </button>
 
       <button mat-raised-button mat-button
-              class="app-button"
+              class="app-button" *ngIf="user.isDealer()"
               (click)="router.navigate(['dealer'],{queryParams:{addr:user.addr}})">
         <div class="bloc-bouton">Page publique<br>de distributeur</div>
       </button>
