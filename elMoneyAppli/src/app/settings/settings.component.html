@@ -12,7 +12,7 @@
   <!--    <div class="bloc-bouton">Sauvegardez<br>votre compte</div>-->
   <!--  </button>-->
 
-  <mat-accordion style="width:96%;display: inline-block;">
+  <mat-accordion style="width:96%;display: inline-block;" *ngIf="message?.length==0">
 
 
     <mat-expansion-panel class="app-panel" [expanded]="open_section==0">
@@ -135,11 +135,21 @@
         <mat-hint *ngIf="focus_idx==6">Votre market place peut être accessible en dehors de TokenForge</mat-hint>
       </mat-form-field>
 
+      <br>
+      <button mat-raised-button mat-button
+              class="app-button" color="primary"
+              [disabled]="user.shop_website.length+user.shop_name.length+user.shop_description.length==0"
+              (click)="make_store()">
+        <div class="bloc-bouton">Créer la<br>boutique</div>
+      </button>
+
+
     </mat-expansion-panel>
 
   </mat-accordion>
 
 
+  <div *ngIf="message?.length==0">
   <br><br>
 
   <small>Votre adresse publique</small>:<br>
@@ -160,5 +170,7 @@
   <br>
   <a routerLink="/transactions">Voir mes transactions</a>
 
+
+  </div>
 
 </div>

@@ -19,7 +19,7 @@ export class NftStoreComponent implements OnInit {
   filter: string="";
   filter_id: number=null;
   filter_ids: any[]=[];
-  dealers:any[]=[];
+  dealers:any[]=[{name:'tous',address:'0x0'}];
 
   constructor(public api: ApiService,
               public routes: ActivatedRoute,
@@ -56,7 +56,7 @@ export class NftStoreComponent implements OnInit {
 
     this.api._get("dealers/","").subscribe((dealers:any)=>{
       this.dealers=dealers;
-      this.dealers.push({address:"0x0"});
+      this.dealers.push({name:'Tous',address:"0x0"});
     })
 
     this.selected_dealer="0x0";
@@ -100,10 +100,6 @@ export class NftStoreComponent implements OnInit {
   }
 
 
-
-
-
-
   clearQuery() {
     this.filter='';
     if(this.nfts.length>100) {
@@ -119,7 +115,7 @@ export class NftStoreComponent implements OnInit {
     ]
 
   selected_mode: any=this.options[0].style;
-  selected_dealer: any;
+  selected_dealer: any="tous";
 
 
   onQuery($event: KeyboardEvent) {
