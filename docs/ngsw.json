@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1617718217010,
+  "timestamp": 1617814093808,
   "index": "https://tf.f80.fr/index.html",
   "assetGroups": [
     {
@@ -66,7 +66,23 @@
       "patterns": []
     }
   ],
-  "dataGroups": [],
+  "dataGroups": [
+    {
+      "name": "api",
+      "patterns": [
+        "https:\\/\\/server\\.f80\\.fr\\/api",
+        "http:\\/\\/localhost:6660\\/api"
+      ],
+      "strategy": "freshness",
+      "maxSize": 20,
+      "maxAge": 3600000,
+      "timeoutMs": 5000,
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "version": 1
+    }
+  ],
   "hashTable": {
     "https://tf.f80.fr/assets/TokenForgeFromExcel.xlsm": "bb13298ed2ab37a6c5290c0dcd9bb8b3afa970d1",
     "https://tf.f80.fr/assets/cmk.html": "6f06383ca5f4552828853e7bd98e516195470229",
@@ -103,7 +119,7 @@
     "https://tf.f80.fr/favicon.ico": "c3bbe9dfa628852d8131849561b7fd52194f4d8d",
     "https://tf.f80.fr/favicon.png": "9d07b4062b45b028a517877c4b51af7a330eab1a",
     "https://tf.f80.fr/index.html": "bbdb9ec9f49027b3d810e5938caec155170ad309",
-    "https://tf.f80.fr/main.js": "ea584a9fc91c3fcb67876474d36ebf8660ff5938",
+    "https://tf.f80.fr/main.js": "903c7aba2130551b01a5251302efd5b8712a6fca",
     "https://tf.f80.fr/manifest.webmanifest": "8291133aeacc475e061eb544514d2c1e8c02c576",
     "https://tf.f80.fr/polyfills.js": "e1b2e55679346bfd4fe23b63dc0ba38a7e8e2738",
     "https://tf.f80.fr/runtime.js": "154c277c076cfc8ee335df5d9349395c6bf58db5",

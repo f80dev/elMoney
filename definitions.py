@@ -44,7 +44,7 @@ NETWORKS={
 
     "devnet":{
         "new_account":float(2*1e18),
-        "bank":"alice",
+        "bank":"bank",
         "unity":"xEgld",
         "tokenIdentifier":"TFC-57a49e",
         "faucet":"https://r3d4.fr/elrond/devnet/index.php",

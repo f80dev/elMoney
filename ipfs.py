@@ -17,7 +17,11 @@ class IPFS:
         filename=str(datetime.now().timestamp())+".tmp"
 
         f=open('./temp/'+filename, 'wb')
-        f.write(base64.b64decode(body.split("base64,")[1]))
+        if "base64," in body:
+            f.write(base64.b64decode(body.split("base64,")[1]))
+        else:
+            f.write(bytes(body,"utf8"))
+
         f.close()
 
         f = open('./temp/' + filename, 'rb')
@@ -36,7 +40,7 @@ class IPFS:
         url="https://ipfs.io/ipfs/"+token
         r=requests.get(url).content
         try:
-            return json.loads(str(r,"utf8"))
+            return json.loads(str(r,"utf8").replace("'","\""))
         except:
             return r
 

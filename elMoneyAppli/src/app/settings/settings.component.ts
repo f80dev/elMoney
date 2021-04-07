@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {ConfigService} from "../config.service";
 import {DomSanitizer} from "@angular/platform-browser";
 import {Location} from "@angular/common";
@@ -24,6 +24,7 @@ export class SettingsComponent implements OnInit,OnDestroy {
 
   message: string="";
   filename: string="";
+  open_section=0;
 
   constructor(public router:Router,
               public user:UserService,
@@ -32,12 +33,16 @@ export class SettingsComponent implements OnInit,OnDestroy {
               private sanitizer: DomSanitizer,
               public api:ApiService,
               public _location:Location,
+              public routes:ActivatedRoute,
               public config:ConfigService) { }
 
   ngOnInit(): void {
     let obj:any=this.user.pem;
-    const blob = new Blob([obj.pem], { type: 'text/plain' });
-    this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(blob));
+    if(this.user.pem){
+      const blob = new Blob([obj.pem], { type: 'text/plain' });
+      this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(blob));
+    }
+    this.open_section=Number(this.routes.snapshot.queryParamMap.get("section"));
   }
 
 

@@ -201,13 +201,10 @@ def get_pem_file(data):
     if not "pem" in data:
         rc="./PEM/"+NETWORKS[bc.network_name]["bank"]+".pem"
     else:
-        if type(data["pem"])==dict and "pem" in data["pem"]:
-            rc="./PEM/temp"+str(now()*1000)+".pem"
-            log("Fabrication d'un fichier PEM pour la signature et enregistrement sur " + rc)
-            with open(rc, "w") as file:file.write(data["pem"]["pem"])
-        else:
-            rc="./PEM/"+data["pem"]
-
+        if type(data["pem"]) == dict and "pem" in data["pem"]:data["pem"]=data["pem"]["pem"]
+        rc="./PEM/temp"+str(now()*1000)+".pem"
+        log("Fabrication d'un fichier PEM pour la signature et enregistrement sur " + rc)
+        with open(rc, "w") as file:file.write(data["pem"])
     return rc
 
 
@@ -564,12 +561,13 @@ def transactions(user:str):
 def new_dealer(data:dict=None):
     if data is None:
         data = json.loads(str(request.data, encoding="utf-8"))
+
     pem_file = get_pem_file(data["pem"])
     _dealer = Account(address=data["addr"])
 
-    ipfs=client.add(json.dump(StringIO(data["shop"])))
+    ipfs=client.add(str(data["shop"]))
     tx=bc.execute(NETWORKS[bc.network_name]["nft"],
-                  pem_file,
+                    pem_file,
                  function="new_dealer",
                  arguments=["0x"+ipfs.encode().hex()],
                  )

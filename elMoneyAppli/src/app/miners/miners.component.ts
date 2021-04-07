@@ -7,6 +7,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {ConfigService} from "../config.service";
 import {PromptComponent} from "../prompt/prompt.component";
 import {Router} from "@angular/router";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-miners',
@@ -22,14 +23,15 @@ export class MinersComponent implements OnInit {
     public api:ApiService,
     public user:UserService,
     public dialog:MatDialog,
-    public config:ConfigService
+    public config:ConfigService,
+    public toast:MatSnackBar
   ) { }
 
   ngOnInit(): void {
     if(!this.user.isDealer()){
       if(!this.user.pseudo || this.user.pseudo.length==0){
-        showMessage(this,"Vous devez renseigné un pseudo pour avoir le statut de distributeur");
-        this.router.navigate(["settings"]);
+        showMessage(this,"Vous devez renseigner la section distributeur pour approuver des mineurs");
+        this.router.navigate(["settings"],{queryParams:{section:2}});
       } else {
         this.message="Ouverture de votre statut de distributeur";
         this.user.new_dealer(()=>{

@@ -39,8 +39,6 @@
 
 
 
-
-
     <mat-form-field appearance="fill" style="width:130px;color:white;">
       <mat-label>Affichage</mat-label>
       <mat-select [(value)]="selected_mode" style="color: white;">
@@ -58,7 +56,6 @@
     <br><br>
   </div>
 
-
   <app-nfts [nfts]="nfts"
             [user]="user" [filter]="filter"
             [height]="selected_mode.height"
@@ -68,6 +65,7 @@
             (refresh)="refresh(true)"
             (buy)="on_buy($event)">
   </app-nfts>
+
   <br><br>
   <button mat-raised-button
           mat-button class="app-button"

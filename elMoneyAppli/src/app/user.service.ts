@@ -36,11 +36,9 @@ export class UserService {
 
 
   isDealer(){
-    $$("Evaluation du fait que l'utilisateur est dealer");
     for(let d of this.config.dealers){
-      if(this.addr==d.address){
+      if(d.address==this.addr)
         return true;
-      }
     }
     return false;
   }
@@ -216,7 +214,7 @@ export class UserService {
     })
   }
 
-  new_dealer(func: () => void) {
+  new_dealer(func:Function,func_error:Function=null) {
     let body={
       pem:this.pem,
       shop:{
@@ -229,7 +227,11 @@ export class UserService {
       addr:this.addr
     }
     this.api._post("new_dealer/","",body).subscribe((r:any)=>{
+      this.config.refresh_dealers();
       func();
+    },()=>{
+      $$("Probleme de création du distributeur");
+      if(func_error)func_error();
     });
   }
 }

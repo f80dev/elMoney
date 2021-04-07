@@ -15,7 +15,7 @@
   <mat-accordion style="width:96%;display: inline-block;">
 
 
-    <mat-expansion-panel class="app-panel">
+    <mat-expansion-panel class="app-panel" [expanded]="open_section==0">
       <mat-expansion-panel-header>Changer de compte</mat-expansion-panel-header>
 
        <a [href]="fileUrl"
@@ -51,7 +51,7 @@
     </mat-expansion-panel>
 
 
-    <mat-expansion-panel class="app-panel">
+    <mat-expansion-panel class="app-panel" [expanded]="open_section==0">
       <mat-expansion-panel-header>Modifier votre profil</mat-expansion-panel-header>
 
       <button mat-raised-button mat-button
@@ -105,7 +105,7 @@
     </mat-expansion-panel>
 
 
-    <mat-expansion-panel class="app-panel">
+    <mat-expansion-panel class="app-panel" [expanded]="open_section==0">
       <mat-expansion-panel-header>Distribuer des NFTs</mat-expansion-panel-header>
       <mat-form-field appearance="fill" class="app-field">
         <mat-label>Votre nom de distributeur</mat-label>

@@ -560,7 +560,10 @@ class ElrondNet:
         if fund>0:
             log("On transfere un peu d'eGold pour assurer les premiers transferts"+str(fund))
             tx=self.credit(self.bank,_u,"%.0f" % fund)
-            if tx["status"]!="Success":log("Le compte "+_u.address.bech32()+" n'a pas recu d'eGld pour les transactions")
+            if tx["status"]!="Success":
+                log("Le compte "+_u.address.bech32()+" n'a pas recu d'eGld pour les transactions")
+            else:
+                log("Le compte " + self.bank.bech32() + " n'a probablement plus de fonds à transférer")
 
         return _u,pem
 
@@ -881,9 +884,11 @@ class ElrondNet:
         rc = []
         if len(tx)>0 and len(tx[0].hex)>0:
             for dealer in str(tx[0].hex).split("000000"):
-                address=dealer[0:64]
-                content=self.ipfs.get_dict(bytes.fromhex(dealer[64:]).decode("utf-8"))
-                rc.append({"address":address,"content":content})
+                if len(dealer)>100:
+                    address=dealer[0:64]
+                    content=self.ipfs.get_dict(bytes.fromhex(dealer[64:]).decode("utf-8"))
+                    content["address"]=Account(address=address).address.bech32()
+                    rc.append(content)
         return rc
 
 
