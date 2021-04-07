@@ -57,10 +57,10 @@ export class NftStoreComponent implements OnInit {
     this.api._get("dealers/","").subscribe((dealers:any)=>{
       this.dealers=dealers;
       this.dealers.push({name:'Tous',address:"0x0"});
+      this.selected_dealer=this.dealers[this.dealers.length-1];
+      this.refresh();
     })
 
-    this.selected_dealer="0x0";
-    this.refresh();
     localStorage.setItem("last_screen","store");
   }
 
@@ -69,7 +69,7 @@ export class NftStoreComponent implements OnInit {
 
   refresh(withMessage = true) {
     if (withMessage) this.message = "Chargement des tokens ...";
-    this.api._get("nfts/"+this.selected_dealer+"/").subscribe((r: any) => {
+    this.api._get("nfts/"+this.selected_dealer.address+"/").subscribe((r: any) => {
       this.message = "";
       this.nfts = [];
       for (let item of r) {
@@ -115,7 +115,7 @@ export class NftStoreComponent implements OnInit {
     ]
 
   selected_mode: any=this.options[0].style;
-  selected_dealer: any="tous";
+  selected_dealer: any;
 
 
   onQuery($event: KeyboardEvent) {

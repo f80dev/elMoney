@@ -6,21 +6,31 @@
 
 <div class="mainform">
 
-<!--  <mat-button-toggle-group #group="market_place">-->
-<!--    <mat-button-toggle *ngFor="let seller of sellers" [(ngModel)]="modelName" [checked]="modelName"></mat-button-toggle>-->
-<!--  </mat-button-toggle-group>-->
+  <!--  <mat-button-toggle-group #group="market_place">-->
+  <!--    <mat-button-toggle *ngFor="let seller of sellers" [(ngModel)]="modelName" [checked]="modelName"></mat-button-toggle>-->
+  <!--  </mat-button-toggle-group>-->
 
-  <mat-form-field appearance="legacy"
-                    style="max-width:150px;font-size: medium;">
-      <mat-label>Vendeurs</mat-label>
-      <mat-select id="selOrder" [(ngModel)]="selected_dealer" (selectionChange)="refresh()">
-        <mat-option *ngFor="let dealer of dealers" [value]="dealer.address">
-          {{dealer.name}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+  <table id="seller_zone" style="margin: 5px;"><tr style="width: 100%;">
 
-    <mat-icon (click)="selected_dealer=='0x0'" style="cursor: pointer;font-size: small;">cancel</mat-icon>
+    <td style="width: 110px;margin:0;padding:0;text-align: left;">
+      <img [src]="selected_dealer?.visual" style="width:100px;">
+    </td>
+
+    <td style="width:auto;padding:0px;">
+      <mat-form-field appearance="legacy"
+                      style="width:100%;font-size: medium;padding:0px;margin:0px;">
+        <mat-select id="selOrder" [(ngModel)]="selected_dealer" (selectionChange)="refresh()" style="margin: 0px;">
+          <mat-option *ngFor="let dealer of dealers" [value]="dealer">
+            {{dealer.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <br>
+      {{selected_dealer?.description}}
+
+    </td>
+
+  </tr></table>
 
 
 
@@ -62,6 +72,7 @@
   </div>
 
   <app-nfts [nfts]="nfts"
+            *ngIf="message?.length==0"
             [user]="user" [filter]="filter"
             [height]="selected_mode.height"
             [width]="selected_mode.width"

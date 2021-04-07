@@ -49,6 +49,7 @@ export class MinersComponent implements OnInit {
     this.message="Récupération de la liste des fabricants validés";
      this.api._get("miners/"+this.user.addr,"").subscribe((r:any)=>{
        this.message="";
+       debugger
       this.miners=r;
     });
   }

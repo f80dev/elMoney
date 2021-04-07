@@ -71,7 +71,11 @@ export class ImporterComponent implements OnInit {
     localStorage.setItem("last_screen","importer");
     this.api.getyaml("tokens").subscribe((r:any)=>{
       this.tokens=r.content;
-    })
+    });
+    if(this.user.pseudo.length==0){
+      showMessage(this,"En tant que créateur de token, vous devez avoir un pseudo");
+      this.router.navigate(["settings"],{queryParams:{section:1}});
+    }
   }
 
 

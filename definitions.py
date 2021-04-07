@@ -43,7 +43,7 @@ NETWORKS={
     },
 
     "devnet":{
-        "new_account":float(2*1e18),
+        "new_account":float(4*1e18),
         "bank":"bank",
         "unity":"xEgld",
         "tokenIdentifier":"TFC-57a49e",
@@ -51,7 +51,7 @@ NETWORKS={
         "proxy":"https://devnet-api.elrond.com",
         "explorer":"https://devnet-explorer.elrond.com",
         "wallet":"https://devnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgql0pc7l9xj9ynlgptg6pep28y2p0dk6vhd8ss2gw0fu"
+        "nft":"erd1qqqqqqqqqqqqqpgqxn0sxhcujvfcjuzmwucya9ztyl8cuseud8ssln0mzr"
     },
 
     "server":{

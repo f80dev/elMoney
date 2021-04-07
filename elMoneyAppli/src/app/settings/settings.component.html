@@ -51,19 +51,13 @@
     </mat-expansion-panel>
 
 
-    <mat-expansion-panel class="app-panel" [expanded]="open_section==0">
+    <mat-expansion-panel class="app-panel" [expanded]="open_section==1">
       <mat-expansion-panel-header>Modifier votre profil</mat-expansion-panel-header>
 
       <button mat-raised-button mat-button
               class="app-button"
               (click)="router.navigate(['miner'],{queryParams:{addr:user.addr}})">
         <div class="bloc-bouton">Page publique<br>de créateur</div>
-      </button>
-
-      <button mat-raised-button mat-button
-              class="app-button" *ngIf="user.isDealer()"
-              (click)="router.navigate(['dealer'],{queryParams:{addr:user.addr}})">
-        <div class="bloc-bouton">Page publique<br>de distributeur</div>
       </button>
 
       <br>
@@ -105,7 +99,7 @@
     </mat-expansion-panel>
 
 
-    <mat-expansion-panel class="app-panel" [expanded]="open_section==0">
+    <mat-expansion-panel class="app-panel" [expanded]="open_section==2">
       <mat-expansion-panel-header>Distribuer des NFTs</mat-expansion-panel-header>
       <mat-form-field appearance="fill" class="app-field">
         <mat-label>Votre nom de distributeur</mat-label>

@@ -2216,7 +2216,7 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
   min-height: 100vh;
   background-color: #404040;
   color: lightgray;
-  padding: 2px;
+  padding: 5px;
 }
 .sidemenu {
   background-color: #323232;

@@ -609,9 +609,12 @@ def add_miner(data:dict=None):
     pem_file = get_pem_file(data["pem"])
 
     _miner = Account(address=data["address"])
+    _profil=dao.get_user(data["address"])
+    ipfs_token=IPFS(IPFS_NODE).add(str({"pseudo":_profil["pseudo"],"visual":_profil["visual"]}))
+
 
     tx=bc.add_miner(NETWORKS[bc.network_name]["nft"],
-                    pem_file,["0x" + _miner.address.hex()]
+                    pem_file,["0x" + _miner.address.hex(),"0x"+ipfs_token.encode().hex()]
                     )
     os.remove(pem_file)
 
