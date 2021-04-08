@@ -16,9 +16,9 @@
       <img [src]="selected_dealer?.visual" style="width:100px;">
     </td>
 
-    <td style="width:auto;padding:0px;">
-      <mat-form-field appearance="legacy"
-                      style="width:100%;font-size: medium;padding:0px;margin:0px;">
+    <td style="width:auto;padding:0px;text-align: left;line-height: 90%;">
+      <mat-form-field appearance="fill"
+                      style="width:100%;">
         <mat-select id="selOrder" [(ngModel)]="selected_dealer" (selectionChange)="refresh()" style="margin: 0px;">
           <mat-option *ngFor="let dealer of dealers" [value]="dealer">
             {{dealer.name}}

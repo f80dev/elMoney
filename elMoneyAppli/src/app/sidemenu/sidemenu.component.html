@@ -81,9 +81,10 @@
     <a title="Ajouter un mineur à votre compte distributeur"
        routerLink="miners"
        mat-list-item
+       *ngIf="user.isDealer()"
        id="cmdAddMiner">
       <mat-icon>add_circle</mat-icon>&nbsp;
-      Valider un mineur
+      Référencer des créateurs
     </a>
 
 

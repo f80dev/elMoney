@@ -46,12 +46,12 @@ NETWORKS={
         "new_account":float(4*1e18),
         "bank":"bank",
         "unity":"xEgld",
-        "tokenIdentifier":"TFC-57a49e",
+        "tokenIdentifier":"",
         "faucet":"https://r3d4.fr/elrond/devnet/index.php",
         "proxy":"https://devnet-api.elrond.com",
         "explorer":"https://devnet-explorer.elrond.com",
         "wallet":"https://devnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqxn0sxhcujvfcjuzmwucya9ztyl8cuseud8ssln0mzr"
+        "nft":"erd1qqqqqqqqqqqqqpgqey6rcsmt8egnwtyc50d7pfpthr65wzxqd8ssmhjqyl"
     },
 
     "server":{

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {ApiService} from "../api.service";
 import {UserService} from "../user.service";
 import {NewDealerComponent} from "../new-dealer/new-dealer.component";
-import {showMessage} from "../tools";
+import {showError, showMessage} from "../tools";
 import {MatDialog} from "@angular/material/dialog";
 import {ConfigService} from "../config.service";
 import {PromptComponent} from "../prompt/prompt.component";
@@ -47,10 +47,12 @@ export class MinersComponent implements OnInit {
 
   refresh(){
     this.message="Récupération de la liste des fabricants validés";
-     this.api._get("miners/"+this.user.addr,"").subscribe((r:any)=>{
-       this.message="";
-       debugger
+    this.api._get("miners/"+this.user.addr,"").subscribe((r:any)=>{
+      this.message="";
       this.miners=r;
+    },(err)=>{
+      showError(this,err);
+      this.message="";
     });
   }
 

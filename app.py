@@ -595,7 +595,13 @@ def add_dealer(token_id:str,data:dict=None):
 @app.route('/api/miners/<seller>/',methods=["GET"])
 def get_miners(seller:str):
     miners = bc.miners(seller)
-    return jsonify(miners), 200
+    rc=[]
+    for miner in miners:
+        _miner=dao.get_user(miner["address"])
+        del _miner["_id"]
+        del _miner["pem"]
+        rc.append(_miner)
+    return jsonify(rc), 200
 
 @app.route('/api/dealers/',methods=["GET"])
 def get_dealers():

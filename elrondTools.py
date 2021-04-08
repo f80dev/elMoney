@@ -872,10 +872,12 @@ class ElrondNet:
         tx = self.query("miners",["0x"+seller_addr])
         rc=[]
         if len(tx)>0 and len(tx[0].hex)>=64:
-            for i in range(0,len(tx[0].hex),64):
-                addr=str(tx[0].hex)[i:i+64].upper()
-                _acc=Account(address=addr)
-                rc.append({"address":_acc.address.bech32()})
+            for miner in tx[0].hex.split("000000"):
+                if len(miner)>100:
+                    addr=miner[0:64].upper()
+                    ipfs=miner[64:]
+                    _acc=Account(address=addr)
+                    rc.append({"address":_acc.address.bech32(),"ipfs":ipfs})
         return rc
 
 

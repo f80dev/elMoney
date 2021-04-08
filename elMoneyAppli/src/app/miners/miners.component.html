@@ -5,7 +5,11 @@
   <div *ngIf="miners?.length>0">
     <h2>Liste des fabricants approuvés</h2>
     <div *ngFor="let miner of miners">
-      <a [href]="config.server.explorer+'/accounts/'+miner.address" target="_blank">{{miner?.address}}</a>
+      <a [href]="config.server.explorer+'/accounts/'+miner.addr" target="_blank">
+        {{miner?.pseudo}}<br>
+        <img [src]="miner?.shop_visual" style="width: 100px;"><br>
+
+      </a>
       <mat-icon (click)="remove(miner)">cancel</mat-icon>
     </div>
   </div>
@@ -16,7 +20,7 @@
           *ngIf="message?.length==0"
           mat-button class="app-button"
           (click)="add_miner()">
-      <mat-icon>add_circle</mat-icon> Approuver un fabricant de NFT
+      <mat-icon>add_circle</mat-icon> Approuver un créateur de NFT
   </button>
 
 

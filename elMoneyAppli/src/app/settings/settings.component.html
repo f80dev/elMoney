@@ -134,7 +134,8 @@
               class="app-button" color="primary"
               [disabled]="user.shop_website.length+user.shop_name.length+user.shop_description.length==0"
               (click)="make_store()">
-        <div class="bloc-bouton">Créer la<br>boutique</div>
+        <div class="bloc-bouton" *ngIf="!user.isDealer()">Créer la<br>boutique</div>
+        <div class="bloc-bouton" *ngIf="user.isDealer()">Modifier la<br>boutique</div>
       </button>
 
 
