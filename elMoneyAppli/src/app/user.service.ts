@@ -26,6 +26,7 @@ export class UserService {
   shop_name:string="";
   shop_description: string="";
   shop_website: string="";
+  dealer: any=null;
 
   constructor(public api:ApiService,
               public socket:Socket,
@@ -37,12 +38,14 @@ export class UserService {
 
   isDealer(){
     for(let d of this.config.dealers){
-      if(d.address==this.addr)
+      if(d.address==this.addr){
+        this.dealer=d;
         return true;
+      }
     }
+    this.dealer=null;
     return false;
   }
-
 
 
 

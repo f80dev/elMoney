@@ -888,10 +888,20 @@ class ElrondNet:
             for dealer in str(tx[0].hex).split("000000"):
                 if len(dealer)>100:
                     address=dealer[0:64]
-                    content=self.ipfs.get_dict(bytes.fromhex(dealer[64:]).decode("utf-8"))
+                    state=int("0x"+dealer[64:66],16)
+                    content=self.ipfs.get_dict(bytes.fromhex(dealer[66:]).decode("utf-8"))
                     content["address"]=Account(address=address).address.bech32()
+                    content["state"]=state
                     rc.append(content)
         return rc
+
+    def dealer_state(self, contract,pem_file, state):
+        tx = self.execute(contract, pem_file,
+                          function="dealer_state",
+                          arguments=["0x"+hex(state)],
+                          )
+        return tx
+
 
 
 

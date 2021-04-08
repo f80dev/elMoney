@@ -608,10 +608,19 @@ def get_dealers():
     return jsonify(bc.dealers()), 200
 
 
+
+@app.route('/api/dealer_state/<state>/',methods=["POST"])
+def dealer_state(state:str,data:dict=None):
+    if data is None: data = json.loads(str(request.data, encoding="utf-8"))
+    pem_file = get_pem_file(data["pem"])
+    tx=bc.dealer_state(NETWORKS[bc.network_name]["nft"],pem_file,int(state))
+    os.remove(pem_file)
+    return jsonify({"message":"ok"}), 200
+
+
 @app.route('/api/add_miner/',methods=["POST"])
 def add_miner(data:dict=None):
-    if data is None:
-        data = json.loads(str(request.data, encoding="utf-8"))
+    if data is None:data = json.loads(str(request.data, encoding="utf-8"))
     pem_file = get_pem_file(data["pem"])
 
     _miner = Account(address=data["address"])

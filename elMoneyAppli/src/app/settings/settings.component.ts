@@ -21,7 +21,6 @@ export class SettingsComponent implements OnInit,OnDestroy {
   contrat="";
   focus_idx: number;
 
-
   message: string="";
   filename: string="";
   open_section=0;
@@ -44,6 +43,7 @@ export class SettingsComponent implements OnInit,OnDestroy {
     }
     this.open_section=Number(this.routes.snapshot.queryParamMap.get("section"));
   }
+
 
 
   raz_account() {
@@ -88,7 +88,7 @@ export class SettingsComponent implements OnInit,OnDestroy {
 
 
   change_visual(field:string) {
- this.dialog.open(ImageSelectorComponent, {position:
+    this.dialog.open(ImageSelectorComponent, {position:
         {left: '5vw', top: '5vh'},
       maxWidth: 400, maxHeight: 700, width: '90vw', height: 'auto', data:
         {
@@ -121,8 +121,17 @@ export class SettingsComponent implements OnInit,OnDestroy {
     if(this.user.shop_website.length+this.user.shop_name.length+this.user.shop_description.length>0){
       this.user.new_dealer(()=>{
         this.message="";
-        showMessage(this,"Vous avez été ajouté comme distributeur");
+        showMessage(this,"Vous avez été ajouté comme distributeur. Valider des créateurs dés maintenant");
+        this.router.navigate(["miners"]);
       });
     }
+  }
+
+  openclose_store() {
+    let state=Math.abs(this.user.dealer.state-1);
+    this.api._post("dealer_state/"+this.user.addr+"/"+state,"",{pem:this.user.pem}).subscribe(()=>{
+      showMessage(this,"Statut modifié");
+      this.config.refresh_dealers();
+    });
   }
 }

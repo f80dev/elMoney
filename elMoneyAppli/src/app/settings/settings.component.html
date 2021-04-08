@@ -138,6 +138,14 @@
         <div class="bloc-bouton" *ngIf="user.isDealer()">Modifier la<br>boutique</div>
       </button>
 
+      <button mat-raised-button mat-button
+              class="app-button" color="primary"
+              [disabled]="!user.isDealer()"
+              (click)="openclose_store()">
+        <div class="bloc-bouton" *ngIf="user.dealer?.state==0">Fermer la<br>boutique</div>
+        <div class="bloc-bouton" *ngIf="user.dealer?.state==1">Ouvrir la<br>boutique</div>
+      </button>
+
 
     </mat-expansion-panel>
 
