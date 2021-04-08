@@ -1,5 +1,7 @@
 <div class="mainform">
   <app-tuto label="Le distributeur est garant de la qualité des NFTs qu'il vend. Ainsi, vous devez approuver chaque fabriquant qui souhaite distribuer ces tokens chez vous"></app-tuto>
+  <app-tuto [if]="miners?.length>0"
+            label="A tout moment vous pouvez révoquer un créateur. Ces NFTs ne seront plus référencées dans votre store"></app-tuto>
   <app-hourglass [message]="message"></app-hourglass>
   <br>
   <div *ngIf="miners?.length>0">
@@ -7,7 +9,7 @@
     <div *ngFor="let miner of miners">
       <a [href]="config.server.explorer+'/accounts/'+miner.addr" target="_blank">
         {{miner?.pseudo}}<br>
-        <img [src]="miner?.shop_visual" style="width: 100px;"><br>
+        <img [src]="miner?.visual" style="width: 100px;"><br>
 
       </a>
       <mat-icon (click)="remove(miner)">cancel</mat-icon>

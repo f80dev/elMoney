@@ -129,7 +129,7 @@ export class SettingsComponent implements OnInit,OnDestroy {
 
   openclose_store() {
     let state=Math.abs(this.user.dealer.state-1);
-    this.api._post("dealer_state/"+this.user.addr+"/"+state,"",{pem:this.user.pem}).subscribe(()=>{
+    this.api._post("dealer_state/"+state+"/","",{pem:this.user.pem}).subscribe(()=>{
       showMessage(this,"Statut modifié");
       this.config.refresh_dealers();
     });

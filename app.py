@@ -598,9 +598,10 @@ def get_miners(seller:str):
     rc=[]
     for miner in miners:
         _miner=dao.get_user(miner["address"])
-        del _miner["_id"]
-        del _miner["pem"]
-        rc.append(_miner)
+        if not _miner is None:
+            del _miner["_id"]
+            del _miner["pem"]
+            rc.append(_miner)
     return jsonify(rc), 200
 
 @app.route('/api/dealers/',methods=["GET"])
@@ -613,9 +614,12 @@ def get_dealers():
 def dealer_state(state:str,data:dict=None):
     if data is None: data = json.loads(str(request.data, encoding="utf-8"))
     pem_file = get_pem_file(data["pem"])
-    tx=bc.dealer_state(NETWORKS[bc.network_name]["nft"],pem_file,int(state))
+    tx=bc.dealer_state(pem_file,int(state))
     os.remove(pem_file)
-    return jsonify({"message":"ok"}), 200
+    if not tx is None and tx["status"]=="success":
+        return jsonify({"message":"ok"}), 200
+    else:
+        return jsonify({"message": "Problème technique"}), 501
 
 
 @app.route('/api/add_miner/',methods=["POST"])

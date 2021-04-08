@@ -52,6 +52,7 @@ class ElrondNet:
         :param bank_pem:
         """
         self.network_name=network_name
+        self.contract=NETWORKS[network_name]["nft"]
         proxy=NETWORKS[network_name]["proxy"]
         log("Initialisation de l'environnement "+proxy)
         logging.basicConfig(level=logging.DEBUG)
@@ -895,10 +896,11 @@ class ElrondNet:
                     rc.append(content)
         return rc
 
-    def dealer_state(self, contract,pem_file, state):
-        tx = self.execute(contract, pem_file,
+
+    def dealer_state(self,pem_file, state):
+        tx = self.execute(self.contract, pem_file,
                           function="dealer_state",
-                          arguments=["0x"+hex(state)],
+                          arguments=[hex(state)],
                           )
         return tx
 

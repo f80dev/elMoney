@@ -29,20 +29,10 @@ export class MinersComponent implements OnInit {
 
   ngOnInit(): void {
     if(!this.user.isDealer()){
-      if(!this.user.pseudo || this.user.pseudo.length==0){
         showMessage(this,"Vous devez renseigner la section distributeur pour approuver des mineurs");
         this.router.navigate(["settings"],{queryParams:{section:2}});
-      } else {
-        this.message="Ouverture de votre statut de distributeur";
-        this.user.new_dealer(()=>{
-          this.refresh();
-        })
-
-      }
-
-    } else this.refresh();
-
-
+    } else
+      this.refresh();
   }
 
   refresh(){
@@ -68,7 +58,7 @@ export class MinersComponent implements OnInit {
           address:result.addr,
           pem:this.user.pem
         };
-        this.message="Approbation d'un fabricant";
+        this.message="Approbation d'un nouveau créateur";
         this.api._post("add_miner/","",obj).subscribe(()=>{
           showMessage(this,"Mineur ajoute");
           this.message="";

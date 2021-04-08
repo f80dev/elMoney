@@ -93,9 +93,6 @@
         <mat-hint *ngIf="focus_idx==3">L'adresse de votre site internet</mat-hint>
       </mat-form-field>
 
-
-
-
     </mat-expansion-panel>
 
 
@@ -131,7 +128,7 @@
 
       <br>
       <button mat-raised-button mat-button
-              class="app-button" color="primary"
+              class="app-button"
               [disabled]="user.shop_website.length+user.shop_name.length+user.shop_description.length==0"
               (click)="make_store()">
         <div class="bloc-bouton" *ngIf="!user.isDealer()">Créer la<br>boutique</div>
@@ -139,7 +136,7 @@
       </button>
 
       <button mat-raised-button mat-button
-              class="app-button" color="primary"
+              class="app-button"
               [disabled]="!user.isDealer()"
               (click)="openclose_store()">
         <div class="bloc-bouton" *ngIf="user.dealer?.state==0">Fermer la<br>boutique</div>
