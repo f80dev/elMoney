@@ -9,7 +9,7 @@
   <app-hourglass [message]="message"></app-hourglass>
   <br>
 
-  <mat-tab-group animationDuration="1000ms" *ngIf="message?.length==0">
+  <mat-tab-group animationDuration="1000ms" *ngIf="message?.length==0" mat-align-tabs="center">
 
     <mat-tab label="NFT express">
 
@@ -97,7 +97,7 @@
               <mat-form-field appearance="fill" class="app-field">
                 <mat-label>Récompense à l'ouverture</mat-label>
                 <input matInput type="number" (focusin)="focus_idx=1.5" min="0" [max]="user.gas/1e18" [(ngModel)]="gift" [ngModelOptions]="{standalone: true}">
-                <mat-hint *ngIf="focus_idx==1.5">La somme sera créditer sur le compte de l'acheteur dés l'ouverture du NFT</mat-hint>
+                <mat-hint *ngIf="focus_idx==1.5">La somme sera débitée de votre compte et crédité sur le compte de l'acheteur dés l'ouverture du NFT</mat-hint>
               </mat-form-field>
             </form>
 
@@ -225,7 +225,7 @@
                   </ng-container>
 
 
-                  <ng-container matColumnDef="delete" style="margin:3px">
+                  <ng-container matColumnDef="delete" style="margin:3px;text-align: right;">
                     <th mat-header-cell *matHeaderCellDef>Commandes</th>
                     <td mat-cell *matCellDef="let element">
                       <mat-icon style="cursor: pointer" title="Enlever le revendeur" (click)="delete_dealer(element)">cancel</mat-icon>&nbsp;

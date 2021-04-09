@@ -191,13 +191,18 @@ export class ImporterComponent implements OnInit {
     }).afterClosed().subscribe((result) => {
       if (result && result.hasOwnProperty("addr")) {
         let obj:SellerProperties={address:result.addr,name:result.name,marge:result.percent};
-        this.dataSource.data.push(obj);
-        this.dataSource._updateChangeSubscription();
+        this.api._get("/miners/"+result.addr+"/","").subscribe((sellers:any)=>{
+          for(let d of sellers){
+            if(d.addr==this.user.addr){
+              this.dataSource.data.push(obj);
+              this.dataSource._updateChangeSubscription();
+              return;
+            }
+          }
+          showMessage(this,"Ce distributeur doit préalablement vous approuver");
+        });
       }
     });
-
-
-
   }
 
   delete_dealer(element: any) {

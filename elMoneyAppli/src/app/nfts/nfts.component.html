@@ -10,7 +10,7 @@
     </mat-card-header>
 
     <mat-card-content [title]="nft.title+' '+nft.description"
-                      [ngStyle]="{'min-height':'min-content',width:'95%',height:_h,'text-align':'center',margin:'0px',overflow:'hidden'}">
+                      [ngStyle]="{'min-height':'min-content',width:'95%',height:_h,'text-align':'center',margin:'5px','margin-bottom':'37px',overflow:'hidden'}">
 
       <app-tuto [if]="nft.owner!=user.addr && nft.has_secret==1"
                 label="Devenez propriétaire de ce NFT pour accèder à son contenu."></app-tuto>
@@ -41,12 +41,13 @@
 
       <img [src]="nft.visual"
            *ngIf="nft.visual?.length>0 && !nft.fullscreen"
-           style="cursor: pointer;display: inline-block;" (click)="show_fullscreen(nft)">
+           style="cursor: pointer;display: inline-block;cursor: pointer;"
+           (click)="show_fullscreen(nft)">
 
 
       <img [src]="nft.visual"
            *ngIf="nft.visual?.length>0 && nft.fullscreen"
-           style="object-fit: cover;width:100%;display: inline-block;"
+           style="object-fit: cover;width:100%;display: inline-block;cursor: pointer;"
            (click)="show_fullscreen(nft)">
 
 

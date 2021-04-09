@@ -51,7 +51,7 @@ NETWORKS={
         "proxy":"https://devnet-api.elrond.com",
         "explorer":"https://devnet-explorer.elrond.com",
         "wallet":"https://devnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqj72e0uhjzvlxdguj3q89fzygwuauzyjtd8ssg47jnp"
+        "nft":"erd1qqqqqqqqqqqqqpgqenvg6h59np78rqs4y49r00x0p2mav9gcd8ssx4zzgz"
     },
 
     "server":{

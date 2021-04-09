@@ -203,7 +203,6 @@ export class NftsComponent implements OnChanges {
 
         this.api._post("add_dealer/"+nft.token_id+"/","",obj).subscribe((r:any)=>{
           nft.message="";
-          debugger
           if(r.status!="fail"){
             showMessage(this,"Distributeur ajouté");
             this.onrefresh.emit();
@@ -213,7 +212,7 @@ export class NftsComponent implements OnChanges {
         },(err)=>{
           nft.message="";
           showError(this,err);
-        })
+        });
       }
     });
   }
