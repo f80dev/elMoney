@@ -688,6 +688,9 @@ class ElrondNet:
                 miner_ratio = int(tokens[index:index + 4], 16)
                 index = index + 4
 
+                miner=Account(address=tokens[index:index+64]).address.bech32()
+                index=index+64
+
                 id=int(tokens[index:index+16], 16)
                 index=index+16
 
@@ -717,15 +720,21 @@ class ElrondNet:
                 title=translate(title,_d)
                 desc=translate(desc,_d)
 
-                obj=dict({"token_id": id, "title": title,"description":desc, "price": price,"markup":markup/100,"has_secret":has_secret,
-                          "min_markup":min_markup/100,"max_markup":max_markup/100,"miner_ratio":miner_ratio/100,
-                          "state": state,"owner":owner_addr,"visual":visual,"fullscreen":fullscreen,
+                obj=dict({"token_id": id,
+                          "title": title,
+                          "description":desc,
+                          "price": price,
+                          "markup":markup/100,
+                          "has_secret":has_secret,
+                          "min_markup":min_markup/100,"max_markup":max_markup/100,
+                          "miner_ratio":miner_ratio/100,
+                          "state": state,
+                          "miner":miner,
+                          "owner":owner_addr,
+                          "visual":visual,
+                          "fullscreen":fullscreen,
                           "properties":properties
                           })
-                if miner_filter!="0x0000000000000000000000000000000000000000000000000000000000000000":
-                    obj["miner"]=owner_addr
-                else:
-                    obj["miner"] = ""
 
                 obj["open"]=""
                 obj["message"]=""

@@ -73,8 +73,7 @@ export class ImporterComponent implements OnInit {
       this.tokens=r.content;
     });
     if(this.user.pseudo.length==0){
-      showMessage(this,"En tant que créateur de token, vous devez avoir un pseudo");
-      this.router.navigate(["settings"],{queryParams:{section:1}});
+      showMessage(this,"Vous pouvez créer un NFT anonynement mais il est préférable de se donner un pseudo à minima");
     }
   }
 
@@ -146,7 +145,7 @@ export class ImporterComponent implements OnInit {
     })
   }
 
-  add_visual(func=null,index=1,title="") {
+  add_visual(func=null,index=1,title="",width=200,height=200,square=true) {
     this.dialog.open(ImageSelectorComponent, {position:
         {left: '5vw', top: '5vh'},
       maxWidth: 400, maxHeight: 700, width: '90vw', height: 'auto', data:
@@ -154,8 +153,9 @@ export class ImporterComponent implements OnInit {
           title:title,
           result: this.files[1],
           checkCode: true,
-          width: 200,
-          height: 200,
+          square:square,
+          width: width,
+          height: height,
           emoji: false,
           internet: false,
           ratio: 1,
@@ -249,7 +249,7 @@ export class ImporterComponent implements OnInit {
   }
 
 
-  quick_photo(index=0,token) {
+  quick_photo(index=0,token,title="",w=400,h=400,square=true) {
     this.add_visual((result:any)=>{
       this.ask_for_text("Titre","Donner un titre à votre NFC",(title)=>{
         if(title && title.length>0){
@@ -262,7 +262,7 @@ export class ImporterComponent implements OnInit {
           });
         }
       });
-    },index)
+    },index,title,w,h,square)
   }
 
 
@@ -378,8 +378,8 @@ export class ImporterComponent implements OnInit {
   }
 
   create_token(token: any) {
-    if(token.index=="photo")this.quick_photo(0,token);
-    if(token.index=="pow")this.quick_photo(1,token);
+    if(token.index=="photo")this.quick_photo(0,token,"Télécharger votre photo",null,null,false);
+    if(token.index=="pow")this.quick_photo(1,token,"Télécharger le visuel de votre NFT",300,300,true);
     if(token.index=="file")this.show_fileupload(1,'Téléverser le fichier à embarquer dans votre token',token);
     if(token.index=="secret")this.quick_secret(token);
     if(token.index=="tickets")this.quick_tickets('Téléverser le visuel de votre invitation',token);

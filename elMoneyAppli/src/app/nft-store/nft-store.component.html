@@ -17,8 +17,9 @@
     </td>
 
     <td style="width:auto;padding:0px;text-align: left;line-height: 90%;">
-      <mat-form-field appearance="fill"
+      <mat-form-field appearance="legacy"
                       style="width:100%;">
+        <mat-label>Revendeur</mat-label>
         <mat-select id="selOrder" [(ngModel)]="selected_dealer" (selectionChange)="refresh()" style="margin: 0px;">
           <mat-option *ngFor="let dealer of dealers" [value]="dealer">
             {{dealer.name}}
@@ -27,7 +28,6 @@
       </mat-form-field>
       <br>
       {{selected_dealer?.description}}
-
     </td>
 
   </tr></table>
@@ -41,7 +41,7 @@
 
 
   <div *ngIf="nfts?.length>2">
-    <mat-form-field appearance="fill"
+    <mat-form-field appearance="legacy"
                     style="max-width:600px;width:60%;margin-right: 10px;" autofocus>
       <mat-label>Chercher un token à acheter</mat-label>
       <input matInput matNativeControl
@@ -51,8 +51,6 @@
                 matSuffix style="cursor: pointer"
                 (click)="clearQuery()">cancel</mat-icon>
     </mat-form-field>
-
-
 
     <mat-form-field appearance="fill" style="width:130px;color:white;">
       <mat-label>Affichage</mat-label>

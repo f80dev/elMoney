@@ -188,8 +188,9 @@ export class UserService {
         if(err.status==404) {
           $$("Impossible de charger l'user");
           this.save_user();
-        }
-        if(func_error)func_error();
+          func();
+        } else
+          if(func_error)func_error();
       });
 
     }

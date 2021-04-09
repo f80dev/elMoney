@@ -2,15 +2,15 @@
 
   <app-tuto label="Consulter l'ensemble des NFTs que vous avez achetés ou fabriqués"></app-tuto>
 
-  <mat-tab-group animationDuration="1000ms"
+  <mat-tab-group animationDuration="1000ms" mat-align-tabs="center"
                  [selectedIndex]="selected.value">
 
-    <mat-tab label="Les NFTs distribués" *ngIf="nfts[0]?.length>0" >
+    <mat-tab label="Les NFTs distribués" *ngIf="nfts[0]?.length>0">
       <app-tuto label="Retrouvez ici tout les NFTs pour lesquels vous disposez d'un mandat de vente"></app-tuto>
       <app-nfts [user]="user" [nfts]="nfts[0]"
                 [filter]="{state:0,isDealer:true}"
                 [with_icon]="false"
-                height="200px"
+                height="fit-content"
                 (refresh)="refresh()">
       </app-nfts>
       <button mat-raised-button mat-button class="app-button"
@@ -25,7 +25,7 @@
       <br>
       <app-tuto [if]="nfts[1].length>0" label="Les NFT achetés peuvent être remis en vente, détruit, ouvert s'ils contiennent un secret ou directement offer"></app-tuto>
       <app-nfts [user]="user" [nfts]="nfts[1]"
-                [with_icon]="true" height="250px"
+                [with_icon]="true" height="fit-content"
                 (transfer)="transfer($event)">
       </app-nfts>
       <br>
@@ -49,7 +49,7 @@
       </mat-form-field>
 
       <app-nfts [user]="user" [nfts]="nfts[2]"
-                [with_icon]="false" height="250px"
+                [with_icon]="false" height="fit-content"
                 (transfer)="transfer($event)"></app-nfts>
 
       <br>

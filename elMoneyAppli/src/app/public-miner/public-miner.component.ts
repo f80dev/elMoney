@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ApiService} from "../api.service";
 import {ActivatedRoute} from "@angular/router";
+import {UserService} from "../user.service";
 
 @Component({
   selector: 'app-public-miner',
@@ -13,7 +14,8 @@ export class PublicMinerComponent implements OnInit {
 
   constructor(
     public api:ApiService,
-    public routes:ActivatedRoute
+    public routes:ActivatedRoute,
+    public user:UserService
   ) { }
 
   ngOnInit(): void {
