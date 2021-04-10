@@ -25,6 +25,7 @@ export class NftsComponent implements OnChanges {
   @Input("fontsize") fontsize:string="normal";
   @Input("with_icon") with_icon:boolean=true;
   @Input("width") _w:string="350px";
+  @Input("maxwidth") max_w:string="500px";
   @Input("height") _h:string="auto"
   @Input("seller") seller:string="0x0000000000000000000000000000000000000000000000000000000000000000";
   @Output("refresh") onrefresh:EventEmitter<any>=new EventEmitter();

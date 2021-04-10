@@ -1,5 +1,5 @@
-<div *ngIf="nfts?.length>0" style="margin: 2px;padding:0;width:100%;text-align: center;" class="wrap-list" >
-  <mat-card class="app-card" [ngStyle]="{'min-height':'110px',width:_w,height: 'fit-content','margin':'3px','margin-bottom':'5px',padding:'7px'}"
+<div *ngIf="nfts?.length>0" style="margin: 0px;padding:0;width:99%;text-align: center;" class="wrap-list" >
+  <mat-card class="app-card" [ngStyle]="{'min-height':'110px','max-width':max_w,width:_w,height: 'fit-content','margin':'3px','margin-bottom':'5px',padding:'7px'}"
             *ngFor="let nft of nfts | filter: ['search',filter]">
     <mat-card-header *ngIf="!nft.fullscreen" style="height: 35px">
       <img *ngIf="with_icon" mat-card-avatar src="./assets/icons/gift.png" class="image-icon">

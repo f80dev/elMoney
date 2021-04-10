@@ -1,29 +1,34 @@
 <div class="mainform">
   <app-tuto label="Le distributeur est garant de la qualité des NFTs qu'il vend. Ainsi, vous devez approuver chaque fabriquant qui souhaite distribuer ces tokens chez vous"></app-tuto>
   <app-tuto [if]="miners?.length>0"
-            label="A tout moment vous pouvez révoquer un créateur. Ces NFTs ne seront plus référencées dans votre store"></app-tuto>
+            label="A tout moment vous pouvez révoquer un créateur. Les NFTs de ce dernier ne seront plus référencés dans votre store"></app-tuto>
   <app-hourglass [message]="message"></app-hourglass>
   <br>
+
   <div *ngIf="miners?.length>0">
-    <h2>Liste des fabricants approuvés</h2>
-    <div *ngFor="let miner of miners">
+    <h2>Liste des créateurs approuvés</h2>
+    <div *ngFor="let miner of miners" style="display: inline-block;margin:5px;min_height:150px;" [title]="miner.description">
       <a [href]="config.server.explorer+'/accounts/'+miner.addr" target="_blank">
         {{miner?.pseudo}}<br>
-        <img [src]="miner?.visual" style="width: 100px;"><br>
-
+        <img class="mat-elevation-z4" [src]="miner?.visual" style="width: 100px;"><br>
       </a>
       <mat-icon (click)="remove(miner)">cancel</mat-icon>
     </div>
   </div>
 
-  <br>
+  <span *ngIf="miners?.length==0">Aucun créateur référencé</span>
+
+  <br><br>
+
 
   <button mat-raised-button
           *ngIf="message?.length==0"
           mat-button class="app-button"
           (click)="add_miner()">
-      <mat-icon>add_circle</mat-icon> Approuver un créateur de NFT
+      <mat-icon>add_circle</mat-icon> Référencer des créateurs de NFT
   </button>
+
+  <br><br><br>
 
 
 </div>

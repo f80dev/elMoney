@@ -80,7 +80,7 @@ export class MinersComponent implements OnInit {
     }).afterClosed().subscribe((result) => {
       if (result == "yes") {
         let obj:any={
-          address:result.addr,
+          address:miner.addr,
           pem:this.user.pem
         };
         this.message="Suppression en cours";

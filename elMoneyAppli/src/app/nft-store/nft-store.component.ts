@@ -56,7 +56,7 @@ export class NftStoreComponent implements OnInit {
 
     this.api._get("dealers/","").subscribe((dealers:any)=>{
       this.dealers=dealers;
-      this.dealers.push({name:'Tous',address:"0x0"});
+      this.dealers.push({name:'Vente directe',address:"0x0"});
       this.selected_dealer=this.dealers[this.dealers.length-1];
       this.refresh();
     })

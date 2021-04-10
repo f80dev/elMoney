@@ -2438,6 +2438,9 @@ mat-card-header {
 mat-card-content {
   background-color: #343439;
 }
+.photo {
+  border: white solid 1px;
+}
 .toolbar-app {
   z-index: 9999;
   background-color: #323232;

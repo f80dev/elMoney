@@ -170,8 +170,8 @@ export class UserService {
       this.addr=addr;
       $$("Enregistrement de "+this.addr+" sur le device");
       localStorage.setItem("addr",this.addr);
-      this.visual=environment.domain_appli+"/assets/img/anonymous.jpg";
-      this.shop_visual=environment.domain_appli+"/assets/img/shop.png";
+      this.visual="/assets/img/anonymous.jpg";
+      this.shop_visual="/assets/img/shop.png";
       this.pem=pem;
 
       $$("Chargement de l'utilisateur");

@@ -1,18 +1,21 @@
 <div class="mainform" style="text-align: center;">
 
-  <h1>{{miner?.pseudo}}</h1>
-  <img style="width: 300px;" [src]="miner?.visual">
+  <table><tr style="width: 100%;">
+    <td style="width: 120px;">
+      <img style="width: 100px;" class="photo" [src]="miner?.visual">
+    </td>
+    <td style="vertical-align: text-top;text-align: left;padding: 5px;">
+      <span style="font-size: xx-large;">{{miner?.pseudo}}</span><br>
+      {{miner?.description}}
+    </td>
+  </tr></table>
+
   <br>
-
-  <small>{{miner?.description}}</small>
-
-  <br><br><br>
-
   _____
   <br><br>
 
 
   <h3>Les NFTs de {{miner?.pseudo}}</h3>
-  <app-nfts [user]="user" [with_icon]="false" [nfts]="nfts" width="90%" height="auto"></app-nfts>
-  <br><br><br>
+  <app-nfts [user]="user" [with_icon]="false" [nfts]="nfts" maxwidth="100px" width="90%" height="auto"></app-nfts>
+  <br><br>
 </div>
