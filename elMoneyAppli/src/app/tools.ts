@@ -122,11 +122,11 @@ export function selectFile(event:any,maxsize:number,quality:number,square:boolea
         autoRotate(result,quality,(res)=>{
           if(square){
             cropToSquare(res,quality,(result_square)=>{
-              func(result_square);
+              func(result_square,dataURL);
             });
           }
           else
-            func(result);
+            func(result,dataURL);
         })
       }));
     };

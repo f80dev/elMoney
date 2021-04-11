@@ -53,6 +53,7 @@ export class ImporterComponent implements OnInit {
   prompt: string="";
   tokens: any[]=[];
   full_flyer: boolean=true;
+  file_format: string="";
 
   constructor(public api:ApiService,
               public user:UserService,
@@ -113,6 +114,7 @@ export class ImporterComponent implements OnInit {
       file:this.files[0],
       visual:this.files[1],
       filename:this.filename,
+      format:this.file_format,
       signature:this.title,
       secret:this.secret,
       price:this.price,
@@ -145,7 +147,7 @@ export class ImporterComponent implements OnInit {
     })
   }
 
-  add_visual(func=null,index=1,title="",width=200,height=200,square=true) {
+  add_visual(func=null,title="",width=200,height=200,square=true) {
     this.dialog.open(ImageSelectorComponent, {position:
         {left: '5vw', top: '5vh'},
       maxWidth: 400, maxHeight: 700, width: '90vw', height: 'auto', data:
@@ -163,7 +165,6 @@ export class ImporterComponent implements OnInit {
         }
     }).afterClosed().subscribe((result) => {
       if (result) {
-        this.files[index]= result;
         if(func)func(result);
       } else {
         if(func)func(null);
@@ -178,6 +179,11 @@ export class ImporterComponent implements OnInit {
 
   open_store(elt:any) {
     open("./assets/store.html?seller="+elt.address+"&server="+environment.domain_server+"&explorer="+this.config.server.explorer,"store");
+  }
+
+
+  add_all_seller() {
+    //TODO: a coder la récupération de l'ensemble des distributeurs ayant reconnu le créateur
   }
 
   add_seller() {
@@ -254,8 +260,32 @@ export class ImporterComponent implements OnInit {
   }
 
 
-  quick_photo(index=0,token,title="",w=400,h=400,square=true) {
+
+  quick_pow(token:any,w,h){
     this.add_visual((result:any)=>{
+      this.files[1]=result.img;
+      this.ask_for_text("Titre","Donner un titre à votre NFC",(title)=> {
+        if (title && title.length > 0) {
+          this.ask_for_text("Présentation", "Rédigez une présentation rapide de votre photo pour la marketplace", (legende) => {
+            if (legende != null) {
+              this.title = title;
+              this.desc = legende;
+              this.ask_for_price("Quel prix pour votre photo", null, token.fee);
+            }
+          });
+        }
+      });
+    },"Télécharger le visuel de votre NFT",w,h,true);
+  }
+
+
+
+  quick_photo(token:any,title="",w=400,h=400,square=true) {
+    this.add_visual((result:any)=>{
+      this.files[1]=result.img;
+      this.files[0]=result.original;
+      this.filename=result.file.name;
+      this.file_format=result.file.type;
       this.ask_for_text("Titre","Donner un titre à votre NFC",(title)=>{
         if(title && title.length>0){
           this.ask_for_text("Présentation","Rédigez une présentation rapide de votre photo pour la marketplace",(legende)=>{
@@ -267,7 +297,7 @@ export class ImporterComponent implements OnInit {
           });
         }
       });
-    },index,title,w,h,square)
+    },title,w,h,square)
   }
 
 
@@ -286,15 +316,15 @@ export class ImporterComponent implements OnInit {
               }
             })
         });
-
       }
-    })
+    });
   }
 
 
   quick_loterie(token:any){
     this.add_visual((visual:any)=> {
       if(visual){
+        this.files[1]=visual.img;
         this.ask_for_text("Nombre de billet","",(num_billets)=> {
           if(num_billets)
             this.ask_for_text("Montant du billet gagnant","",(gift)=> {
@@ -314,7 +344,7 @@ export class ImporterComponent implements OnInit {
             },"number",20);
         },"number",20);
       }
-    },1,"Visuel de vos billets");
+    },"Visuel de vos billets");
   }
 
 
@@ -324,6 +354,7 @@ export class ImporterComponent implements OnInit {
   quick_tickets($event:any,token:any){
     this.add_visual((visual:any)=>{
       if(visual){
+        this.files[1]=visual.img;
         this.ask_for_text("Titre de votre évenement","",(title)=> {
           if (title) {
             this.ask_for_text("Lieu et Date","Indiquer l'adresse et l'horaire",(desc)=> {
@@ -346,7 +377,7 @@ export class ImporterComponent implements OnInit {
         });
       }
 
-    },1,"Visuel de votre invitation");
+    },"Visuel de votre invitation");
 
   }
 
@@ -383,11 +414,15 @@ export class ImporterComponent implements OnInit {
   }
 
   create_token(token: any) {
-    if(token.index=="photo")this.quick_photo(0,token,"Télécharger votre photo",null,null,false);
-    if(token.index=="pow")this.quick_photo(1,token,"Télécharger le visuel de votre NFT",300,300,true);
+    if(token.index=="photo")this.quick_photo(token,"Télécharger votre photo",null,null,false);
+    if(token.index=="pow")this.quick_pow(token,300,300);
     if(token.index=="file")this.show_fileupload(1,'Téléverser le fichier à embarquer dans votre token',token);
     if(token.index=="secret")this.quick_secret(token);
     if(token.index=="tickets")this.quick_tickets('Téléverser le visuel de votre invitation',token);
     if(token.index=="loterie")this.quick_loterie(token);
   }
+
+
+
+
 }

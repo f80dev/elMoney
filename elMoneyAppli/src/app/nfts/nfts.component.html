@@ -21,11 +21,11 @@
 
 
       <div *ngIf="nft.price>0 && nft.state==0 && (nft.owner==user.addr || nft.isDealer)" >
-          {{nft.price | number:'1.0-3'}} xEgld
+        {{nft.price | number:'1.0-3'}} xEgld
       </div>
 
 
-      <div *ngIf="nft.state!=0 && nft.owner!=user.addr">
+      <div *ngIf="nft.state!=0 && nft.owner!=user.addr" style="position: absolute;z-index: 200;top:20%;left:20%;width:50%;display: block;">
         <img src="/assets/img/vendu.png" style="width:150px;">
       </div>
 
@@ -67,7 +67,22 @@
     </mat-card-content>
     <!--      <mat-card-actions class="app-card-action" style="position: absolute;bottom:16px;width:96%;text-align: right;">-->
     <mat-card-actions class="app-card-action">
-      <div *ngIf="nft.message?.length==0 && nft.open?.length==0">
+
+
+      <div *ngIf="nft.message?.length==0">
+
+        <!--        Zone réservé au propriétaire du token -->
+
+        <button mat-raised-button mat-button
+                color="primary"
+                title="Ouvrir le NFT pour découvrir le secret"
+                *ngIf="nft.open?.length==0 && user.addr==nft.owner && user.addr!=nft.miner && nft.has_secret==1"
+                class="app-button"
+                (click)="open(nft)">
+          Ouvrir
+        </button>
+
+
         <button mat-raised-button mat-button class="app-button"
                 *ngIf="nft.owner!=user.addr && nft.state==0 && !nft.isDealer"
                 [title]="'Acheter ce NFT pour '+nft.price+' xEgld'"
@@ -76,6 +91,8 @@
           <small *ngIf="nft.price==0">Gratuit</small>
           <span *ngIf="nft.price>0" >{{nft.price | number:'1.1-3'}} <small>xEGld</small></span>
         </button>
+
+
 
         <button mat-icon-button mat-flat-button
                 title="Modifier votre commission"
@@ -94,58 +111,59 @@
         </button>
 
 
-        <div *ngIf="nft.owner==user.addr" style="display: inline-block">
-          <button mat-raised-button mat-button
-                  color="primary"
-                  title="Ouvrir le NFT pour découvrir le secret"
-                  *ngIf="nft.state==1 && user.add!=nft.miner && nft.has_secret==1"
-                  class="app-button"
-                  (click)="open(nft)">
-            Ouvrir
-          </button>
+
+
+      <div *ngIf="nft.owner==user.addr" style="display: inline;">
+
+          <button mat-icon-button
+                class="icon-button"
+                *ngIf="nft.open?.length>0"
+                (click)="nft.open=''">
+          <mat-icon>visibility_off</mat-icon>
+        </button>
 
 
 
-          <button mat-icon-button mat-flat-button
-                  title="Ajouter un distributeur"
-                  *ngIf="!nft?.isDealer"
-                  class="icon-button"
-                  (click)="add_dealer(nft)">
-            <mat-icon>add_shopping_cart</mat-icon>
-          </button>
+        <button mat-icon-button mat-flat-button
+                title="Ajouter un distributeur"
+                *ngIf="!nft?.isDealer"
+                class="icon-button"
+                (click)="add_dealer(nft)">
+          <mat-icon>add_shopping_cart</mat-icon>
+        </button>
 
 
+        <button mat-icon-button mat-flat-button
+                *ngIf="nft.state==0 && (can_sell(nft.properties) || nft.miner==user.addr)"
+                title="Retirer de la vente"
+                class="icon-button"
+                (click)="setstate(nft,1,'retirer de la vente')">
+          <mat-icon>remove_shopping_cart</mat-icon>
+        </button>
 
-          <button mat-icon-button mat-flat-button
-                  *ngIf="nft.state==0 && (can_sell(nft.properties) || nft.miner==user.addr)"
-                  title="Retirer de la vente"
-                  class="icon-button"
-                  (click)="setstate(nft,1,'retirer de la vente')">
-            <mat-icon>remove_shopping_cart</mat-icon>
-          </button>
+        <button mat-icon-button mat-flat-button class="icon-button"
+                *ngIf="nft.state==1 && (can_sell(nft.properties) || nft.miner==user.addr)"
+                title="Mettre en vente"
+                (click)="setstate(nft,0,'mise en vente')">
+          <mat-icon>shopping_cart</mat-icon>
+        </button>
 
-          <button mat-icon-button mat-flat-button class="icon-button"
-                  *ngIf="nft.state==1 && (can_sell(nft.properties) || nft.miner==user.addr)"
-                  title="Mettre en vente"
-                  (click)="setstate(nft,0,'mise en vente')">
-            <mat-icon>shopping_cart</mat-icon>
-          </button>
-
-          <button mat-icon-button mat-flat-button class="icon-button"
-                  title="Offrir ce token"
-                  *ngIf="nft.state==1 && nft.owner==user.addr && (can_transfer(nft.properties) || nft.miner==user.addr)"
-                  (click)="transfer(nft)">
-            <mat-icon>redeem</mat-icon>
-          </button>
+        <button mat-icon-button mat-flat-button class="icon-button"
+                title="Offrir ce token"
+                *ngIf="nft.state==1 && nft.owner==user.addr && (can_transfer(nft.properties) || nft.miner==user.addr)"
+                (click)="transfer(nft)">
+          <mat-icon>redeem</mat-icon>
+        </button>
 
 
-          <button mat-icon-button mat-flat-button class="icon-button"
-                  *ngIf="nft.state==1 && nft.owner==user.addr"
-                  title="Détruire ce token"
-                  (click)="burn(nft)">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </div>
+        <button mat-icon-button mat-flat-button class="icon-button"
+                *ngIf="nft.state==1 && nft.owner==user.addr"
+                title="Détruire ce token"
+                (click)="burn(nft)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+
 
         <button mat-button mat-raised-button
                 *ngIf="nft.state==0 && nft.owner==user.addr"
@@ -157,13 +175,8 @@
 
       </div>
 
-      <div *ngIf="nft.open?.length>0">
-        <button mat-icon-button
-                class="icon-button"
-                (click)="nft.open=''">
-          <mat-icon>visibility_off</mat-icon>
-        </button>
-      </div>
+
+
     </mat-card-actions>
   </mat-card>
 </div>

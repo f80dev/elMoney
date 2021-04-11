@@ -19,9 +19,11 @@ export class ImageSelectorComponent implements OnInit {
   pictures=[];
   imagesearchengine_token="";
   ratio=1;
+  original:any={};
 
   imageBase64:string=null;
   croppedImage: any = null;
+  originalFile: string;
 
   constructor(
     public dialog:MatDialog,
@@ -55,8 +57,10 @@ export class ImageSelectorComponent implements OnInit {
 
 
   onSelectFile(event:any) {
-    selectFile(event,this.data.maxsize,this.data.quality,false,(res)=>{
+    selectFile(event,this.data.maxsize,this.data.quality,false,(res,original)=>{
       this.imageBase64=res;
+      this.original=original;
+      this.originalFile=event.target.files[0];
     });
   }
 
@@ -76,9 +80,6 @@ export class ImageSelectorComponent implements OnInit {
     this.data.result=icon.photo;
   }
 
-
-  ngOnInit() {
-  }
 
   addUrl() {
     this.dialog.open(PromptComponent, {

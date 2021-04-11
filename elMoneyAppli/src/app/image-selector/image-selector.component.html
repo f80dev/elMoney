@@ -13,7 +13,7 @@
     <button mat-flat-button mat-button
             id="cmdFile" class="app-button"
             style="width:65px;">
-      <label for="file">&nbsp;Photos</label>
+      <label for="file">&nbsp<mat-icon>camera</mat-icon>&nbsp;Photos</label>
       <input type="file" id="file" style="opacity: 0;"
              (change)="onSelectFile($event)"
              accept="image/gif,image/jpeg,image/png" />
@@ -65,7 +65,10 @@
   </button>
 
   <button id="cmdCancel" class="app-button" mat-button mat-raised-button (click)="onNoClick()">Annuler</button>
-  <button id="cmdValide" class="app-button" mat-button mat-raised-button [mat-dialog-close]="data.result" >Ok</button>
+  <button id="cmdValide" class="app-button" mat-button mat-raised-button
+          [mat-dialog-close]="{img:data.result,original:original,file:originalFile}">
+    Ok
+  </button>
 </mat-dialog-actions>
 
 

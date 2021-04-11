@@ -62,6 +62,7 @@ export class NftsPersoComponent implements OnInit {
         for(let i=0;i<r.length;i++){
           r[i].isDealer=(tokenIdentifier==0);
           r[i].fullscreen=false;
+          r[i].open=""; //Utiliser pour stocker le secret si celui ci est révélé
         }
 
 

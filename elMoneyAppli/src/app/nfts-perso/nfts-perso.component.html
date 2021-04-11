@@ -28,7 +28,7 @@
         <br>
         <app-tuto [if]="nfts[1].length>0" label="Les NFT achetés peuvent être remis en vente, détruit, ouvert s'ils contiennent un secret ou directement offer"></app-tuto>
         <app-nfts [user]="user" [nfts]="nfts[1]"
-                  [with_icon]="true" height="fit-content"
+                  [with_icon]="true" height="fit-content" width="90%"
                   (transfer)="transfer($event)">
         </app-nfts>
         <br>
@@ -45,14 +45,14 @@
     <mat-tab label="Vos NFTs fabriqués" style="height: fit-content">
       <app-tuto label="L'ensemble des NFTs que vous avez fabriqués sont listés ici. Vous pouvez ajouter des distributeurs, les retirer de la vente, en faire la promotion"></app-tuto>
       <br>
-      <mat-form-field appearance="fill" style="width:200px;color:white;" *ngIf="nfts[2]?.length>4">
+      <mat-form-field appearance="fill" style="width:200px;color:white;" *ngIf="nfts[2]?.length>2">
         <mat-label>Filtrer</mat-label>
         <mat-select [(value)]="filter">
-          <mat-option *ngFor="let f of filters" [value]="f.filter">{{f.label}}</mat-option>
+          <mat-option *ngFor="let f of filters" [value]="f.filter" (onSelectionChange)="refresh()">{{f.label}}</mat-option>
         </mat-select>
       </mat-form-field>
 
-      <app-nfts [user]="user" [nfts]="nfts[2]"
+      <app-nfts [user]="user" [nfts]="nfts[2]" width="90%"
                 [with_icon]="false" height="fit-content"
                 (transfer)="transfer($event)"></app-nfts>
 

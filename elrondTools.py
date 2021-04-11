@@ -736,7 +736,6 @@ class ElrondNet:
                           "properties":properties
                           })
 
-                obj["open"]=""
                 obj["message"]=""
 
                 rc.append(obj)
