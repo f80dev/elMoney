@@ -1,12 +1,12 @@
 <h2 mat-dialog-title>{{data.title}}</h2>
 <mat-dialog-content>
 
-  <mat-form-field appearance="fill" class="app-field" style="max-width: 150px">
-    <mat-label>Nom du revendeur</mat-label>
-    <input matInput type="text" max="30"
-           [(ngModel)]="dealer.name"
-           [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=2">
-  </mat-form-field>
+<!--  <mat-form-field appearance="fill" class="app-field" style="max-width: 150px">-->
+<!--    <mat-label>Nom du revendeur</mat-label>-->
+<!--    <input matInput type="text" max="30"-->
+<!--           [(ngModel)]="dealer.name"-->
+<!--           [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=2">-->
+<!--  </mat-form-field>-->
 
 
 <!--  <mat-form-field appearance="fill" class="app-field" style="max-width: 150px">-->
@@ -21,15 +21,15 @@
   <br>
 
   <mat-form-field appearance="fill" class="app-field" style="width: 100%">
-    <mat-label>Adresse du distributeur</mat-label>
+    <mat-label>Adresse Elrond</mat-label>
     <input matInput type="text" [(ngModel)]="dealer.addr"
            [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=1">
   </mat-form-field>
 
 
   <div style="width: 100%;text-align: center" *ngIf="showScanner">
-    <small>Pointez le QRCode du distributeur</small><br>
-    <app-scanner [size]="220"
+    <small>Pointez le QRCode de l'adresse à ajouter</small><br>
+    <app-scanner [size]="300"
                  autofocus
                  (click)="showScanner=false"
                  (flash)="onflash_event($event)">

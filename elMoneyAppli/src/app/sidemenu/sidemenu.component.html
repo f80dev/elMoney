@@ -16,8 +16,8 @@
       <td style="text-align: right">
         <button mat-icon-button mat-raised-button class="icon-button"
                 title="Recharger mon compte"
-                *ngIf="user.gas/1e18<0.5"
-                (click)="router.navigate(['faucet'])">
+                *ngIf="user.gas/1e18<1"
+                (click)="router.navigate(['faucet'],{queryParams:{auto:'reload'}})">
           <mat-icon>plus_one</mat-icon>
         </button>
       </td>

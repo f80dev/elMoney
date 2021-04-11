@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {ApiService} from "../api.service";
 import {UserService} from "../user.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {checkConfig, showError, showMessage} from "../tools";
 import {ConfigService} from "../config.service";
 
@@ -18,11 +18,15 @@ export class FaucetComponent implements OnInit {
               public user:UserService,
               public config:ConfigService,
               public toast:MatSnackBar,
+              public routes:ActivatedRoute,
               public router:Router) { }
 
   ngOnInit(): void {
      checkConfig(this);
      this.user.refresh_balance();
+     if(this.routes.snapshot.queryParamMap.get("auto")=="reload"){
+       this.reload_account();
+     }
   }
 
    reload_account() {

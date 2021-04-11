@@ -1,5 +1,5 @@
 <div *ngIf="nfts?.length>0" style="margin: 0px;padding:0;width:99%;text-align: center;" class="wrap-list" >
-  <mat-card class="app-card" [ngStyle]="{'min-height':'110px','max-width':max_w,width:_w,height: 'fit-content','margin':'3px','margin-bottom':'5px',padding:'7px'}"
+  <mat-card class="app-card" [ngStyle]="{'min-height':'150px','max-width':max_w,width:_w,height: 'fit-content','margin':'3px','margin-bottom':'5px',padding:'7px'}"
             *ngFor="let nft of nfts | filter: ['search',filter]">
     <mat-card-header *ngIf="!nft.fullscreen" style="height: 35px">
       <img *ngIf="with_icon" mat-card-avatar src="./assets/icons/gift.png" class="image-icon">
@@ -10,7 +10,7 @@
     </mat-card-header>
 
     <mat-card-content [title]="nft.title+' '+nft.description"
-                      [ngStyle]="{'min-height':'min-content',width:'95%',height:_h,'text-align':'center',margin:'5px','margin-bottom':'37px',overflow:'hidden'}">
+                      [ngStyle]="{'min-height':'fit-content',width:'95%',height:_h,'text-align':'center',margin:'5px','margin-bottom':'37px',overflow:'hidden'}">
 
       <app-tuto [if]="nft.owner!=user.addr && nft.has_secret==1"
                 label="Devenez propriétaire de ce NFT pour accèder à son contenu."></app-tuto>

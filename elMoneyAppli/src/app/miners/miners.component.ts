@@ -51,7 +51,7 @@ export class MinersComponent implements OnInit {
     this.dialog.open(NewDealerComponent, {
       position: {left: '5vw', top: '5vh'},
       maxWidth: 400, width: '90vw', height: 'auto',
-      data:{title:"Ajout d'un mineur",result:this.user.addr}
+      data:{title:"Référencement d'un créateur",result:this.user.addr}
     }).afterClosed().subscribe((result) => {
       if (result && result.hasOwnProperty("addr")) {
         let obj:any={

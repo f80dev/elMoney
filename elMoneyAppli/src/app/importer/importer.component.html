@@ -52,6 +52,9 @@
     </mat-tab>
 
     <mat-tab label="NFT avancé">
+      <br>
+      Le mode avancé vous permet de créer des NFTs "sur mesure" en combinant toutes les possibilités de TokenForge<br>
+
       <app-tuto [if]="files[0].length>0"
                 label="Le fichier est stocké dans le réseau IPFS de façon totalement sécurisé. Seul la clé permettant de le reconstituer est embarqué dans le NFT"></app-tuto>
 
@@ -175,7 +178,7 @@
             <ng-template matStepLabel>Distribution</ng-template>
             <mat-tab-group
               animationDuration="1000ms">
-              <mat-tab label="Le propriétaire">
+              <mat-tab label="Le propriétaire" style="height:max-content;overflow: hidden;">
                 <br>
                 <mat-slide-toggle
                   color="primary"
@@ -195,6 +198,7 @@
                   [disabled]="dataSource.data.length==0"
                   [(ngModel)]="direct_sell">Disponible en vente directe
                 </mat-slide-toggle>
+                <br>
               </mat-tab>
 
               <mat-tab label="Les revendeurs">
@@ -284,7 +288,7 @@
                 <mat-hint *ngIf="focus_idx==10">Attention le coût de fabrication dépend également du nombre de NFT fabriqués</mat-hint>
               </mat-form-field>
               <br><br>
-              Cout de fabrication: {{count*gift}} + frais de transaction&nbsp;
+              Cout de fabrication: {{count*gift}} + frais de transactions
               <span *ngIf="count*gift>user.gas/1e18">(Solde insuffisant)</span>
               <br>
               <button mat-raised-button  color="primary"
