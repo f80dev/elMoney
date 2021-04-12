@@ -10,14 +10,17 @@
   <!--    <mat-button-toggle *ngFor="let seller of sellers" [(ngModel)]="modelName" [checked]="modelName"></mat-button-toggle>-->
   <!--  </mat-button-toggle-group>-->
 
+
+
+
   <table id="seller_zone" style="margin: 5px;"><tr style="width: 100%;">
 
-    <td style="width: 110px;margin:0;padding:0;text-align: left;">
-      <img [src]="selected_dealer?.visual" style="width:100px;">
+    <td style="width: 110px;margin:0;padding:0;text-align: left;" *ngIf="selected_dealer?.visual?.length>0">
+      <img [src]="selected_dealer?.visual" style="width:80px;">
     </td>
 
-    <td style="width:auto;padding:0px;text-align: left;line-height: 90%;">
-      <mat-form-field appearance="legacy"
+    <td style="padding:0px;text-align: left;line-height: 90%;">
+      <mat-form-field appearance="fill"
                       style="width:100%;">
         <mat-label>Revendeur</mat-label>
         <mat-select id="selOrder" [(ngModel)]="selected_dealer" (selectionChange)="refresh()" style="margin: 0px;">
@@ -29,21 +32,13 @@
       <br>
       {{selected_dealer?.description}}
     </td>
-
   </tr></table>
 
 
-
-  <br>
-
-  <app-tuto [if]="nfts?.length>0"
-            label="Ici, vous pouvez acheter des NFTs vendu directement par les propriétaires. Si vous ne disposez pas de fonds suffisants, il est possible de recharger votre compte"></app-tuto>
-
-
   <div *ngIf="nfts?.length>2">
-    <mat-form-field appearance="legacy"
-                    style="max-width:600px;width:60%;margin-right: 10px;" autofocus>
-      <mat-label>Chercher un token à acheter</mat-label>
+    <mat-form-field appearance="fill"
+                    style="max-width:150px;margin-right: 10px;" autofocus>
+      <mat-label>Chercher un token</mat-label>
       <input matInput matNativeControl
              (keyup)="onQuery($event)"
              placeholder="Un ou plusieurs mots du titre" [(ngModel)]="filter">
@@ -52,13 +47,21 @@
                 (click)="clearQuery()">cancel</mat-icon>
     </mat-form-field>
 
-    <mat-form-field appearance="fill" style="width:130px;color:white;">
+    <mat-form-field appearance="fill" style="width:100px;color:white;">
       <mat-label>Affichage</mat-label>
       <mat-select [(value)]="selected_mode" style="color: white;">
         <mat-option *ngFor="let option of options" [value]="option.style">{{option.label}}</mat-option>
       </mat-select>
     </mat-form-field>
   </div>
+
+
+  <br>
+
+  <app-tuto [if]="nfts?.length>0"
+            label="Ici, vous pouvez acheter des NFTs vendu directement par les propriétaires. Si vous ne disposez pas de fonds suffisants, il est possible de recharger votre compte"></app-tuto>
+
+
 
 
   <app-hourglass [message]="message"></app-hourglass>

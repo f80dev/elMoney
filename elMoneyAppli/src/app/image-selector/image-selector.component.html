@@ -12,8 +12,8 @@
 
     <button mat-flat-button mat-button
             id="cmdFile" class="app-button"
-            style="width:65px;">
-      <label for="file">&nbsp<mat-icon>camera</mat-icon>&nbsp;Photos</label>
+            style="width:65px;padding:2px;">
+      <label for="file">&nbsp;<mat-icon style="margin-top: 3px;">camera</mat-icon>&nbsp;Photos</label>
       <input type="file" id="file" style="opacity: 0;"
              (change)="onSelectFile($event)"
              accept="image/gif,image/jpeg,image/png" />

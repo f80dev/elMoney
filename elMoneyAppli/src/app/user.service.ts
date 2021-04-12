@@ -69,6 +69,7 @@ export class UserService {
       description:this.description,
       pseudo:this.pseudo,
       visual:this.visual,
+      website:this.website,
       shop_visual:this.shop_visual,
       shop_name:this.shop_name,
       shop_description:this.shop_description,

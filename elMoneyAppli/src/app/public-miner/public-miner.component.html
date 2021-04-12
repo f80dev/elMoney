@@ -5,7 +5,12 @@
       <img style="width: 100px;" class="photo" [src]="miner?.visual">
     </td>
     <td style="vertical-align: text-top;text-align: left;padding: 5px;">
-      <span style="font-size: xx-large;">{{miner?.pseudo}}</span><br>
+      <span style="font-size: xx-large;">{{miner?.pseudo}}</span>
+      &nbsp;<mat-icon *ngIf="miner?.website?.length>0"
+                      (click)="open_website(miner)"
+                      style="cursor: pointer;"
+                      title="Voir son site web">language</mat-icon>
+      <br>
       {{miner?.description}}
     </td>
   </tr></table>
@@ -16,6 +21,8 @@
 
 
   <h3>Les NFTs de {{miner?.pseudo}}</h3>
-  <app-nfts [user]="user" [with_icon]="false" [nfts]="nfts" maxwidth="100px" width="90%" height="auto"></app-nfts>
+  <app-nfts [user]="user" [with_icon]="false"
+            (buy)="refresh()"
+            [nfts]="nfts" maxwidth="100px" width="90%" height="auto"></app-nfts>
   <br><br>
 </div>

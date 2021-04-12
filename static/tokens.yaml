@@ -33,6 +33,22 @@ content:
     transac: 0.00015
     production: true
 
+  - index: music
+    title: Vendre<br>de la music
+    icon: music
+    description: Vendre un fichier musical
+    fee: 0.002
+    transac: 0.00015
+    production: true
+
+  - index: film
+    title: Vendre<br>un film
+    icon: movie
+    description: Vendre un film via le lien d'une plateforme vidéo
+    fee: 0.002
+    transac: 0.00015
+    production: true
+
   - index: secret
     title: Vendre<br>un secret
     icon: lock

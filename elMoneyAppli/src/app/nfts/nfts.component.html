@@ -2,10 +2,10 @@
   <mat-card class="app-card" [ngStyle]="{'min-height':'150px','max-width':max_w,width:_w,height: 'fit-content','margin':'3px','margin-bottom':'5px',padding:'7px'}"
             *ngFor="let nft of nfts | filter: ['search',filter]">
     <mat-card-header *ngIf="!nft.fullscreen" style="height: 35px">
-      <img *ngIf="with_icon" mat-card-avatar src="./assets/icons/gift.png" class="image-icon">
+      <img *ngIf="with_icon" mat-card-avatar src="./assets/icons/gift.png" class="image-icon" style="margin:0;">
       <mat-card-title [ngStyle]="{'font-size':fontsize}">
         {{nft.title}}
-        <span *ngIf="nft?.count && nft?.count>1">({{nft.count}})</span>
+        <span style="font-size: xx-small" *ngIf="nft?.count && nft?.count>1">({{nft.count}})</span>
       </mat-card-title>
     </mat-card-header>
 

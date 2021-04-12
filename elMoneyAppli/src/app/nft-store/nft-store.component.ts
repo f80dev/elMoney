@@ -90,7 +90,6 @@ export class NftStoreComponent implements OnInit {
           item.count=1;
           if (!this.filter_id || this.filter_id == item.token_id) {
           if (item.state == 0 && item.properties>=4 && item.owner!=this.user.addr) {
-            debugger
             this.nfts.push(item);
           }
         }
