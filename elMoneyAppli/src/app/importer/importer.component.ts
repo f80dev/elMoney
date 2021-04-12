@@ -12,11 +12,11 @@ import {environment} from "../../environments/environment";
 import {MatTableDataSource} from "@angular/material/table";
 import {StepperSelectionEvent} from "@angular/cdk/stepper";
 import {PromptComponent} from "../prompt/prompt.component";
+import {SelDealerComponent} from "../sel-dealer/sel-dealer.component";
 
 export interface SellerProperties {
   address: string;
   name: string;
-  marge:number;
 }
 
 @Component({
@@ -187,26 +187,19 @@ export class ImporterComponent implements OnInit {
   }
 
   add_seller() {
-    this.dialog.open(NewDealerComponent, {
+    this.dialog.open(SelDealerComponent, {
       position:
         {left: '5vw', top: '5vh'},
       maxWidth: 400, width: '90vw', height: 'auto', data:{
-        title:"Ajouter un distributeur",
-        result:this.user.addr
+        title:"Ajouter mes distributeurs"
       }
     }).afterClosed().subscribe((result) => {
-      if (result && result.hasOwnProperty("addr")) {
-        let obj:SellerProperties={address:result.addr,name:result.name,marge:result.percent};
-        this.api._get("/miners/"+result.addr+"/","").subscribe((sellers:any)=>{
-          for(let d of sellers){
-            if(d.addr==this.user.addr){
-              this.dataSource.data.push(obj);
-              this.dataSource._updateChangeSubscription();
-              return;
-            }
-          }
-          showMessage(this,"Ce distributeur doit préalablement vous approuver");
-        });
+      if (result!={}) {
+        for(let seller of result){
+          let obj:SellerProperties={address:seller.address,name:seller.name};
+          this.dataSource.data.push(obj);
+        }
+        this.dataSource._updateChangeSubscription();
       }
     });
   }
@@ -242,7 +235,7 @@ export class ImporterComponent implements OnInit {
     }).afterClosed().subscribe((price) => {
       if(price){
         this.price=Number(price);
-        this.min_price=0;this.max_price=0;this.miner_ratio=0;
+        this.min_price=0;this.max_price=this.price*2;this.miner_ratio=0;
         if(func)func(this.price); else this.tokenizer(fee);
       }
     });

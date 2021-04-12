@@ -113,21 +113,23 @@ export class SettingsComponent implements OnInit,OnDestroy {
 
   ngOnDestroy(): void {
     this.user.save_user();
-
   }
 
   make_store() {
-    this.message="Création de la boutique";
-    if(this.user.shop_website.length+this.user.shop_name.length+this.user.shop_description.length>0){
-      this.user.new_dealer(()=>{
-        this.message="";
-        showMessage(this,"Vous avez été ajouté comme distributeur. Référencez des créateurs dés maintenant",0,()=>{
-          this.router.navigate(["miners"]);
+    this.user.save_user(()=>{
+      this.message="Création de la boutique";
+      if(this.user.shop_website.length+this.user.shop_name.length+this.user.shop_description.length>0){
+        this.user.new_dealer(()=>{
+          this.message="";
+          showMessage(this,"Vous avez été ajouté comme distributeur. Référencez des créateurs dés maintenant",0,()=>{
+            this.router.navigate(["miners"]);
+          });
+        },(err)=>{
+          showError(this,err);
         });
-      },(err)=>{
-        showError(this,err);
-      });
-    }
+      }
+    });
+
   }
 
   openclose_store() {

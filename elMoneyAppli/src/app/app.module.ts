@@ -69,6 +69,7 @@ import { TransactionsComponent } from './transactions/transactions.component';
 import { UploadFileComponent } from './upload-file/upload-file.component';
 import { MinersComponent } from './miners/miners.component';
 import { PublicMinerComponent } from './public-miner/public-miner.component';
+import { SelDealerComponent } from './sel-dealer/sel-dealer.component';
 
 const config: SocketIoConfig = {
   url: environment.domain_server,
@@ -114,7 +115,8 @@ const config: SocketIoConfig = {
     TransactionsComponent,
     UploadFileComponent,
     MinersComponent,
-    PublicMinerComponent
+    PublicMinerComponent,
+    SelDealerComponent
   ],
   imports: [
     MatButtonModule,

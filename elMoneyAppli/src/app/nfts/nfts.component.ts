@@ -11,6 +11,7 @@ import {PromptComponent} from "../prompt/prompt.component";
 import {MatDialog} from "@angular/material/dialog";
 import {NewDealerComponent} from "../new-dealer/new-dealer.component";
 import {SellerProperties} from "../importer/importer.component";
+import {SelDealerComponent} from "../sel-dealer/sel-dealer.component";
 
 @Component({
   selector: 'app-nfts',
@@ -186,18 +187,16 @@ export class NftsComponent implements OnChanges {
 
 
   add_dealer(nft: any) {
-    this.dialog.open(NewDealerComponent, {
+    this.dialog.open(SelDealerComponent, {
       position:
         {left: '5vw', top: '5vh'},
-      maxWidth: 400, width: '90vw', height: 'auto', data:{
-        title:"Ajouter un distributeur",
+        maxWidth: 400, width: '90vw', height: 'auto', data:{
         result:this.user.addr
       }
     }).afterClosed().subscribe((result) => {
-      if (result && result.hasOwnProperty("addr")) {
+      if (result!={} && result.length>0) {
         let obj:any={
-          addr:result.addr,
-          name:result.name,
+          dealers:result,
           pem:this.user.pem
         };
         nft.message="Ajout du distributeur en cours";

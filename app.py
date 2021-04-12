@@ -583,11 +583,12 @@ def add_dealer(token_id:str,data:dict=None):
         data = json.loads(str(request.data, encoding="utf-8"))
     pem_file = get_pem_file(data["pem"])
 
-    _dealer = Account(address=data["addr"])
+    for dealer in data["dealers"]:
+        _dealer = Account(address=dealer["address"])
+        arguments = [int(token_id), "0x" + _dealer.address.hex()]
+        tx = bc.add_dealer(NETWORKS[bc.network_name]["nft"], pem_file, arguments)
 
-    arguments = [int(token_id), "0x" + _dealer.address.hex()]
-    tx = bc.add_dealer(NETWORKS[bc.network_name]["nft"], pem_file, arguments)
-    os.remove(pem_file)
+    os.remove(pem_filLe)
 
     return jsonify(tx), 200
 
@@ -605,8 +606,9 @@ def get_miners(seller:str):
     return jsonify(rc), 200
 
 @app.route('/api/dealers/',methods=["GET"])
-def get_dealers():
-    return jsonify(bc.dealers()), 200
+@app.route('/api/dealers/<addr>/',methods=["GET"])
+def get_dealers(addr:str="0x0"):
+    return jsonify(bc.dealers(addr)), 200
 
 
 

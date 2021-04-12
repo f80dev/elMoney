@@ -1,0 +1,20 @@
+<mat-dialog-content>
+  <table style="width: 100%;">
+    <tr *ngFor="let dealer of dealers">
+      <td style="width: 60px">
+        <img [src]="dealer.visual" style="width:60px;">
+      </td>
+      <td style="text-align: left;">
+        {{dealer.name}}
+      </td>
+      <td>
+        <mat-slide-toggle [(ngModel)]="dealer.selected"></mat-slide-toggle>
+      </td>
+    </tr>
+  </table>
+</mat-dialog-content>
+<mat-dialog-actions style="text-align: right;width:100%;">
+  <button id="cmdNo" class="app-button" mat-button mat-raised-button [mat-dialog-close]="{}">Annuler</button>
+  <button id="cmdYes" class="app-button" mat-button mat-raised-button (click)="return_dealers()">Ajouter</button>
+</mat-dialog-actions>
+

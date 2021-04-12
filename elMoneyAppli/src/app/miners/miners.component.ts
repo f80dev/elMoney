@@ -8,6 +8,7 @@ import {ConfigService} from "../config.service";
 import {PromptComponent} from "../prompt/prompt.component";
 import {Router} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {ClipboardService} from "ngx-clipboard";
 
 @Component({
   selector: 'app-miners',
@@ -21,6 +22,7 @@ export class MinersComponent implements OnInit {
   constructor(
     public router:Router,
     public api:ApiService,
+    public clipboard:ClipboardService,
     public user:UserService,
     public dialog:MatDialog,
     public config:ConfigService,
@@ -29,8 +31,8 @@ export class MinersComponent implements OnInit {
 
   ngOnInit(): void {
     if(!this.user.isDealer()){
-        showMessage(this,"Vous devez renseigner la section distributeur pour approuver des mineurs");
-        this.router.navigate(["settings"],{queryParams:{section:2}});
+      showMessage(this,"Vous devez renseigner la section distributeur pour approuver des mineurs");
+      this.router.navigate(["settings"],{queryParams:{section:2}});
     } else
       this.refresh();
   }
@@ -47,25 +49,38 @@ export class MinersComponent implements OnInit {
   }
 
 
-  add_miner(){
+  prompt_dealer(addr){
     this.dialog.open(NewDealerComponent, {
-      position: {left: '5vw', top: '5vh'},
-      maxWidth: 400, width: '90vw', height: 'auto',
-      data:{title:"Référencement d'un créateur",result:this.user.addr}
-    }).afterClosed().subscribe((result) => {
-      if (result && result.hasOwnProperty("addr")) {
-        let obj:any={
-          address:result.addr,
-          pem:this.user.pem
-        };
-        this.message="Approbation d'un nouveau créateur";
-        this.api._post("add_miner/","",obj).subscribe(()=>{
-          showMessage(this,"Mineur ajoute");
-          this.message="";
-          this.refresh();
-        })
-      }
-    });
+        position: {left: '5vw', top: '5vh'},
+        maxWidth: 400, width: '90vw', height: 'auto',
+        data:{title:"Référencement d'un créateur",result:addr}
+      }).afterClosed().subscribe((result) => {
+        if (result && result.hasOwnProperty("addr")) {
+          let obj:any={
+            address:result.addr,
+            pem:this.user.pem
+          };
+          this.message="Approbation d'un nouveau créateur";
+          this.api._post("add_miner/","",obj).subscribe(()=>{
+            showMessage(this,"Mineur ajoute");
+            this.message="";
+            this.refresh();
+          })
+        }
+      });
+  }
+
+
+
+  add_miner(){
+    navigator["clipboard"].readText().then((data)=>{
+      let _default=this.user.addr;
+      if(data.startsWith("erd"))
+        _default=data;
+      this.prompt_dealer(_default);
+    }).catch(()=>{
+      this.prompt_dealer(this.user.addr);
+    })
   }
 
 

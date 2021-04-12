@@ -890,8 +890,13 @@ class ElrondNet:
         return rc
 
 
-    def dealers(self):
-        tx = self.query("dealers")
+    def dealers(self,miner_filter:str):
+        if miner_filter!="0x0":
+            miner_filter="0x"+Account(address=miner_filter).address.hex()
+        else:
+            miner_filter="0x0000000000000000000000000000000000000000000000000000000000000000"
+
+        tx = self.query("dealers",[miner_filter])
         rc = []
         if len(tx)>0 and len(tx[0].hex)>0:
             for dealer in str(tx[0].hex).split("000000"):
