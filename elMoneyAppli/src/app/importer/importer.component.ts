@@ -302,13 +302,13 @@ export class ImporterComponent implements OnInit {
 
 
 
-  quick_secret(token){
-    this.ask_for_text("Cacher un secret","Saisissez votre secret, mot de passe ...",(secret)=>{
+  quick_secret(token,lib_secret="Saisissez votre secret, mot de passe ..."){
+    this.ask_for_text("Contenu embarqué",lib_secret,(secret)=>{
       if(secret){
         this.secret=secret;
-        this.ask_for_text("Un titre","Entrez un titre pour votre annonce",(title)=> {
+        this.ask_for_text("Un titre","Entrez un titre pour votre NFT",(title)=> {
           if(title)
-            this.ask_for_text("Description","Faites une breve description de votre token",(description)=>{
+            this.ask_for_text("Description","Ecrivez une breve description",(description)=>{
               if(description){
                 this.desc=description;
                 this.title=title;
@@ -416,13 +416,13 @@ export class ImporterComponent implements OnInit {
   create_token(token: any) {
     if(token.index=="photo")this.quick_photo(token,"Télécharger votre photo",null,null,false);
     if(token.index=="pow")this.quick_pow(token,300,300);
+    if(token.index=="music")this.show_fileupload(1,'Téléverser le fichier musical',token);
+    if(token.index=="movie")this.quick_secret(token,'coller le lien secret (youtube par exemple) du film');
     if(token.index=="file")this.show_fileupload(1,'Téléverser le fichier à embarquer dans votre token',token);
     if(token.index=="secret")this.quick_secret(token);
     if(token.index=="tickets")this.quick_tickets('Téléverser le visuel de votre invitation',token);
     if(token.index=="loterie")this.quick_loterie(token);
   }
-
-
 
 
 }

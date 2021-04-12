@@ -1,10 +1,9 @@
 <div class="mainform" style="text-align: center;">
-
-  <table><tr style="width: 100%;">
+  <table style="width: 100%;"><tr style="width: 100%;">
     <td style="width: 120px;">
       <img style="width: 100px;" class="photo" [src]="miner?.visual">
     </td>
-    <td style="vertical-align: text-top;text-align: left;padding: 5px;">
+    <td style="width:max-content;vertical-align: text-top;text-align: left;padding: 5px;">
       <span style="font-size: xx-large;">{{miner?.pseudo}}</span>
       &nbsp;<mat-icon *ngIf="miner?.website?.length>0"
                       (click)="open_website(miner)"
@@ -12,6 +11,17 @@
                       title="Voir son site web">language</mat-icon>
       <br>
       {{miner?.description}}
+    </td>
+    <td style="width:62px;text-align: right">
+      <qrcode
+      [width]="60"
+      ngxClipboard
+      [cdkCopyToClipboard]="miner?.addr"
+      style="display: inline-block;"
+      [elementType]="'svg'"
+      [errorCorrectionLevel]="'M'"
+      [qrdata]="miner?.addr">
+    </qrcode>
     </td>
   </tr></table>
 

@@ -35,7 +35,7 @@ content:
 
   - index: music
     title: Vendre<br>de la music
-    icon: music
+    icon: audiotrack
     description: Vendre un fichier musical
     fee: 0.002
     transac: 0.00015
