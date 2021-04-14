@@ -19,7 +19,7 @@
       <img [src]="selected_dealer?.visual" style="width:80px;">
     </td>
 
-    <td style="padding:0px;text-align: left;line-height: 90%;width:40%;">
+    <td style="padding:0px;text-align: left;line-height: 90%;">
       <mat-form-field appearance="fill"
                       style="width:100%;">
         <mat-label>Revendeur</mat-label>
@@ -33,7 +33,9 @@
       {{selected_dealer?.description}}
     </td>
     <td style="text-align: right;">
-      <mat-icon (click)="ask_reference(selected_dealer)" *ngIf="selected_dealer?.email?.length>0">mail</mat-icon>
+      <mat-icon (click)="ask_reference(selected_dealer)"
+                style="cursor: pointer;"
+                *ngIf="selected_dealer?.email?.length>0">mail</mat-icon>
     </td>
   </tr></table>
 

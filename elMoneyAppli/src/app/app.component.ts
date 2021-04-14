@@ -46,6 +46,7 @@ export class AppComponent implements OnInit,OnDestroy {
 
       $$("Initialisation de l'utilisateur")
       let addr=this.routes.snapshot.queryParamMap.get("user");
+      let miner=this.routes.snapshot.queryParamMap.get("miner");
       let q=this.routes.snapshot.queryParamMap.get("q");
       let filter=this.routes.snapshot.queryParamMap.get("filter");
       let pem_key=localStorage.getItem("pem");
@@ -53,19 +54,20 @@ export class AppComponent implements OnInit,OnDestroy {
 
       this.user.init(addr,pem_key,
         (r)=> {
-          if(localStorage.getItem("last_screen"))
+          if(localStorage.getItem("last_screen") && !miner)
             this.router.navigate([localStorage.getItem("last_screen")]);
           else{
-
-
-
             if(this.config.hasESDT() && !q && !filter)
               this.router.navigate(["main"]);
             else{
+
               if(addr)
                 this.router.navigate(["nfts-perso"]);
               else {
-                this.router.navigate(["store"],{queryParams:{q:q,filter:filter}});
+                if(miner)
+                  this.router.navigate(["miner"],{queryParams:{addr:miner}})
+                else
+                  this.router.navigate(["store"],{queryParams:{q:q,filter:filter}});
               }
             }
 

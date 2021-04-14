@@ -5,7 +5,7 @@ from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-from definitions import SMTP_SERVER, USERNAME, PASSWORD, DOMAIN_APPLI
+from definitions import SMTP_SERVER, USERNAME, PASSWORD, DOMAIN_APPLI, SIGNATURE, APPNAME
 
 
 #Retourne la date du jour en secondes
@@ -113,6 +113,9 @@ def open_html_file(name:str,replace=dict(),domain_appli=DOMAIN_APPLI):
      }
     </style>
     """
+
+    replace["signature"]=SIGNATURE
+    replace["appname"]=APPNAME
 
     for k in list(replace.keys()):
         body=body.replace("{{"+k+"}}",str(replace.get(k)))

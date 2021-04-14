@@ -77,7 +77,7 @@ export class UserService {
       shop_website:this.shop_website,
       pem:this.pem
     };
-
+    
     this.api._post("users/","",body).subscribe((id:any)=>{
       $$("Enregistrement de l'utilisateur");
       if(func)func();
@@ -184,6 +184,7 @@ export class UserService {
         this.visual=body.visual;
         this.description=body.description;
         this.shop_name=body.shop_name;
+        this.email=body.email;
         this.shop_visual=body.shop_visual;
         this.pem=body.pem;
         func(body);

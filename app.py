@@ -352,8 +352,6 @@ def transfer_nft(token_id,dest):
     pem_file=get_pem_file(data["pem"])
 
     _dest = convert_email_to_addr(dest,open_html_file("transfer_nft", {
-        "appname": APPNAME,
-        "signature": SIGNATURE,
         "title": data["title"],
         "from":data["from"],
         "url_appli": DOMAIN_APPLI + "/?user=#addr#",
@@ -608,14 +606,31 @@ def get_miners(seller:str):
 @app.route('/api/dealers/',methods=["GET"])
 @app.route('/api/dealers/<addr>/',methods=["GET"])
 def get_dealers(addr:str="0x0"):
-    return jsonify(bc.dealers(addr)), 200
+    rc=[]
+    for dealer in bc.dealers(addr):
+        _dealer=dao.get_user(dealer["address"])
+        del _dealer["_id"]
+        rc.append(_dealer | dealer)
+    return jsonify(rc), 200
 
 
 @app.route('/api/ask_ref/<addr_from>/<addr_to>/',methods=["GET"])
 def ask_ref(addr_from:str,addr_to:str):
-    _dealer=dao.get_user(addr_from)
-    _creator=dao.get_user(addr_to)
-    send_mail(open_html_file("ask_ref",{}),_dealer["email"])
+    _dealer=dao.get_user(addr_to)
+    _creator=dao.get_user(addr_from)
+
+    website=DOMAIN_APPLI+"/miner?addr="+_creator["addr"]
+    if "website" in _creator:website=_creator["website"]
+
+    send_mail(open_html_file("ask_ref",{
+        "miner":_creator["addr"],
+        "miner_website":website,
+        "miner_explorer":NETWORKS[bc.network_name]["explorer"]+"/account/"+_creator["addr"],
+        "miner_pseudo":_creator["pseudo"],
+        "miner_email":_creator["email"],
+        "autoref":DOMAIN_APPLI+"/?miner="+_creator["addr"]
+    }),_dealer["email"],subject="Demande de référencement")
+    return jsonify({"message":"ok"}), 200
 
 
 
