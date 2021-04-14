@@ -27,11 +27,18 @@ export class SelDealerComponent implements OnInit {
     });
   }
 
+  eval_selected_dealer(evt=null){
+    setTimeout(()=>{
+      this.sel_dealers= [];
+      for(let d of this.dealers){
+        if(d.selected)this.sel_dealers.push(d);
+      }
+    },50)
+
+  }
+
   return_dealers() {
-    let rc=[];
-    for(let d of this.dealers){
-      if(d.selected)rc.push(d);
-    }
-    this.dialogRef.close(rc);
+    this.eval_selected_dealer();
+    this.dialogRef.close(this.sel_dealers);
   }
 }

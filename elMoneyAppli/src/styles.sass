@@ -1,18 +1,21 @@
 /* You can add global styles to this file, and also import other style files */
 
 $darkgray: #323232
+$darkdarkgray: #1c1a1a
 $grayinput: #303030
 $button-color: #221913
 
 .mainform
   text-align: center
   min-height: 100vh
-  background-color: #404040
-  color: lightgray
+  background-color: $darkgray
+  color: white
   padding: 5px
 
 .sidemenu
-  background-color: #323232
+  background-color: $darkdarkgray
+  margin: 0px !important
+  padding: 0px !important
 
 .app-button
   margin: 4px !important
@@ -66,11 +69,11 @@ h2
   justify-content: center
 
 body
-  background-color: #545454 !important
+  background-color: $darkgray !important
   color: white
 
 html
-  background-color: #545454 !important
+  background-color: $darkgray !important
   overflow: scroll
   overflow-x: hidden
 
@@ -98,7 +101,7 @@ input
   color: lightgray
 
 mat-dialog-container
-  background-color: #323232 !important
+  background-color: $darkgray !important
 
 
 td
@@ -250,8 +253,11 @@ mat-card-content
 
 .toolbar-app
   z-index: 9999
-  background-color: #323232
+  height: 40px
+  background-color: #2d2d2d
   color: lightgray
+  margin: 0px
+  padding: 0px
 
 .image-icon
   width: 27px !important

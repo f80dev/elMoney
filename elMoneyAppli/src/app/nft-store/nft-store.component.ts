@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ApiService} from "../api.service";
-import {subscribe_socket} from "../tools";
+import {showMessage, subscribe_socket} from "../tools";
 import {UserService} from "../user.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -131,5 +131,11 @@ export class NftStoreComponent implements OnInit {
   on_buy($event: any) {
     this.user.refresh_balance();
     this.router.navigate(['nfts-perso'],{queryParams:{index:0}})
+  }
+
+  ask_reference(dealer:any) {
+    this.api._get("ask_ref/"+this.user.addr+"/"+dealer.address+"/","").subscribe(()=>{
+      showMessage(this,"La demande de referencement a été envoyé");
+    });
   }
 }

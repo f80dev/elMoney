@@ -3,19 +3,18 @@
             color="white"
             image=""
             [subtitle]="'Fabriquez vos propres monnaies et NFT sur la blockchain Elrond<br><br><small>alpha version '+appVersion+'</small>'"
-            background="./assets/img/tokenforge.jpg"></app-tuto>
+            background="./assets/img/tokenforge.jpg">
+</app-tuto>
 
 
 <mat-toolbar class="toolbar-app"
              (mousedown)="closeMenu()" *ngIf="message?.length==0">
     <mat-icon
-      title="Accédez au menu principal"
-      id="cmdMenu"
-      (click)="drawer.toggle()"
-      style="cursor: pointer;">
+      title="Accédez au menu principal" id="cmdMenu"
+      (click)="drawer.toggle()" style="cursor: pointer;">
       menu
     </mat-icon>
-
+    &nbsp;
     <span>
     {{config.values?.appname}}&nbsp;
     </span>
@@ -29,22 +28,21 @@
               title="Revenir à l'écran précédent"
               (click)="_location.back()">navigate_before</mat-icon>
 
-    <!--    <mat-icon -->
-    <!--              title="Se déconnecter de l'application"-->
-    <!--              (click)="logout()" style="cursor: pointer;">exit_to_app-->
-    <!--    </mat-icon>-->
 </mat-toolbar>
+
+
 
 <mat-drawer-container class="container" autosize>
 
-    <mat-drawer #drawer class="sidenav" style="background-color: #323232;" [mode]="sidemenu_mode" *ngIf="message.length==0">
+    <mat-drawer #drawer class="sidemenu"
+                [mode]="sidemenu_mode" *ngIf="message.length==0">
       <app-sidemenu (logout)="logout()" (click)="closeMenu()">
       </app-sidemenu>
     </mat-drawer>
 
-    <mat-drawer-content style="overflow: scroll">
+    <mat-drawer-content style="overflow: scroll;margin:0px;">
       <div class="sidenav-container"
-           style="z-index:100 !important;text-align: center;height: 100vh;border: none;margin: 0;padding: 0;"
+           style="z-index:100 !important;text-align: center;height: 100vh;border: none;margin: 0px;padding: 0px;"
            (mousedown)="closeMenu()">
 
         <div style="width:60%;margin-left: 20%;">
@@ -55,7 +53,7 @@
 <!--        filter: saturate(2) invert() blur(1px) grayscale(100%)-->
 
         <img src="./assets/img/coin.png"
-             style="width:60vw;max-width:300px;display: inline;margin-top: 50px;"
+             style="width:60vw;max-width:300px;display: inline;margin:0px;margin-top: 50px;"
              *ngIf="message.length>0">
 
         <router-outlet style="width:100%;background-color: #323232;"

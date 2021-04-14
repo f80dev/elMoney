@@ -27,7 +27,6 @@ export class UserService {
   shop_description: string="";
   shop_website: string="";
   dealer: any=null;
-  shop_contact: string="";
 
   constructor(public api:ApiService,
               public socket:Socket,
@@ -74,7 +73,7 @@ export class UserService {
       shop_visual:this.shop_visual,
       shop_name:this.shop_name,
       shop_description:this.shop_description,
-      shop_contact:this.shop_contact,
+      email:this.email,
       shop_website:this.shop_website,
       pem:this.pem
     };
@@ -230,9 +229,11 @@ export class UserService {
         name:this.shop_name,
         website:this.shop_website,
         visual: this.shop_visual,
+        contact:this.email
       },
       pseudo:this.pseudo,
-      addr:this.addr
+      addr:this.addr,
+      email:this.email
     }
     this.api._post("new_dealer/","",body).subscribe((r:any)=>{
       this.config.refresh_dealers();

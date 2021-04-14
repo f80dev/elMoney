@@ -2214,12 +2214,14 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
 .mainform {
   text-align: center;
   min-height: 100vh;
-  background-color: #404040;
-  color: lightgray;
+  background-color: #323232;
+  color: white;
   padding: 5px;
 }
 .sidemenu {
-  background-color: #323232;
+  background-color: #1c1a1a;
+  margin: 0px !important;
+  padding: 0px !important;
 }
 .app-button {
   margin: 4px !important;
@@ -2271,11 +2273,11 @@ h2 {
   justify-content: center;
 }
 body {
-  background-color: #545454 !important;
+  background-color: #323232 !important;
   color: white;
 }
 html {
-  background-color: #545454 !important;
+  background-color: #323232 !important;
   overflow: scroll;
   overflow-x: hidden;
 }
@@ -2443,8 +2445,11 @@ mat-card-content {
 }
 .toolbar-app {
   z-index: 9999;
-  background-color: #323232;
+  height: 40px;
+  background-color: #2d2d2d;
   color: lightgray;
+  margin: 0px;
+  padding: 0px;
 }
 .image-icon {
   width: 27px !important;

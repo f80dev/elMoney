@@ -904,9 +904,10 @@ class ElrondNet:
                     address=dealer[0:64]
                     state=int("0x"+dealer[64:66],16)
                     content=self.ipfs.get_dict(bytes.fromhex(dealer[66:]).decode("utf-8"))
-                    content["address"]=Account(address=address).address.bech32()
-                    content["state"]=state
-                    rc.append(content)
+                    if type(content)==dict:
+                        content["address"]=Account(address=address).address.bech32()
+                        content["state"]=state
+                        rc.append(content)
         return rc
 
 

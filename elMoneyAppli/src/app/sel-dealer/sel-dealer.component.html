@@ -1,5 +1,5 @@
 <mat-dialog-content>
-  <table style="width: 100%;">
+  <table style="width: 100%;" *ngIf="dealers?.length>0">
     <tr *ngFor="let dealer of dealers">
       <td style="width: 60px">
         <img [src]="dealer.visual" style="width:60px;">
@@ -8,13 +8,22 @@
         {{dealer.name}}
       </td>
       <td>
-        <mat-slide-toggle [(ngModel)]="dealer.selected"></mat-slide-toggle>
+        <mat-slide-toggle
+          (change)="eval_selected_dealer($event)"
+          [(ngModel)]="dealer.selected">
+        </mat-slide-toggle>
       </td>
     </tr>
   </table>
+
+  <div *ngIf="dealers?.length==0">
+    Aucun distributeur ne vous a référencé.
+    Demander votre référencement depuis la marketplace
+  </div>
+
 </mat-dialog-content>
 <mat-dialog-actions style="text-align: right;width:100%;">
   <button id="cmdNo" class="app-button" mat-button mat-raised-button [mat-dialog-close]="{}">Annuler</button>
-  <button id="cmdYes" class="app-button" mat-button mat-raised-button (click)="return_dealers()">Ajouter</button>
+  <button *ngIf="sel_dealers?.length>0" id="cmdYes" class="app-button" mat-button mat-raised-button (click)="return_dealers()">Ajouter</button>
 </mat-dialog-actions>
 

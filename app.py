@@ -588,7 +588,7 @@ def add_dealer(token_id:str,data:dict=None):
         arguments = [int(token_id), "0x" + _dealer.address.hex()]
         tx = bc.add_dealer(NETWORKS[bc.network_name]["nft"], pem_file, arguments)
 
-    os.remove(pem_filLe)
+    os.remove(pem_file)
 
     return jsonify(tx), 200
 
@@ -609,6 +609,13 @@ def get_miners(seller:str):
 @app.route('/api/dealers/<addr>/',methods=["GET"])
 def get_dealers(addr:str="0x0"):
     return jsonify(bc.dealers(addr)), 200
+
+
+@app.route('/api/ask_ref/<addr_from>/<addr_to>/',methods=["GET"])
+def ask_ref(addr_from:str,addr_to:str):
+    _dealer=dao.get_user(addr_from)
+    _creator=dao.get_user(addr_to)
+    send_mail(open_html_file("ask_ref",{}),_dealer["email"])
 
 
 

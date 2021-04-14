@@ -19,7 +19,7 @@
       <img [src]="selected_dealer?.visual" style="width:80px;">
     </td>
 
-    <td style="padding:0px;text-align: left;line-height: 90%;">
+    <td style="padding:0px;text-align: left;line-height: 90%;width:40%;">
       <mat-form-field appearance="fill"
                       style="width:100%;">
         <mat-label>Revendeur</mat-label>
@@ -31,6 +31,9 @@
       </mat-form-field>
       <br>
       {{selected_dealer?.description}}
+    </td>
+    <td style="text-align: right;">
+      <mat-icon (click)="ask_reference(selected_dealer)" *ngIf="selected_dealer?.email?.length>0">mail</mat-icon>
     </td>
   </tr></table>
 
@@ -55,14 +58,9 @@
     </mat-form-field>
   </div>
 
-
   <br>
-
   <app-tuto [if]="nfts?.length>0"
             label="Ici, vous pouvez acheter des NFTs vendu directement par les propriétaires. Si vous ne disposez pas de fonds suffisants, il est possible de recharger votre compte"></app-tuto>
-
-
-
 
   <app-hourglass [message]="message"></app-hourglass>
 

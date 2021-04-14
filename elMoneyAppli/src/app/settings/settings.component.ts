@@ -117,7 +117,7 @@ export class SettingsComponent implements OnInit,OnDestroy {
 
   make_store() {
     this.user.save_user(()=>{
-      this.message="Création de la boutique";
+      this.message="Création / modification de la boutique";
       if(this.user.shop_website.length+this.user.shop_name.length+this.user.shop_description.length>0){
         this.user.new_dealer(()=>{
           this.message="";
