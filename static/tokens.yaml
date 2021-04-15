@@ -12,7 +12,19 @@ content:
   - index: photo
     title: Vendre<br>une photo
     icon: camera
-    description: Prenez une photo ou sélectionner une photo déjà prise, faite une description et fixer un prix. Cette photo ne pourrat être vu que par l'acheteur
+    description: Vendre une photo qui ne sera visible que pour le propriétaire
+    tuto: "
+      La procédure est la suivante:<br>
+      <small>
+      <ul>
+        <li>Prenez une photo ou sélectionner une photo déjà prise,</li><br>
+        <li>Donner lui un titre et faites en une description pour encourager l'achat</li><br>
+        <li>fixer un prix en eGold</li>
+      </ul>
+      </small>
+      <br>
+       Cette photo ne pourrat être vu que par l'acheteur
+    "
     fee: 0.002
     transac: 0.00015
     production: true
@@ -21,6 +33,19 @@ content:
     title: Tokeniser<br>une oeuvre
     icon: person
     description: Envoyer une photo et attachez y votre identité (email, passeport) en tant qu'auteur
+    tuto: "
+      Tokenizer un oeuvre revient à attacher une identité à cette oeuvre. Cela revient à produire un certificat d'authenticité
+           <small>
+           <ul>
+             <li>Prenez une photo de l'oeuvre,</li><br>
+             <li>Donner un titre</li><br>
+             <li>Donner une information vous authentifiant formellement (numéro de passeport, email,numéro de SS)</li><br>
+             <li>fixer un prix en eGold si vous souhaitez vendre l'oeuvre</li>
+           </ul>
+           </small>
+           <br>
+            Cette photo ne pourrat être vu que par l'acheteur
+    "
     fee: 0.001
     transac: 0.00015
     production: true
@@ -29,6 +54,18 @@ content:
     title: Vendre<br>un fichier
     icon: description
     description: ""
+    tuto: "
+          La procédure est la suivante:<br>
+          <small>
+          <ul>
+            <li>Charger le fichier dans TokenForge,</li><br>
+            <li>Donner lui un titre et faites en une description pour encourager l'achat</li><br>
+            <li>fixer un prix en eGold</li>
+          </ul>
+          </small>
+          <br>
+           Ce fichier ne pourrat être télécharger que par l'acheteur
+    "
     fee: 0.002
     transac: 0.00015
     production: true
@@ -37,6 +74,20 @@ content:
     title: Vendre<br>de la music
     icon: audiotrack
     description: Vendre un fichier musical
+    tuto: "
+
+              La procédure est la suivante:<br>
+              <small>
+              <ul>
+                <li>Récupérer votre musique sous forme d'un fichier audio de n'importe quel format,</li><br>
+                <li>Donner lui un titre et faites en une description pour encourager l'achat</li><br>
+                <li>fixer un prix en eGold</li>
+              </ul>
+              </small>
+              <br>
+               Seul l'acheteur pourra écouter le morceau
+
+        "
     fee: 0.002
     transac: 0.00015
     production: true
@@ -45,6 +96,11 @@ content:
     title: Vendre<br>un film
     icon: movie
     description: Vendre un film via le lien d'une plateforme vidéo
+    tuto: "
+      Pour embarquer un film, vous devez l'avoir uploader sur une plate forme comme youtube et récupéré le lien de partage.<br>
+      Le partage doit être réservé à ceux qui posséde le lien<br>
+      Grâce à TokenForge le lien est caché dans le NFT et visible uniquement du propriétaire / acheteur.
+      "
     fee: 0.002
     transac: 0.00015
     production: true
@@ -54,6 +110,11 @@ content:
     icon: lock
     description: Vendre un mot de passe, un numéro de license, un code secret de coffre, un code promo
     fee: 0.001
+    tuto: "
+          Pour embarquer un film, vous devez l'avoir uploader sur une plate forme comme youtube et récupéré le lien de partage.<br>
+          Le partage doit être réservé à ceux qui posséde le lien<br>
+          Grâce à TokenForge le lien est caché dans le NFT et visible uniquement du propriétaire / acheteur.
+          "
     transac: 0.00015
     help: Utiliser la commande "ouvrir" pour découvrir le secret que contient ce token
     production: true
@@ -63,6 +124,9 @@ content:
     icon: label
     description: Générer et vendez des billets d'accès à un evénement de tout type
     fee: 0.002
+    tuto: "
+          Grâce à TokenForge le lien est caché dans le NFT et visible uniquement du propriétaire / acheteur.
+          "
     transac: 0.00015
     help: Présenter votre code perso à l'entrée de l'événement pour contrôle du billet
     production: true
@@ -72,6 +136,11 @@ content:
     icon: casino
     description: Organiser une loterie, des cartes à grater en récompensant le gagnant en eGold
     fee: 0.003
+    tuto: "
+          Pour embarquer un film, vous devez l'avoir uploader sur une plate forme comme youtube et récupéré le lien de partage.<br>
+          Le partage doit être réservé à ceux qui posséde le lien<br>
+          Grâce à TokenForge le lien est caché dans le NFT et visible uniquement du propriétaire / acheteur.
+          "
     transac: 0.00015
     help: Après achat, ouvrer ce token pour découvrir si vous avez gagné. Si c'est le cas le gain est immédiatement versé sur votre compte
     production: false

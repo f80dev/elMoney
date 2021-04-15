@@ -6,7 +6,6 @@ import {ImageSelectorComponent} from "../image-selector/image-selector.component
 import {MatDialog} from "@angular/material/dialog";
 import {Router} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {NewDealerComponent} from "../new-dealer/new-dealer.component";
 import {ConfigService} from "../config.service";
 import {environment} from "../../environments/environment";
 import {MatTableDataSource} from "@angular/material/table";
@@ -54,6 +53,7 @@ export class ImporterComponent implements OnInit {
   tokens: any[]=[];
   full_flyer: boolean=true;
   file_format: string="";
+  selected_token: any;
 
   constructor(public api:ApiService,
               public user:UserService,
@@ -258,17 +258,20 @@ export class ImporterComponent implements OnInit {
     this.add_visual((result:any)=>{
       this.files[1]=result.img;
       this.ask_for_text("Titre","Donner un titre à votre NFC",(title)=> {
-        if (title && title.length > 0) {
-          this.ask_for_text("Présentation", "Rédigez une présentation rapide de votre photo pour la marketplace", (legende) => {
-            if (legende != null) {
-              this.title = title;
-              this.desc = legende;
-              this.ask_for_price("Quel prix pour votre photo", null, token.fee);
+        this.ask_for_text("Signer","Indiquer votre signature publique (pseudo, nom)",(signature)=> {
+          if (title && title.length > 0) {
+            this.ask_for_text("Authentification", "Donner une information vous désignant formellement (numéro de passeport, de SS, email)", (legende) => {
+              if (legende != null) {
+                this.title = title;
+                this.desc = "Réalisé par "+signature;
+                this.secret="Authentification "+legende;
+                this.ask_for_price("Quel prix pour votre oeuvre", null, token.fee);
             }
           });
         }
+        });
       });
-    },"Télécharger le visuel de votre NFT",w,h,true);
+    },"Télécharger un visuel de votre oeuvre",w,h,true);
   }
 
 
@@ -407,7 +410,10 @@ export class ImporterComponent implements OnInit {
   }
 
   create_token(token: any) {
-    debugger
+    this.selected_token=token;
+  }
+
+  open_wizard(token:any){
     if(token.index=="photo")this.quick_photo(token,"Télécharger votre photo",null,null,false);
     if(token.index=="pow")this.quick_pow(token,300,300);
     if(token.index=="music")this.show_fileupload(1,'Téléverser le fichier musical',token);

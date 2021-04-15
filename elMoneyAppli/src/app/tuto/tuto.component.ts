@@ -11,6 +11,7 @@ import {TransPipe} from "../trans.pipe";
 export class TutoComponent implements OnInit {
 
   @Input("text") text: string="";
+  @Input("text-align") text_align: string="center";
   @Input("title") title: string="";
   @Input("type") _type: string="tips";
   @Input("label") label: string="";
@@ -19,6 +20,7 @@ export class TutoComponent implements OnInit {
   @Input("delay") delay=0.2;
   @Input("duration") duration=0;
   @Input("background") background="";
+  @Input("background-color") bkColor="black";
   @Input('if') _if=true;
   @Input('image') image: string="./assets/img/tips.png";
   @Input('main_button') labelButton: string="Continuez";
@@ -29,6 +31,7 @@ export class TutoComponent implements OnInit {
   @Input('icon_button') _button:string="";
   @Input('height') height:string="auto";
   @Output('click') onclick: EventEmitter<any>=new EventEmitter();
+  @Output('close') onclose: EventEmitter<any>=new EventEmitter();
 
   constructor(public config:ConfigService,public transPipe:TransPipe) {}
 
@@ -40,9 +43,7 @@ export class TutoComponent implements OnInit {
     this.text=brand_text(this.text,this.config);
     this.title=brand_text(this.title,this.config);
 
-    //if(this.config.params==null)return;
-    //if(!this.config.params.tuto)this.hideTuto(false);
-    if(!this.config.visibleTuto || this._type=="title" || this.force ){
+     if(!this.config.visibleTuto || this._type=="title" || this.force ){
       if(this._if){
           this.config.visibleTuto=true;
           this.handle=setTimeout(()=>{
@@ -71,6 +72,7 @@ export class TutoComponent implements OnInit {
     this.config.visibleTuto=false;
     this.title="";
     this.subtitle="";
+    this.onclose.emit();
     clearTimeout(this.handle);
   }
 
@@ -87,11 +89,10 @@ export class TutoComponent implements OnInit {
     //this.text=this.transPipe.transform(this.text);
 
     this.code="histo"+hashCode(this.text+this.subtitle);
-    if(localStorage.hasOwnProperty("tuto") && localStorage.getItem("tuto").indexOf(this.code)>-1){
-      this._if=false;
-    }
-    else{
-
+    if(!this.force){
+      if(localStorage.hasOwnProperty("tuto") && localStorage.getItem("tuto").indexOf(this.code)>-1){
+        this._if=false;
+      }
     }
 
     if(this.duration==0)this.duration=(this.text.split(" ").length+this.subtitle.split(" ").length)/2;
