@@ -407,10 +407,11 @@ export class ImporterComponent implements OnInit {
   }
 
   create_token(token: any) {
+    debugger
     if(token.index=="photo")this.quick_photo(token,"Télécharger votre photo",null,null,false);
     if(token.index=="pow")this.quick_pow(token,300,300);
     if(token.index=="music")this.show_fileupload(1,'Téléverser le fichier musical',token);
-    if(token.index=="movie")this.quick_secret(token,'coller le lien secret (youtube par exemple) du film');
+    if(token.index=="film")this.quick_secret(token,'coller le lien secret (fourni par youtube) du film');
     if(token.index=="file")this.show_fileupload(1,'Téléverser le fichier à embarquer dans votre token',token);
     if(token.index=="secret")this.quick_secret(token);
     if(token.index=="tickets")this.quick_tickets('Téléverser le visuel de votre invitation',token);
