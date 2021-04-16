@@ -256,21 +256,24 @@ export class ImporterComponent implements OnInit {
 
   quick_pow(token:any,w,h){
     this.add_visual((result:any)=>{
-      this.files[1]=result.img;
-      this.ask_for_text("Titre","Donner un titre à votre NFC",(title)=> {
-        this.ask_for_text("Signer","Indiquer votre signature publique (pseudo, nom)",(signature)=> {
-          if (title && title.length > 0) {
-            this.ask_for_text("Authentification", "Donner une information vous désignant formellement (numéro de passeport, de SS, email)", (legende) => {
-              if (legende != null) {
-                this.title = title;
-                this.desc = "Réalisé par "+signature;
-                this.secret="Authentification "+legende;
-                this.ask_for_price("Quel prix pour votre oeuvre", null, token.fee);
+      if(result && result.img){
+        this.files[1]=result.img;
+        this.ask_for_text("Titre","Donner un titre à votre NFC",(title)=> {
+          this.ask_for_text("Signer","Indiquer votre signature publique (pseudo, nom)",(signature)=> {
+            if (title && title.length > 0) {
+              this.ask_for_text("Authentification", "Donner une information vous désignant formellement (numéro de passeport, de SS, email)", (legende) => {
+                if (legende != null) {
+                  this.title = title;
+                  this.desc = "Réalisé par "+signature;
+                  this.secret="Authentification "+legende;
+                  this.ask_for_price("Quel prix pour votre oeuvre", null, token.fee);
+                }
+              });
             }
           });
-        }
         });
-      });
+      }
+
     },"Télécharger un visuel de votre oeuvre",w,h,true);
   }
 

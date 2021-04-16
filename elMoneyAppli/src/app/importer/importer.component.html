@@ -12,12 +12,12 @@
     type="title"
     image=""
     [duration]="1000"
+    main_button="Démarrer"
     background-color="black"
     [subtitle]="tk.tuto"
     (close)="open_wizard(tk)"
     *ngIf="tk==selected_token">
-</app-tuto>
-
+  </app-tuto>
 </div>
 
 
@@ -146,24 +146,24 @@
 
               <table><tr>
                 <td>
-              <button mat-raised-button
-                      mat-button class="app-button"
-                      (click)="add_visual()">
+                  <button mat-raised-button
+                          mat-button class="app-button"
+                          (click)="add_visual()">
 
-                <div class="bloc-bouton">
-                  <span *ngIf="files[1]?.length>0">Modifier le</span>
-                  <span *ngIf="files[1]?.length==0">Ajouter un</span>
-                  <br>
-                  visuel
-                </div>
-              </button>
+                    <div class="bloc-bouton">
+                      <span *ngIf="files[1]?.length>0">Modifier le</span>
+                      <span *ngIf="files[1]?.length==0">Ajouter un</span>
+                      <br>
+                      visuel
+                    </div>
+                  </button>
                 </td>
                 <td>
-                   <mat-slide-toggle
-                     *ngIf="files[1]?.length>0"
-                      color="primary"
-                      [(ngModel)]="full_flyer">Afficher uniquement le visuel
-                </mat-slide-toggle>
+                  <mat-slide-toggle
+                    *ngIf="files[1]?.length>0"
+                    color="primary"
+                    [(ngModel)]="full_flyer">Afficher uniquement le visuel
+                  </mat-slide-toggle>
                 </td>
               </tr></table>
 
