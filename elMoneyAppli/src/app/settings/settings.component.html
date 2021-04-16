@@ -58,6 +58,9 @@
     <mat-expansion-panel class="app-panel" [expanded]="open_section==1">
       <mat-expansion-panel-header>Modifier votre profil</mat-expansion-panel-header>
 
+      <app-tuto label="Les informations de votre profil sont notamment utilisées pour vous présenter en tant que créateur de NFT"></app-tuto>
+
+
       <button mat-raised-button mat-button
               class="app-button"
               (click)="router.navigate(['miner'],{queryParams:{addr:user.addr}})">
@@ -101,7 +104,7 @@
       <mat-form-field appearance="fill" class="app-field">
         <mat-label>L'adresse de votre site</mat-label>
         <input matInput type="url" (focusin)="focus_idx=3" maxlength="200" [(ngModel)]="user.website" [ngModelOptions]="{standalone: true}">
-        <mat-hint *ngIf="focus_idx==3">L'adresse de votre site internet</mat-hint>
+        <mat-hint *ngIf="focus_idx==3">En tant que créateur de NFT vous disposez peut être d'un site</mat-hint>
       </mat-form-field>
 
     </mat-expansion-panel>

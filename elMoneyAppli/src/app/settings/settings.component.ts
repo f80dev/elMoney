@@ -104,7 +104,7 @@ export class SettingsComponent implements OnInit,OnDestroy {
         }
     }).afterClosed().subscribe((result) => {
       if (result) {
-        this.user[field]= result;
+        this.user[field]= result.img;
       } else {
 
       }
