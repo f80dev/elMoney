@@ -2219,7 +2219,7 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
   padding: 5px;
 }
 .sidemenu {
-  background-color: #1c1a1a;
+  background-color: #323232;
   margin: 0px !important;
   padding: 0px !important;
   z-index: 10 !important;
@@ -2276,9 +2276,13 @@ h2 {
 }
 body {
   background-color: #323232 !important;
+  font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif;
   color: white;
+  margin: 0px;
 }
 html {
+  font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif;
+  font-weight: lighter;
   background-color: #323232 !important;
   overflow: scroll;
   overflow-x: hidden;
@@ -2292,9 +2296,6 @@ html {
 }
 p, div {
   color: white;
-}
-body {
-  margin: 0px;
 }
 mat-label {
   color: lightgray;
@@ -2422,6 +2423,7 @@ a {
 .app-card-action {
   text-align: right;
   right: 8px;
+  width: 100%;
   position: absolute;
   bottom: 8px;
   padding: 0;
@@ -2434,13 +2436,16 @@ a {
   margin: 4px;
   text-align: left;
   display: inline-block;
-  background-color: #343439;
+  background-color: #20202b;
 }
 mat-card-header {
-  background-color: #343439;
+  background-color: #20202b;
 }
 mat-card-content {
-  background-color: #343439;
+  background-color: #20202b;
+}
+mat-expansion-panel-header {
+  background-color: #323232;
 }
 .photo {
   border: white solid 1px;

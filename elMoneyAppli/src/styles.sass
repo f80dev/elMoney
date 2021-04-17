@@ -15,7 +15,7 @@ $button-color: #221913
 
 
 .sidemenu
-  background-color: $darkdarkgray
+  background-color: $darkgray
   margin: 0px !important
   padding: 0px !important
   z-index: 10 !important
@@ -74,9 +74,13 @@ h2
 
 body
   background-color: $darkgray !important
+  font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif
   color: white
+  margin: 0px
 
 html
+  font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif
+  font-weight: lighter
   background-color: $darkgray !important
   overflow: scroll
   overflow-x: hidden
@@ -92,8 +96,7 @@ html
 p, div
   color: white
 
-body
-  margin: 0px
+
 
 mat-label
   color: lightgray
@@ -224,11 +227,12 @@ a
   background-color: $button-color
 
 //remplissage des cartes
-$card-color: #343439
+$card-color: #20202b
 
 .app-card-action
   text-align: right
   right: 8px
+  width: 100%
   position: absolute
   bottom: 8px
   padding: 0
@@ -249,6 +253,9 @@ mat-card-header
 mat-card-content
   background-color:  $card-color
 
+
+mat-expansion-panel-header
+  background-color: $darkgray
 
 .photo
   border: white solid 1px

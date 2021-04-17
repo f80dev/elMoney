@@ -22,9 +22,6 @@
 
 
     <mat-tab label="Vos NFTs achetés" style="height: fit-content">
-
-
-
         <br>
         <app-tuto [if]="nfts[1].length>0" label="Les NFT achetés peuvent être remis en vente, détruit, ouvert s'ils contiennent un secret ou directement offer"></app-tuto>
         <app-nfts [user]="user" [nfts]="nfts[1]"

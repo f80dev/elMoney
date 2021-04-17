@@ -15,16 +15,6 @@
       <app-tuto [if]="nft.owner!=user.addr && nft.has_secret==1"
                 label="Devenez propriétaire de ce NFT pour accèder à son contenu."></app-tuto>
 
-      <div *ngIf="!nft.fullscreen && (nft.owner!=user.addr || nft.state==0)" style="width:90%;margin-left:5%;margin:3px;line-height: 95%;font-size: small;">
-        {{nft.description}}
-        <div *ngIf="nft.price>0 && nft.state==0 && (nft.owner==user.addr || nft.isDealer)" style="display: inline;">
-          <small>&nbsp;({{nft.price | number:'1.0-3'}} xEgld)</small>
-        </div>
-      </div>
-
-
-
-
       <div *ngIf="nft.state!=0 && nft.owner!=user.addr" style="position: absolute;z-index: 200;top:20%;left:20%;width:50%;display: block;">
         <img src="/assets/img/vendu.png" style="width:150px;">
       </div>
@@ -51,9 +41,14 @@
            (click)="show_fullscreen(nft)">
 
 
-      <div *ngIf="nft.message?.length>0">
-        <app-hourglass [message]="nft.message" fontsize="small"></app-hourglass>
+      <div *ngIf="!nft.fullscreen && (nft.owner!=user.addr || nft.state==0)"
+           style="width:90%;margin:5%;line-height: 95%;font-size: small;text-align: center;">
+        {{nft.description}}
+        <div *ngIf="nft.price>0 && nft.state==0 && (nft.owner==user.addr || nft.isDealer)" style="display: inline;">
+          <small>&nbsp;({{nft.price | number:'1.0-3'}} xEgld)</small>
+        </div>
       </div>
+
 
       <div *ngIf="nft.open?.length>0">
         <a *ngIf="nft.open.startsWith('http')" [href]="nft.open" target="_blank">Ouvrir le fichier</a>
@@ -68,18 +63,22 @@
     <!--      <mat-card-actions class="app-card-action" style="position: absolute;bottom:16px;width:96%;text-align: right;">-->
     <mat-card-actions class="app-card-action">
 
+     <div *ngIf="nft.message?.length>0" style="width:100%;display: inline-block;text-align: center;">
+        <app-hourglass [message]="nft.message" fontsize="small"></app-hourglass>
+      </div>
+
 
       <div *ngIf="nft.message?.length==0">
 
         <!--        Zone réservé au propriétaire du token -->
 
-        <button mat-raised-button mat-button
+        <button mat-raised-button mat-button mat-icon-button
                 color="primary"
                 title="Ouvrir le NFT pour découvrir le secret"
                 *ngIf="nft.open?.length==0 && user.addr==nft.owner && user.addr!=nft.miner && nft.has_secret==1"
-                class="app-button"
+                class="icon-button"
                 (click)="open(nft)">
-          Ouvrir
+          <mat-icon>vpn_key</mat-icon>
         </button>
 
 

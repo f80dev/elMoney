@@ -1,5 +1,5 @@
 <div class="mainform">
-  <app-tuto label="Retrouvez ici l'ensemble des transactions effectuées"></app-tuto>
+  <app-tuto label="L'ensemble de vos transactions facturées avec les couts de transactions et les couts annexes"></app-tuto>
   <app-hourglass [message]="message"></app-hourglass><br>
   <span *ngIf="transactions?.length==0 && message.length==0">Aucune transaction effectuée</span>
   <table mat-table [dataSource]="transactions"

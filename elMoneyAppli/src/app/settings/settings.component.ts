@@ -106,9 +106,7 @@ export class SettingsComponent implements OnInit,OnDestroy {
       if(this.user.shop_website.length+this.user.shop_name.length+this.user.shop_description.length>0){
         this.user.new_dealer(()=>{
           this.message="";
-          showMessage(this,"Vous avez été ajouté comme distributeur. Référencez des créateurs dés maintenant",0,()=>{
-            this.router.navigate(["miners"]);
-          });
+          showMessage(this,"Vous avez été ajouté comme distributeur. Référencez des créateurs dés maintenant si vous pouvez");
         },(err)=>{
           showError(this,err);
         });
