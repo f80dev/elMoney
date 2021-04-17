@@ -2223,7 +2223,7 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
   margin: 0px !important;
   padding: 0px !important;
   z-index: 0 !important;
-  display: inline-block;
+  display: block;
 }
 .app-button {
   margin: 4px !important;

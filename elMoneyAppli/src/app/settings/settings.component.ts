@@ -71,21 +71,6 @@ export class SettingsComponent implements OnInit,OnDestroy {
 
 
 
-  // set_filename() {
-  //    this.dialog.open(PromptComponent, {
-  //     data: {
-  //       title: 'Enregistrer votre compte',
-  //       question: 'Donner un pseudo à votre compte',
-  //       onlyConfirm: false,
-  //       _type:"text"
-  //     }
-  //   }).afterClosed().subscribe((result) => {
-  //      if(result)this.filename=result+".pem";
-  //   });
-  // }
-
-
-
 
   change_visual(field:string) {
     this.dialog.open(ImageSelectorComponent, {position:
