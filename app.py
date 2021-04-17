@@ -608,9 +608,10 @@ def get_miners(seller:str):
 def get_dealers(addr:str="0x0"):
     rc=[]
     for dealer in bc.dealers(addr):
-        _dealer=dao.get_user(dealer["address"])
+        _dealer=dao.get_user(dealer["address"]) | dealer
         del _dealer["_id"]
-        rc.append(_dealer | dealer)
+        del _dealer["visual"]
+        rc.append(_dealer)
     return jsonify(rc), 200
 
 

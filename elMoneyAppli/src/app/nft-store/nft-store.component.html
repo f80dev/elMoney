@@ -25,7 +25,7 @@
         <mat-label>Revendeur</mat-label>
         <mat-select id="selOrder" [(ngModel)]="selected_dealer" (selectionChange)="refresh()" style="margin: 0px;">
           <mat-option *ngFor="let dealer of dealers" [value]="dealer">
-            {{dealer.name}}
+            {{dealer.shop_name}}
           </mat-option>
         </mat-select>
       </mat-form-field>
