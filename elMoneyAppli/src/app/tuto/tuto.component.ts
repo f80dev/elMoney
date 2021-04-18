@@ -22,6 +22,7 @@ export class TutoComponent implements OnInit {
   @Input("background") background="";
   @Input("background-color") bkColor="black";
   @Input('if') _if=true;
+  @Input('fullscreen') fullscreen=true;
   @Input('image') image: string="./assets/img/tips.png";
   @Input('main_button') labelButton: string="Continuez";
   @Input('icon') icon:string="";
@@ -37,9 +38,11 @@ export class TutoComponent implements OnInit {
 
   handle:any;
   code:string="";
+  _position="fixed";
 
   refresh(){
 
+    if(!this.fullscreen)this._position="relative";
     this.text=brand_text(this.text,this.config);
     this.title=brand_text(this.title,this.config);
 

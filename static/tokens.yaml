@@ -14,16 +14,19 @@ content:
     icon: camera
     description: Vendre une photo qui ne sera visible que pour le propriétaire
     tuto: "
-      La procédure est la suivante:<br>
+      TokenForge vous permet de vendre une photo, une image<br>
+      en haute résolution accessible uniquement à l'acquéreur
+
+      <br><br><br>La procédure est la suivante:<br>
       <small>
       <ul>
         <li>Prenez une photo ou sélectionner une photo déjà prise,</li><br>
-        <li>Donner lui un titre et faites en une description pour encourager l'achat</li><br>
+        <li>Charger la photo, et sélectionner une partie qui sera utiliser pour l'apperçu,</li><br>
+        <li>Donner lui un titre et faites en une description pour encourager l'achat,</li><br>
         <li>fixer un prix en eGold</li>
       </ul>
       </small>
       <br>
-       Cette photo ne pourrat être vu que par l'acheteur
     "
     fee: 0.002
     transac: 0.00015
@@ -34,17 +37,19 @@ content:
     icon: person
     description: Envoyer une photo et attachez y votre identité (email, passeport) en tant qu'auteur
     tuto: "
-      Tokenizer un oeuvre revient à attacher une identité à cette oeuvre. Cela revient à produire un certificat d'authenticité
-           <small>
+      Tokenizer un oeuvre revient à attacher une identité à cette oeuvre.<br>
+      Cela revient à produire un certificat d'authenticité<br>
+      <br><br><br>La procédure est la suivante :<br>
+
            <ul>
              <li>Prenez une photo de l'oeuvre,</li><br>
              <li>Donner un titre</li><br>
              <li>Donner une information vous authentifiant formellement (numéro de passeport, email,numéro de SS)</li><br>
              <li>fixer un prix en eGold si vous souhaitez vendre l'oeuvre</li>
            </ul>
-           </small>
+
            <br>
-            Cette photo ne pourrat être vu que par l'acheteur
+           Cette photo ne pourrat être vu que par l'acheteur
     "
     fee: 0.001
     transac: 0.00015
@@ -55,14 +60,14 @@ content:
     icon: description
     description: ""
     tuto: "
-          La procédure est la suivante:<br>
-          <small>
+          Grâce à TokenForge vous pouvez vendre n'importe quel fichier très simplement.
+
+          <br><br><br>La procédure est la suivante:<br>
           <ul>
             <li>Charger le fichier dans TokenForge,</li><br>
             <li>Donner lui un titre et faites en une description pour encourager l'achat</li><br>
             <li>fixer un prix en eGold</li>
           </ul>
-          </small>
           <br>
            Ce fichier ne pourrat être télécharger que par l'acheteur
     "
@@ -75,18 +80,19 @@ content:
     icon: audiotrack
     description: Vendre un fichier musical
     tuto: "
+              TokenForge permet de vendre des fichier musicaux.<br>
 
               La procédure est la suivante:<br>
               <small>
               <ul>
                 <li>Récupérer votre musique sous forme d'un fichier audio de n'importe quel format,</li><br>
                 <li>Donner lui un titre et faites en une description pour encourager l'achat</li><br>
+                <li>Ajouter un eventuel visuel<li><br>
                 <li>fixer un prix en eGold</li>
               </ul>
               </small>
               <br>
-               Seul l'acheteur pourra écouter le morceau
-
+               Seul l'acheteur pourra accèder au morceau
         "
     fee: 0.002
     transac: 0.00015
@@ -97,8 +103,11 @@ content:
     icon: movie
     description: Vendre un film via le lien d'une plateforme vidéo
     tuto: "
-      Pour embarquer un film, vous devez l'avoir uploader sur une plate forme comme youtube et récupéré le lien de partage.<br>
-      Le partage doit être réservé à ceux qui posséde le lien<br>
+      TokenForge permet de vendre des contenus audiovisuel (films, vidéos, musiques).<br>
+
+      Vous devez préalablement l'avoir uploader sur une plateforme comme youtube et récupéré le lien de partage.<br>
+      Ce partage doit être réservé à ceux qui posséde le lien<br><br>
+
       Grâce à TokenForge le lien est caché dans le NFT et visible uniquement du propriétaire / acheteur.
       "
     fee: 0.002
@@ -111,9 +120,13 @@ content:
     description: Vendre un mot de passe, un numéro de license, un code secret de coffre, un code promo
     fee: 0.001
     tuto: "
-          Pour embarquer un film, vous devez l'avoir uploader sur une plate forme comme youtube et récupéré le lien de partage.<br>
-          Le partage doit être réservé à ceux qui posséde le lien<br>
-          Grâce à TokenForge le lien est caché dans le NFT et visible uniquement du propriétaire / acheteur.
+          TokenForge vous permet de vendre des secrets (code d'accès, mot de passe, adresse). <br><br>
+
+          Le principe est que le secret n'est visible que par l'acheteur après achat.<br>
+
+          Comme pour les autres NFTs vous pouvez donner un titre et une description à votre NFT,<br>indépedemment du secret
+          qu'il embarque.
+
           "
     transac: 0.00015
     help: Utiliser la commande "ouvrir" pour découvrir le secret que contient ce token

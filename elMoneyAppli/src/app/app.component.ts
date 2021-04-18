@@ -82,7 +82,7 @@ export class AppComponent implements OnInit,OnDestroy {
     },()=>{
       this.message="";
       $$("!Probléme d'initialisation de la configuration");
-      this.router.navigate(["support"],{queryParams:{message:"Problème grave de connexion"}});
+      this.router.navigate(["support"],{queryParams:{message:"Serveur non disponible"}});
     });
   }
 

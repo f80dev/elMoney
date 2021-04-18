@@ -71,7 +71,12 @@ export class ImporterComponent implements OnInit {
     // })
     localStorage.setItem("last_screen","importer");
     this.api.getyaml("tokens").subscribe((r:any)=>{
-      this.tokens=r.content;
+      this.tokens=[];
+      for(let token of r.content){
+        token.tuto_title=token.title.replace("<br>"," ");
+        token.tuto=token.tuto+"<br><br><small>Le cout de fabrication est d'environ "+token.fee+" + "+token.transac+" xEgld de frais de réseau</small>";
+        this.tokens.push(token);
+      }
     });
     if(this.user.pseudo.length==0){
       showMessage(this,"Vous pouvez créer un NFT anonynement mais il est préférable de se donner un pseudo à minima");
@@ -131,6 +136,7 @@ export class ImporterComponent implements OnInit {
     };
 
     this.message="Enregistrement dans la blockchain";
+    this.show_zone_upload=false;
     this.api._post("mint/"+this.count,"",obj).subscribe((r:any)=>{
       if(r){
         this.message="";
@@ -269,11 +275,12 @@ export class ImporterComponent implements OnInit {
                   this.ask_for_price("Quel prix pour votre oeuvre", null, token.fee);
                 }
               });
+            } else {
+              this.show_zone_upload=false;
             }
           });
         });
       }
-
     },"Télécharger un visuel de votre oeuvre",w,h,true);
   }
 
@@ -288,13 +295,12 @@ export class ImporterComponent implements OnInit {
       this.ask_for_text("Titre","Donner un titre à votre NFC",(title)=>{
         if(title && title.length>0){
           this.ask_for_text("Présentation","Rédigez une présentation rapide de votre photo pour la marketplace",(legende)=>{
-            if(legende!=null){
-              this.title=title;
-              this.desc=legende;
-              this.ask_for_price("Quel prix pour votre photo",null,token.fee);
-            }
+            if(legende==null)legende="";
+            this.title=title;
+            this.desc=legende;
+            this.ask_for_price("Quel prix pour votre photo",null,token.fee);
           });
-        }
+        } else this.show_zone_upload=false;
       });
     },title,w,h,square)
   }
@@ -382,10 +388,12 @@ export class ImporterComponent implements OnInit {
 
 
 
-  quick_file($event: any,token:any) {
+  quick_file($event: any,token:any,title="Télécharger un visuel") {
     this.files[0]=$event.file;
     this.filename=$event.filename;
-    this.ask_for_text("Titre","Titre de votre annonce",(title)=>{
+    this.add_visual((visual)=>{
+      if(visual)this.files[1]=visual.img;
+      this.ask_for_text("Titre","Titre de votre annonce",(title)=>{
       if(title) {
         this.ask_for_text("Description","Rédigez une courte phrase pour donner envie de l'acheter",(desc)=>{
           if(desc){
@@ -396,6 +404,8 @@ export class ImporterComponent implements OnInit {
         })
       }
     });
+    },title);
+
   }
 
 
@@ -415,6 +425,8 @@ export class ImporterComponent implements OnInit {
   create_token(token: any) {
     this.selected_token=token;
   }
+
+
 
   open_wizard(token:any){
     if(token.index=="photo")this.quick_photo(token,"Télécharger votre photo",null,null,false);

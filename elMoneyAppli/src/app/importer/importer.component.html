@@ -4,24 +4,27 @@
           subtitle="Fabriquer vos propres NFTs a partir d'un fichier, fixez un prix et vendez-les !"
           background="./assets/img/build.jpg"></app-tuto>
 
-<div *ngFor="let tk of tokens">
-  <app-tuto
-    [title]="tk.title"
-    [force]="true"
-    text-align="left"
-    type="title"
-    image=""
-    [duration]="1000"
-    main_button="Démarrer"
-    background-color="black"
-    [subtitle]="tk.tuto"
-    (close)="open_wizard(tk)"
-    *ngIf="tk==selected_token">
-  </app-tuto>
-</div>
+
 
 
 <div class="mainform">
+
+  <div *ngFor="let tk of tokens" >
+    <app-tuto
+      [title]="tk.tuto_title"
+      [force]="true"
+      [fullscreen]="false"
+      text-align="left"
+      type="title"
+      image=""
+      [duration]="1000"
+      main_button="Démarrer"
+      background-color="black"
+      [subtitle]="tk.tuto"
+      (close)="open_wizard(tk)"
+      *ngIf="tk==selected_token">
+    </app-tuto>
+  </div>
 
   <app-hourglass [message]="message"></app-hourglass>
   <br>
