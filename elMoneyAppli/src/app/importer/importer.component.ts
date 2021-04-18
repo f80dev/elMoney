@@ -193,8 +193,8 @@ export class ImporterComponent implements OnInit {
       maxWidth: 400, width: '90vw', height: 'auto', data:{
         title:"Ajouter mes distributeurs"
       }
-    }).afterClosed().subscribe((result) => {
-      if (result!={}) {
+    }).afterClosed().subscribe((result:any) => {
+      if (result && Object.keys(result).length>0) {
         for(let seller of result){
           let obj:SellerProperties={address:seller.address,name:seller.name};
           this.dataSource.data.push(obj);

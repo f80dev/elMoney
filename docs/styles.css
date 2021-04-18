@@ -2219,11 +2219,13 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
   padding: 5px;
 }
 .sidemenu {
-  background-color: #323232;
+  background-color: #27272b;
   margin: 0px !important;
   padding: 0px !important;
   z-index: 10 !important;
   display: inline-block;
+  font-weight: lighter;
+  font-size: small;
 }
 .app-button {
   margin: 4px !important;

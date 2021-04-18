@@ -43,16 +43,20 @@ export class TutoComponent implements OnInit {
     this.text=brand_text(this.text,this.config);
     this.title=brand_text(this.title,this.config);
 
-     if(!this.config.visibleTuto || this._type=="title" || this.force ){
+    if(!this.config.visibleTuto || this._type=="title" || this.force ){
       if(this._if){
-          this.config.visibleTuto=true;
-          this.handle=setTimeout(()=>{
-            this.hideTuto(true);
-          },3000+this.duration*1000);
+        this.config.visibleTuto=true;
+        this.handle=setTimeout(()=>{
+          this.hideTuto(true);
+        },3000+this.duration*1000);
       } else {
         this.hideTuto();
       }
-    } else this.hideTuto();
+    }
+    else this.hideTuto();
+
+    if(this._type!="title")this.color="#ecdb95";
+
   }
 
 
