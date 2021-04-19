@@ -58,10 +58,6 @@
             <div class="bloc-bouton" [innerHTML]="token.title"></div>
           </button>
           <br>
-          <div style="font-size: xx-small;color:orangered;font-weight: bold;"
-               *ngIf="token.production=='true' || !config.isProd()">
-            -{{token.fee+token.transac}} xeGld
-          </div>
 
         </div>
 
@@ -120,12 +116,13 @@
               </mat-form-field>
 
 
-              <mat-form-field appearance="fill" class="app-field">
+              <mat-form-field appearance="fill" class="app-field" style="max-width: 150px;">
                 <mat-label>Récompense à l'ouverture</mat-label>
                 <input matInput type="number"
                        id="txtGift"
                        (focusin)="focus_idx=1.5" min="0" [max]="user.gas/1e18" [(ngModel)]="gift" [ngModelOptions]="{standalone: true}">
-                <mat-hint *ngIf="focus_idx==1.5">La somme sera débitée de votre compte et crédité sur le compte de l'acheteur dés l'ouverture du NFT</mat-hint>
+                <span matSuffix>xeGld</span>
+                <mat-hint *ngIf="focus_idx==1.5">Débitée de votre compte à la création et crédité sur le compte de l'acheteur à l'ouverture du NFT</mat-hint>
               </mat-form-field>
             </form>
 
@@ -192,7 +189,7 @@
 
               <br><br>
 
-              <mat-form-field appearance="fill" class="app-field" id="formPrice" style="max-width: 200px">
+              <mat-form-field appearance="fill" class="app-field" id="formPrice" style="max-width: 120px">
                 <mat-label>Prix de vente</mat-label>
                 <input matInput id="txtPrice" type="number" min="0" max="100"
                        [(ngModel)]="price" [ngModelOptions]="{standalone: true}" (ngModelChange)="update_prices()">
@@ -201,10 +198,10 @@
 
               <button mat-raised-button
                       id="cmdDefaultPrice"
-                      mat-button class="app-button"
-                      style="width: 50px !important;"
+                      mat-button class="small-button"
+                      style="max-width: 0px"
                       (click)="price=price+0.5">
-                + 0,5
+                +0,5
               </button>
 
 
@@ -287,16 +284,16 @@
                 <div *ngIf="dataSource.data.length>0">
                   <br>
                   Marge autorisé par les revendeurs<br>
-                  <mat-form-field appearance="fill" class="app-field" style="max-width: 130px">
-                    <mat-label>Commission vendeur minimum</mat-label>
+                  <mat-form-field appearance="fill" class="app-field" style="max-width: 150px">
+                    <mat-label>Commission minimum</mat-label>
                     <input matInput type="number" min="0" [max]="price"
                            id="txtMargeMin"
                            [(ngModel)]="min_price" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=3">
                     <span matSuffix>xeGld</span>
                   </mat-form-field>
                   &nbsp;
-                  <mat-form-field appearance="fill" class="app-field" style="max-width: 130px">
-                    <mat-label>Commission vendeur maximum</mat-label>
+                  <mat-form-field appearance="fill" class="app-field" style="max-width: 150px">
+                    <mat-label>Commission maximum</mat-label>
                     <input matInput type="number"
                            id="txtMargeMax"
                            [min]="price" [(ngModel)]="max_price" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=4">

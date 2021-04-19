@@ -89,6 +89,7 @@ export class NftsComponent implements OnChanges {
 
       nft.message = "En cours d'achat";
       let price = nft.price;
+      debugger
       this.api._post("buy_nft/" + nft.token_id + "/" + price + "/" + this.seller, "", this.user.pem).subscribe((r: any) => {
         nft.message = "";
         showMessage(this, "Achat du token pour " + (nft.price + r.cost) + " xEgld");

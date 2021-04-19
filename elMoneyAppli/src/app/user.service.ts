@@ -77,7 +77,7 @@ export class UserService {
       shop_website:this.shop_website,
       pem:this.pem
     };
-    
+
     this.api._post("users/","",body).subscribe((id:any)=>{
       $$("Enregistrement de l'utilisateur");
       if(func)func();
@@ -237,8 +237,10 @@ export class UserService {
       email:this.email
     }
     this.api._post("new_dealer/","",body).subscribe((r:any)=>{
-      this.config.refresh_dealers();
-      func();
+      setTimeout(()=>{
+        this.config.refresh_dealers();
+        func();
+      },1000);
     },()=>{
       $$("Probleme de création du distributeur");
       if(func_error)func_error();

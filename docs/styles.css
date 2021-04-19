@@ -2247,6 +2247,8 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
   margin: 4px !important;
   width: 20px !important;
   background-color: #221913;
+  color: lightgray;
+  padding: 1px;
 }
 .large-button {
   margin: 10px !important;

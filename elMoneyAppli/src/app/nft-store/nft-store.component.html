@@ -75,7 +75,9 @@
 
   <app-nfts [nfts]="nfts"
             *ngIf="message?.length==0"
-            [user]="user" [filter]="filter"
+            [user]="user"
+            [filter]="filter"
+            [seller]="selected_dealer.address"
             [height]="selected_mode.height"
             [width]="selected_mode.width"
             [fontsize]="selected_mode.fontsize"

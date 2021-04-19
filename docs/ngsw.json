@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1618831979767,
+  "timestamp": 1618870688201,
   "index": "https://tf.f80.fr/index.html",
   "assetGroups": [
     {
@@ -119,11 +119,11 @@
     "https://tf.f80.fr/favicon.ico": "c3bbe9dfa628852d8131849561b7fd52194f4d8d",
     "https://tf.f80.fr/favicon.png": "9d07b4062b45b028a517877c4b51af7a330eab1a",
     "https://tf.f80.fr/index.html": "f4708a85c1b8229b6f80a293749b655fca7d5f18",
-    "https://tf.f80.fr/main.js": "a18f4d4bf07abb8ec6d60d13cf9bbeecdc00e7c1",
+    "https://tf.f80.fr/main.js": "3766fabd3c384fcefff1598ada33c2e292c49791",
     "https://tf.f80.fr/manifest.webmanifest": "8291133aeacc475e061eb544514d2c1e8c02c576",
     "https://tf.f80.fr/polyfills.js": "e1b2e55679346bfd4fe23b63dc0ba38a7e8e2738",
     "https://tf.f80.fr/runtime.js": "154c277c076cfc8ee335df5d9349395c6bf58db5",
-    "https://tf.f80.fr/styles.css": "fe7d0bf6111cae4deab6c9978eebd94292647d7b"
+    "https://tf.f80.fr/styles.css": "a5047321fb3bd26ff6118ae08c43aea149b04b93"
   },
   "navigationUrls": [
     {
