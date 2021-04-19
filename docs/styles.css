@@ -2216,7 +2216,7 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
   min-height: 100vh;
   background-color: #323232;
   color: white;
-  padding: 5px;
+  padding: 0px;
 }
 .sidemenu {
   background-color: #27272b;
@@ -2226,6 +2226,15 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
   display: inline-block;
   font-weight: lighter;
   font-size: small;
+}
+.container {
+  width: 100vw;
+  min-height: 100vh;
+  background: transparent;
+  padding: 2px;
+  margin: 0;
+  position: fixed;
+  z-index: 0 !important;
 }
 .app-button {
   margin: 4px !important;

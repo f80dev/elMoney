@@ -76,23 +76,23 @@ content:
     production: true
 
   - index: music
-    title: Vendre<br>de la music
+    title: Vendre<br>de la musique
     icon: audiotrack
     description: Vendre un fichier musical
     tuto: "
-              TokenForge permet de vendre des fichier musicaux.<br>
+              TokenForge permet de vendre des fichier musicaux.<br><br>
 
               La procédure est la suivante:<br>
               <small>
               <ul>
                 <li>Récupérer votre musique sous forme d'un fichier audio de n'importe quel format,</li><br>
                 <li>Donner lui un titre et faites en une description pour encourager l'achat</li><br>
-                <li>Ajouter un eventuel visuel<li><br>
+                <li>Ajouter un eventuel visuel</li><br>
                 <li>fixer un prix en eGold</li>
               </ul>
               </small>
               <br>
-               Seul l'acheteur pourra accèder au morceau
+               Seul l'acheteur pourra accèder au morceau.
         "
     fee: 0.002
     transac: 0.00015
