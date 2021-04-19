@@ -10,6 +10,7 @@ import {showError, showMessage} from "../tools";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ApiService} from "../api.service";
 import {ImageSelectorComponent} from "../image-selector/image-selector.component";
+import {environment} from "../../environments/environment";
 
 @Component({
   selector: 'app-settings',
@@ -24,6 +25,7 @@ export class SettingsComponent implements OnInit,OnDestroy {
   message: string="";
   filename: string="";
   open_section=0;
+  domain_appli=environment.domain_appli;
 
   constructor(public router:Router,
               public user:UserService,

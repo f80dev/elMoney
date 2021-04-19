@@ -54,13 +54,21 @@ export class NftStoreComponent implements OnInit {
       this.filter_ids = this.routes.snapshot.queryParamMap.get("ids").split(",");
     }
 
+
+    let store=this.routes.snapshot.queryParamMap.get("store");
+
     this.dealers=[{shop_name:'Vente directe',address:"0x0"}];
     this.selected_dealer=this.dealers[0];
     this.refresh();
 
     this.api._get("dealers/","").subscribe((dealers:any)=>{
-      for(let dealer of dealers)
+
+      for(let dealer of dealers){
         this.dealers.push(dealer);
+        if (store && store==dealer.address)
+          this.selected_dealer=dealer;
+      }
+
     })
 
     localStorage.setItem("last_screen","store");

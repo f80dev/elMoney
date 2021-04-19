@@ -158,6 +158,15 @@
         <div class="bloc-bouton" *ngIf="user.dealer?.state==1">Ouvrir la<br>boutique</div>
       </button>
 
+      <button mat-raised-button mat-button
+              class="app-button"
+              ngxClipboards
+              [cdkCopyToClipboard]="domain_appli+'/?store='+user.addr"
+              [disabled]="!user.isDealer()"
+              (click)="informe_clipboard()">
+        <mat-icon>share</mat-icon> Partager
+      </button>
+
 
     </mat-expansion-panel>
 

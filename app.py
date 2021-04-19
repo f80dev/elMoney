@@ -732,6 +732,7 @@ def server_config():
         "proxy": bc._proxy.url,
         "network":bc.network_name,
         "nft_contract": NETWORKS[bc.network_name]["nft"],
+        "domain_appli":DOMAIN_APPLI,
         "esdt_contract": ESDT_CONTRACT,
         "bank_gas":bc._proxy.get_account_balance(bc.bank.address),
         "explorer":bc._proxy.url.replace("-api","-explorer"),

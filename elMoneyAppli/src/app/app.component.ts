@@ -48,6 +48,7 @@ export class AppComponent implements OnInit,OnDestroy {
       let addr=this.routes.snapshot.queryParamMap.get("user");
       let miner=this.routes.snapshot.queryParamMap.get("miner");
       let q=this.routes.snapshot.queryParamMap.get("q");
+      let store=this.routes.snapshot.queryParamMap.get("store");
       let filter=this.routes.snapshot.queryParamMap.get("filter");
       let pem_key=localStorage.getItem("pem");
       if(pem_key)pem_key=JSON.parse(pem_key);
@@ -66,8 +67,13 @@ export class AppComponent implements OnInit,OnDestroy {
               else {
                 if(miner)
                   this.router.navigate(["miner"],{queryParams:{addr:miner}})
-                else
-                  this.router.navigate(["store"],{queryParams:{q:q,filter:filter}});
+                else{
+                  if(store)
+                    this.router.navigate(["store"],{queryParams:{store:store}});
+                  else
+                    this.router.navigate(["store"],{queryParams:{q:q,filter:filter}});
+                }
+
               }
             }
 
