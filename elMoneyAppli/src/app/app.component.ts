@@ -61,12 +61,12 @@ export class AppComponent implements OnInit,OnDestroy {
             if(this.config.hasESDT() && !q && !filter)
               this.router.navigate(["main"]);
             else{
-
               if(addr)
                 this.router.navigate(["nfts-perso"]);
               else {
-                if(miner)
-                  this.router.navigate(["miner"],{queryParams:{addr:miner}})
+                if(miner){
+                  this.router.navigate(["miner"],{queryParams:{miner:miner}})
+                }
                 else{
                   if(store)
                     this.router.navigate(["store"],{queryParams:{store:store}});

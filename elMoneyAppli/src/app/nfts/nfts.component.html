@@ -1,5 +1,6 @@
 <div *ngIf="nfts?.length>0" style="margin: 0px;padding:0;width:99%;text-align: center;" class="wrap-list" >
-  <mat-card class="app-card" [ngStyle]="{'min-height':'150px','max-width':max_w,width:_w,height: 'fit-content','margin':'3px','margin-bottom':'5px',padding:'7px'}"
+  <mat-card class="app-card mat-elevation-z6"
+            [ngStyle]="{'min-height':'150px','max-width':max_w,width:_w,height: 'fit-content','margin':'3px','margin-bottom':'5px',padding:'7px'}"
             *ngFor="let nft of nfts | filter: ['search',filter]">
     <mat-card-header *ngIf="!nft.fullscreen" style="height: 35px">
       <img *ngIf="with_icon" mat-card-avatar src="./assets/icons/gift.png" class="image-icon" style="margin:0;">
@@ -105,7 +106,7 @@
                 title="En savoir plus sur le créateur"
                 *ngIf="nft.miner!=user.addr"
                 class="icon-button"
-                routerLink="/miner" [queryParams]="{addr:nft.miner}">
+                routerLink="/miner" [queryParams]="{miner:nft.miner}">
           <mat-icon>person</mat-icon>
         </button>
 

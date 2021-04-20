@@ -11,6 +11,8 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {ApiService} from "../api.service";
 import {ImageSelectorComponent} from "../image-selector/image-selector.component";
 import {environment} from "../../environments/environment";
+import {NgNavigatorShareService} from "ng-navigator-share";
+import {ClipboardService} from "ngx-clipboard";
 
 @Component({
   selector: 'app-settings',
@@ -35,10 +37,13 @@ export class SettingsComponent implements OnInit,OnDestroy {
               public api:ApiService,
               public _location:Location,
               public routes:ActivatedRoute,
+              public ngNavigatorShareService:NgNavigatorShareService,
+              public _clipboardService:ClipboardService,
               public config:ConfigService) { }
 
   ngOnInit(): void {
     let obj:any=this.user.pem;
+
     if(this.user.pem){
       const blob = new Blob([obj.pem], { type: 'text/plain' });
       this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(blob));
@@ -104,6 +109,9 @@ export class SettingsComponent implements OnInit,OnDestroy {
     this.user.save_user(()=>{
       this.message="Création / modification de la boutique";
       if(this.user.shop_website.length+this.user.shop_name.length+this.user.shop_description.length>0){
+        if(!this.user.shop_website || this.user.shop_website=="")
+          this.user.shop_website=environment.domain_appli+"/?store="+this.user.addr;
+
         this.user.new_dealer(()=>{
           this.message="";
           showMessage(this,"Vous avez été ajouté comme distributeur. Référencez des créateurs dés maintenant si vous pouvez");
@@ -121,5 +129,20 @@ export class SettingsComponent implements OnInit,OnDestroy {
       showMessage(this,"Statut modifié");
       this.config.refresh_dealers();
     });
+  }
+
+  share(){
+    this.informe_clipboard();
+     this.ngNavigatorShareService.share({
+      title: this.user.shop_name,
+      text: "Achetez des NFTs",
+      url: this.user.shop_website
+    })
+      .then( (response) => {console.log(response);},()=>{
+        this._clipboardService.copyFromContent(this.user.shop_website);
+      })
+      .catch( (error) => {
+        this._clipboardService.copyFromContent(this.user.shop_website);
+      });
   }
 }

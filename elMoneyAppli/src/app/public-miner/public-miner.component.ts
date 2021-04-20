@@ -19,7 +19,7 @@ export class PublicMinerComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    let addr=this.routes.snapshot.queryParamMap.get("addr");
+    let addr=this.routes.snapshot.queryParamMap.get("miner");
     this.api._get("users/"+addr+"/","").subscribe((data:any)=>{
       this.miner=data;
     });
@@ -27,7 +27,7 @@ export class PublicMinerComponent implements OnInit {
   }
 
   refresh(){
-    let addr=this.routes.snapshot.queryParamMap.get("addr");
+    let addr=this.routes.snapshot.queryParamMap.get("miner");
     this.api._get("nfts/0x0/0x0/"+addr+"/").subscribe((r: any) => {
       this.nfts=r;
     });

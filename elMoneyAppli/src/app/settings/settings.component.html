@@ -162,9 +162,9 @@
               class="app-button"
               ngxClipboards
               [cdkCopyToClipboard]="domain_appli+'/?store='+user.addr"
-              [disabled]="!user.isDealer()"
-              (click)="informe_clipboard()">
-        <mat-icon>share</mat-icon> Partager
+              [disabled]="!user.isDealer() || user.shop_website?.length==0"
+              (click)="share()">
+        <div class="bloc-bouton" *ngIf="user.dealer?.state==0">Partager l'url<br>de la boutique</div>
       </button>
 
 
