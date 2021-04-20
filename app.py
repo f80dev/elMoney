@@ -375,7 +375,13 @@ def buy_nft(token_id,price,seller:str,data:dict=None):
         data = json.loads(str(request.data, encoding="utf-8"))
 
     pem_file=get_pem_file(data)
-    if seller.startswith("erd"):seller="0x"+Account(address=seller).address.hex()
+
+    if seller == "0x0":
+        seller = "0x0000000000000000000000000000000000000000000000000000000000000000"
+    else:
+        seller = "0x" + str(Account(address=seller).address.hex())
+    #if seller.startswith("erd"): seller = "0x" + Account(address=seller).address.hex()
+
     if type(price)==str and "," in price:price=price.replace(",",".")
 
     rc=bc.nft_buy(NETWORKS[bc.network_name]["nft"],pem_file,token_id,float(price),seller)
