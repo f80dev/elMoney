@@ -327,15 +327,30 @@
               <ng-template matStepLabel>Fabrication</ng-template>
               <mat-form-field appearance="fill" class="app-field" style="max-width: 250px;width:80%;">
                 <mat-label>Combien d'exemplaire (max 30)</mat-label>
-                <input matInput type="number" min="1" max="30" [(ngModel)]="count" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=10">
+                <input matInput type="number"
+                       id="txtNumber"
+                       min="1" max="30" [(ngModel)]="count"
+                       [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=10">
                 <mat-hint *ngIf="focus_idx==10">Attention le coût de fabrication dépend également du nombre de NFT fabriqués</mat-hint>
               </mat-form-field>
+
+              <button mat-raised-button
+                      id="cmdIncNumber"
+                      mat-button class="small-button"
+                      style="max-width: 0px"
+                      (click)="count=count+1">
+                +1
+              </button>
+
+
+
               <br><br>
               Cout de fabrication: {{count*gift}} + frais de transactions
               <span *ngIf="count*gift>user.gas/1e18">(Solde insuffisant)</span>
               <br>
               <button mat-raised-button  color="primary"
                       mat-button class="large-button"
+                      id="cmdMakeNFT"
                       [disabled]="title?.length==0 || count*gift>user.gas/1e18"
                       (click)="tokenizer()">
                 Fabriquer !
