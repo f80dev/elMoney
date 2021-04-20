@@ -69,10 +69,9 @@
 
     <mat-tab label="NFT avancé">
       <br>
-      Le mode avancé vous permet de créer des NFTs "sur mesure" en combinant toutes les possibilités de TokenForge<br>
-
       <app-tuto [if]="files[0].length>0"
                 label="Le fichier est stocké dans le réseau IPFS de façon totalement sécurisé. Seul la clé permettant de le reconstituer est embarqué dans le NFT"></app-tuto>
+
 
 
       <div *ngIf="message.length==0" style="width:100%;">
@@ -82,6 +81,8 @@
 
         <mat-vertical-stepper (selectionChange)="update_idx($event)" [linear]="false" style="width:90%;display: inline-block;max-width:700px;text-align: left;background: none;">
           <mat-step>
+
+            Le mode avancé vous permet de créer des NFTs "sur mesure" en combinant toutes les possibilités de TokenForge<br>
 
             <app-tuto *ngIf="idx_tab==0"
                       label="TOKENFORGE permet de cacher un secret dans le NFT. Celui-ci ne peut être vue que par le propriétaire du NFT. Par exemple vous pouvez cacher un mot de passe, un lien youtube, un fichier"></app-tuto>
@@ -345,11 +346,27 @@
 
 
               <br><br>
-              Cout de fabrication: {{count*gift}} + frais de transactions
+              <small>Cout de fabrication: {{count*gift}} + frais de transactions</small>
               <span *ngIf="count*gift>user.gas/1e18">(Solde insuffisant)</span>
+              <br><br>
+              <div *ngIf="show_preview">
+                <app-nfts [nfts]="nfts_preview" [user]="user"
+                          height="fit-content"></app-nfts>
+                <small>Visualisation de votre NFT dans la marketplace</small>
+              </div>
+
               <br>
+
+              <button mat-raised-button
+                      mat-button class="app-button"
+                      id="cmdShowPreview"
+                      (click)="showPreview()">
+                <span *ngIf="!show_preview">Preview</span>
+                <span *ngIf="show_preview">Cacher</span>
+              </button>
+
               <button mat-raised-button  color="primary"
-                      mat-button class="large-button"
+                      mat-button class="app-button"
                       id="cmdMakeNFT"
                       [disabled]="title?.length==0 || count*gift>user.gas/1e18"
                       (click)="tokenizer()">

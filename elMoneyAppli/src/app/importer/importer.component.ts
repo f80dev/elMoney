@@ -39,6 +39,7 @@ export class ImporterComponent implements OnInit {
   max_price: any=0;
   min_price: any=0;
   focus_idx=0;
+  show_preview=false;
 
   displayedColumns: string[] = ['Address', 'name','delete'];
   dataSource = new MatTableDataSource<SellerProperties>([]);
@@ -54,6 +55,7 @@ export class ImporterComponent implements OnInit {
   full_flyer: boolean=true;
   file_format: string="";
   selected_token: any;
+  nfts_preview: any[]=[];
 
   constructor(public api:ApiService,
               public user:UserService,
@@ -153,6 +155,25 @@ export class ImporterComponent implements OnInit {
     })
   }
 
+
+  create_preview(){
+    this.nfts_preview=[
+      {
+        title:this.title,
+        description:this.desc,
+        secret:this.secret,
+        visual:this.files[0],
+        miner:"0x1",
+        owner:"0x2",
+        state:0,
+        isDealer:false,
+        message:"",
+        price:this.price
+      }
+    ]
+  }
+
+
   add_visual(func=null,title="",width=200,height=200,square=true) {
     this.dialog.open(ImageSelectorComponent, {position:
         {left: '5vw', top: '5vh'},
@@ -209,6 +230,8 @@ export class ImporterComponent implements OnInit {
       }
     });
   }
+
+
 
   delete_dealer(element: any) {
     let idx=this.dataSource.data.indexOf(element);
@@ -440,4 +463,8 @@ export class ImporterComponent implements OnInit {
   }
 
 
+  showPreview() {
+    this.create_preview();
+    this.show_preview=!this.show_preview;
+  }
 }

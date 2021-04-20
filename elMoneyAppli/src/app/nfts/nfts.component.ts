@@ -28,6 +28,7 @@ export class NftsComponent implements OnChanges {
   @Input("width") _w:string="350px";
   @Input("maxwidth") max_w:string="500px";
   @Input("height") _h:string="auto"
+  @Input("preview") preview=false;
   @Input("seller") seller:string="0x0000000000000000000000000000000000000000000000000000000000000000";
   @Output("refresh") onrefresh:EventEmitter<any>=new EventEmitter();
   @Output("buy") onbuy:EventEmitter<any>=new EventEmitter();
@@ -70,6 +71,8 @@ export class NftsComponent implements OnChanges {
   }
 
   buy(nft: any) {
+    if(this.preview)return;
+
     this.dialog.open(PromptComponent, {
       data: {
         title: 'Acheter ce token pour '+nft.price+" xEgld",

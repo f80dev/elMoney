@@ -138,11 +138,31 @@ content:
     description: Générer et vendez des billets d'accès à un evénement de tout type
     fee: 0.002
     tuto: "
-          Grâce à TokenForge le lien est caché dans le NFT et visible uniquement du propriétaire / acheteur.
+          Grâce à TokenForge vous pouvez fabriquer des billets pour vos événements, concerts, spectacles <br>
+          Il vous suffit d'un visuel et de préciser le lieu et la date de votre événement pour fabriquer vos billets.<br><br>
+
+          Un menu de TokenForge vous permet de contrôler les billets en scannant simplement le QRCode du propriétaire
           "
     transac: 0.00015
     help: Présenter votre code perso à l'entrée de l'événement pour contrôle du billet
     production: true
+
+
+  - index: souvenir
+    title: Graver des<br>souvenirs
+    icon: favorite
+    description: Enregistrez vos plus beaux souvenir de façon définitive et inaltérable dans la blockchaine
+    fee: 0.004
+    tuto: "
+          Faite une photo de votre événement, donner lui un titre, racontez le brievement.<br>
+          Celui-ci est immédiatement enregistré dans la blockchaine. Vous pouvez le conserver ou l'offrir à quelqu'un
+          "
+    transac: 0.00030
+    help:
+    production: true
+
+
+
 
   - index: loterie
     title: Loterie

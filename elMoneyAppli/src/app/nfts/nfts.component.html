@@ -104,7 +104,7 @@
 
         <button mat-icon-button mat-flat-button
                 title="En savoir plus sur le créateur"
-                *ngIf="nft.miner!=user.addr"
+                *ngIf="nft.miner!=user.addr && !preview"
                 class="icon-button"
                 routerLink="/miner" [queryParams]="{miner:nft.miner}">
           <mat-icon>person</mat-icon>
@@ -121,7 +121,6 @@
                   (click)="nft.open=''">
             <mat-icon>visibility_off</mat-icon>
           </button>
-
 
 
           <button mat-icon-button mat-flat-button
