@@ -58,6 +58,15 @@
                 (click)="clearQuery()">cancel</mat-icon>
     </mat-form-field>
 
+
+    <mat-form-field appearance="fill" style="width:100px;color:white;margin-right: 10px;">
+      <mat-label>Tags</mat-label>
+      <mat-select [(value)]="selected_tag" style="color: white;">
+        <mat-option *ngFor="let tag of tags" [value]="tag">#{{tag}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+
     <mat-form-field appearance="fill" style="width:100px;color:white;">
       <mat-label>Affichage</mat-label>
       <mat-select [(value)]="selected_mode" style="color: white;">
@@ -81,7 +90,7 @@
   <app-nfts [nfts]="nfts"
             *ngIf="message?.length==0"
             [user]="user"
-            [filter]="filter"
+            [filter]="filter+selected_tag"
             [seller]="selected_dealer.address"
             [height]="selected_mode.height"
             [width]="selected_mode.width"

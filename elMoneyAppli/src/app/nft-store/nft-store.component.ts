@@ -21,6 +21,21 @@ export class NftStoreComponent implements OnInit {
   filter_ids: any[]=[];
   dealers:any[]=[{name:'tous',address:'0x0'}];
 
+
+  handle:any;
+  options:any[]=[
+    {label:"Standard",style:{width:"250px",height:"fit-content",fontsize:"medium",with_icon:true}},
+    {label:"Condensé",style:{width:"auto",height:"fit-content",fontsize:"small",with_icon:false}},
+    {label:"Large",style:{width:"350px",height:"300px",fontsize:"large",with_icon:true}}
+    ]
+
+  selected_mode: any=this.options[0].style;
+  selected_dealer: any;
+
+  tags=[""];
+  selected_tag: any="";
+
+
   constructor(public api: ApiService,
               public routes: ActivatedRoute,
               public toast: MatSnackBar,
@@ -82,9 +97,10 @@ export class NftStoreComponent implements OnInit {
     this.api._get("nfts/"+this.selected_dealer.address+"/").subscribe((r: any) => {
       this.message = "";
       this.nfts = [];
+      this.tags=[""];
       for (let item of r) {
         item.message = "";
-        item.search=item.title+" "+item.price;
+        item.search=item.title+" "+item.price+" "+item.description;
         item.open = "";
 
         let same_item=null;
@@ -100,6 +116,18 @@ export class NftStoreComponent implements OnInit {
           item.count=1;
           if (!this.filter_id || this.filter_id == item.token_id) {
           if (item.state == 0 && item.properties>=4 && item.owner!=this.user.addr) {
+
+            if(item.description.indexOf("#")>-1){
+              let k=0;
+              for(let tag of item.description.split("#")){
+                if(k>0){
+                  tag=tag.split(" ")[0];
+                  if(this.tags.indexOf(tag)==-1)this.tags.push(tag);
+                }
+                k=k+1;
+              }
+            }
+
             this.nfts.push(item);
           }
         }
@@ -117,15 +145,9 @@ export class NftStoreComponent implements OnInit {
     }
   }
 
-  handle:any;
-  options:any[]=[
-    {label:"Standard",style:{width:"250px",height:"fit-content",fontsize:"medium",with_icon:true}},
-    {label:"Condensé",style:{width:"auto",height:"fit-content",fontsize:"small",with_icon:false}},
-    {label:"Large",style:{width:"350px",height:"300px",fontsize:"large",with_icon:true}}
-    ]
 
-  selected_mode: any=this.options[0].style;
-  selected_dealer: any;
+
+
 
 
   onQuery($event: KeyboardEvent) {

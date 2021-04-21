@@ -160,8 +160,11 @@ content:
     description: Enregistrez vos plus beaux souvenir de façon définitive et inaltérable dans la blockchaine
     fee: 0.004
     tuto: "
-          Faite une photo de votre événement, donner lui un titre, racontez le brievement.<br>
-          Celui-ci est immédiatement enregistré dans la blockchaine. Vous pouvez le conserver ou l'offrir à quelqu'un
+          <h2>Tout ce qui est écrit dans la blockchain l'est pour l'éternité !</h2>
+          Enregistrer photo de votre souvenir, donner lui un titre, racontez le brievement.<br>
+          Celui-ci est immédiatement enregistré dans la blockchaine.<br>
+
+          Vous pouvez le conserver ou l'offrir quand vous le souhaitez.<br>
           "
     transac: 0.00030
     tags: #evenement

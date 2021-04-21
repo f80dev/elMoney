@@ -514,10 +514,11 @@ def transactions(user:str):
             fee = -float(t["fee"])/1e18
             value = float(t["value"]) / 1e18
 
-            # if "scResults" in t:
-            #     for tt in t["scResults"]:
-            #         if tt["receiver"]==user:
-            #             cost=cost-int(tt["value"])
+            comment=""
+            if t["status"]!="success":
+                value=0
+                comment="annulée"
+
             if t["sender"]==user:sign=-1
             if t["receiver"]==user:sign=+1
 
@@ -538,7 +539,8 @@ def transactions(user:str):
                     "data": data,
                     "value": sign * value,
                     "fee": fee,
-                    "transaction": t["txHash"]
+                    "transaction": t["txHash"],
+                    "comment":comment
                 })
 
             if "scResults" in t:

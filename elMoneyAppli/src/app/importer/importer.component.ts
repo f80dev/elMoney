@@ -476,9 +476,9 @@ export class ImporterComponent implements OnInit {
 
 
   quick_lifeevents(token: any) {
-      this.ask_for_text("Titre de l'évenement","",(title)=> {
+      this.ask_for_text("Donner un titre à votre souvenir","",(title)=> {
         if (title) {
-          this.ask_for_text("Commentaire", "Ajouter un commentaire, un lieu, une date", (desc) => {
+          this.ask_for_text("Commentaire", "Ajouter un commentaire, une impression, un lieu, une date", (desc) => {
              this.add_visual((visual:any)=>{
                this.files[0]=visual.img;
                this.title=title;
