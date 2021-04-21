@@ -410,6 +410,23 @@ export class ImporterComponent implements OnInit {
   }
 
 
+  quick_lifeevents(token: any) {
+      this.ask_for_text("Titre de l'évenement","",(title)=> {
+        if (title) {
+          this.ask_for_text("Commentaire", "Ajouter un commentaire, un lieu, une date", (desc) => {
+             this.add_visual((visual:any)=>{
+               this.files[0]=visual.img;
+               this.title=title;
+               this.desc=desc;
+               this.owner_can_sell=false;
+               this.owner_can_transfer=true;
+               this.price=0;
+               this.tokenizer(token.fee);
+             },"Ajouter une belle photo de cet événement",800,800);
+          });
+        }
+      });
+  }
 
   quick_file($event: any,token:any,title="Télécharger un visuel") {
     this.files[0]=$event.file;
@@ -458,6 +475,7 @@ export class ImporterComponent implements OnInit {
     if(token.index=="film")this.quick_secret(token,'coller le lien secret (fourni par youtube) du film');
     if(token.index=="file")this.show_fileupload(1,'Téléverser le fichier à embarquer dans votre token',token);
     if(token.index=="secret")this.quick_secret(token);
+    if(token.index=="life_events")this.quick_lifeevents(token);
     if(token.index=="tickets")this.quick_tickets('Téléverser le visuel de votre invitation',token);
     if(token.index=="loterie")this.quick_loterie(token);
   }
@@ -467,4 +485,6 @@ export class ImporterComponent implements OnInit {
     this.create_preview();
     this.show_preview=!this.show_preview;
   }
+
+
 }

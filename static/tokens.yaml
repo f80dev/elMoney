@@ -148,7 +148,7 @@ content:
     production: true
 
 
-  - index: souvenir
+  - index: life_events
     title: Graver des<br>souvenirs
     icon: favorite
     description: Enregistrez vos plus beaux souvenir de façon définitive et inaltérable dans la blockchaine
