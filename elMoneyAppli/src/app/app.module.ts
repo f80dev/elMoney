@@ -70,6 +70,8 @@ import { UploadFileComponent } from './upload-file/upload-file.component';
 import { MinersComponent } from './miners/miners.component';
 import { PublicMinerComponent } from './public-miner/public-miner.component';
 import { SelDealerComponent } from './sel-dealer/sel-dealer.component';
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {MatChipsModule} from "@angular/material/chips";
 
 const config: SocketIoConfig = {
   url: environment.domain_server,
@@ -122,6 +124,7 @@ const config: SocketIoConfig = {
     MatButtonModule,
     MatDialogModule,
     MatIconModule,
+    MatAutocompleteModule,
     MatSnackBarModule,
     SocialLoginModule,
     SocketIoModule.forRoot(config),
@@ -149,7 +152,8 @@ const config: SocketIoConfig = {
     MatTabsModule,
     MatStepperModule,
     MatGridListModule,
-    ImageCropperModule
+    ImageCropperModule,
+    MatChipsModule
   ],
   providers: [
     ApiService,

@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {showMessage} from "../tools";
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {isNull, showMessage} from "../tools";
 import {ApiService} from "../api.service";
 import {UserService} from "../user.service";
 import {ImageSelectorComponent} from "../image-selector/image-selector.component";
@@ -12,6 +12,11 @@ import {MatTableDataSource} from "@angular/material/table";
 import {StepperSelectionEvent} from "@angular/cdk/stepper";
 import {PromptComponent} from "../prompt/prompt.component";
 import {SelDealerComponent} from "../sel-dealer/sel-dealer.component";
+import {COMMA, ENTER} from "@angular/cdk/keycodes";
+import {FormControl} from "@angular/forms";
+import {iif, Observable} from "rxjs";
+import {MatAutocomplete, MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
+import {MatChipInputEvent} from "@angular/material/chips";
 
 export interface SellerProperties {
   address: string;
@@ -57,6 +62,20 @@ export class ImporterComponent implements OnInit {
   selected_token: any;
   nfts_preview: any[]=[];
 
+
+  //Gestion des tags
+  visible = true;
+  selectable = true;
+  removable = true;
+  separatorKeysCodes: number[] = [ENTER, COMMA];
+  tagCtrl = new FormControl();
+  filteredTags: Observable<string[]>;
+  tags: string[] = ['Job'];
+  allTags: string[] = ['Photos', 'Musique','Evénement',"Secret"];
+
+  @ViewChild('tagsInput') tagInput: ElementRef<HTMLInputElement>;
+  @ViewChild('auto') matAutocomplete: MatAutocomplete;
+
   constructor(public api:ApiService,
               public user:UserService,
               public config:ConfigService,
@@ -83,6 +102,47 @@ export class ImporterComponent implements OnInit {
     if(this.user.pseudo.length==0){
       showMessage(this,"Vous pouvez créer un NFT anonynement mais il est préférable de se donner un pseudo à minima");
     }
+  }
+
+
+
+  //Gestion des tags
+   add(event: MatChipInputEvent): void {
+    const input = event.input;
+    const value = event.value;
+
+    // Add our fruit
+    if ((value || '').trim()) {
+      this.tags.push(value.trim());
+    }
+
+    // Reset the input value
+    if (input) {
+      input.value = '';
+    }
+
+    this.tagCtrl.setValue(null);
+  }
+
+
+
+  remove(fruit: string): void {
+    const index = this.tags.indexOf(fruit);
+    if (index >= 0) {
+      this.tags.splice(index, 1);
+    }
+  }
+
+  selected(event: MatAutocompleteSelectedEvent): void {
+    this.tags.push(event.option.viewValue);
+    this.tagInput.nativeElement.value = '';
+    this.tagCtrl.setValue(null);
+  }
+
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.allTags.filter(fruit => fruit.toLowerCase().indexOf(filterValue) === 0);
   }
 
 
@@ -294,6 +354,7 @@ export class ImporterComponent implements OnInit {
                 if (legende != null) {
                   this.title = title;
                   this.desc = "Réalisé par "+signature;
+                  if(token.tags)this.desc=this.desc+" "+token.tags;
                   this.secret="Authentification "+legende;
                   this.ask_for_price("Quel prix pour votre oeuvre", null, token.fee);
                 }
@@ -321,6 +382,7 @@ export class ImporterComponent implements OnInit {
             if(legende==null)legende="";
             this.title=title;
             this.desc=legende;
+            if(token.tags)this.desc=this.desc+" "+token.tags;
             this.ask_for_price("Quel prix pour votre photo",null,token.fee);
           });
         } else this.show_zone_upload=false;
@@ -339,6 +401,7 @@ export class ImporterComponent implements OnInit {
             this.ask_for_text("Description","Ecrivez une breve description",(description)=>{
               if(description){
                 this.desc=description;
+                if(token.tags)this.desc=this.desc+" "+token.tags;
                 this.title=title;
                 this.ask_for_price("Quel prix pour votre secret",null,token.fee);
               }
@@ -389,6 +452,8 @@ export class ImporterComponent implements OnInit {
               if (desc) {
                 this.title=title+" - "+desc;
                 this.secret="Billet: @id@";
+                this.desc=desc;
+                if(token.tags)this.desc=this.desc+" "+token.tags;
                 this.ask_for_price("Prix unitaire du billet",(price)=>{
                   this.ask_for_text("Combien de billets","Indiquer le nombre de billets à fabriquer (maximum 30)",(num)=>{
                     this.count=Number(num);
@@ -418,6 +483,7 @@ export class ImporterComponent implements OnInit {
                this.files[0]=visual.img;
                this.title=title;
                this.desc=desc;
+               if(token.tags)this.desc=this.desc+" "+token.tags;
                this.owner_can_sell=false;
                this.owner_can_transfer=true;
                this.price=0;
@@ -438,6 +504,7 @@ export class ImporterComponent implements OnInit {
         this.ask_for_text("Description","Rédigez une courte phrase pour donner envie de l'acheter",(desc)=>{
           if(desc){
             this.desc=desc;
+            if(token.tags)this.desc=this.desc+" "+token.tags;
             this.title=title;
             this.ask_for_price("Quel est votre prix pour ce fichier",null,token.fee);
           }
@@ -487,4 +554,11 @@ export class ImporterComponent implements OnInit {
   }
 
 
+  make_token() {
+    if(this.tags && this.tags.length>0)
+      for(let tag of this.tags)
+        if(tag)this.desc=" "+this.desc.trim()+"#"+tag;
+
+    this.tokenizer();
+  }
 }

@@ -29,6 +29,7 @@ content:
       <br>
     "
     fee: 0.002
+    tags: #photos
     transac: 0.00015
     production: true
 
@@ -52,6 +53,7 @@ content:
            Cette photo ne pourrat être vu que par l'acheteur
     "
     fee: 0.001
+    tags: #artiste #oeuvre
     transac: 0.00015
     production: true
 
@@ -72,6 +74,7 @@ content:
            Ce fichier ne pourrat être télécharger que par l'acheteur
     "
     fee: 0.002
+    tags: #fichier #secret
     transac: 0.00015
     production: true
 
@@ -111,6 +114,7 @@ content:
       Grâce à TokenForge le lien est caché dans le NFT et visible uniquement du propriétaire / acheteur.
       "
     fee: 0.002
+    tags: #film #cinema
     transac: 0.00015
     production: true
 
@@ -119,6 +123,7 @@ content:
     icon: lock
     description: Vendre un mot de passe, un numéro de license, un code secret de coffre, un code promo
     fee: 0.001
+    tags: #secret
     tuto: "
           TokenForge vous permet de vendre des secrets (code d'accès, mot de passe, adresse). <br><br>
 
@@ -144,6 +149,7 @@ content:
           Un menu de TokenForge vous permet de contrôler les billets en scannant simplement le QRCode du propriétaire
           "
     transac: 0.00015
+    tags: #billets #spectacle
     help: Présenter votre code perso à l'entrée de l'événement pour contrôle du billet
     production: true
 
@@ -158,6 +164,7 @@ content:
           Celui-ci est immédiatement enregistré dans la blockchaine. Vous pouvez le conserver ou l'offrir à quelqu'un
           "
     transac: 0.00030
+    tags: #evenement
     help:
     production: true
 
@@ -177,6 +184,7 @@ content:
     transac: 0.00015
     help: Après achat, ouvrer ce token pour découvrir si vous avez gagné. Si c'est le cas le gain est immédiatement versé sur votre compte
     production: false
+    tags: #jeu #loterie
 
 
 

@@ -52,7 +52,7 @@
       <mat-label>Chercher un token</mat-label>
       <input matInput matNativeControl
              (keyup)="onQuery($event)"
-             placeholder="Un ou plusieurs mots du titre" [(ngModel)]="filter">
+             placeholder="Un ou plusieurs mots du titre ou des #htag" [(ngModel)]="filter">
       <mat-icon *ngIf="filter?.length>0"
                 matSuffix style="cursor: pointer"
                 (click)="clearQuery()">cancel</mat-icon>

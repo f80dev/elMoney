@@ -79,10 +79,12 @@
         <app-tuto [if]="focus_idx==1 || focus_idx==2"
                   label="Vous pouvez utiliser certaines abrévations dans le secret comme par exemple @token@ pour rappeler la référence du token ou @owner@ pour avoir l'adresse du propriétaire"></app-tuto>
 
+         <app-tuto label="Le mode avancé vous permet de créer des NFTs 'sur mesure' en combinant toutes les possibilités de TokenForge"></app-tuto>
+
+
         <mat-vertical-stepper (selectionChange)="update_idx($event)" [linear]="false" style="width:90%;display: inline-block;max-width:700px;text-align: left;background: none;">
           <mat-step>
 
-            Le mode avancé vous permet de créer des NFTs "sur mesure" en combinant toutes les possibilités de TokenForge<br>
 
             <app-tuto *ngIf="idx_tab==0"
                       label="TOKENFORGE permet de cacher un secret dans le NFT. Celui-ci ne peut être vue que par le propriétaire du NFT. Par exemple vous pouvez cacher un mot de passe, un lien youtube, un fichier"></app-tuto>
@@ -186,6 +188,35 @@
                 <mat-hint *ngIf="focus_idx==2.5">Présenter votre NFT en quelques mots</mat-hint>
                 <mat-icon *ngIf="desc?.length>0" matSuffix style="cursor: pointer"  (click)="desc=''">cancel</mat-icon>
               </mat-form-field>
+              <br>
+
+
+              <!--              Tags-->
+              <mat-form-field class="app-field">
+                <mat-label>Tags</mat-label>
+                <mat-chip-list #chipList aria-label="Selection des tags">
+                  <mat-chip
+                    *ngFor="let tag of tags"
+                    [selectable]="selectable"
+                    [removable]="removable"
+                    (removed)="remove(tag)">
+                    {{tag}}
+                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                  </mat-chip>
+                  <input
+                    #tagsInput
+                    [matAutocomplete]="auto"
+                    [matChipInputFor]="chipList"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    (matChipInputTokenEnd)="add($event)">
+                </mat-chip-list>
+                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                  <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
+                    {{tag}}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+
 
 
               <br><br>
@@ -369,7 +400,7 @@
                       mat-button class="app-button"
                       id="cmdMakeNFT"
                       [disabled]="title?.length==0 || count*gift>user.gas/1e18"
-                      (click)="tokenizer()">
+                      (click)="make_token()">
                 Fabriquer !
               </button>
             </form>

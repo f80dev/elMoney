@@ -1,4 +1,7 @@
 <div *ngIf="nfts?.length>0" style="margin: 0px;padding:0;width:99%;text-align: center;" class="wrap-list" >
+
+
+
   <mat-card class="app-card mat-elevation-z6"
             [ngStyle]="{'min-height':'150px','max-width':max_w,width:_w,height: 'fit-content','margin':'3px','margin-bottom':'5px',padding:'7px'}"
             *ngFor="let nft of nfts | filter: ['search',filter]">
