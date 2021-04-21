@@ -141,7 +141,9 @@ export class NftsComponent implements OnChanges {
       data: {
         title: 'Confirmation',
         question: 'Souhaitez-vous vraiment détruire ce NFT ?',
-        onlyConfirm: true
+        onlyConfirm: true,
+         lbl_ok: 'Oui',
+        lbl_cancel: 'Non'
       }}).afterClosed().subscribe((result:any) => {
       if (result=="yes") {
         nft.message = "En cours de destruction";
