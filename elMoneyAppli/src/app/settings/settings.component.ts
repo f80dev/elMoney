@@ -26,7 +26,7 @@ export class SettingsComponent implements OnInit,OnDestroy {
 
   message: string="";
   filename: string="";
-  open_section=0;
+  open_section=-1;
   domain_appli=environment.domain_appli;
 
   constructor(public router:Router,

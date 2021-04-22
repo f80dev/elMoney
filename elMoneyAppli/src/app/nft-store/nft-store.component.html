@@ -81,7 +81,7 @@
 
   <app-hourglass [message]="message"></app-hourglass>
 
-  <div *ngIf="nfts.length==0 && message.length==0">
+  <div *ngIf="nfts?.length==0 && message.length==0">
     Aucun token disponible pour l'instant
     &nbsp;<mat-icon style="font-size: small;" (click)="refresh()">refresh</mat-icon>
     <br><br>

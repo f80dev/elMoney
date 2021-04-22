@@ -117,13 +117,21 @@
                        maxlength="200" [(ngModel)]="secret" [ngModelOptions]="{standalone: true}">
                 <mat-hint *ngIf="focus_idx==1">un mot de passe, une adresse internet qui ne sera accessible qu'au propriétaire</mat-hint>
               </mat-form-field>
+              <br>
+
+              <div *ngIf="secret && secret.length>0" style="margin-bottom: 15px">
+                <mat-slide-toggle color="primary"
+                    [(ngModel)]="self_destruction" [ngModelOptions]="{standalone: true}">Auto-destruction après ouverture
+                </mat-slide-toggle>
+              </div>
 
 
               <mat-form-field appearance="fill" class="app-field" style="max-width: 150px;">
                 <mat-label>Récompense à l'ouverture</mat-label>
                 <input matInput type="number"
                        id="txtGift"
-                       (focusin)="focus_idx=1.5" min="0" [max]="user.gas/1e18" [(ngModel)]="gift" [ngModelOptions]="{standalone: true}">
+                       (focusin)="focus_idx=1.5" min="0" [max]="user.gas/1e18" [(ngModel)]="gift"
+                       [ngModelOptions]="{standalone: true}">
                 <span matSuffix>xeGld</span>
                 <mat-hint *ngIf="focus_idx==1.5">Débitée de votre compte à la création et crédité sur le compte de l'acheteur à l'ouverture du NFT</mat-hint>
               </mat-form-field>
@@ -192,16 +200,16 @@
 
 
               <!--              Tags-->
-              <mat-form-field class="app-field">
+              <mat-form-field class="app-field" appearance="fill" >
                 <mat-label>Tags</mat-label>
                 <mat-chip-list #chipList aria-label="Selection des tags">
                   <mat-chip
                     *ngFor="let tag of tags"
                     [selectable]="selectable"
-                    [removable]="removable"
+                    [removable]="true"
                     (removed)="remove(tag)">
-                    {{tag}}
-                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                    <small>{{tag}}</small>
+                    <mat-icon matChipRemove>cancel</mat-icon>
                   </mat-chip>
                   <input
                     #tagsInput
@@ -374,15 +382,13 @@
                 +1
               </button>
 
-
-
               <br><br>
               <small>Cout de fabrication: {{count*gift}} + frais de transactions</small>
               <span *ngIf="count*gift>user.gas/1e18">(Solde insuffisant)</span>
               <br><br>
-              <div *ngIf="show_preview">
+              <div *ngIf="show_preview" style="width: 100%;text-align: center;">
                 <app-nfts [nfts]="nfts_preview" [user]="user"
-                          height="fit-content"></app-nfts>
+                          height="fit-content"></app-nfts><br>
                 <small>Visualisation de votre NFT dans la marketplace</small>
               </div>
 

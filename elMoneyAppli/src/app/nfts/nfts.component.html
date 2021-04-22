@@ -1,10 +1,9 @@
 <div *ngIf="nfts?.length>0" style="margin: 0px;padding:0;width:99%;text-align: center;" class="wrap-list" >
 
-
-
   <mat-card class="app-card mat-elevation-z6"
             [ngStyle]="{'min-height':'150px','max-width':max_w,width:_w,height: 'fit-content','margin':'3px','margin-bottom':'5px',padding:'7px'}"
             *ngFor="let nft of nfts | filter: ['search',filter]">
+
     <mat-card-header *ngIf="!nft.fullscreen" style="height: 35px">
       <img *ngIf="with_icon" mat-card-avatar src="./assets/icons/gift.png" class="image-icon" style="margin:0;">
       <mat-card-title [ngStyle]="{'font-size':fontsize}">
@@ -47,10 +46,13 @@
 
       <div *ngIf="!nft.fullscreen && (nft.owner!=user.addr || nft.state==0)"
            style="width:90%;margin:5%;line-height: 95%;font-size: small;text-align: center;">
-        {{nft.description}}
+        {{nft.description}}<br>
+
         <div *ngIf="nft.price>0 && nft.state==0 && (nft.owner==user.addr || nft.isDealer)" style="display: inline;">
           <small>&nbsp;({{nft.price | number:'1.0-3'}} xEgld)</small>
         </div>
+
+        <span style="font-size: x-small;color:lightgrey">{{nft.tags}}</span>
       </div>
 
 

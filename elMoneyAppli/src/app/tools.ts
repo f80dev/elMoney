@@ -1006,3 +1006,44 @@ function drawRotated(canvas, image, degrees) {
   ctx.restore();
 }
 
+export function extract_tags(tokens:any[]) {
+  let tags=[];
+  let k = 0;
+  for(let item of tokens){
+    for (let tag of item.tags.split("#")) {
+      if (k > 0) {
+        tag = tag.split(" ")[0];
+        if (tags.indexOf(tag) == -1) tags.push(tag);
+      }
+      k = k + 1;
+    }
+  }
+  return tags;
+}
+
+export function group_tokens(tokens:any[],func_validate:Function=null):any {
+  let nfts = [];
+
+  for (let item of tokens) {
+    item.message = "";
+    item.search = item.title + " " + item.price + " " + item.description + " " + item.tags;
+    item.open = "";
+
+    let same_item = null;
+    for (let i of nfts) {
+      if (i.title == item.title && i.description == item.description && i.miner == item.miner && i.price == item.price && i.state == item.state)
+        same_item = i;
+    }
+
+    if (same_item) {
+      same_item.count = same_item.count + 1;
+    } else {
+      item.count = 1;
+      if (!func_validate || func_validate(item)){
+        nfts.push(item);
+      }
+    }
+  }
+
+  return nfts;
+}

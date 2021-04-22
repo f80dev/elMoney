@@ -113,7 +113,7 @@
     <mat-expansion-panel class="app-panel" [expanded]="open_section==2">
       <mat-expansion-panel-header>Distribuer des NFTs</mat-expansion-panel-header>
       <mat-form-field appearance="fill" class="app-field">
-        <mat-label>Votre nom de distributeur</mat-label>
+        <mat-label>Nom de votre marketplace</mat-label>
         <input matInput type="url" (focusin)="focus_idx=4" maxlength="200" [(ngModel)]="user.shop_name" [ngModelOptions]="{standalone: true}">
         <mat-hint *ngIf="focus_idx==4">L'adresse de votre site internet</mat-hint>
       </mat-form-field>

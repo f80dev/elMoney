@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ApiService} from "../api.service";
-import {showMessage, subscribe_socket} from "../tools";
+import {showMessage, subscribe_socket, group_tokens, extract_tags} from "../tools";
 import {UserService} from "../user.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -27,7 +27,7 @@ export class NftStoreComponent implements OnInit {
     {label:"Standard",style:{width:"250px",height:"fit-content",fontsize:"medium",with_icon:true}},
     {label:"Condensé",style:{width:"auto",height:"fit-content",fontsize:"small",with_icon:false}},
     {label:"Large",style:{width:"350px",height:"300px",fontsize:"large",with_icon:true}}
-    ]
+  ]
 
   selected_mode: any=this.options[0].style;
   selected_dealer: any;
@@ -96,44 +96,17 @@ export class NftStoreComponent implements OnInit {
     if (withMessage) this.message = "Chargement des tokens ...";
     this.api._get("nfts/"+this.selected_dealer.address+"/").subscribe((r: any) => {
       this.message = "";
-      this.nfts = [];
-      this.tags=[""];
-      for (let item of r) {
-        item.message = "";
-        item.search=item.title+" "+item.price+" "+item.description;
-        item.open = "";
 
-        let same_item=null;
-        for(let i of this.nfts){
-
-          if(i.title==item.title && i.description==item.description && i.miner==item.miner && i.price==item.price && i.state==item.state)
-            same_item=i;
-        }
-
-        if(same_item){
-          same_item.count=same_item.count+1;
-        } else {
-          item.count=1;
-          if (!this.filter_id || this.filter_id == item.token_id) {
-          if (item.state == 0 && item.properties>=4 && item.owner!=this.user.addr) {
-
-            if(item.description.indexOf("#")>-1){
-              let k=0;
-              for(let tag of item.description.split("#")){
-                if(k>0){
-                  tag=tag.split(" ")[0];
-                  if(this.tags.indexOf(tag)==-1)this.tags.push(tag);
-                }
-                k=k+1;
-              }
-            }
-
-            this.nfts.push(item);
+      this.nfts=group_tokens(r,(item)=>{
+        if (!this.filter_id || this.filter_id == item.token_id) {
+          if (item.state == 0 && item.properties >= 4 && item.owner != this.user.addr) {
+              return true;
           }
+        return false;
         }
-        }
+      });
 
-      }
+      this.tags=extract_tags(this.nfts);
     });
   }
 

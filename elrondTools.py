@@ -720,8 +720,21 @@ class ElrondNet:
                 title=translate(title,_d)
                 desc=translate(desc,_d)
 
+                #extraction des tags
+                tags=[]
+                if "#" in desc:
+                    i=0
+                    for tag in desc.split("#"):
+                        if i>0:
+                            _t="#"+tag.split(" ")[0]
+                            tags.append(_t)
+                            desc=desc.replace(_t," ")
+                        i=i+1
+
+                desc=desc.strip()
                 obj=dict({"token_id": id,
                           "title": title,
+                          "tags":" ".join(tags),
                           "description":desc,
                           "price": price,
                           "markup":markup/100,

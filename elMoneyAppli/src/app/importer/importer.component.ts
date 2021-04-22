@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {isNull, showMessage} from "../tools";
+import {$$, isNull, showMessage} from "../tools";
 import {ApiService} from "../api.service";
 import {UserService} from "../user.service";
 import {ImageSelectorComponent} from "../image-selector/image-selector.component";
@@ -17,6 +17,7 @@ import {FormControl} from "@angular/forms";
 import {iif, Observable} from "rxjs";
 import {MatAutocomplete, MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {MatChipInputEvent} from "@angular/material/chips";
+import {map, startWith} from "rxjs/operators";
 
 export interface SellerProperties {
   address: string;
@@ -50,7 +51,9 @@ export class ImporterComponent implements OnInit {
   dataSource = new MatTableDataSource<SellerProperties>([]);
   owner_can_sell: boolean=true;
   owner_can_transfer: boolean=true;
+  self_destruction: boolean=false;
   direct_sell: boolean=true;
+
   miner_ratio: number = 0;
   idx_tab: number=0;
   show_zone_upload: boolean=false;
@@ -66,11 +69,10 @@ export class ImporterComponent implements OnInit {
   //Gestion des tags
   visible = true;
   selectable = true;
-  removable = true;
   separatorKeysCodes: number[] = [ENTER, COMMA];
   tagCtrl = new FormControl();
   filteredTags: Observable<string[]>;
-  tags: string[] = ['Job'];
+  tags: string[] = [];
   allTags: string[] = ['Photos', 'Musique','Evénement',"Secret"];
 
   @ViewChild('tagsInput') tagInput: ElementRef<HTMLInputElement>;
@@ -82,6 +84,9 @@ export class ImporterComponent implements OnInit {
               public dialog:MatDialog,
               public toast:MatSnackBar,
               public router:Router) {
+    this.filteredTags = this.tagCtrl.valueChanges.pipe(
+        startWith(null),
+        map((tag: string | null) => tag ? this._filter(tag) : this.allTags.slice()));
   }
 
   ngOnInit(): void {
@@ -107,6 +112,7 @@ export class ImporterComponent implements OnInit {
 
 
   //Gestion des tags
+
    add(event: MatChipInputEvent): void {
     const input = event.input;
     const value = event.value;
@@ -142,7 +148,7 @@ export class ImporterComponent implements OnInit {
 
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
-    return this.allTags.filter(fruit => fruit.toLowerCase().indexOf(filterValue) === 0);
+    return this.allTags.filter(tag => tag.toLowerCase().indexOf(filterValue) === 0);
   }
 
 
@@ -174,6 +180,7 @@ export class ImporterComponent implements OnInit {
     if(this.owner_can_transfer)properties=properties+0b00000001;
     if(this.owner_can_sell)properties=properties+0b00000010;
     if(this.direct_sell)properties=properties+0b00000100;
+    if(this.self_destruction)properties=properties+0b00001000;
 
     let obj={
       pem:this.user.pem,
@@ -197,9 +204,13 @@ export class ImporterComponent implements OnInit {
       miner_ratio:this.miner_ratio
     };
 
+    $$("Création du token ",obj);
+
+
     this.message="Enregistrement dans la blockchain";
     this.show_zone_upload=false;
     this.api._post("mint/"+this.count,"",obj).subscribe((r:any)=>{
+      $$("Enregistrement dans la blockchain");
       if(r){
         this.message="";
         showMessage(this,"Fichier tokeniser pour "+r.cost+" xEgld");
@@ -209,6 +220,7 @@ export class ImporterComponent implements OnInit {
         if(func)func();
       }
     },(err)=>{
+      $$("!Erreur de création");
       this.message="";
       showMessage(this,err.error);
       if(func_error)func_error();

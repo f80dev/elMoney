@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {UserService} from "../user.service";
 import {ApiService} from "../api.service";
-import {$$, subscribe_socket} from "../tools";
+import {$$, group_tokens, subscribe_socket} from "../tools";
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormControl} from "@angular/forms";
 import {Socket, SocketIoModule} from "ngx-socket-io";
@@ -66,14 +66,12 @@ export class NftsPersoComponent implements OnInit {
         }
 
 
-        let rc=[];
-        for(let i of r){
+        this.nfts[tokenIdentifier]=group_tokens(r,(i)=>{
           if(!this.filter || tokenIdentifier!=2 || this.filter.key=="" || i[this.filter.key]==this.filter.value) {
-            rc.push(i);
+            return true;
           }
-        }
-
-        this.nfts[tokenIdentifier]=rc;
+          return false;
+        });
       });
     }
   }

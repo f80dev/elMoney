@@ -244,6 +244,8 @@ def burn(token_id,data:dict=None):
     os.remove(pem_file)
 
     send(socketio,"refresh_nft",rc["sender"])
+    send(socketio,"nft_store")
+
     #TODO ajouter la notification du mineur
 
     #TODO: ajouter la destruction du fichier

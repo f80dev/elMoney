@@ -48,17 +48,20 @@ export class NftsComponent implements OnChanges {
 
 
   ngOnChanges(): void {
-    if(this.nfts){
-      for(let nft of this.nfts){
-        nft.visibility='visible';
-        for(let k of Object.keys(this.filter)){
-          if(nft[k] && typeof nft[k]=="string" && nft[k].indexOf(this.filter[k])==-1){
-            nft.visibility='hidden';
-            break;
-          }
-        }
-      }
-    }
+    // if(this.nfts){
+    //   for(let nft of this.nfts){
+    //     nft.visibility='visible';
+    //     if(this.filter.length>0){
+    //       for(let k of Object.keys(this.filter)){
+    //       if(nft[k] && typeof nft[k]=="string" && nft[k].indexOf(this.filter[k])==-1){
+    //         nft.visibility='hidden';
+    //         break;
+    //       }
+    //     }
+    //     }
+    //
+    //   }
+    // }
   }
 
 
@@ -124,13 +127,17 @@ export class NftsComponent implements OnChanges {
   open(nft: any) {
     nft.message = "En cours d'ouverture";
     this.api._post("open_nft/" + nft.token_id + "/", "", this.user.pem).subscribe((r: any) => {
-
       nft.message = "";
-
       nft.open = r.response;
       if(nft.open.length==46)nft.open="https://ipfs.io/ipfs/"+nft.open;
-
       this.user.refresh_balance(() => {});
+      if((nft.properties & 0b1000) > 0){
+        showMessage(this,"Auto-destruction de ce NFT dans 10 secondes");
+        setTimeout(()=>{this.onrefresh.emit();},10000);
+      }
+
+    },(err)=>{
+      showMessage(this,"Impossible d'ouvrir ce NFT");
     });
   }
 
