@@ -85,8 +85,8 @@ export class ImporterComponent implements OnInit {
               public toast:MatSnackBar,
               public router:Router) {
     this.filteredTags = this.tagCtrl.valueChanges.pipe(
-        startWith(null),
-        map((tag: string | null) => tag ? this._filter(tag) : this.allTags.slice()));
+      startWith(null),
+      map((tag: string | null) => tag ? this._filter(tag) : this.allTags.slice()));
   }
 
   ngOnInit(): void {
@@ -113,7 +113,7 @@ export class ImporterComponent implements OnInit {
 
   //Gestion des tags
 
-   add(event: MatChipInputEvent): void {
+  add(event: MatChipInputEvent): void {
     const input = event.input;
     const value = event.value;
 
@@ -320,10 +320,24 @@ export class ImporterComponent implements OnInit {
     this.idx_tab=$event.selectedIndex;
   }
 
+  ask_options(options:any[],func:Function,title="Sélectionnez une option") {
+    this.dialog.open(PromptComponent,{width: 'auto',data:
+        {
+          title: title,
+          question: "",
+          type:"options",
+          options:options,
+          lbl_ok:"Ok",
+          lbl_cancel:"Annuler"
+        }
+    }).afterClosed().subscribe((result) => {
+      func(result);
+    });
+  }
 
 
   ask_for_price(question="",func:Function=null,fee=0){
-    this.dialog.open(PromptComponent,{width: '250px',data:
+    this.dialog.open(PromptComponent,{width: '280px',data:
         {
           title: "Prix de vente",
           question: question,
@@ -413,10 +427,16 @@ export class ImporterComponent implements OnInit {
           if(title)
             this.ask_for_text("Description","Ecrivez une breve description",(description)=>{
               if(description){
-                this.desc=description;
-                if(token.tags)this.desc=this.desc+" "+token.tags;
-                this.title=title;
-                this.ask_for_price("Quel prix pour votre secret",null,token.fee);
+                this.ask_options([
+                  {label:"<div class='bloc-bouton'>Le NFT s'autodétruit<br>après ouverture</div>",value:true,width:'200px'},
+                  {label:"<div class='bloc-bouton'>Le NFT peut être ouvert<br>plusieurs fois</div>",value:false,width:'200px'}
+                ],(value)=>{
+                  this.self_destruction=value;
+                  this.desc=description;
+                  if(token.tags)this.desc=this.desc+" "+token.tags;
+                  this.title=title;
+                  this.ask_for_price("Quel prix pour votre secret",null,token.fee);
+                });
               }
             })
         });
@@ -489,22 +509,22 @@ export class ImporterComponent implements OnInit {
 
 
   quick_lifeevents(token: any) {
-      this.ask_for_text("Donner un titre à votre souvenir","",(title)=> {
-        if (title) {
-          this.ask_for_text("Commentaire", "Ajouter un commentaire, une impression, un lieu, une date", (desc) => {
-             this.add_visual((visual:any)=>{
-               this.files[0]=visual.img;
-               this.title=title;
-               this.desc=desc;
-               if(token.tags)this.desc=this.desc+" "+token.tags;
-               this.owner_can_sell=false;
-               this.owner_can_transfer=true;
-               this.price=0;
-               this.tokenizer(token.fee);
-             },"Ajouter une belle photo de cet événement",800,800);
-          });
-        }
-      });
+    this.ask_for_text("Donner un titre à votre souvenir","",(title)=> {
+      if (title) {
+        this.ask_for_text("Commentaire", "Ajouter un commentaire, une impression, un lieu, une date", (desc) => {
+          this.add_visual((visual:any)=>{
+            this.files[0]=visual.img;
+            this.title=title;
+            this.desc=desc;
+            if(token.tags)this.desc=this.desc+" "+token.tags;
+            this.owner_can_sell=false;
+            this.owner_can_transfer=true;
+            this.price=0;
+            this.tokenizer(token.fee);
+          },"Ajouter une belle photo de cet événement",800,800);
+        });
+      }
+    });
   }
 
   quick_file($event: any,token:any,title="Télécharger un visuel") {
@@ -513,17 +533,17 @@ export class ImporterComponent implements OnInit {
     this.add_visual((visual)=>{
       if(visual)this.files[1]=visual.img;
       this.ask_for_text("Titre","Titre de votre annonce",(title)=>{
-      if(title) {
-        this.ask_for_text("Description","Rédigez une courte phrase pour donner envie de l'acheter",(desc)=>{
-          if(desc){
-            this.desc=desc;
-            if(token.tags)this.desc=this.desc+" "+token.tags;
-            this.title=title;
-            this.ask_for_price("Quel est votre prix pour ce fichier",null,token.fee);
-          }
-        })
-      }
-    });
+        if(title) {
+          this.ask_for_text("Description","Rédigez une courte phrase pour donner envie de l'acheter",(desc)=>{
+            if(desc){
+              this.desc=desc;
+              if(token.tags)this.desc=this.desc+" "+token.tags;
+              this.title=title;
+              this.ask_for_price("Quel est votre prix pour ce fichier",null,token.fee);
+            }
+          })
+        }
+      });
     },title);
 
   }

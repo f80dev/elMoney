@@ -13,7 +13,8 @@ export interface DialogData {
   lbl_ok:string,
   type:string,
   lbl_cancel:string,
-  lbl_sup:string
+  lbl_sup:string,
+  options:any[]
 }
 
 
@@ -60,5 +61,9 @@ export class PromptComponent {
   onEnter(evt:any) {
     if(evt.keyCode==13)
       this.dialogRef.close(this.data.result);
+  }
+
+  select_option(value: any) {
+    this.dialogRef.close(value);
   }
 }
