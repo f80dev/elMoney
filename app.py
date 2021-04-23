@@ -10,6 +10,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 
 import yaml
 from erdpy.accounts import Account
+from erdpy.contracts import SmartContract
 
 from flask import  Response, request, jsonify
 
@@ -505,8 +506,8 @@ def mint(count:str,data:dict=None):
 def transactions(user:str):
     rc=[]
     for addr in [NETWORKS[bc.network_name]["nft"]]:
-        for t in bc.getTransactions(addr):
-            t=bc.getTransactionsByRest(t["hash"])
+        for t in bc.getTransactionsByRest(addr):
+            # t=bc.getTransactionsByRest(t["hash"])
             try:
                 data = str(base64.b64decode(t["data"]), "utf-8")
             except:
@@ -541,7 +542,7 @@ def transactions(user:str):
                     "data": data,
                     "value": sign * value,
                     "fee": fee,
-                    "transaction": t["txHash"],
+                    "transaction": t["hash"],
                     "comment":comment
                 })
 
@@ -558,7 +559,7 @@ def transactions(user:str):
                                 "data":data+": "+data2,
                                 "value":sign*float(tt["value"])/1e18,
                                 "fee":0,
-                                "transaction":t["txHash"]
+                                "transaction":t["hash"]
                             })
 
     return jsonify(rc),200

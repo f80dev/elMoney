@@ -885,7 +885,13 @@ class ElrondNet:
         return rc
 
     def getTransactionsByRest(self,addr):
-        rc=rq.get(self._proxy.url+"/transactions/"+addr).json()
+        _c=SmartContract(address=addr)
+        #rc=rq.get(self._proxy.url+"/transactions/"+addr).json()
+        rc=rq.get(self._proxy.url+"/address/"+_c.address.bech32()+"/transactions")
+        if rc.status_code==200:
+            rc=json.loads(rc.text)["data"]["transactions"]
+        else:
+            rc={"error":rc.status_code,"message":rc.text}
         return rc
 
 

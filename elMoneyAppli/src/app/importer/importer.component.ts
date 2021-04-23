@@ -152,7 +152,7 @@ export class ImporterComponent implements OnInit {
   }
 
 
-  import(fileInputEvent: any,index_file=0,prompt="",func=null) {
+  _import(fileInputEvent: any,index_file=0,prompt="",func=null) {
     this.dialog.open(PromptComponent,{width: '250px',data:
         {
           title: prompt,
@@ -161,8 +161,9 @@ export class ImporterComponent implements OnInit {
           lbl_cancel:"Annuler"
         }
     }).afterClosed().subscribe((rep) => {
-      if (rep) {
-
+      if (rep=="yes") {
+        this.files[0]=fileInputEvent.file;
+        this.filename=fileInputEvent.filename;
       }
     });
   }

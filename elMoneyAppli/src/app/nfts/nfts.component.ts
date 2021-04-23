@@ -132,8 +132,15 @@ export class NftsComponent implements OnChanges {
       if(nft.open.length==46)nft.open="https://ipfs.io/ipfs/"+nft.open;
       this.user.refresh_balance(() => {});
       if((nft.properties & 0b1000) > 0){
-        showMessage(this,"Auto-destruction de ce NFT dans 10 secondes");
-        setTimeout(()=>{this.onrefresh.emit();},10000);
+        nft.delay=15;
+        nft.timer=setInterval(()=>{
+          nft.delay=nft.delay-1;
+          nft.message="Notez ce message, il s'auto-détruira dans "+nft.delay+" secondes";
+          if(nft.delay==0){
+            clearInterval(nft.timer);
+            this.onrefresh.emit();
+          }
+        },1000);
       }
 
     },(err)=>{

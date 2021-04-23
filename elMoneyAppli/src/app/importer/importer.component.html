@@ -93,7 +93,7 @@
               <ng-template matStepLabel>Embarquer dans le NFT</ng-template>
               <input #csvInput [hidden]="true"
                      type="file" onclick="this.value=null"
-                     (change)="import($event,0,'Commençons par charger le fichier dans le NFC')"
+                     (change)="_import($event,0,'Commençons par charger le fichier dans le NFC')"
                      accept="*"/>
 
               <button mat-raised-button
@@ -119,7 +119,7 @@
               </mat-form-field>
               <br>
 
-              <div *ngIf="secret && secret.length>0" style="margin-bottom: 15px">
+              <div *ngIf="(secret && secret.length>0) || filename?.length>0" style="margin-bottom: 15px">
                 <mat-slide-toggle color="primary"
                     [(ngModel)]="self_destruction" [ngModelOptions]="{standalone: true}">Auto-destruction après ouverture
                 </mat-slide-toggle>
