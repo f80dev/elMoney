@@ -66,6 +66,10 @@ NETWORKS={
     }
 }
 
+ADMINS=[
+    "",""
+]
+
 SIGNATURE="<br><br>L'équipe de TokenForge<br><a href='https://t.me/tokenforge'>Le forum des utilisateurs</a>"
 
 DB_SERVERS=dict({

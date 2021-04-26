@@ -1,57 +1,107 @@
 <div class="mainform">
 
-   <mat-form-field appearance="fill" class="app-field"
-                   style="max-width: 150px"
-                   *ngIf="password!='hh4271'">
+  <mat-form-field appearance="fill" class="app-field"
+                  style="max-width: 150px"
+                  *ngIf="password!='hh4271'">
     <mat-label>Admin password</mat-label>
     <input matInput type="text" maxlength="6" [(ngModel)]="password">
-   </mat-form-field>
+  </mat-form-field>
+
+
   &nbsp;&nbsp;
   <div *ngIf="password=='hh4271'">
-    <button mat-raised-button
-          mat-button class="app-button"
-          (click)="raz()">
-      Raz
-    </button>
+
+
+    <mat-accordion style="width:96%;display: inline-block;" *ngIf="message?.length==0">
+
+
+      <mat-expansion-panel class="app-panel">
+
+        <mat-expansion-panel-header>Les tokens</mat-expansion-panel-header>
+        <a [href]="config.domain_server+'/api/nfts/?format=json'" target="_blank">Fichiers JSON des tokens</a>
+        <br>
+
+        <a [href]="config.domain_server+'/api/nfts/?format=json'" target="_blank">Fichiers Excel des tokens</a>
+
+
+      </mat-expansion-panel>
+
+
+      <mat-expansion-panel class="app-panel">
+        <mat-expansion-panel-header>Gestion des comptes</mat-expansion-panel-header>
+        <button mat-raised-button
+                mat-button class="app-button"
+                (click)="raz()">
+          Raz
+        </button>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel class="app-panel">
+        <mat-expansion-panel-header>Transactions</mat-expansion-panel-header>
+
+        <app-elrond-addr [addr]="config.server?.bank_addr" type="address"
+                         label="Transactions du compte de bank"></app-elrond-addr><br>
+        <br><br>
+        <app-elrond-addr [addr]="config.server?.default_money" type="address"
+                         label="Transactions du TFC"></app-elrond-addr>
+        <br>
+
+        <h3>Smart Contrat utilisé</h3>
+        <app-elrond-addr [addr]="config.server?.nft_contract"
+                         label="Transactions du contrat NFT"
+                         type="address">
+        </app-elrond-addr>
+        <br>
+
+        <app-elrond-addr [addr]="config.server?.esdt_contract"
+                         label="Transaction des ESDT"
+                         type="address">
+        </app-elrond-addr>
+
+      </mat-expansion-panel>
+
+
+      <mat-expansion-panel class="app-panel">
+        <mat-expansion-panel-header>Compte administrateur</mat-expansion-panel-header>
+
+        <h3>Réserves de la banque</h3>
+        Ref de la monnaie : {{config.server?.bank_esdt_ref}}<br>
+        TFC: {{config.server?.bank_esdt}}<br>
+        eGLD: {{config.server?.bank_gas/1e18 | number:'1.0-2'}}
+        <br>
+        <span *ngIf="config.server?.bank_gas/1e18<5">Impossible de créer une monnaie</span>
+        <br>
+        <br>
+        <a [href]="config.server.wallet" target="_blank">
+          Wallet de la banque
+        </a>
+      </mat-expansion-panel>
+
+
+
+
+
+    </mat-accordion>
+
+
+
+
+
   </div>
   <br><br>
 
-  <app-elrond-addr [addr]="config.server?.bank_addr" type="address"
-                   label="Transactions du compte de bank"></app-elrond-addr><br>
-  <br><br>
-  <app-elrond-addr [addr]="config.server?.default_money" type="address"
-                   label="Transactions du TFC"></app-elrond-addr>
-  <br>
-  <br><br>
-
-  <h2>Réserves de la banque</h2>
-  Ref de la monnaie : {{config.server?.bank_esdt_ref}}<br>
-  TFC: {{config.server?.bank_esdt}}<br>
-  eGLD: {{config.server?.bank_gas/1e18 | number:'1.0-2'}}
-  <br>
-  <span *ngIf="config.server?.bank_gas/1e18<5">Impossible de créer une monnaie</span>
-  <br>
-  <br>
-  <a [href]="config.server.wallet" target="_blank">
-    Wallet de la banque
-  </a>
 
   <br><br>
-  <h2>Smart Contrats utilisdé</h2>
-  <app-elrond-addr [addr]="config.server?.nft_contract"
-                   label="Transactions du contrat NFT"
-                   type="address">
-  </app-elrond-addr>
 
-  <app-elrond-addr [addr]="config.server?.esdt_contract"
-                   label="Transaction des ESDT"
-                   type="address">
-  </app-elrond-addr>
+
+
+  <br><br>
+
 
 
   <br><br>
   Proxy : {{config.server?.proxy}}
 
-  </div>
+</div>
 
 

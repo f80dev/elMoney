@@ -14,6 +14,7 @@ import {environment} from "../../environments/environment";
 })
 export class AdminComponent implements OnInit {
   password: any="";
+  message="";
 
    constructor(public api:ApiService,
                public toast:MatSnackBar,

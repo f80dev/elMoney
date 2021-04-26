@@ -1,9 +1,10 @@
 import base64
+
+import flask_excel as excel
 import json
 import os
 import ssl
 import sys
-from io import StringIO
 
 from AesEverywhere import aes256
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -267,7 +268,13 @@ def nfts(seller_filter="0x0",owner_filter="0x0",miner_filter="0x0"):
     for uri in bc.get_tokens(seller_filter,owner_filter,miner_filter):
         rc.append(uri)
 
-    return jsonify(rc),200
+    format=request.args.get("format","json")
+    if format=="json":
+        return jsonify(rc),200
+
+    if format=="excel" or format.startswith("xls"):
+        excel.init_excel(app)
+        return excel.make_response_from_array(rc, file_type="csv", file_name="tokens.csv")
 
 
 

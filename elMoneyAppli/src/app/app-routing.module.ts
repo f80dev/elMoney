@@ -46,6 +46,7 @@ const routes: Routes = [
   { path: 'main', component: MainComponent},
   { path: 'wallet', component: MainComponent},
   { path: 'contacts', component: ContactsComponent},
+  { path: '**', component: NftStoreComponent},
 ];
 
 @NgModule({

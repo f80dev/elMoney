@@ -19,6 +19,7 @@ export class ConfigService {
   width_screen: number;
   ready=false;
   dealers:any[]=[];
+  domain_server;
 
   query_cache: any[]; //Conserve le contenu de la dernière requete
   unity: string ="";
@@ -37,7 +38,7 @@ export class ConfigService {
       isDesktop:this.deviceService.isDesktop(),
       infos:this.deviceService.getDeviceInfo()
     }
-
+    this.domain_server=environment.domain_server;
   }
 
 

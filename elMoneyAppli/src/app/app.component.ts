@@ -44,7 +44,7 @@ export class AppComponent implements OnInit,OnDestroy {
       $$("Recherche du contrat à utiliser pour le device");
       this.api.init_tokenIdentifier(this.routes.snapshot.queryParamMap.get("contract"))
 
-      $$("Initialisation de l'utilisateur")
+      $$("Initialisation de l'utilisateur");
       let addr=this.routes.snapshot.queryParamMap.get("user");
       let miner=this.routes.snapshot.queryParamMap.get("miner");
       let q=this.routes.snapshot.queryParamMap.get("q");
@@ -55,13 +55,14 @@ export class AppComponent implements OnInit,OnDestroy {
 
       this.user.init(addr,pem_key,
         (r)=> {
+
           if(filter){this.router.navigate(["store"],{queryParams:{id:filter}});return;}
           if(addr) {this.router.navigate(["nfts-perso"]);return;};
           if(miner){this.router.navigate(["miner"],{queryParams:{miner:miner}});return;}
           if(store){this.router.navigate(["store"],{queryParams:{store:store}});return;}
-          if(localStorage.getItem("last_screen") && !miner){this.router.navigate([localStorage.getItem("last_screen")]);return};
+          if(this._location.path().indexOf("/admin")==-1 && localStorage.getItem("last_screen") && !miner){this.router.navigate([localStorage.getItem("last_screen")]);return;}
           if(this.config.hasESDT() && !q && !filter){this.router.navigate(["main"]);return;}
-          this.router.navigate(["store"],{queryParams:{q:q,filter:filter}});
+          //this.router.navigate(["store"],{queryParams:{q:q,filter:filter}});
         },
         (err)=>{
           $$("Evaluation de la balance impossible, on propose un changement de contrat");
