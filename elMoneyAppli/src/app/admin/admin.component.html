@@ -18,10 +18,35 @@
       <mat-expansion-panel class="app-panel">
 
         <mat-expansion-panel-header>Les tokens</mat-expansion-panel-header>
-        <a [href]="config.domain_server+'/api/nfts/?format=json'" target="_blank">Fichiers JSON des tokens</a>
-        <br>
+        <table style="width: 90%;">
+          <tr>
+            <td>
+              Gestions
+            </td>
+            <td>
+              <a href="/assets/admin.xlsx" download="admin.xlsx">Excel</a>
+            </td>
+          </tr>
 
-        <a [href]="config.domain_server+'/api/nfts/?format=json'" target="_blank">Fichiers Excel des tokens</a>
+          <tr>
+            <td>Les tokens</td>
+            <td>
+              <a [href]="config.domain_server+'/api/nfts/?format=json'" target="_blank">JSON</a>
+            </td>
+            <td>
+              <a [href]="config.domain_server+'/api/nfts/?format=json'" target="_blank">Excel</a>
+            </td>
+            <td>
+              <a [href]="config.domain_server+'/api/nfts/?format=csv'" target="_blank">CSV</a>
+            </td>
+          </tr>
+        </table>
+
+
+
+
+
+
 
 
       </mat-expansion-panel>

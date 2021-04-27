@@ -40,6 +40,7 @@ export class AppComponent implements OnInit,OnDestroy {
     this.message="Connexion";
 
     this.config.init(()=>{
+      this.config.init_tags();
       this.message="";
       $$("Recherche du contrat à utiliser pour le device");
       this.api.init_tokenIdentifier(this.routes.snapshot.queryParamMap.get("contract"))

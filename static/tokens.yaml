@@ -12,6 +12,7 @@ content:
   - index: photo
     title: Vendre<br>une photo
     icon: camera
+    nft_icon: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/279/framed-picture_1f5bc-fe0f.png
     description: Vendre une photo qui ne sera visible que pour le propriétaire
     tuto: "
       TokenForge vous permet de vendre une photo, une image<br>
@@ -29,13 +30,14 @@ content:
       <br>
     "
     fee: 0.002
-    tags: #photos
+    tags: "#photos"
     transac: 0.00015
     production: true
 
   - index: pow
     title: Tokeniser<br>une oeuvre
     icon: person
+    nft_icon: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/279/artist-palette_1f3a8.png
     description: Envoyer une photo et attachez y votre identité (email, passeport) en tant qu'auteur
     tuto: "
       Tokenizer un oeuvre revient à attacher une identité à cette oeuvre.<br>
@@ -53,13 +55,14 @@ content:
            Cette photo ne pourrat être vu que par l'acheteur
     "
     fee: 0.001
-    tags: #artiste #oeuvre
+    tags: "#artiste #oeuvre #photo"
     transac: 0.00015
     production: true
 
   - index: file
     title: Vendre<br>un fichier
     icon: description
+    nft_icon: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/279/memo_1f4dd.png
     description: ""
     tuto: "
           Grâce à TokenForge vous pouvez vendre n'importe quel fichier très simplement.
@@ -74,13 +77,14 @@ content:
            Ce fichier ne pourrat être télécharger que par l'acheteur
     "
     fee: 0.002
-    tags: #fichier #secret
+    tags: "#fichier #secret"
     transac: 0.00015
     production: true
 
   - index: music
-    title: Vendre<br>de la musique
+    title: Vendre de<br>la musique
     icon: audiotrack
+    nft_icon: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/279/musical-note_1f3b5.png
     description: Vendre un fichier musical
     tuto: "
               TokenForge permet de vendre des fichier musicaux.<br><br>
@@ -98,12 +102,14 @@ content:
                Seul l'acheteur pourra accèder au morceau.
         "
     fee: 0.002
+    tags: "#music #audio #track"
     transac: 0.00015
     production: true
 
   - index: film
     title: Vendre<br>un film
     icon: movie
+    nft_icon: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/google/274/film-frames_1f39e-fe0f.png
     description: Vendre un film via le lien d'une plateforme vidéo
     tuto: "
       TokenForge permet de vendre des contenus audiovisuel (films, vidéos, musiques).<br>
@@ -114,16 +120,17 @@ content:
       Grâce à TokenForge le lien est caché dans le NFT et visible uniquement du propriétaire / acheteur.
       "
     fee: 0.002
-    tags: #film #cinema
+    tags: "#film #cinema"
     transac: 0.00015
     production: true
 
   - index: secret
     title: Vendre<br>un secret
     icon: lock
+    nft_icon: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/279/key_1f511.png
     description: Vendre un mot de passe, un numéro de license, un code secret de coffre, un code promo
     fee: 0.001
-    tags: #secret
+    tags: "#secret"
     tuto: "
           TokenForge vous permet de vendre des secrets (code d'accès, mot de passe, adresse). <br><br>
 
@@ -140,6 +147,7 @@ content:
   - index: tickets
     title: Billeterie
     icon: label
+    nft_icon: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/281/admission-tickets_1f39f-fe0f.png
     description: Générer et vendez des billets d'accès à un evénement de tout type
     fee: 0.002
     tuto: "
@@ -149,7 +157,7 @@ content:
           Un menu de TokenForge vous permet de contrôler les billets en scannant simplement le QRCode du propriétaire
           "
     transac: 0.00015
-    tags: #billets #spectacle
+    tags: "#billets #spectacle"
     help: Présenter votre code perso à l'entrée de l'événement pour contrôle du billet
     production: true
 
@@ -157,6 +165,7 @@ content:
   - index: life_events
     title: Graver des<br>souvenirs
     icon: favorite
+    nft_icon: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/279/red-heart_2764-fe0f.png
     description: Enregistrez vos plus beaux souvenir de façon définitive et inaltérable dans la blockchaine
     fee: 0.004
     tuto: "
@@ -167,7 +176,7 @@ content:
           Vous pouvez le conserver ou l'offrir quand vous le souhaitez.<br>
           "
     transac: 0.00030
-    tags: #evenement
+    tags: "#evenement #souvenir"
     help:
     production: true
 
@@ -177,6 +186,7 @@ content:
   - index: loterie
     title: Loterie
     icon: casino
+    nft_icon: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/279/game-die_1f3b2.png
     description: Organiser une loterie, des cartes à grater en récompensant le gagnant en eGold
     fee: 0.003
     tuto: "
@@ -187,7 +197,7 @@ content:
     transac: 0.00015
     help: Après achat, ouvrer ce token pour découvrir si vous avez gagné. Si c'est le cas le gain est immédiatement versé sur votre compte
     production: false
-    tags: #jeu #loterie
+    tags: "#jeu #loterie"
 
 
 

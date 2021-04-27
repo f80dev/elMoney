@@ -4,6 +4,9 @@ from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from io import StringIO
+
+import pandas as pd
 
 from definitions import SMTP_SERVER, USERNAME, PASSWORD, DOMAIN_APPLI, SIGNATURE, APPNAME
 
@@ -179,3 +182,10 @@ def translate(text:str,d:dict):
     for k in d.keys():
         text=text.replace("@"+k+"@",d[k])
     return text
+
+#http://localhost:6660/api/nfts/?format=csv
+def dictlist_to_csv(lst):
+    df = pd.DataFrame.from_dict(lst)
+    output = StringIO()
+    df.to_csv(output)
+    return output.getvalue()

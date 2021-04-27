@@ -5,7 +5,7 @@
             *ngFor="let nft of nfts | filter: ['search',filter]">
 
     <mat-card-header *ngIf="!nft.fullscreen" style="height: 35px">
-      <img *ngIf="with_icon" mat-card-avatar src="./assets/icons/gift.png" class="image-icon" style="margin:0;">
+      <img *ngIf="with_icon" mat-card-avatar [src]="nft.icon" class="image-icon" style="margin:0;">
       <mat-card-title [ngStyle]="{'font-size':fontsize}">
         {{nft.title}}
         <span style="font-size: xx-small" *ngIf="nft?.count && nft?.count>1">({{nft.count}})</span>

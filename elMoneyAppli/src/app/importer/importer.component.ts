@@ -194,6 +194,7 @@ export class ImporterComponent implements OnInit {
       secret:this.secret,
       price:this.price,
       fee:fee,
+      tags: this.tags,
       description:this.desc,
       gift:this.gift,
       fullscreen:this.full_flyer,

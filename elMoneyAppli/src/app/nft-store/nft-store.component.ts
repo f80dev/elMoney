@@ -6,6 +6,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Socket} from "ngx-socket-io";
 import {environment} from "../../environments/environment";
+import {ConfigService} from "../config.service";
 
 @Component({
   selector: 'app-nft-store',
@@ -40,6 +41,7 @@ export class NftStoreComponent implements OnInit {
               public routes: ActivatedRoute,
               public toast: MatSnackBar,
               public socket: Socket,
+              public config:ConfigService,
               public router: Router,
               public user: UserService
   ) {
@@ -97,7 +99,7 @@ export class NftStoreComponent implements OnInit {
     this.api._get("nfts/"+this.selected_dealer.address+"/").subscribe((r: any) => {
       this.message = "";
 
-      this.nfts=group_tokens(r,(item)=>{
+      this.nfts=group_tokens(r,this.config.tags,(item)=>{
         if (!this.filter_id || this.filter_id == item.token_id) {
           if (item.state == 0 && item.properties >= 4 && item.owner != this.user.addr) {
               return true;

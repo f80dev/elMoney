@@ -1,6 +1,7 @@
 import base64
+from io import BytesIO
 
-import flask_excel as excel
+import pandas as pd
 import json
 import os
 import ssl
@@ -11,12 +12,10 @@ from apscheduler.schedulers.background import BackgroundScheduler
 
 import yaml
 from erdpy.accounts import Account
-from erdpy.contracts import SmartContract
 
-from flask import  Response, request, jsonify
+from flask import Response, request, jsonify, send_file, make_response
 
-
-from Tools import log, send_mail, open_html_file, now, send, translate
+from Tools import log, send_mail, open_html_file, now, send, dictlist_to_csv
 from apiTools import create_app
 
 from dao import DAO
@@ -211,7 +210,7 @@ def get_pem_file(data):
 
 
 
-#http://localhost:6660/api/nfts/
+
 @app.route('/api/evalprice/<sender>/<data>/<value>/',methods=["GET"])
 def evalprice(sender,data="",value=0):
     rc=bc.evalprice(sender,NETWORKS[bc.network_name]["nft"],value,data)
@@ -258,6 +257,8 @@ def burn(token_id,data:dict=None):
 
 #tag: get_tokens tokens all_tokens
 #http://localhost:6660/api/nfts/
+#http://localhost:6660/api/nfts/?format=json
+#http://localhost:6660/api/nfts/?format=csv
 @app.route('/api/nfts/',methods=["GET"])
 @app.route('/api/nfts/<seller_filter>/',methods=["GET"])
 @app.route('/api/nfts/<seller_filter>/<owner_filter>/',methods=["GET"])
@@ -273,10 +274,19 @@ def nfts(seller_filter="0x0",owner_filter="0x0",miner_filter="0x0"):
         return jsonify(rc),200
 
     if format=="excel" or format.startswith("xls"):
-        excel.init_excel(app)
-        return excel.make_response_from_array(rc, file_type="csv", file_name="tokens.csv")
+        df=pd.DataFrame.from_dict(rc)
+        output = BytesIO()
+        writer=pd.ExcelWriter(output,engine="xlsxwriter")
+        df.to_excel(writer,sheet_name="Tokens")
+        writer.close()
+        output.seek(0)
+        return send_file(output,
+                         attachment_filename="Token.xlsx",
+                         mimetype="application/vnd.ms-excel",
+                         as_attachment=True)
 
-
+    if format=="csv":
+        return Response(dictlist_to_csv(rc),mimetype="text/csv")
 
 
 @app.route('/api/update_price/<token_id>/',methods=["POST"])
@@ -509,8 +519,10 @@ def mint(count:str,data:dict=None):
 
 
 #http://localhost:6660/api/transactions/erd1zez3nsz9jyeh0dca64377ra7xhnl4n2ll0tqskf7krnw0x5k3d2s5l6sf6
+#http://localhost:6660/api/transactions/
+@app.route('/api/transactions/',methods=["GET"])
 @app.route('/api/transactions/<user>/',methods=["GET"])
-def transactions(user:str):
+def transactions(user:str=""):
     rc=[]
     for addr in [NETWORKS[bc.network_name]["nft"]]:
         for t in bc.getTransactionsByRest(addr):
@@ -555,14 +567,16 @@ def transactions(user:str):
 
             if "scResults" in t:
                 for tt in t["scResults"]:
-                    if tt["receiver"]==user or tt["sender"]==user:
+                    if len(user)==0 or (tt["receiver"]==user or tt["sender"]==user):
                         if tt["receiver"]==user:sign=1
-                        if tt["sender"] == user: sign = -1
+                        if tt["sender"] == user: sign=-1
                         data2 = str(base64.b64decode(tt["data"]), "utf-8")
                         if "@" in data2:data2=""
 
                         if len(data2)>0:
                             rc.append({
+                                "receiver":tt["receiver"],
+                                "sender": tt["sender"],
                                 "data":data+": "+data2,
                                 "value":sign*float(tt["value"])/1e18,
                                 "fee":0,
@@ -621,6 +635,8 @@ def get_miners(seller:str):
             rc.append(_miner)
     return jsonify(rc), 200
 
+
+#http://localhost:6660/api/dealers/
 @app.route('/api/dealers/',methods=["GET"])
 @app.route('/api/dealers/<addr>/',methods=["GET"])
 def get_dealers(addr:str="0x0"):
@@ -740,7 +756,7 @@ def deploy(name:str,unity:str,nbdec:str,amount:str,data:dict=None):
 
 
 
-#http://localhost:5555/api/server_config/
+#http://localhost:6660/api/server_config/
 @app.route('/api/server_config/')
 def server_config():
     log("Récupération de la configuration du server avec la bank "+bc.bank.address.bech32())

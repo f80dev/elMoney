@@ -3,6 +3,7 @@ import {ApiService} from "../api.service";
 import {ActivatedRoute} from "@angular/router";
 import {UserService} from "../user.service";
 import {group_tokens} from "../tools";
+import {ConfigService} from "../config.service";
 
 @Component({
   selector: 'app-public-miner',
@@ -15,6 +16,7 @@ export class PublicMinerComponent implements OnInit {
 
   constructor(
     public api:ApiService,
+    public config:ConfigService,
     public routes:ActivatedRoute,
     public user:UserService
   ) { }
@@ -30,7 +32,7 @@ export class PublicMinerComponent implements OnInit {
   refresh(){
     let addr=this.routes.snapshot.queryParamMap.get("miner");
     this.api._get("nfts/0x0/0x0/"+addr+"/").subscribe((r: any) => {
-      this.nfts=group_tokens(r);
+      this.nfts=group_tokens(r,this.config.tags);
     });
   }
 

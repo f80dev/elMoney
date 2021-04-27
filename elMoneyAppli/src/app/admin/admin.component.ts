@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ApiService} from "../api.service";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {showError, showMessage} from "../tools";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {UserService} from "../user.service";
@@ -19,14 +19,16 @@ export class AdminComponent implements OnInit {
    constructor(public api:ApiService,
                public toast:MatSnackBar,
                public config:ConfigService,
+               public routes:ActivatedRoute,
                public user:UserService,
                public router:Router) {
    }
 
 
   ngOnInit(): void {
-   if(!environment.production){
-     this.password="hh4271";
+     this.password=this.routes.snapshot.queryParamMap.get("password");
+     if(!environment.production){
+      this.password="hh4271";
    }
   }
 

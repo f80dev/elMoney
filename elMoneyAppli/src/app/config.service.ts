@@ -25,6 +25,7 @@ export class ConfigService {
   unity: string ="";
   server: any={bank:""};
   private device: { isDesktop: any; isTablet: any; isMobile: any; infos: any };
+  tags: any={};
 
   constructor(private location: Location,
               private http: HttpClient,
@@ -42,6 +43,18 @@ export class ConfigService {
   }
 
 
+  init_tags(){
+    if(this.tags=={}){
+      this.api.getyaml("tokens").subscribe((r:any)=>{
+      for(let token of r.content) {
+        for (let tag of token.tags.split(" ")) {
+          if (!this.config.tags.hasOwnProperty(tag.replace("#", "")))
+            this.config.tags[tag.replace("#", "")] = token.nft_icon;
+        }
+      }
+    });
+    }
+  }
 
   public async getJson(jsonFile:string): Promise<any> {
     return Promise.resolve((await this.http.get(jsonFile).toPromise()));

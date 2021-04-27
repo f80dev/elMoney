@@ -66,7 +66,7 @@ export class NftsPersoComponent implements OnInit {
         }
 
 
-        this.nfts[tokenIdentifier]=group_tokens(r,(i)=>{
+        this.nfts[tokenIdentifier]=group_tokens(r,this.config.tags,(i)=>{
           if(!this.filter || tokenIdentifier!=2 || this.filter.key=="" || i[this.filter.key]==this.filter.value) {
             return true;
           }
