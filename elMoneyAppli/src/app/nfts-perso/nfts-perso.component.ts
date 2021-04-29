@@ -53,21 +53,22 @@ export class NftsPersoComponent implements OnInit {
 
    refresh() {
     this.user.refresh_balance();
-    for(let tokenIdentifier of [0,1,2]){
+    for(let identifier of [0,1,2]){
       let filters=["0x0","0x0","0x0"];
-      filters[tokenIdentifier]=this.user.addr;
+      filters[identifier]=this.user.addr;
       this.message = "Chargement des tokens ...";
       this.api._get("nfts/"+filters[0]+"/"+filters[1]+"/"+filters[2]).subscribe((r: any) => {
         this.message = "";
+        debugger
         for(let i=0;i<r.length;i++){
-          r[i].isDealer=(tokenIdentifier==0);
+          r[i].isDealer=(identifier==0);
           r[i].fullscreen=false;
           r[i].open=""; //Utiliser pour stocker le secret si celui ci est révélé
         }
 
 
-        this.nfts[tokenIdentifier]=group_tokens(r,this.config.tags,(i)=>{
-          if(!this.filter || tokenIdentifier!=2 || this.filter.key=="" || i[this.filter.key]==this.filter.value) {
+        this.nfts[identifier]=group_tokens(r,this.config.tags,(i)=>{
+          if(!this.filter || identifier!=2 || this.filter.key=="" || i[this.filter.key]==this.filter.value) {
             return true;
           }
           return false;

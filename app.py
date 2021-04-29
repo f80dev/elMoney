@@ -1,6 +1,5 @@
 import base64
 from io import BytesIO
-
 import pandas as pd
 import json
 import os
@@ -25,8 +24,8 @@ from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME
 from elrondTools import ElrondNet
 from ipfs import IPFS
 
-scheduler = BackgroundScheduler()
 
+scheduler = BackgroundScheduler()
 
 def init_default_money(bc,dao):
     """
@@ -37,12 +36,12 @@ def init_default_money(bc,dao):
         return None
 
     _balance=bc.getMoneys(bc.bank)
-    if not "tokenIdentifier" in NETWORKS[bc.network_name] or not NETWORKS[bc.network_name]["tokenIdentifier"] in _balance:
+    if not "identifier" in NETWORKS[bc.network_name] or not NETWORKS[bc.network_name]["identifier"] in _balance:
         log("Le contrat de "+MAIN_UNITY+" n'est pas valable")
         money_idx=""
     else:
         log("Balance de la bank "+str(_balance))
-        money_idx = NETWORKS[bc.network_name]["tokenIdentifier"]
+        money_idx = NETWORKS[bc.network_name]["identifier"]
 
     if len(money_idx) == 0:
         log("Pas de monnaie dans la configuration, on déploy "+MAIN_NAME+" d'unite "+MAIN_UNITY)
@@ -403,8 +402,13 @@ def buy_nft(token_id,price,seller:str,data:dict=None):
     #if seller.startswith("erd"): seller = "0x" + Account(address=seller).address.hex()
 
     if type(price)==str and "," in price:price=price.replace(",",".")
+    tokenName=data["identifier"]
 
-    rc=bc.nft_buy(NETWORKS[bc.network_name]["nft"],pem_file,token_id,float(price),seller)
+    if len(tokenName)>0:
+        #On déclenche le transfert au smartcontract
+        bc.transferESDT(tokenName,Account(pem_file=pem_file).address.hex(),bc.contract.hex(),float(price))
+
+    rc=bc.nft_buy(NETWORKS[bc.network_name]["nft"],pem_file,token_id,float(price),seller,tokenName)
     os.remove(pem_file)
     if not rc is None:
         send(socketio,"refresh_nft")
@@ -464,6 +468,7 @@ def mint(count:str,data:dict=None):
     miner_ratio=int(data["miner_ratio"]*100)
     fee=int(float(data["fee"])*1e18)
     gift=int(float(data["gift"])*100)
+    money=data["money"]
 
     arguments=[int(count),
                "0x"+title.encode().hex(),
@@ -472,7 +477,8 @@ def mint(count:str,data:dict=None):
                price,min_markup,max_markup,
                properties,
                miner_ratio,
-               gift]
+               gift,
+               "0x"+money.encode().hex()]
 
     result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,
                    arguments=arguments,
@@ -752,6 +758,8 @@ def deploy(name:str,unity:str,nbdec:str,amount:str,data:dict=None):
         }),_to=data["email"],subject="Confirmation de création du "+unity)
         dao.add_money(result["id"],unity,int(nbdec),result["owner"],data["public"],data["transferable"],data["url"],bc._proxy.url)
 
+
+
     return jsonify(result),200
 
 
@@ -776,10 +784,10 @@ def server_config():
     }
 
     bank_balance=bc.getMoneys(bc.bank)
-    if "tokenIdentifier" in NETWORKS[bc.network_name] and NETWORKS[bc.network_name]["tokenIdentifier"] in bank_balance:
-        infos["default_money"]=bank_balance[NETWORKS[bc.network_name]["tokenIdentifier"]]["unity"]
-        infos["bank_esdt_ref"]=NETWORKS[bc.network_name]["tokenIdentifier"]
-        infos["bank_esdt"]=bank_balance[NETWORKS[bc.network_name]["tokenIdentifier"]]["balance"]
+    if "identifier" in NETWORKS[bc.network_name] and NETWORKS[bc.network_name]["identifier"] in bank_balance:
+        infos["default_money"]=bank_balance[NETWORKS[bc.network_name]["identifier"]]["unity"]
+        infos["bank_esdt_ref"]=NETWORKS[bc.network_name]["identifier"]
+        infos["bank_esdt"]=bank_balance[NETWORKS[bc.network_name]["identifier"]]["balance"]
         log("Balance de la bank " + str(bank_balance))
     else:
         log("Pas de monnaie disponible, on charge celle du fichier de config " + str(bank_balance))
@@ -871,7 +879,7 @@ def new_account():
 
     esdt:dict=dao.get_money_by_name(MAIN_UNITY,bc._proxy.url)
     if not esdt is None:
-        bc.transferESDT(esdt["idx"], bc.bank, _a, CREDIT_FOR_NEWACCOUNT*(10**esdt["decimals"]))
+        bc.transferESDT(esdt["idx"], bc.bank.address.hex(), _a.address.hex(), CREDIT_FOR_NEWACCOUNT*(10**esdt["decimals"]))
         rc["default_money"]=esdt["idx"]
         rc["default_name"]=esdt["unity"]
     else:

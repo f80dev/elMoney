@@ -49,7 +49,7 @@
         {{nft.description}}<br>
 
         <div *ngIf="nft.price>0 && nft.state==0 && (nft.owner==user.addr || nft.isDealer)" style="display: inline;">
-          <small>&nbsp;({{nft.price | number:'1.0-3'}} xEgld)</small>
+          <small>&nbsp;({{nft.price | number:'1.0-3'}} {{nft.unity}})</small>
         </div>
 
         <span style="font-size: x-small;color:lightgrey">{{nft.tags}}</span>
@@ -90,11 +90,11 @@
 
         <button mat-raised-button mat-button class="app-button"
                 *ngIf="nft.owner!=user.addr && nft.state==0 && !nft.isDealer"
-                [title]="'Acheter ce NFT pour '+nft.price+' xEgld'"
+                [title]="'Acheter ce NFT pour '+nft.price+' '+nft.unity"
                 (click)="buy(nft)">
           <mat-icon>shopping_cart</mat-icon>&nbsp;
           <small *ngIf="nft.price==0">Gratuit</small>
-          <span *ngIf="nft.price>0" >{{nft.price | number:'1.1-3'}} <small>xEGld</small></span>
+          <span *ngIf="nft.price>0" >{{nft.price | number:'1.1-3'}} <small>{{nft.unity}}</small></span>
         </button>
 
 

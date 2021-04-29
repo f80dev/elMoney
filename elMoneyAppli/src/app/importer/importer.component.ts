@@ -65,6 +65,10 @@ export class ImporterComponent implements OnInit {
   selected_token: any;
   nfts_preview: any[]=[];
 
+  //Money à utiliser pour la transaction du NFT
+  selected_money: any={label:"eGld",identifier:"egld"};
+  moneys: any[]=[];
+
 
   //Gestion des tags
   visible = true;
@@ -87,6 +91,7 @@ export class ImporterComponent implements OnInit {
     this.filteredTags = this.tagCtrl.valueChanges.pipe(
       startWith(null),
       map((tag: string | null) => tag ? this._filter(tag) : this.allTags.slice()));
+
   }
 
   ngOnInit(): void {
@@ -96,6 +101,17 @@ export class ImporterComponent implements OnInit {
     //   }
     // })
     localStorage.setItem("last_screen","importer");
+    this.api._get("moneys/"+this.user.addr).subscribe((r:any)=>{
+      this.moneys=[{identifier:'',label:'xEGld'}];
+      for(let money of Object.values(r)){
+        if(money.hasOwnProperty("identifier")){
+          this.moneys.push({identifier:money["identifier"],label:money["unity"]})
+        }
+      }
+      this.selected_money=this.moneys[0];
+    });
+
+
     this.api.getyaml("tokens").subscribe((r:any)=>{
       this.tokens=[];
       for(let token of r.content){
@@ -183,6 +199,7 @@ export class ImporterComponent implements OnInit {
     if(this.direct_sell)properties=properties+0b00000100;
     if(this.self_destruction)properties=properties+0b00001000;
 
+    debugger
     let obj={
       pem:this.user.pem,
       owner:this.user.addr,
@@ -203,7 +220,8 @@ export class ImporterComponent implements OnInit {
       dealers:this.dataSource.data,
       properties:properties,
       direct_sell:this.direct_sell,
-      miner_ratio:this.miner_ratio
+      miner_ratio:this.miner_ratio,
+      money:this.selected_money.identifier
     };
 
     $$("Création du token ",obj);

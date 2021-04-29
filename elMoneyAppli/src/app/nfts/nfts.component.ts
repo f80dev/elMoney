@@ -78,7 +78,7 @@ export class NftsComponent implements OnChanges {
 
     this.dialog.open(PromptComponent, {
       data: {
-        title: 'Acheter ce token pour '+nft.price+" xEgld",
+        title: 'Acheter ce token pour '+nft.price+" "+nft.unity,
         question: 'Etes vous sûr ?',
         onlyConfirm: true,
         lbl_ok: 'Oui',
@@ -86,19 +86,24 @@ export class NftsComponent implements OnChanges {
       }}).afterClosed().subscribe((result:any) => {
       if (!result || result == "no")return;
 
-      if (nft.price > this.user.gas / 1e18 + environment.transac_cost) {
+      let identifier=nft.identifier;
+      if(identifier=="")identifier="egld";
+
+      if (nft.price > Number(this.user.moneys[identifier].balance) / 1e18) {
         showMessage(this, "Votre solde est insuffisant (prix + frais de transaction)", 5000, () => {
-          this.router.navigate(["faucet"]);
+          if(nft.identifier=="")
+            this.router.navigate(["faucet"]);
+          else
+            this.router.navigate(["main"]);
         }, "Recharger ?");
         return false;
       }
 
       nft.message = "En cours d'achat";
       let price = nft.price;
-      debugger
-      this.api._post("buy_nft/" + nft.token_id + "/" + price + "/" + this.seller, "", this.user.pem).subscribe((r: any) => {
+      this.api._post("buy_nft/" + nft.token_id + "/" + price + "/" + this.seller, "", {pem:this.user.pem,identifier:nft.identifier}).subscribe((r: any) => {
         nft.message = "";
-        showMessage(this, "Achat du token pour " + (nft.price + r.cost) + " xEgld");
+        showMessage(this, "Achat du token pour " + (nft.price + r.cost) + " "+nft.unity);
         this.user.refresh_balance(() => {
           this.onbuy.emit();
         });

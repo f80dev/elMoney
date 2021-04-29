@@ -79,7 +79,7 @@
         <app-tuto [if]="focus_idx==1 || focus_idx==2"
                   label="Vous pouvez utiliser certaines abrévations dans le secret comme par exemple @token@ pour rappeler la référence du token ou @owner@ pour avoir l'adresse du propriétaire"></app-tuto>
 
-         <app-tuto label="Le mode avancé vous permet de créer des NFTs 'sur mesure' en combinant toutes les possibilités de TokenForge"></app-tuto>
+        <app-tuto label="Le mode avancé vous permet de créer des NFTs 'sur mesure' en combinant toutes les possibilités de TokenForge"></app-tuto>
 
 
         <mat-vertical-stepper (selectionChange)="update_idx($event)" [linear]="false" style="width:90%;display: inline-block;max-width:700px;text-align: left;background: none;">
@@ -121,7 +121,7 @@
 
               <div *ngIf="(secret && secret.length>0) || filename?.length>0" style="margin-bottom: 15px">
                 <mat-slide-toggle color="primary"
-                    [(ngModel)]="self_destruction" [ngModelOptions]="{standalone: true}">Auto-destruction après ouverture
+                                  [(ngModel)]="self_destruction" [ngModelOptions]="{standalone: true}">Auto-destruction après ouverture
                 </mat-slide-toggle>
               </div>
 
@@ -229,11 +229,22 @@
 
               <br><br>
 
+              <mat-form-field appearance="fill" style="max-width:100px">
+                <mat-label>Monnaie</mat-label>
+                <mat-select [(ngModel)]="selected_money" name="money">
+                  <mat-option *ngFor="let money of moneys" [value]="money">
+                    {{money?.label}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              &nbsp;
+
               <mat-form-field appearance="fill" class="app-field" id="formPrice" style="max-width: 120px">
                 <mat-label>Prix de vente</mat-label>
                 <input matInput id="txtPrice" type="number" min="0" max="100"
                        [(ngModel)]="price" [ngModelOptions]="{standalone: true}" (ngModelChange)="update_prices()">
-                <span matSuffix>xeGld</span>
+                <span matSuffix>{{selected_money?.label}}</span>
               </mat-form-field>
 
               <button mat-raised-button

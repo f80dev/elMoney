@@ -17,7 +17,7 @@ from erdpy.transactions import Transaction
 from erdpy.wallet import derive_keys
 
 from Tools import log, base_alphabet_to_10, str_to_hex, hex_to_str, nbr_to_hex, translate
-from definitions import LIMIT_GAS, ESDT_CONTRACT, NETWORKS, IPFS_NODE
+from definitions import LIMIT_GAS, ESDT_CONTRACT, NETWORKS, IPFS_NODE, ESDT_PRICE
 from ipfs import IPFS
 
 
@@ -133,20 +133,21 @@ class ElrondNet:
             lst=[]
 
         lst.append({
-            "tokenIdentifier":"egld",
-            "tokenName":"eGold",
-            "numDecimals":18,
+            "identifier":"egld",
+            "name":"eGold",
+            "decimals":18,
             "balance": self._proxy.get_account_balance(_user.address)
         })
 
         #Transforme la liste en dict sur la base du tokenIdentifier
         rc=dict()
         for l in lst:
-            rc[l["tokenIdentifier"]]=l
-            rc[l["tokenIdentifier"]]["solde"]=float(l["balance"])/(10**l["numDecimals"])
-            rc[l["tokenIdentifier"]]["unity"]=l["tokenIdentifier"].split("-")[0]
-            rc[l["tokenIdentifier"]]["url"]=""
-            #TODO ajouter ici la documentation des monnaies via la base de données
+            if "identifier" in l:
+                rc[l["identifier"]]=l
+                rc[l["identifier"]]["solde"]=float(l["balance"])/(10**18)
+                rc[l["identifier"]]["unity"]=l["identifier"].split("-")[0]
+                rc[l["identifier"]]["url"]=""
+                #TODO ajouter ici la documentation des monnaies via la base de données
 
 
         return rc
@@ -237,7 +238,7 @@ class ElrondNet:
 
 
 
-    def transferESDT(self,idx:str,user_from:Account,user_to:Account,amount:float):
+    def transferESDT(self,idx:str,user_from:str,user_to:str,amount:float):
         """
         Appel la fonction transfer du smart contrat, correpondant à un transfert de fond
         :param _contract:
@@ -246,14 +247,15 @@ class ElrondNet:
         :param amount:
         :return:
         """
-        if user_from.address.bech32()==user_to.address.bech32():
+        if user_from==user_to:
             return {"error":"Impossible de s'envoyer des fonds à soi-même"}
 
-        log("Transfert "+user_from.address.bech32()+" -> "+user_to.address.bech32()+" de "+str(amount)+" via ESDT")
+        log("Transfert "+user_from+" -> "+user_to+" de "+str(amount)+" via ESDT")
 
         #Passage du montant en hex (attention il faut un nombre pair de caractères)
         amount_in_hex=str(hex(amount)).replace("0x","")
         if len(amount_in_hex) % 2 == 1: amount_in_hex="0"+amount_in_hex
+
         data="ESDTTransfer@"+str_to_hex(idx,False)+"@"+amount_in_hex
 
         try:
@@ -321,7 +323,7 @@ class ElrondNet:
         if type(pem_file)==str:
             user=Account(pem_file=pem_file)
 
-        if self._proxy.get_account_balance(user.address)<5e18:
+        if self._proxy.get_account_balance(user.address)<ESDT_PRICE:
             return {"error": 600,
                     "message": "not enought money to create ESDT token",
                     "cost": 0,
@@ -342,7 +344,7 @@ class ElrondNet:
         #Voir documentation : https://docs.elrond.com/developers/esdt-tokens/
         t=self.execute(ESDT_CONTRACT,
                         user,"issue",
-                        value=5000000000000000000,
+                        value=ESDT_PRICE,
                         arguments=arguments,
                         gas_limit=LIMIT_GAS,
                         timeout=timeout,
@@ -570,7 +572,7 @@ class ElrondNet:
 
 
 
-    def execute(self,_contract,_user,function,arguments=[],value:int=None,gas_limit=LIMIT_GAS,timeout=60,gas_price_factor=1):
+    def execute(self,_contract,_user,function,arguments=[],value:int=None,gas_limit=LIMIT_GAS,timeout=60,gas_price_factor=1,tokenName=""):
         if type(_contract) == str: _contract = SmartContract(_contract)
         if type(_user)==str:
             if ".pem" in _user:
@@ -587,7 +589,7 @@ class ElrondNet:
                                                    gas_price=config.DEFAULT_GAS_PRICE*gas_price_factor,
                                                    gas_limit=gas_limit,
                                                    value=value,
-                                                   chain=self.chain_id,
+                                                    chain=self.chain_id,
                                                    version=config.get_tx_version()
                                                    )
         except Exception as inst:
@@ -660,8 +662,14 @@ class ElrondNet:
                 desc_len=int(tokens[index:index + 8], 16)*2
                 index=index+8
 
+                money_len=int(tokens[index:index + 8], 16)*2-8
+                index=index+8
+
                 price = int(tokens[index:index+8], 16) / 1e4
                 index=index+8
+
+                identifier=str(bytearray.fromhex(tokens[index:index+money_len]), "utf-8")
+                index=index+money_len
 
                 _u = SmartContract(address=tokens[index:index+64])
                 owner_addr = _u.address.bech32()
@@ -720,6 +728,10 @@ class ElrondNet:
                 title=translate(title,_d)
                 desc=translate(desc,_d)
 
+                unity=identifier.split("-")[0]
+                if money_len==0:unity="eGld"
+
+
                 #extraction des tags
                 tags=[]
                 if "#" in desc:
@@ -745,6 +757,8 @@ class ElrondNet:
                           "miner":miner,
                           "owner":owner_addr,
                           "visual":visual,
+                          "unity":unity,
+                          "identifier":identifier,
                           "fullscreen":fullscreen,
                           "properties":properties
                           })
@@ -801,7 +815,7 @@ class ElrondNet:
 
 
 
-    def nft_buy(self, contract, pem_file, token_id,price,seller):
+    def nft_buy(self, contract, pem_file, token_id,price,seller,identifier):
         value=int(1e7*price)*1e11
         tr = self.execute(
                contract,pem_file,

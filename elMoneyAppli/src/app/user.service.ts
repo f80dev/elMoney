@@ -138,7 +138,7 @@ export class UserService {
   create_new_account(func,func_error){
     $$("Création d'un nouveau compte");
     this.api._get("new_account/","",120).subscribe((r:any)=> {
-      this.api.set_tokenIdentifier(r["default_money"])
+      this.api.set_identifier(r["default_money"])
       if (r.pem.length > 0) {
         $$("Initialisation du userService avec le fichier PEM correct");
         func(r)
@@ -166,7 +166,7 @@ export class UserService {
       $$("Initialisation de l'utilisateur à l'adresse ",addr);
 
       if(this.config.hasESDT()){
-        if(this.selected_money.length==0)this.selected_money=this.api.tokenIdentifier;
+        if(this.selected_money.length==0)this.selected_money=this.api.identifier;
         this.refresh_balance(func,func_error);
       }
 

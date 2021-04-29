@@ -12,7 +12,7 @@ export class ApiService {
   user: any;
   token: string = null;
   token_expires: Date;
-  tokenIdentifier: string=environment.default_contract;
+  identifier: string=environment.default_contract;
   connectionStatus: boolean=true;
 
 
@@ -87,11 +87,11 @@ export class ApiService {
   }
 
 
-  set_tokenIdentifier(tokenIdentifier: string) {
-    if(tokenIdentifier && tokenIdentifier.length>0){
-      $$("Changement de contract : "+tokenIdentifier);
-      localStorage.setItem("tokenIdentifier",tokenIdentifier);
-      this.tokenIdentifier=tokenIdentifier;
+  set_identifier(identifier: string) {
+    if(identifier && identifier.length>0){
+      $$("Changement de contract : "+identifier);
+      localStorage.setItem("identifier",identifier);
+      this.identifier=identifier;
       return true;
     } else {
       $$("Aucune monnaie sélectionné");
@@ -99,8 +99,8 @@ export class ApiService {
     }
   }
 
-  init_tokenIdentifier(tokenIdentifier: string) {
-    if(!tokenIdentifier)tokenIdentifier=localStorage.getItem("tokenIdentifier");
-    return this.set_tokenIdentifier(tokenIdentifier);
+  init_identifier(identifier: string) {
+    if(!identifier)identifier=localStorage.getItem("identifier");
+    return this.set_identifier(identifier);
   }
 }

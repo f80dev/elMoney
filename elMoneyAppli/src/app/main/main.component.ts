@@ -45,8 +45,7 @@ export class MainComponent implements OnInit {
           this.router.navigate(["moneys"],{queryParams:{"select":unity}});
         }
       }
-
-      setTimeout(()=>{this.refresh();},200)
+      this.refresh();
     });
   }
 
@@ -66,10 +65,11 @@ export class MainComponent implements OnInit {
         color:"white"
       })
     }
-    if(this.api.tokenIdentifier && this.user.moneys[this.user.selected_money]){
-        this._max=this.user.moneys[this.user.selected_money].solde;
-        if(this.hand<0)this.hand=Math.round(this._max/10);
-        this.temp_max=this._max;
+
+    if(this.api.identifier && this.user.moneys[this.user.selected_money]){
+      this._max=this.user.moneys[this.user.selected_money].solde;
+      if(this.hand<0)this.hand=Math.round(this._max/10);
+      this.temp_max=this._max;
     }
   }
 
@@ -93,18 +93,18 @@ export class MainComponent implements OnInit {
     let pem=JSON.stringify(this.user.pem);
     $$("Demande de transfert vers "+email+" avec pem="+pem);
     this.message=this.hand+" "+this.user.moneys[this.user.selected_money].unity+" en cours de transfert à "+email;
-    this.api._post("transfer/" + this.api.tokenIdentifier + "/" +  email+ "/" + this.hand+"/"+this.user.moneys[this.user.selected_money].unity+"/",
-        "",
-        pem,180).subscribe((r: any) => {
-          this.message="";
-          showMessage(this, "Fond transféré, pour "+r["cost"]+" xeGld de frais de réseau",4000);
-          this.user.refresh_balance(()=>{this.refresh();})
-          this.user.moneys[this.user.selected_money].solde=this.user.moneys[this.user.selected_money].solde-this.hand;
-          this.hand=0;
-          this.refresh();
-      },(err)=>{
-          this.message="";
-          showMessage(this,"Problème technique, transfert non effectué");
+    this.api._post("transfer/" + this.api.identifier + "/" +  email+ "/" + this.hand+"/"+this.user.moneys[this.user.selected_money].unity+"/",
+      "",
+      pem,180).subscribe((r: any) => {
+      this.message="";
+      showMessage(this, "Fond transféré, pour "+r["cost"]+" xeGld de frais de réseau",4000);
+      this.user.refresh_balance(()=>{this.refresh();})
+      this.user.moneys[this.user.selected_money].solde=this.user.moneys[this.user.selected_money].solde-this.hand;
+      this.hand=0;
+      this.refresh();
+    },(err)=>{
+      this.message="";
+      showMessage(this,"Problème technique, transfert non effectué");
     });
   }
 
@@ -112,17 +112,17 @@ export class MainComponent implements OnInit {
   add_contact(){
     let height='620px';
     if(this.config.webcamsAvailable==0)height="350px";
-      this.dialog.open(NewContactComponent, {
-        position: {left: '10vw', top: '5vh'},
-        maxWidth: 450,
-        width: '80vw',height: height,
-        data:{}
-      }).afterClosed().subscribe((result:any) => {
-        if(result){
-          this.transfer(result.email);
-          this.refresh();
-        }
-      });
+    this.dialog.open(NewContactComponent, {
+      position: {left: '10vw', top: '5vh'},
+      maxWidth: 450,
+      width: '80vw',height: height,
+      data:{}
+    }).afterClosed().subscribe((result:any) => {
+      if(result){
+        this.transfer(result.email);
+        this.refresh();
+      }
+    });
   }
 
   send_to() {
@@ -171,9 +171,12 @@ export class MainComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.user.refresh_balance(()=>{
-      this.refresh();
-    })
+    setTimeout(()=>{
+      this.user.refresh_balance(()=>{
+        this.refresh();
+      });
+    },500)
+
     localStorage.setItem("last_screen","main");
   }
 }
