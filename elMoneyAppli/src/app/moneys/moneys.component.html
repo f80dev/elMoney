@@ -7,20 +7,22 @@
   <br>
   <app-hourglass [message]="message"></app-hourglass>
 
-  <table *ngIf="message?.length==0" style="display: inline-block;">
+  <table *ngIf="message?.length==0" style="display: inline-block;vertical-align: middle;width:90%;max-width: 400px;padding: 3px;">
     <tr color="primary">
       <th></th>
-      <th></th>
+      <th>Unité</th>
+      <th>Nom</th>
       <th>Solde</th>
     </tr>
     <tr *ngFor="let m of moneys" style="pointer:cursor;width: 95vw;" (click)="select(m)">
       <td style="text-align: left;font-size: large;width: fit-content;">
-        <mat-icon style="cursor: pointer;">check</mat-icon>&nbsp;
+        <mat-icon style="cursor: pointer;">chevron_right</mat-icon>&nbsp;
+      </td>
+      <td>
         <strong [cdkCopyToClipboard]="m.tokenIdentifier" ngxClipboard style="cursor: pointer;">{{m.unity}}</strong>
-        <br>
       </td>
       <td style="max-width:300px;text-align: left;font-size: large;width: 50%;">
-        {{m.name}}<br>
+        {{m.name}}
       </td>
       <td style="max-width:100px;text-align: right;font-size: large;">
         <strong>{{m?.solde | number:'1.0-2'}}</strong>

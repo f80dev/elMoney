@@ -139,7 +139,6 @@ const config: SocketIoConfig = {
     BrowserAnimationsModule,
     ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
     QRCodeModule,
-    ClipboardModule,
     MatSlideToggleModule,
     MatToolbarModule,
     MatSidenavModule,

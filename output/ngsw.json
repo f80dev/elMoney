@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1619193846735,
+  "timestamp": 1619789766138,
   "index": "https://tokenforge.f80.fr/index.html",
   "assetGroups": [
     {
@@ -31,6 +31,7 @@
       },
       "urls": [
         "https://tokenforge.f80.fr/assets/TokenForgeFromExcel.xlsm",
+        "https://tokenforge.f80.fr/assets/admin.xlsx",
         "https://tokenforge.f80.fr/assets/cmk.html",
         "https://tokenforge.f80.fr/assets/coin.png",
         "https://tokenforge.f80.fr/assets/icons/coin.png",
@@ -85,6 +86,7 @@
   ],
   "hashTable": {
     "https://tokenforge.f80.fr/assets/TokenForgeFromExcel.xlsm": "bb13298ed2ab37a6c5290c0dcd9bb8b3afa970d1",
+    "https://tokenforge.f80.fr/assets/admin.xlsx": "d2714bd4237d49e5cac4e8dba19dc1cc12032c75",
     "https://tokenforge.f80.fr/assets/cmk.html": "6f06383ca5f4552828853e7bd98e516195470229",
     "https://tokenforge.f80.fr/assets/coin.png": "9b5eb5e2fbadf0386fd6925a9e3b1b73fbfeafbc",
     "https://tokenforge.f80.fr/assets/icons/coin.png": "8d066c2ff9ec582b7143b25b45a4a627276aff71",
@@ -119,7 +121,7 @@
     "https://tokenforge.f80.fr/favicon.ico": "c3bbe9dfa628852d8131849561b7fd52194f4d8d",
     "https://tokenforge.f80.fr/favicon.png": "9d07b4062b45b028a517877c4b51af7a330eab1a",
     "https://tokenforge.f80.fr/index.html": "f59bcc43c533b90428356bfb449322cbc6a8c1c1",
-    "https://tokenforge.f80.fr/main.js": "5a642730dd492567e537cb354113e6d9a328e770",
+    "https://tokenforge.f80.fr/main.js": "23251c9935e24503508a6ebc902d3e8bc65fb28f",
     "https://tokenforge.f80.fr/manifest.webmanifest": "8291133aeacc475e061eb544514d2c1e8c02c576",
     "https://tokenforge.f80.fr/polyfills.js": "d8ea49820569fedd3db3d0b2bf973a0f3aaebae4",
     "https://tokenforge.f80.fr/runtime.js": "a9aafcf49f49145093fc831efd9b8e2f6c71bb9c",

@@ -37,7 +37,7 @@ export class CreateComponent implements OnInit {
        this.router.navigate(["private"]);
      }
      this.user.refresh_balance((r:any)=>{
-       if(r.egld.solde<5){
+       if(r.egld.solde<this.config.server.new_esdt_price){
          showMessage(this,"Vous n'avez pas assez d'eGold pour créer une nouvelle monnaie. recharger votre compte jusqu'a 5 eGold");
          this.router.navigate(["faucet"]);
        }

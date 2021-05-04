@@ -7,8 +7,7 @@ flask-socketio
 ipfshttpclient~=0.7.0
 PyYAML~=5.4.1
 APScheduler~=3.7.0
-pymongo~=3.11.3
+pymongo
 requests~=2.25.1
-bson
 pandas
 aes-everywhere

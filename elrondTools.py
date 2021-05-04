@@ -238,7 +238,7 @@ class ElrondNet:
 
 
 
-    def transferESDT(self,idx:str,user_from:str,user_to:str,amount:float):
+    def transferESDT(self,idx:str,user_from:Account,user_to:str,amount:float):
         """
         Appel la fonction transfer du smart contrat, correpondant à un transfert de fond
         :param _contract:
@@ -247,10 +247,10 @@ class ElrondNet:
         :param amount:
         :return:
         """
-        if user_from==user_to:
+        if user_from.address.bech32==user_to:
             return {"error":"Impossible de s'envoyer des fonds à soi-même"}
 
-        log("Transfert "+user_from+" -> "+user_to+" de "+str(amount)+" via ESDT")
+        log("Transfert "+user_from.address.bech32()+" -> "+user_to+" de "+str(amount)+" via ESDT")
 
         #Passage du montant en hex (attention il faut un nombre pair de caractères)
         amount_in_hex=str(hex(amount)).replace("0x","")
@@ -259,7 +259,7 @@ class ElrondNet:
         data="ESDTTransfer@"+str_to_hex(idx,False)+"@"+amount_in_hex
 
         try:
-            tr=self.send_transaction(user_from,user_to,user_from,"0",data)
+            tr=self.send_transaction(user_from,Account(user_to),user_from,"0",data)
             infos=self._proxy.get_account_balance(user_from.address)
 
             return {
@@ -326,7 +326,7 @@ class ElrondNet:
         if self._proxy.get_account_balance(user.address)<ESDT_PRICE:
             return {"error": 600,
                     "message": "not enought money to create ESDT token",
-                    "cost": 0,
+                    "cost": ESDT_PRICE,
                     "addr": user.address.bech32()
                     }
 
@@ -344,7 +344,7 @@ class ElrondNet:
         #Voir documentation : https://docs.elrond.com/developers/esdt-tokens/
         t=self.execute(ESDT_CONTRACT,
                         user,"issue",
-                        value=ESDT_PRICE,
+                        value=str(int(ESDT_PRICE)),
                         arguments=arguments,
                         gas_limit=LIMIT_GAS,
                         timeout=timeout,
@@ -563,10 +563,8 @@ class ElrondNet:
         if fund>0:
             log("On transfere un peu d'eGold pour assurer les premiers transferts"+str(fund))
             tx=self.credit(self.bank,_u,"%.0f" % fund)
-            if tx["status"]!="Success":
+            if tx["status"]!="success":
                 log("Le compte "+_u.address.bech32()+" n'a pas recu d'eGld pour les transactions")
-            else:
-                log("Le compte " + self.bank.bech32() + " n'a probablement plus de fonds à transférer")
 
         return _u,pem
 

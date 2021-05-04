@@ -20,7 +20,7 @@ from apiTools import create_app
 from dao import DAO
 from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, \
     MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, IPFS_NODE, \
-    MAIN_NAME, MAIN_DECIMALS, NETWORKS, ESDT_CONTRACT, LIMIT_GAS, SECRET_KEY
+    MAIN_NAME, MAIN_DECIMALS, NETWORKS, ESDT_CONTRACT, LIMIT_GAS, SECRET_KEY, ESDT_PRICE
 from elrondTools import ElrondNet
 from ipfs import IPFS
 
@@ -775,6 +775,7 @@ def server_config():
         "bank_addr": bc.bank.address.bech32(),
         "proxy": bc._proxy.url,
         "network":bc.network_name,
+        "new_esdt_price":ESDT_PRICE/1e18,
         "nft_contract": NETWORKS[bc.network_name]["nft"],
         "domain_appli":DOMAIN_APPLI,
         "esdt_contract": ESDT_CONTRACT,
@@ -877,13 +878,18 @@ def new_account():
         "pem":pem
         }
 
-    esdt:dict=dao.get_money_by_name(MAIN_UNITY,bc._proxy.url)
-    if not esdt is None:
-        bc.transferESDT(esdt["idx"], bc.bank.address.hex(), _a.address.hex(), CREDIT_FOR_NEWACCOUNT*(10**esdt["decimals"]))
-        rc["default_money"]=esdt["idx"]
-        rc["default_name"]=esdt["unity"]
+    if "identifier" in NETWORKS[bc.network_name]:
+        decimals=18
+        if "decimals" in NETWORKS[bc.network_name]:decimals=int(NETWORKS[bc.network_name]["decimals"])
+        bc.transferESDT(idx=NETWORKS[bc.network_name]["identifier"],
+                        user_from=bc.bank,
+                        user_to=_a.address.bech32(),
+                        amount=CREDIT_FOR_NEWACCOUNT*(10**decimals)
+                        )
+        rc["default_money"]=NETWORKS[bc.network_name]["identifier"]
+        rc["default_name"]=NETWORKS[bc.network_name]["unity"]
     else:
-        log("Pas de monnaie par défaut, Les ESDT ne sont pas actifs")
+        log("Pas de monnaie par défaut")
 
 
     return jsonify(rc),200

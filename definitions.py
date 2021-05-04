@@ -25,7 +25,7 @@ TOTAL_DEFAULT_UNITY=1000000
 CREDIT_FOR_NEWACCOUNT=200
 
 ESDT_CONTRACT="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
-ESDT_PRICE=5e16
+ESDT_PRICE=5e18
 
 LIMIT_GAS=60000000
 
@@ -54,7 +54,7 @@ NETWORKS={
         "proxy":"https://devnet-api.elrond.com",
         "explorer":"https://devnet-explorer.elrond.com",
         "wallet":"https://devnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqchhw9k32cev9d56nfglpygr9zdzw65l7d8ssqes2rf"
+        "nft":"erd1qqqqqqqqqqqqqpgq7qye26chcjcxn4a5uajx57u5eztuhwq7d8sszly7f8"
     },
 
     "server":{

@@ -31,7 +31,6 @@ export class MoneysComponent implements OnInit {
 
 
   ngOnInit(): void {
-
     this.refresh();
   }
 
