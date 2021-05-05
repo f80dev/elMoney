@@ -61,7 +61,7 @@ export class MoneysComponent implements OnInit {
         lbl_ok: 'Oui',
         lbl_cancel: 'Non'
       }}).afterClosed().subscribe((result:any) => {
-        if(result){
+        if(result=="yes"){
           this.api._delete("money/"+identifier).subscribe(()=>{
             this.refresh();
           });

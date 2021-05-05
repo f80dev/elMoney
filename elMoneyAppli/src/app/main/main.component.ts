@@ -110,8 +110,7 @@ export class MainComponent implements OnInit {
 
 
   add_contact(){
-    let height='620px';
-    if(this.config.webcamsAvailable==0)height="350px";
+    let height='fit-content';
     this.dialog.open(NewContactComponent, {
       position: {left: '10vw', top: '5vh'},
       maxWidth: 450,

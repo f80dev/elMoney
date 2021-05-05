@@ -15,17 +15,17 @@
       <th>Solde</th>
     </tr>
     <tr *ngFor="let m of moneys" style="pointer:cursor;width: 95vw;" (click)="select(m)">
-      <td style="text-align: left;font-size: large;width: fit-content;">
+      <td style="text-align: left;width: fit-content;">
         <mat-icon style="cursor: pointer;">chevron_right</mat-icon>&nbsp;
       </td>
       <td>
-        <strong [cdkCopyToClipboard]="m.tokenIdentifier" ngxClipboard style="cursor: pointer;">{{m.unity}}</strong>
+        <span [cdkCopyToClipboard]="m.tokenIdentifier" ngxClipboard style="cursor: pointer;">{{m.unity}}</span>
       </td>
       <td style="max-width:300px;text-align: left;font-size: large;width: 50%;">
         {{m.name}}
       </td>
       <td style="max-width:100px;text-align: right;font-size: large;">
-        <strong>{{m?.solde | number:'1.0-2'}}</strong>
+        {{m?.solde | number:'1.0-2'}}
       </td>
 
       <td style="text-align: left;">
@@ -36,12 +36,10 @@
           <mat-icon>import_contacts</mat-icon>
         </button>
 
-        <button mat-raised-button mat-icon-button
-                mat-button class="icon-button" style="background-color: transparent;"
-                *ngIf="m.owner==user.addr"
-                (click)="delete_money(m.tokenIdentifier)">
-          <mat-icon>cancel</mat-icon>
-        </button>
+        <mat-icon *ngIf="m.owner==user.addr"
+                  (click)="delete_money(m.tokenIdentifier)">
+          cancel
+        </mat-icon>
 
          <button mat-icon-button mat-raised-button style="background-color: transparent;"
                 mat-button class="icon-button"

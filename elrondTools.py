@@ -112,7 +112,7 @@ class ElrondNet:
         t.sign(_sign)
 
         try:
-            tx = t.send_wait_result(self._proxy)
+            tx = t.send(self._proxy)
             log("Execution de la transaction "+self.getExplorer(tx))
             tr=self.wait_transaction(tx, not_equal="pending")
             return tr
@@ -253,7 +253,7 @@ class ElrondNet:
         log("Transfert "+user_from.address.bech32()+" -> "+user_to+" de "+str(amount)+" via ESDT")
 
         #Passage du montant en hex (attention il faut un nombre pair de caractères)
-        amount_in_hex=str(hex(amount)).replace("0x","")
+        amount_in_hex=str(hex(int(amount))).replace("0x","")
         if len(amount_in_hex) % 2 == 1: amount_in_hex="0"+amount_in_hex
 
         data="ESDTTransfer@"+str_to_hex(idx,False)+"@"+amount_in_hex
@@ -268,7 +268,7 @@ class ElrondNet:
                 "account":toFiat(infos),
                 "cost":tr["cost"],
                 "explorer":self.getExplorer(tr["txHash"],"address"),
-                "to":user_to.address.bech32()
+                "to":user_to
             }
         except Exception as inst:
             return {"error":str(inst.args)}
