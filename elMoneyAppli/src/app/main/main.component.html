@@ -88,7 +88,7 @@
               </mat-slider>
             </td>
             <td style="width: 50px;font-size: large;text-align: left;line-height: 85%;">
-              {{_max}}&nbsp;
+              {{_max | number:'1-0.5'}}&nbsp;
               <span style="font-size: small;">{{user.moneys[user.selected_money].unity.toUpperCase()}}</span>
             </td>
           </tr></table>

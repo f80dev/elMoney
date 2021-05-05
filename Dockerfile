@@ -12,6 +12,10 @@
 #pour fedora 31 : https://linuxconfig.org/how-to-install-docker-on-fedora-31
 #dnf install -y grubby && grubby --update-kernel=ALL --args="systemd.unified_cgroup_hierarchy=0" && reboot
 
+#renouvellement des certificats
+#désactiver le parefeu puis
+#certbot certonly --standalone --email hhoareau@gmail.com -d server.f80.fr
+#cp /etc/letsencrypt/live/server.f80.fr/* /root/certs
 
 #fabrication: docker build -t f80hub/elmoney . & docker push f80hub/elmoney:latest
 #installation: docker rm -f elmoney && docker pull f80hub/elmoney:latest

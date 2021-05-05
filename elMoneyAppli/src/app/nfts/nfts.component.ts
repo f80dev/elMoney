@@ -87,7 +87,7 @@ export class NftsComponent implements OnChanges {
       if (!result || result == "no")return;
 
       let identifier=nft.identifier;
-      if(identifier=="")identifier="egld";
+      if(identifier=="")identifier="EGLD";
 
       if (nft.price > Number(this.user.moneys[identifier].balance) / 1e18) {
         showMessage(this, "Votre solde est insuffisant (prix + frais de transaction)", 5000, () => {

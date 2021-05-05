@@ -133,7 +133,7 @@ class ElrondNet:
             lst=[]
 
         lst.append({
-            "identifier":"egld",
+            "identifier":"EGLD",
             "name":"eGold",
             "decimals":18,
             "balance": self._proxy.get_account_balance(_user.address)
