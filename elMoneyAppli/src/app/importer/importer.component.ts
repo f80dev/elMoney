@@ -200,7 +200,6 @@ export class ImporterComponent implements OnInit {
     if(this.direct_sell)properties=properties+0b00000100;
     if(this.self_destruction)properties=properties+0b00001000;
 
-    debugger
     let obj={
       pem:this.user.pem,
       owner:this.user.addr,
@@ -229,6 +228,7 @@ export class ImporterComponent implements OnInit {
 
 
     this.message="Enregistrement dans la blockchain";
+    window.scrollTo(0,0);
     this.show_zone_upload=false;
     this.api._post("mint/"+this.count,"",obj).subscribe((r:any)=>{
       $$("Enregistrement dans la blockchain");
@@ -613,5 +613,9 @@ export class ImporterComponent implements OnInit {
         if(tag)this.desc=" "+this.desc.trim()+"#"+tag;
 
     this.tokenizer();
+  }
+
+  inc_price(inc: number) {
+    this.price=String(Number(this.price)+0.5);
   }
 }

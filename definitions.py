@@ -54,7 +54,7 @@ NETWORKS={
         "proxy":"https://devnet-api.elrond.com",
         "explorer":"https://devnet-explorer.elrond.com",
         "wallet":"https://devnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgq7qye26chcjcxn4a5uajx57u5eztuhwq7d8sszly7f8"
+        "nft":"erd1qqqqqqqqqqqqqpgq8wx56k0tdedaxt7t6nvw2hgtrdjecd0zd8ssyf43d7"
     },
 
     "server":{
@@ -75,9 +75,11 @@ ADMINS=[
 
 SIGNATURE="<br><br>L'équipe de TokenForge<br><a href='https://t.me/tokenforge'>Le forum des utilisateurs</a>"
 
-DB_SERVERS=dict({
-    "local":"mongodb://127.0.0.1:27017",
-    "server":"mongodb://admin:hh4271@server.f80.fr:27017",
-    "cloud":"mongodb+srv://admin:hh4271!!@kerberus-44xyy.gcp.mongodb.net/test"
-})
+DB_SERVERS=dict(
+    {
+        "local":"mongodb://127.0.0.1:27017",
+        "server":"mongodb://admin:hh4271@server.f80.fr:27017",
+        "cloud":"mongodb+srv://admin:hh4271!!@kerberus-44xyy.gcp.mongodb.net/test"
+    }
+)
 

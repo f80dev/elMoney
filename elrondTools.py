@@ -112,7 +112,7 @@ class ElrondNet:
         t.sign(_sign)
 
         try:
-            tx = t.send(self._proxy)
+            tx = t.send_wait_result(self._proxy)
             log("Execution de la transaction "+self.getExplorer(tx))
             tr=self.wait_transaction(tx, not_equal="pending")
             return tr
@@ -587,7 +587,7 @@ class ElrondNet:
                                                    gas_price=config.DEFAULT_GAS_PRICE*gas_price_factor,
                                                    gas_limit=gas_limit,
                                                    value=value,
-                                                    chain=self.chain_id,
+                                                   chain=self.chain_id,
                                                    version=config.get_tx_version()
                                                    )
         except Exception as inst:
