@@ -38,7 +38,7 @@ export class MoneysComponent implements OnInit {
     this.message="Chargement des monnaies";
     this.api._get("moneys/"+this.user.addr).subscribe((r:any)=>{
       this.message="";
-      delete r.egld; //On n'affiche pas les eGold dans les monnaies
+      delete r.EGLD; //On n'affiche pas les eGold dans les monnaies
       this.moneys=Object.values(r);
 
       if(this.routes.snapshot.queryParamMap.get("select")){
