@@ -660,7 +660,7 @@ class ElrondNet:
                 desc_len=int(tokens[index:index + 8], 16)*2
                 index=index+8
 
-                money_len=int(tokens[index:index + 8], 16)*2-8
+                money_len=int(tokens[index:index + 8], 16)*2
                 index=index+8
 
                 price = int(tokens[index:index+8], 16) / 1e4

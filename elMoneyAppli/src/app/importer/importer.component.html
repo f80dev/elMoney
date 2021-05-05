@@ -242,7 +242,7 @@
 
               <mat-form-field appearance="fill" class="app-field" id="formPrice" style="max-width: 120px">
                 <mat-label>Prix de vente</mat-label>
-                <input matInput id="txtPrice" type="text"
+                <input matInput id="txtPrice" type="number" min="0"
                        [(ngModel)]="price" [ngModelOptions]="{standalone: true}" (ngModelChange)="update_prices()">
                 <span matSuffix>{{selected_money?.label}}</span>
               </mat-form-field>

@@ -36,7 +36,7 @@ export class ImporterComponent implements OnInit {
   count: number=1;
   gift:number=0;
   secret: string="";
-  price: string="0";
+  price: number=0;
   title: string="Mon NFT pour vous";
   desc: string="Achetez mon NFT";
   cost=0;
@@ -187,8 +187,7 @@ export class ImporterComponent implements OnInit {
 
   tokenizer(fee=0,func=null,func_error=null) {
     //properties est stoké sur 8 bits : 00000<vente directe possible><le propriétaire peut vendre><le propriétaire peut offrir>
-    this.price=this.price.replace(",",".");
-    if(this.min_price<0 || this.max_price<0 || Number(this.price)<0){
+    if(this.min_price<0 || this.max_price<0 || this.price<0){
       showMessage(this,"Données incorrectes");
       if(func_error)func_error();
       return;
@@ -209,7 +208,7 @@ export class ImporterComponent implements OnInit {
       format:this.file_format,
       signature:this.title,
       secret:this.secret,
-      price:Number(this.price.replace(",",".")),
+      price:this.price,
       fee:fee,
       tags: this.tags,
       description:this.desc,
@@ -293,8 +292,8 @@ export class ImporterComponent implements OnInit {
   }
 
   update_prices() {
-    if(this.max_price==0)this.max_price=Number(this.price)*0.2;
-    if(this.min_price==0 && Number(this.price)>0)this.min_price=0;
+    if(this.max_price==0)this.max_price=this.price*0.2;
+    if(this.min_price==0 && this.price>0)this.min_price=0;
   }
 
   open_store(elt:any) {
@@ -371,7 +370,7 @@ export class ImporterComponent implements OnInit {
     }).afterClosed().subscribe((price) => {
       if(price){
         this.price=price.replace(",",".");
-        this.min_price=0;this.max_price=Number(this.price)*2;this.miner_ratio=0;
+        this.min_price=0;this.max_price=this.price*2;this.miner_ratio=0;
         if(func)func(this.price); else this.tokenizer(fee);
       }
     });
@@ -539,7 +538,7 @@ export class ImporterComponent implements OnInit {
             if(token.tags)this.desc=this.desc+" "+token.tags;
             this.owner_can_sell=false;
             this.owner_can_transfer=true;
-            this.price="0";
+            this.price=0;
             this.tokenizer(token.fee);
           },"Ajouter une belle photo de cet événement",800,800);
         });
@@ -616,6 +615,6 @@ export class ImporterComponent implements OnInit {
   }
 
   inc_price(inc: number) {
-    this.price=String(Number(this.price)+0.5);
+    this.price=this.price+0.5;
   }
 }
