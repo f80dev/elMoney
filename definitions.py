@@ -39,7 +39,7 @@ NETWORKS={
         "bank":"bob",
         "unity":"tEgld",
         "faucet":"https://r3d4.fr/elrond/testnet/index.php",
-        "proxy":"https://testnet-api.elrond.com",
+        "proxy":"https://testnet-gateway.elrond.com",
         "explorer":"https://testnet-explorer.elrond.com",
         "wallet":"https://testnet-wallet.elrond.com",
         "nft":"erd1qqqqqqqqqqqqqpgqt5w9vlsdcmu5t5wvzdj8xnp42kqm4x3ud8ssrk9q8s"
@@ -51,7 +51,7 @@ NETWORKS={
         "unity":"xEgld",
         "identifier":"TFC-ea7d20",
         "faucet":"https://r3d4.fr/elrond/devnet/index.php",
-        "proxy":"https://devnet-api.elrond.com",
+        "proxy":"https://devnet-gateway.elrond.com",
         "explorer":"https://devnet-explorer.elrond.com",
         "wallet":"https://devnet-wallet.elrond.com",
         "nft":"erd1qqqqqqqqqqqqqpgqdhy0v4eyl56yxf23hads4x9048xa5g9zd8sszhvmn2"

@@ -60,6 +60,7 @@ class ElrondNet:
         self._proxy=ElrondProxy(proxy)
         self.chain_id=self._proxy.get_chain_id()
 
+
         log("On utilise le testnet, la production n'étant pas encore disponible")
         self.environment = TestnetEnvironment(proxy)
 
@@ -509,14 +510,13 @@ class ElrondNet:
             timeout=timeout-interval
 
         if "elrond.com" in self._proxy.url:
-            with urllib.request.urlopen(self._proxy.url+'/transactions/'+tx) as response:
+            with urllib.request.urlopen(self._proxy.url+'/transaction/'+tx) as response:
                 txt = response.read()
-            rc=json.loads(txt)
+            rc=json.loads(txt)["data"]["transaction"]
             gasUsed=0
             if "gasUsed" in rc:gasUsed=rc["gasUsed"]
-            rc["cost"] = float(rc["fee"]) / 1e18
-        else:
-            rc["cost"]=float(rc["fee"])/1e18
+
+            rc["cost"]=float(rc["gasLimit"]*rc["gasPrice"])/1e18
 
         log("Transaction executé "+str(rc))
         if timeout<=0:log("Timeout de "+self.getExplorer(tx)+" "+field+" est a "+str(rc[field]))
