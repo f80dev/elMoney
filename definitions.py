@@ -49,12 +49,12 @@ NETWORKS={
         "new_account":float(4*1e18),
         "bank":"bank",
         "unity":"xEgld",
-        "identifier":"TFC-ea7d20",
+        "identifier":"TFC-99d533",
         "faucet":"https://r3d4.fr/elrond/devnet/index.php",
         "proxy":"https://devnet-gateway.elrond.com",
         "explorer":"https://devnet-explorer.elrond.com",
         "wallet":"https://devnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqdhy0v4eyl56yxf23hads4x9048xa5g9zd8sszhvmn2"
+        "nft":"erd1qqqqqqqqqqqqqpgqgcymxnmp8ms05vx0jq4hqdfsmejrjy24d8ssze3ft4"
     },
 
     "server":{

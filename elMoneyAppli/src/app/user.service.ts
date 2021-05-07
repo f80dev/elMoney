@@ -95,12 +95,13 @@ export class UserService {
 
     $$("Balance("+this.addr+")");
     this.api.balance(this.addr).subscribe((r:any)=>{
+      debugger
       $$("Récupération de la balance : ",r);
       if(r.hasOwnProperty("error")){
         if(func_error)func_error(r);
       } else {
         this.moneys=r;
-        this.gas=r.EGLD.balance;
+        this.gas=r['EGLD-egold'].balance;
         if(func)func(r);
       }
     },(err)=>{

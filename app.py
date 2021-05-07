@@ -405,7 +405,7 @@ def buy_nft(token_id,price,seller:str,data:dict=None):
     if type(price)==str and "," in price:price=price.replace(",",".")
     tokenName=data["identifier"]
 
-    if len(tokenName)>0:
+    if tokenName!="EGLD":
         #On déclenche le transfert au smartcontract
         bc.transferESDT(tokenName,
                         Account(pem_file=pem_file),
@@ -443,8 +443,8 @@ def mint(count:str,data:dict=None):
         data = json.loads(data)
 
     #Chargement des fichiers
-    client = IPFS(IPFS_NODE)
     if "file" in data and len(data["file"])>0:
+        client = IPFS(IPFS_NODE)
         res = client.add(data["file"])
         log("Transfert IPFS du fichier : https://ipfs.io/ipfs/"+res)
         secret=res
@@ -452,8 +452,11 @@ def mint(count:str,data:dict=None):
         secret = data["secret"]
 
     # TODO: ajouter ici un encodage du secret dont la clé est connu par le contrat
-    if len(secret)==0:secret=" ";
-    secret = aes256.encrypt(secret, SECRET_KEY)
+    if len(secret)>0:
+        secret = aes256.encrypt(secret, SECRET_KEY)
+        secret=secret.hex()
+    else:
+        secret=""
 
     res_visual = ""
     if "visual" in data and len(data["visual"])>0:
@@ -474,22 +477,29 @@ def mint(count:str,data:dict=None):
     miner_ratio=int(data["miner_ratio"]*100)
     fee=int(float(data["fee"])*1e18)
     gift=int(float(data["gift"])*100)
-    money=data["money"]
+    money:str=data["money"]
 
     arguments=[int(count),
                "0x"+title.encode().hex(),
                "0x"+desc.encode().hex(),
-               "0x"+secret.hex(),
+               "0x"+secret,
                price,min_markup,max_markup,
                properties,
                miner_ratio,
                gift,
                "0x"+money.encode().hex()]
 
+    value=fee+int(count)*gift*1e16
+    if not money.startswith("EGLD"):
+        #Dans ce cas on sequestre le montant ESDT pour le cadeau
+        transac=bc.transferESDT(money,Account(pem_file=pem_file),bc.contract,int(count)*gift*1e16)
+        if "error" in transac:return "Probleme technique",500
+        value=fee
+
     result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,
                    arguments=arguments,
                    gas_limit=int(LIMIT_GAS*(1+int(count)/4)),
-                   value=fee+int(count)*gift*1e16)
+                   value=value)
 
     if not result is None:
         if result["status"] == "fail":

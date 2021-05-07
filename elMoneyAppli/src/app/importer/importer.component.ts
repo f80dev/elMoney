@@ -104,8 +104,8 @@ export class ImporterComponent implements OnInit {
     this.api._get("moneys/"+this.user.addr).subscribe((r:any)=>{
       this.moneys=[{identifier:'',label:'xEGld'}];
       for(let money of Object.values(r)){
-        if(money.hasOwnProperty("identifier")){
-          this.moneys.push({identifier:money["identifier"],label:money["unity"]})
+        if(money.hasOwnProperty("tokenIdentifier")){
+          this.moneys.push({identifier:money["tokenIdentifier"],label:money["unity"]})
         }
       }
       this.selected_money=this.moneys[0];
@@ -128,6 +128,7 @@ export class ImporterComponent implements OnInit {
 
 
   //Gestion des tags
+  solde_user: number;
 
   add(event: MatChipInputEvent): void {
     const input = event.input;
@@ -193,6 +194,7 @@ export class ImporterComponent implements OnInit {
       return;
     }
 
+    debugger
     let properties:number=0b00000000;
     if(this.owner_can_transfer)properties=properties+0b00000001;
     if(this.owner_can_sell)properties=properties+0b00000010;
@@ -616,5 +618,9 @@ export class ImporterComponent implements OnInit {
 
   inc_price(inc: number) {
     this.price=this.price+0.5;
+  }
+
+  update_user_solde() {
+    this.solde_user=Number(this.user.moneys[this.selected_money.identifier].balance);
   }
 }

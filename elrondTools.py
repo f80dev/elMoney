@@ -123,31 +123,30 @@ class ElrondNet:
 
 
     def getMoneys(self,_user:Account):
-        url = self._proxy.url + '/accounts/' + _user.address.bech32() + "/tokens"
+        url = self._proxy.url + '/address/' + _user.address.bech32() + "/esdt"
         log("Interrogation de la balance : " + url)
         try:
             with urllib.request.urlopen(url) as response:
                 txt = response.read()
-            lst=json.loads(txt)
+            result=json.loads(txt)
         except:
             log("L'interrogation des tokens ne fonctionne pas")
             lst=[]
 
+        lst=list(result["data"]["esdts"].values())
         lst.append({
-            "identifier":"EGLD",
-            "name":"eGold",
-            "decimals":18,
+            "tokenIdentifier":"EGLD-egold",
             "balance": self._proxy.get_account_balance(_user.address)
         })
 
         #Transforme la liste en dict sur la base du tokenIdentifier
         rc=dict()
         for l in lst:
-            if "identifier" in l:
-                rc[l["identifier"]]=l
-                rc[l["identifier"]]["solde"]=float(l["balance"])/(10**18)
-                rc[l["identifier"]]["unity"]=l["identifier"].split("-")[0]
-                rc[l["identifier"]]["url"]=""
+            if "tokenIdentifier" in l:
+                rc[l["tokenIdentifier"]]=l
+                rc[l["tokenIdentifier"]]["solde"]=float(l["balance"])/(10**18)
+                rc[l["tokenIdentifier"]]["unity"]=l["tokenIdentifier"].split("-")[0]
+                rc[l["tokenIdentifier"]]["url"]=""
                 #TODO ajouter ici la documentation des monnaies via la base de données
 
 
@@ -268,7 +267,7 @@ class ElrondNet:
                 "price":toFiat(tr["gasLimit"]),
                 "account":toFiat(infos),
                 "cost":tr["cost"],
-                "explorer":self.getExplorer(tr["txHash"],"address"),
+                "explorer":self.getExplorer(tr["blockHash"],"address"),
                 "to":user_to
             }
         except Exception as inst:
@@ -504,19 +503,15 @@ class ElrondNet:
         rc=None
         while timeout>0:
             sleep(interval)
-            rc=self._proxy.get_transaction(tx_hash=tx)
+            rc=self._proxy.get_transaction(tx_hash=tx,with_results=True)
             if len(equal)>0 and rc[field]==equal:break
             if len(not_equal) > 0 and rc[field] != not_equal: break
             timeout=timeout-interval
 
-        if "elrond.com" in self._proxy.url:
-            with urllib.request.urlopen(self._proxy.url+'/transaction/'+tx) as response:
-                txt = response.read()
-            rc=json.loads(txt)["data"]["transaction"]
-            gasUsed=0
-            if "gasUsed" in rc:gasUsed=rc["gasUsed"]
+        gasUsed=0
+        if "gasUsed" in rc:gasUsed=rc["gasUsed"]
 
-            rc["cost"]=float(rc["gasLimit"]*rc["gasPrice"])/1e18
+        rc["cost"]=float(rc["gasLimit"]*rc["gasPrice"])/1e18
 
         log("Transaction executé "+str(rc))
         if timeout<=0:log("Timeout de "+self.getExplorer(tx)+" "+field+" est a "+str(rc[field]))
@@ -929,7 +924,7 @@ class ElrondNet:
 
         tx = self.query("dealers",[miner_filter])
         rc = []
-        if len(tx)>0 and len(tx[0].hex)>0:
+        if len(tx)>0 and tx[0]!='' and len(tx[0].hex)>0:
             for dealer in str(tx[0].hex).split("000000"):
                 if len(dealer)>100:
                     address=dealer[0:64]

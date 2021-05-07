@@ -127,12 +127,12 @@
 
 
               <mat-form-field appearance="fill" class="app-field" style="max-width: 150px;">
-                <mat-label>Récompense à l'ouverture</mat-label>
+                <mat-label>Récompense</mat-label>
                 <input matInput type="number"
                        id="txtGift"
                        (focusin)="focus_idx=1.5" min="0" [max]="user.gas/1e18" [(ngModel)]="gift"
                        [ngModelOptions]="{standalone: true}">
-                <span matSuffix>xeGld</span>
+                <span matSuffix>{{selected_money.label}}</span>
                 <mat-hint *ngIf="focus_idx==1.5">Débitée de votre compte à la création et crédité sur le compte de l'acheteur à l'ouverture du NFT</mat-hint>
               </mat-form-field>
             </form>
@@ -231,7 +231,7 @@
 
               <mat-form-field appearance="fill" style="max-width:100px">
                 <mat-label>Monnaie</mat-label>
-                <mat-select [(ngModel)]="selected_money" name="money">
+                <mat-select [(ngModel)]="selected_money" name="money" (ngModelChange)="update_user_solde()">
                   <mat-option *ngFor="let money of moneys" [value]="money">
                     {{money?.label}}
                   </mat-option>
@@ -394,7 +394,7 @@
               </button>
 
               <br><br>
-              <small>Cout de fabrication: {{count*gift}} + frais de transactions</small>
+              <small>Cout de fabrication: {{count*gift}} {{selected_money.label}} + frais de transactions</small>
               <span *ngIf="count*gift>user.gas/1e18">(Solde insuffisant)</span>
               <br><br>
               <div *ngIf="show_preview" style="width: 100%;text-align: center;">
@@ -416,7 +416,7 @@
               <button mat-raised-button  color="primary"
                       mat-button class="app-button"
                       id="cmdMakeNFT"
-                      [disabled]="title?.length==0 || count*gift>user.gas/1e18"
+                      [disabled]="title?.length==0 || count*gift>solde_user/1e18"
                       (click)="make_token()">
                 Fabriquer !
               </button>
