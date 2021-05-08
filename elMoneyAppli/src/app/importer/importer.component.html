@@ -126,7 +126,7 @@
               </div>
 
 
-              <mat-form-field appearance="fill" class="app-field" style="max-width: 150px;">
+              <mat-form-field appearance="fill" class="app-field" style="width: 150px;">
                 <mat-label>Récompense</mat-label>
                 <input matInput type="number"
                        id="txtGift"
@@ -135,7 +135,22 @@
                 <span matSuffix>{{selected_money.label}}</span>
                 <mat-hint *ngIf="focus_idx==1.5">Débitée de votre compte à la création et crédité sur le compte de l'acheteur à l'ouverture du NFT</mat-hint>
               </mat-form-field>
+
+              &nbsp;
+
+              <mat-form-field appearance="fill" style="max-width:100px">
+                <mat-label>Monnaie</mat-label>
+                <mat-select [(ngModel)]="selected_money" name="money" (ngModelChange)="update_user_solde()">
+                  <mat-option *ngFor="let money of moneys" [value]="money">
+                    {{money?.label}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
             </form>
+
+
+
 
           </mat-step>
 

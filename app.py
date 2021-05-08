@@ -145,8 +145,8 @@ def convert_email_to_addr(dest:str,html_email:str):
 @app.route('/api/transfer/<idx>/<dest>/<amount>/<unity>/',methods=["POST"])
 def transfer(idx:str,dest:str,amount:str,unity:str):
 
-    _money=dao.get_money_by_idx(idx)
-    if _money is None:return "Monnaie inconnue",500
+    #_money=dao.get_money_by_idx(idx)
+    #if _money is None:return "Monnaie inconnue",500
 
     _dest=convert_email_to_addr(dest,open_html_file("share", {
         "email": dest,
@@ -178,7 +178,7 @@ def transfer(idx:str,dest:str,amount:str,unity:str):
             _from.private_key_seed=infos["private"]
 
     log("Appel du smartcontract")
-    rc=bc.transferESDT(idx,_from,_dest.address.bech32(),int(amount)*(10**_money["decimals"]))
+    rc=bc.transferESDT(idx,_from,_dest.address.bech32(),int(amount)*(10**18))
 
     if not "error" in rc:
         log("Transfert effectué " + str(rc) + " programmation du rafraichissement des comptes")
@@ -479,22 +479,26 @@ def mint(count:str,data:dict=None):
     gift=int(float(data["gift"])*100)
     money:str=data["money"]
 
-    arguments=[int(count),
-               "0x"+title.encode().hex(),
-               "0x"+desc.encode().hex(),
-               "0x"+secret,
-               price,min_markup,max_markup,
-               properties,
-               miner_ratio,
-               gift,
-               "0x"+money.encode().hex()]
+
 
     value=fee+int(count)*gift*1e16
     if not money.startswith("EGLD"):
         #Dans ce cas on sequestre le montant ESDT pour le cadeau
-        transac=bc.transferESDT(money,Account(pem_file=pem_file),bc.contract,int(count)*gift*1e16)
+        transac=bc.transferESDT(money,Account(pem_file=pem_file),bc.contract,int(count)*gift)
         if "error" in transac:return "Probleme technique",500
         value=fee
+    else:
+        money=""
+
+    arguments = [int(count),
+                 "0x" + title.encode().hex(),
+                 "0x" + desc.encode().hex(),
+                 "0x" + secret,
+                 price, min_markup, max_markup,
+                 properties,
+                 miner_ratio,
+                 gift,
+                 "0x" + money.encode().hex()]
 
     result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,
                    arguments=arguments,
@@ -773,8 +777,6 @@ def deploy(name:str,unity:str,nbdec:str,amount:str,data:dict=None):
             "signature":SIGNATURE,
         }),_to=data["email"],subject="Confirmation de création du "+unity)
         dao.add_money(result["id"],unity,int(nbdec),result["owner"],data["public"],data["transferable"],data["url"],bc._proxy.url)
-
-
 
     return jsonify(result),200
 

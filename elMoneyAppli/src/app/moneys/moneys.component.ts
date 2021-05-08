@@ -71,8 +71,8 @@ export class MoneysComponent implements OnInit {
 
   select(_m:any){
     this.message="Changement de monnaie";
-    this.api.set_identifier(_m.identifier);
-    this.user.selected_money=_m.identifier;
+    this.api.set_identifier(_m.tokenIdentifier);
+    this.user.selected_money=_m.tokenIdentifier;
     this.user.refresh_balance(()=>{
       this.message="";
       this.router.navigate(["main"]);

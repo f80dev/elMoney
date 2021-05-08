@@ -89,15 +89,19 @@ export class NftsComponent implements OnChanges {
       let identifier=nft.identifier;
       if(identifier=="")identifier="EGLD";
 
-      if (nft.price > Number(this.user.moneys[identifier].balance) / 1e18) {
-        showMessage(this, "Votre solde est insuffisant (prix + frais de transaction)", 5000, () => {
-          if(nft.identifier=="")
-            this.router.navigate(["faucet"]);
-          else
-            this.router.navigate(["main"]);
-        }, "Recharger ?");
-        return false;
+      if(nft.price>0){
+        if (!this.user.moneys.hasOwnProperty(identifier) || nft.price > Number(this.user.moneys[identifier].balance)/ 1e18 ) {
+
+          showMessage(this, "Votre solde est insuffisant (prix + frais de transaction)", 5000, () => {
+            if(nft.identifier.startsWith("EGLD"))
+              this.router.navigate(["faucet"]);
+            else
+              this.router.navigate(["main"]);
+          }, "Recharger ?");
+          return false;
+        }
       }
+
 
       nft.message = "En cours d'achat";
       let price = nft.price;
@@ -161,7 +165,7 @@ export class NftsComponent implements OnChanges {
         title: 'Confirmation',
         question: 'Souhaitez-vous vraiment détruire ce NFT ?',
         onlyConfirm: true,
-         lbl_ok: 'Oui',
+        lbl_ok: 'Oui',
         lbl_cancel: 'Non'
       }}).afterClosed().subscribe((result:any) => {
       if (result=="yes") {
@@ -226,7 +230,7 @@ export class NftsComponent implements OnChanges {
     this.dialog.open(SelDealerComponent, {
       position:
         {left: '5vw', top: '5vh'},
-        maxWidth: 400, width: '90vw', height: 'auto', data:{
+      maxWidth: 400, width: '90vw', height: 'auto', data:{
         result:this.user.addr
       }
     }).afterClosed().subscribe((result) => {
