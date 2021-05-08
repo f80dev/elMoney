@@ -481,6 +481,8 @@ def mint(count:str,data:dict=None):
 
 
 
+
+
     value=fee+int(count)*gift*1e16
     if not money.startswith("EGLD"):
         #Dans ce cas on sequestre le montant ESDT pour le cadeau
