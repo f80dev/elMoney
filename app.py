@@ -480,13 +480,10 @@ def mint(count:str,data:dict=None):
     money:str=data["money"]
 
 
-
-
-
     value=fee+int(count)*gift*1e16
     if not money.startswith("EGLD"):
         #Dans ce cas on sequestre le montant ESDT pour le cadeau
-        transac=bc.transferESDT(money,Account(pem_file=pem_file),bc.contract,int(count)*gift)
+        transac=bc.transferESDT(money,Account(pem_file=pem_file),bc.contract,int(count)*gift*1e16)
         if "error" in transac:return "Probleme technique",500
         value=fee
     else:
