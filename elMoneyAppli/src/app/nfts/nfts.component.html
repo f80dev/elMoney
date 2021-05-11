@@ -9,6 +9,12 @@
       <mat-card-title [ngStyle]="{'font-size':fontsize}">
         {{nft.title}}
         <span style="font-size: xx-small" *ngIf="nft?.count && nft?.count>1">({{nft.count}})</span>
+
+        <div *ngIf="nft.price>0 && nft.state==0 && (nft.owner==user.addr || nft.isDealer)"
+             style="display: inline;">
+          <small>&nbsp;({{nft.price | number:'1.0-3'}} {{nft.unity}})</small>
+        </div>
+
       </mat-card-title>
     </mat-card-header>
 
@@ -48,11 +54,7 @@
            style="width:90%;margin:5%;line-height: 95%;font-size: small;text-align: center;">
         {{nft.description}}<br>
 
-        <div *ngIf="nft.price>0 && nft.state==0 && (nft.owner==user.addr || nft.isDealer)" style="display: inline;">
-          <small>&nbsp;({{nft.price | number:'1.0-3'}} {{nft.unity}})</small>
-        </div>
-
-        <span style="font-size: x-small;color:lightgrey">{{nft.tags}}</span>
+        <div style="font-size: x-small;color:lightgrey;margin-top: 3px;">{{nft.tags}}</div>
       </div>
 
 

@@ -140,6 +140,7 @@ export class NftsComponent implements OnChanges {
      this.dialog.open(PromptComponent, {
       data: {
         title: 'Donner la réponse pour gagner',
+        question:nft.description,
         onlyConfirm: false,
         lbl_ok: 'Répondre',
         lbl_cancel: 'Abandonner'
@@ -160,6 +161,8 @@ export class NftsComponent implements OnChanges {
       nft.open = r.response;
       if(nft.open.length==46)nft.open="https://ipfs.io/ipfs/"+nft.open;
       this.user.refresh_balance(() => {});
+
+      //Indique que le message est programmé pour s'autodétruire
       if((nft.properties & 0b1000) > 0){
         nft.delay=15;
         nft.timer=setInterval(()=>{

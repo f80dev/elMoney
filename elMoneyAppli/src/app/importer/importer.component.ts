@@ -474,6 +474,7 @@ export class ImporterComponent implements OnInit {
     this.ask_for_text("La question","Quel est la question du jeu",(question)=>{
       if(question){
         this.desc=question;
+        if(!this.desc.endsWith("?"))this.desc=this.desc+" ?";
         this.ask_for_text("Quelle est la réponse","Entrer la réponse extactement comme le joueur va la saisir",(secret)=> {
           if(secret)
             this.secret=secret.toLowerCase().trim();

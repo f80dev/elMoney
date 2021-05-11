@@ -308,7 +308,12 @@ def open_nft(token_id:str,data:dict=None):
         data = json.loads(str(request.data, encoding="utf-8"))
 
     pem_file = get_pem_file(data)
-    response=aes256.encrypt(data["response"],SECRET_KEY).hex()
+    if len(SECRET_KEY)>0:
+        response=data["response"]
+        response=aes256.encrypt(response,SECRET_KEY).hex()
+    else:
+        response=data["response"].encode().hex()
+
     tx = bc.nft_open(NETWORKS[bc.network_name]["nft"], pem_file, token_id,response)
     os.remove(pem_file)
 
@@ -321,7 +326,10 @@ def open_nft(token_id:str,data:dict=None):
             if "@" in rc:rc=rc.split("@")[2]
             #if len(rc)>0:rc=rc[0:len(rc) - 1]
             try:
-                rc=str(aes256.decrypt(bytearray.fromhex(rc),SECRET_KEY),"utf8")
+                if len(SECRET_KEY)>0:
+                    rc=str(aes256.decrypt(bytearray.fromhex(rc),SECRET_KEY),"utf8")
+                else:
+                    rc=str(bytearray.fromhex(rc),"utf8")
             except:
                 rc=str(bytearray.fromhex(rc),"utf8")
     else:
@@ -447,6 +455,8 @@ def mint(count:str,data:dict=None):
         log("Les données de fabrication sont " + data)
         data = json.loads(data)
 
+    if data["gift"] is None:data["gift"]=0
+
     #Chargement des fichiers
     if "file" in data and len(data["file"])>0:
         client = IPFS(IPFS_NODE)
@@ -458,7 +468,10 @@ def mint(count:str,data:dict=None):
 
     # TODO: ajouter ici un encodage du secret dont la clé est connu par le contrat
     if len(secret)>0:
-        secret = aes256.encrypt(secret, SECRET_KEY).hex()
+        if len(SECRET_KEY)>0:
+            secret = aes256.encrypt(secret, SECRET_KEY).hex()
+        else:
+            secret=secret.encode().hex()
     else:
         secret=""
 
