@@ -26,7 +26,8 @@
     </app-tuto>
   </div>
 
-  <app-hourglass [message]="message"></app-hourglass>
+  <app-hourglass [message]="message"></app-hourglass><br><br>
+  <img src="./assets/gears.gif" style="width: 150px;display: inline;" *ngIf="message.length>0">
   <br>
 
   <mat-tab-group animationDuration="1000ms" *ngIf="message?.length==0" mat-align-tabs="center">

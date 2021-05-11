@@ -8,6 +8,7 @@
     "prod": "npm version patch && ng build --configuration=production --prod --output-hashing=none --baseHref=https://tokenforge.f80.fr",
     "dev": "ng build --configuration=dev --output-hashing=none --baseHref=https://tf.f80.fr",
     "web": "live-server --open=./src/assets/store.html?seller=erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx",
+    "trad": "ng extract-i18n",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
@@ -41,8 +42,9 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "0.1102.2",
-    "@angular/cli": "~11.1.4",
+    "@angular/cli": "~11.2.12",
     "@angular/compiler-cli": "~11.1.2",
+    "@angular/localize": "^11.1.2",
     "@types/jasmine": "~3.5.0",
     "@types/node": "^12.19.15",
     "eslint": "^7.18.0",

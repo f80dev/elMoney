@@ -582,7 +582,7 @@ def transactions(user:str=""):
             if data.startswith("setstate"): data = "Mise en vente"
             if data.startswith("open"):
                 data = "Révéler le secret"
-                if "smartContractResults" in t and len(t["smartContractResults"])>1:sign=0
+                if "scResults" in t and len(t["scResults"])>1:sign=0
             if data.startswith("buy"):data="Achat d'un NFT"
 
             if sign!=0:
@@ -596,8 +596,8 @@ def transactions(user:str=""):
                     "comment":comment
                 })
 
-            if "smartContractResults" in t:
-                for tt in t["smartContractResults"]:
+            if "scResults" in t:
+                for tt in t["scResults"]:
                     if len(user)==0 or (tt["receiver"]==user or tt["sender"]==user):
                         if tt["receiver"]==user:sign=1
                         if tt["sender"] == user: sign=-1
@@ -719,8 +719,10 @@ def add_miner(data:dict=None):
 
     _miner = Account(address=data["address"])
     _profil=dao.get_user(data["address"])
-    ipfs_token=IPFS(IPFS_NODE).add(str({"pseudo":_profil["pseudo"],"visual":_profil["visual"]}))
+    if not "pseudo" in _profil or len(_profil["pseudo"])==0:
+        return jsonify({"error":"Le créateur doit au moins avoir un pseudo"}),500
 
+    ipfs_token=IPFS(IPFS_NODE).add(str({"pseudo":_profil["pseudo"],"visual":_profil["visual"]}))
 
     tx=bc.add_miner(NETWORKS[bc.network_name]["nft"],
                     pem_file,["0x" + _miner.address.hex(),"0x"+ipfs_token.encode().hex()]

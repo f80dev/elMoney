@@ -193,9 +193,8 @@ export class NftsComponent implements OnChanges {
         this.api._post("burn/" + nft.token_id + "/", "", this.user.pem).subscribe((r: any) => {
           nft.message = "";
           showMessage(this, "Votre token n'existe plus");
-          this.user.refresh_balance(() => {
-            this.onrefresh.emit();
-          });
+          this.onrefresh.emit();
+          this.user.refresh_balance();
         });
       }
     });

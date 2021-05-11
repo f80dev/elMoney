@@ -65,6 +65,9 @@ export class MinersComponent implements OnInit {
             showMessage(this,"Mineur ajoute");
             this.message="";
             this.refresh();
+          },(err)=>{
+            showMessage(this,"Ce créateur n'est pas conforme");
+            this.message="";
           })
         }
       });

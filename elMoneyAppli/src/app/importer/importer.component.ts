@@ -334,6 +334,7 @@ export class ImporterComponent implements OnInit {
     let idx=this.dataSource.data.indexOf(element);
     if(idx>-1){
       this.dataSource.data.splice(idx,1);
+      if(this.dataSource.data.length==0)this.direct_sell=true;
       this.dataSource._updateChangeSubscription();
     }
   }

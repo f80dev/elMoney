@@ -609,6 +609,7 @@ class ElrondNet:
                 log("Essai "+str(i)+" Impossible d'executer "+function_name+"("+str(arguments)+") -> ")
                 log(str(inst.args))
 
+        if len(d)==1 and d[0]=='':d=[]
         return d
 
 

@@ -50,6 +50,7 @@
 
       <app-nfts [user]="user" [nfts]="nfts[2]" width="90%"
                 [with_icon]="false" height="fit-content"
+                (refresh)="refresh()"
                 (transfer)="transfer($event)"></app-nfts>
 
       <br>
