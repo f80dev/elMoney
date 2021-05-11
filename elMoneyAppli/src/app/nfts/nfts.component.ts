@@ -90,6 +90,7 @@ export class NftsComponent implements OnChanges {
       if(identifier=="")identifier="EGLD";
 
       if(nft.price>0){
+
         if (!this.user.moneys.hasOwnProperty(identifier) || nft.price > Number(this.user.moneys[identifier].balance)/ 1e18 ) {
 
           showMessage(this, "Votre solde est insuffisant (prix + frais de transaction)", 5000, () => {
@@ -133,9 +134,28 @@ export class NftsComponent implements OnChanges {
     });
   }
 
-  open(nft: any) {
+
+  give_response(nft:any){
+   if ((nft.properties & 0b10000) > 0) {
+     this.dialog.open(PromptComponent, {
+      data: {
+        title: 'Donner la réponse pour gagner',
+        onlyConfirm: false,
+        lbl_ok: 'Répondre',
+        lbl_cancel: 'Abandonner'
+      }}).afterClosed().subscribe((result:any) => {
+       if (result) {
+         this.open(nft,result);
+       }
+     });
+   } else
+     this.open(nft);
+  }
+
+
+  open(nft: any,reponse="") {
     nft.message = "En cours d'ouverture";
-    this.api._post("open_nft/" + nft.token_id + "/", "", this.user.pem).subscribe((r: any) => {
+    this.api._post("open_nft/" + nft.token_id + "/", "", {pem:this.user.pem,response:reponse}).subscribe((r: any) => {
       nft.message = "";
       nft.open = r.response;
       if(nft.open.length==46)nft.open="https://ipfs.io/ipfs/"+nft.open;

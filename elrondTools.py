@@ -135,7 +135,7 @@ class ElrondNet:
 
         lst=list(result["data"]["esdts"].values())
         lst.append({
-            "tokenIdentifier":"EGLD-egold",
+            "tokenIdentifier":"EGLD",
             "balance": self._proxy.get_account_balance(_user.address)
         })
 
@@ -356,7 +356,7 @@ class ElrondNet:
         if t["status"]!="success":
             log("Echec de déploiement")
             message=t["status"]
-            if "scResults" in t and "returnMessage" in t["scResults"][0]:message=t["scResults"][0]["returnMessage"]
+            if "smartContractResults" in t and "returnMessage" in t["smartContractResults"][0]:message=t["smartContractResults"][0]["returnMessage"]
 
             return {"error":600,
                     "message":message,
@@ -366,8 +366,8 @@ class ElrondNet:
         else:
             log("Déploiement du nouveau contrat réussi voir transaction "+self.getExplorer(t["txHash"]))
             id=""
-            if "scResults" in t:
-                for result in t["scResults"]:
+            if "smartContractResults" in t:
+                for result in t["smartContractResults"]:
                     id=str(base64.b64decode(result["data"]),"utf-8")
                     if id.startswith("ESDTTransfer"):
                         id=id.split("@")[1]
@@ -820,10 +820,10 @@ class ElrondNet:
         return tr
 
 
-    def nft_open(self, contract, pem_file, token_id):
+    def nft_open(self, contract, pem_file, token_id,response:str=""):
         tr = self.execute(contract,pem_file,
                             function="open",
-                            arguments=[int(token_id)],
+                            arguments=[int(token_id),"0x"+response],
                             value=0
                           )
         return tr

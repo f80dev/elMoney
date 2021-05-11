@@ -44,7 +44,7 @@
            (click)="show_fullscreen(nft)">
 
 
-      <div *ngIf="!nft.fullscreen && (nft.owner!=user.addr || nft.state==0)"
+      <div *ngIf="!nft.fullscreen"
            style="width:90%;margin:5%;line-height: 95%;font-size: small;text-align: center;">
         {{nft.description}}<br>
 
@@ -83,7 +83,7 @@
                 title="Ouvrir le NFT pour découvrir le secret"
                 *ngIf="nft.open?.length==0 && user.addr==nft.owner && user.addr!=nft.miner && nft.has_secret==1"
                 class="icon-button"
-                (click)="open(nft)">
+                (click)="give_response(nft)">
           <mat-icon>vpn_key</mat-icon>
         </button>
 

@@ -308,17 +308,22 @@ def open_nft(token_id:str,data:dict=None):
         data = json.loads(str(request.data, encoding="utf-8"))
 
     pem_file = get_pem_file(data)
-    tx = bc.nft_open(NETWORKS[bc.network_name]["nft"], pem_file, token_id)
+    response=aes256.encrypt(data["response"],SECRET_KEY).hex()
+    tx = bc.nft_open(NETWORKS[bc.network_name]["nft"], pem_file, token_id,response)
     os.remove(pem_file)
 
-    if "scResults" in tx:
+    if "smartContractResults" in tx:
         if tx["status"]=="fail":
-            rc=tx["scResults"][0]["returnMessage"]
+            rc=tx["smartContractResults"][0]["returnMessage"]
         else:
-            rc=str(base64.b64decode(tx["scResults"][0]["data"]))[2:]
+            rc=tx["smartContractResults"][0]["data"]
+            #rc=str(base64.b64decode(tx["smartContractResults"][0]["data"]))[2:]
             if "@" in rc:rc=rc.split("@")[2]
-            if len(rc)>0:rc=rc[0:len(rc) - 1]
-            rc=str(aes256.decrypt(bytearray.fromhex(rc),SECRET_KEY),"utf8")
+            #if len(rc)>0:rc=rc[0:len(rc) - 1]
+            try:
+                rc=str(aes256.decrypt(bytearray.fromhex(rc),SECRET_KEY),"utf8")
+            except:
+                rc=str(bytearray.fromhex(rc),"utf8")
     else:
         rc="Impossible d'ouvrir le token"
     return jsonify({"response":rc,"cost":tx["cost"]})
@@ -453,8 +458,7 @@ def mint(count:str,data:dict=None):
 
     # TODO: ajouter ici un encodage du secret dont la clé est connu par le contrat
     if len(secret)>0:
-        secret = aes256.encrypt(secret, SECRET_KEY)
-        secret=secret.hex()
+        secret = aes256.encrypt(secret, SECRET_KEY).hex()
     else:
         secret=""
 
@@ -506,10 +510,10 @@ def mint(count:str,data:dict=None):
 
     if not result is None:
         if result["status"] == "fail":
-            return result["scResults"][0]["returnMessage"],500
+            return result["smartContractResults"][0]["returnMessage"],500
         else:
-            if "scResults" in result and len(result["scResults"])>0:
-                return_string=str(base64.b64decode(result["scResults"][0]["data"]),"utf-8")
+            if "smartContractResults" in result and len(result["smartContractResults"])>0:
+                return_string=result["smartContractResults"][0]["data"]
                 last_new_id=int(return_string.split("@")[2],16)
                 tokenids=range(last_new_id-int(count),last_new_id)
 
@@ -578,7 +582,7 @@ def transactions(user:str=""):
             if data.startswith("setstate"): data = "Mise en vente"
             if data.startswith("open"):
                 data = "Révéler le secret"
-                if "scResults" in t and len(t["scResults"])>1:sign=0
+                if "smartContractResults" in t and len(t["smartContractResults"])>1:sign=0
             if data.startswith("buy"):data="Achat d'un NFT"
 
             if sign!=0:
@@ -592,8 +596,8 @@ def transactions(user:str=""):
                     "comment":comment
                 })
 
-            if "scResults" in t:
-                for tt in t["scResults"]:
+            if "smartContractResults" in t:
+                for tt in t["smartContractResults"]:
                     if len(user)==0 or (tt["receiver"]==user or tt["sender"]==user):
                         if tt["receiver"]==user:sign=1
                         if tt["sender"] == user: sign=-1

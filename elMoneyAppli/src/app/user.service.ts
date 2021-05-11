@@ -100,7 +100,7 @@ export class UserService {
         if(func_error)func_error(r);
       } else {
         this.moneys=r;
-        this.gas=r['EGLD-egold'].balance;
+        this.gas=r['EGLD'].balance;
         if(func)func(r);
       }
     },(err)=>{

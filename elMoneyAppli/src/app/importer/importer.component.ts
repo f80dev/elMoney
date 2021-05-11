@@ -51,6 +51,7 @@ export class ImporterComponent implements OnInit {
   dataSource = new MatTableDataSource<SellerProperties>([]);
   owner_can_sell: boolean=true;
   owner_can_transfer: boolean=true;
+  find_secret: boolean=false;
   self_destruction: boolean=false;
   direct_sell: boolean=true;
 
@@ -102,7 +103,6 @@ export class ImporterComponent implements OnInit {
     // })
     localStorage.setItem("last_screen","importer");
     this.api._get("moneys/"+this.user.addr).subscribe((r:any)=>{
-      this.moneys=[{identifier:'',label:'xEGld'}];
       for(let money of Object.values(r)){
         if(money.hasOwnProperty("tokenIdentifier")){
           this.moneys.push({identifier:money["tokenIdentifier"],label:money["unity"]})
@@ -129,6 +129,7 @@ export class ImporterComponent implements OnInit {
 
   //Gestion des tags
   solde_user: number;
+
 
   add(event: MatChipInputEvent): void {
     const input = event.input;
@@ -194,12 +195,13 @@ export class ImporterComponent implements OnInit {
       return;
     }
 
-    debugger
+
     let properties:number=0b00000000;
     if(this.owner_can_transfer)properties=properties+0b00000001;
-    if(this.owner_can_sell)properties=properties+0b00000010;
-    if(this.direct_sell)properties=properties+0b00000100;
-    if(this.self_destruction)properties=properties+0b00001000;
+    if(this.owner_can_sell)properties=properties    +0b00000010;
+    if(this.direct_sell)properties=properties       +0b00000100;
+    if(this.self_destruction)properties=properties  +0b00001000;
+    if(this.find_secret)properties=properties       +0b00010000; //L'utilisateur doit fournir le secret dans l'open pour recevoir le cadeau
 
     let obj={
       pem:this.user.pem,
@@ -216,6 +218,7 @@ export class ImporterComponent implements OnInit {
       description:this.desc,
       gift:this.gift,
       fullscreen:this.full_flyer,
+      find_secret:this.find_secret,
       max_markup:this.max_price,
       min_markup:this.min_price,
       dealers:this.dataSource.data,
@@ -466,6 +469,38 @@ export class ImporterComponent implements OnInit {
   }
 
 
+  quick_game(token){
+    this.ask_for_text("La question","Quel est la question du jeu",(question)=>{
+      if(question){
+        this.desc=question;
+        this.ask_for_text("Quelle est la réponse","Entrer la réponse extactement comme le joueur va la saisir",(secret)=> {
+          if(secret)
+            this.secret=secret.toLowerCase().trim();
+            this.ask_for_text("Titre","Rédiger un titre pour votre jeu",(title)=>{
+              if(title){
+                this.ask_for_text("Récompense","De combien est la récompense",(gift)=>{
+                  this.gift=Number(gift);
+                  this.ask_options([
+                  {label:"<div class='bloc-bouton'>Le NFT s'autodétruit<br>après ouverture</div>",value:true,width:'200px'},
+                  {label:"<div class='bloc-bouton'>Le NFT peut être ouvert<br>plusieurs fois</div>",value:false,width:'200px'}
+                ],(value)=>{
+                    this.self_destruction=value;
+                    this.title=title;
+                    this.find_secret=true;
+
+                    if(token.tags)this.desc=this.desc+" "+token.tags;
+                    this.ask_for_price("Combien coute la participation",null,token.fee);
+                  });
+                });
+
+              }
+            })
+        });
+      }
+    });
+  }
+
+
   quick_loterie(token:any){
     this.add_visual((visual:any)=> {
       if(visual){
@@ -596,6 +631,7 @@ export class ImporterComponent implements OnInit {
     if(token.index=="film")this.quick_secret(token,'coller le lien secret (fourni par youtube) du film');
     if(token.index=="file")this.show_fileupload(1,'Téléverser le fichier à embarquer dans votre token',token);
     if(token.index=="secret")this.quick_secret(token);
+    if(token.index=="game")this.quick_game(token);
     if(token.index=="life_events")this.quick_lifeevents(token);
     if(token.index=="tickets")this.quick_tickets('Téléverser le visuel de votre invitation',token);
     if(token.index=="loterie")this.quick_loterie(token);

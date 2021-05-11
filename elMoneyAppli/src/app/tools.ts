@@ -262,7 +262,7 @@ export function openFAQ(vm:any,id:string){
 export function $$(s: string, obj: any= null) {
   if(environment.production)return;
   if((s!=null && s.startsWith("!")) || localStorage.getItem("debug")=="1"){
-    debugger;
+    debugger
   }
   const lg = new Date().getHours() + ':' + new Date().getMinutes() + ' -> ' + s;
   if (obj != null) {

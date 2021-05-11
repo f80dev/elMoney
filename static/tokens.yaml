@@ -59,6 +59,29 @@ content:
     transac: 0.00015
     production: true
 
+  - index: game
+    title: La Question<br>qui rapport
+    icon: help
+    nft_icon: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/279/artist-palette_1f3a8.png
+    description: Poser une question et récompenser celui qui trouve la réponse
+    tuto: "
+      Un petit jeu amusant, Poser une question et faite gagner celui qui trouve la réponse
+      <br><br><br>La procédure est la suivante :<br>
+
+           <ul>
+             <li>Rédiger votre question,</li><br>
+             <li>Donner un titre pour présenter le jeu</li><br>
+             <li>Donner le montant de la récompense</li><br>
+           </ul>
+
+           <br>
+           Avant de pouvoir répondre le joueur doit avoir acheté la question
+    "
+    fee: 0.001
+    tags: "#jouer #jeu #laquestion"
+    transac: 0.00015
+    production: true
+
   - index: file
     title: Vendre<br>un fichier
     icon: description
