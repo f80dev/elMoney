@@ -65,6 +65,8 @@ export class ImporterComponent implements OnInit {
   file_format: string="";
   selected_token: any;
   nfts_preview: any[]=[];
+  opt_gift:boolean=false; //si false, chaque billet contient le gift sinon un seul billet le contient
+
 
   //Money à utiliser pour la transaction du NFT
   selected_money: any={label:"eGld",identifier:"egld"};
@@ -129,6 +131,7 @@ export class ImporterComponent implements OnInit {
 
   //Gestion des tags
   solde_user: number;
+
 
 
   add(event: MatChipInputEvent): void {
@@ -225,6 +228,7 @@ export class ImporterComponent implements OnInit {
       properties:properties,
       direct_sell:this.direct_sell,
       miner_ratio:this.miner_ratio,
+      opt_gift:this.opt_gift,
       money:this.selected_money.identifier
     };
 
@@ -512,16 +516,10 @@ export class ImporterComponent implements OnInit {
             this.ask_for_text("Montant du billet gagnant","",(gift)=> {
               if(gift)
                 this.ask_for_price("Prix unitaire du billet",(price)=>{
-                  this.count=num_billets-1;
-                  this.gift=0;
-                  this.secret="Désolé ! Perdu";
-                  this.tokenizer(token.fee,(result)=>{
-                    this.message="Fabrication du billet gagnant";
-                    this.count=1;
-                    this.gift=gift;
-                    this.secret="Vous avez gagné "+gift+" xEgld";
-                    this.tokenizer(token.fee);
-                  });
+                  this.count=num_billets
+                  this.opt_gift=true;
+                  this.gift=gift;
+                  this.tokenizer(token.fee);
                 });
             },"number",20);
         },"number",20);

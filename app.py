@@ -496,11 +496,16 @@ def mint(count:str,data:dict=None):
     gift=int(float(data["gift"])*100)
     money:str=data["money"]
 
+    opt_gift="0"
+    pay_count=int(count)
+    if data["opt_gift"]:
+        opt_gift="1"
+        pay_count=1 #Nombre de payment
 
-    value=fee+int(count)*gift*1e16
+    value=fee+pay_count*gift*1e16
     if not money.startswith("EGLD"):
         #Dans ce cas on sequestre le montant ESDT pour le cadeau
-        transac=bc.transferESDT(money,Account(pem_file=pem_file),bc.contract,int(count)*gift*1e16)
+        transac=bc.transferESDT(money,Account(pem_file=pem_file),bc.contract,pay_count*gift*1e16)
         if "error" in transac:return "Probleme technique",500
         value=fee
     else:
@@ -514,6 +519,7 @@ def mint(count:str,data:dict=None):
                  properties,
                  miner_ratio,
                  gift,
+                 "0x"+opt_gift,
                  "0x" + money.encode().hex()]
 
     result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,

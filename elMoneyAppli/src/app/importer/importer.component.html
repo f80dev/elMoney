@@ -131,7 +131,7 @@
                 <mat-label>Récompense</mat-label>
                 <input matInput type="number"
                        id="txtGift"
-                       (focusin)="focus_idx=1.5" min="0" [max]="user.gas/1e18" [(ngModel)]="gift"
+                       (focusin)="focus_idx=1.5" step="0.1" min="0" [max]="user.gas/1e18" [(ngModel)]="gift"
                        [ngModelOptions]="{standalone: true}">
                 <mat-hint *ngIf="focus_idx==1.5">Débitée de votre compte à la création et crédité sur le compte de l'acheteur à l'ouverture du NFT</mat-hint>
               </mat-form-field>
@@ -148,11 +148,14 @@
             </form>
 
             <br>
-            <mat-slide-toggle
-                    *ngIf="gift>0 && secret.length>0"
-                    color="primary"
-                    [(ngModel)]="find_secret">Trouver le secret pour avoir la récompense
-            </mat-slide-toggle>
+
+            <div *ngIf="gift>0">
+              <mat-slide-toggle
+                      color="primary"
+                      *ngIf="secret.length>0"
+                      [(ngModel)]="find_secret">Trouver le secret pour avoir la récompense
+              </mat-slide-toggle>
+            </div>
 
 
 
@@ -253,7 +256,8 @@
 
               <mat-form-field appearance="fill" class="app-field" id="formPrice" style="max-width: 120px">
                 <mat-label>Prix de vente</mat-label>
-                <input matInput id="txtPrice" type="number" min="0"
+                <input matInput id="txtPrice" type="number"
+                       min="0" step="0.1" autocomplete="false"
                        [(ngModel)]="price" [ngModelOptions]="{standalone: true}" (ngModelChange)="update_prices()">
               </mat-form-field>
 
@@ -399,8 +403,8 @@
               <mat-form-field appearance="fill" class="app-field" style="max-width: 250px;width:80%;">
                 <mat-label>Combien d'exemplaire (max 30)</mat-label>
                 <input matInput type="number"
-                       id="txtNumber"
-                       min="1" max="30" [(ngModel)]="count"
+                       id="txtNumber" autocomplete="false"
+                       min="1" step="1" max="30" [(ngModel)]="count"
                        [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=10">
                 <mat-hint *ngIf="focus_idx==10">Attention le coût de fabrication dépend également du nombre de NFT fabriqués</mat-hint>
               </mat-form-field>
@@ -413,8 +417,18 @@
                 +1
               </button>
 
-              <br><br>
-              <small>Cout de fabrication: {{count*gift}} {{selected_money.label}} + frais de transactions</small>
+              <br>
+
+               <mat-slide-toggle
+                      color="primary"
+                      *ngIf="count>1 && gift>0"
+                      name="opt_gift"
+                      [(ngModel)]="opt_gift">N'attribuer la récompense qu'a un seul NFT (loterie)
+                </mat-slide-toggle>
+              <br>
+
+              <br>
+              <small *ngIf="!opt_gift">Cout de fabrication: {{count*gift}} {{selected_money.label}} + frais de transactions</small>
               <span *ngIf="count*gift>user.gas/1e18">(Solde insuffisant)</span>
               <br><br>
               <div *ngIf="show_preview" style="width: 100%;text-align: center;">
