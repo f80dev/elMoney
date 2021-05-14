@@ -458,8 +458,8 @@ def mint(count:str,data:dict=None):
     if data["gift"] is None:data["gift"]=0
 
     #Chargement des fichiers
+    client = IPFS(IPFS_NODE)
     if "file" in data and len(data["file"])>0:
-        client = IPFS(IPFS_NODE)
         res = client.add(data["file"])
         log("Transfert IPFS du fichier : https://ipfs.io/ipfs/"+res)
         secret=res
@@ -496,10 +496,10 @@ def mint(count:str,data:dict=None):
     gift=int(float(data["gift"])*100)
     money:str=data["money"]
 
-    opt_gift="0"
+    opt_gift=0
     pay_count=int(count)
     if data["opt_gift"]:
-        opt_gift="1"
+        opt_gift=1
         pay_count=1 #Nombre de payment
 
     value=fee+pay_count*gift*1e16
@@ -519,7 +519,7 @@ def mint(count:str,data:dict=None):
                  properties,
                  miner_ratio,
                  gift,
-                 "0x"+opt_gift,
+                 opt_gift,
                  "0x" + money.encode().hex()]
 
     result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,

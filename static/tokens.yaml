@@ -219,7 +219,7 @@ content:
           "
     transac: 0.00015
     help: Après achat, ouvrer ce token pour découvrir si vous avez gagné. Si c'est le cas le gain est immédiatement versé sur votre compte
-    production: false
+    production: true
     tags: "#jeu #loterie"
 
 
