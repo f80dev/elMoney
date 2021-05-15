@@ -483,25 +483,25 @@ export class ImporterComponent implements OnInit {
         this.ask_for_text("Quelle est la réponse","Entrer la réponse extactement comme le joueur va la saisir",(secret)=> {
           if(secret)
             this.secret=secret.toLowerCase().trim();
-            this.ask_for_text("Titre","Rédiger un titre pour votre jeu",(title)=>{
-              if(title){
-                this.ask_for_text("Récompense","De combien est la récompense",(gift)=>{
-                  this.gift=Number(gift);
-                  this.ask_options([
+          this.ask_for_text("Titre","Rédiger un titre pour votre jeu",(title)=>{
+            if(title){
+              this.ask_for_text("Récompense","De combien est la récompense",(gift)=>{
+                this.gift=Number(gift);
+                this.ask_options([
                   {label:"<div class='bloc-bouton'>Le NFT s'autodétruit<br>après ouverture</div>",value:true,width:'200px'},
                   {label:"<div class='bloc-bouton'>Le NFT peut être ouvert<br>plusieurs fois</div>",value:false,width:'200px'}
                 ],(value)=>{
-                    this.self_destruction=value;
-                    this.title=title;
-                    this.find_secret=true;
+                  this.self_destruction=value;
+                  this.title=title;
+                  this.find_secret=true;
 
-                    if(token.tags)this.desc=this.desc+" "+token.tags;
-                    this.ask_for_price("Combien coute la participation",null,token.fee);
-                  });
+                  if(token.tags)this.desc=this.desc+" "+token.tags;
+                  this.ask_for_price("Combien coute la participation",null,token.fee);
                 });
+              });
 
-              }
-            })
+            }
+          })
         });
       }
     });
@@ -512,18 +512,22 @@ export class ImporterComponent implements OnInit {
     this.add_visual((visual:any)=> {
       if(visual){
         this.files[1]=visual.img;
-        this.ask_for_text("Nombre de billet","",(num_billets)=> {
-          if(num_billets)
-            this.ask_for_text("Montant du billet gagnant","",(gift)=> {
-              if(gift)
-                this.ask_for_price("Prix unitaire du billet",(price)=>{
-                  this.count=num_billets
-                  this.opt_gift=true;
-                  this.gift=gift;
-                  this.tokenizer(token.fee);
-                });
-            },"number",20);
-        },"number",20);
+        this.ask_for_text("Titre de l'événement","",(title)=> {
+          this.ask_for_text("Nombre de billet","",(num_billets)=> {
+            if(num_billets)
+              this.ask_for_text("Montant du billet gagnant","",(gift)=> {
+                if(gift)
+                  this.ask_for_price("Prix unitaire du billet",(price)=>{
+                    this.count=num_billets
+                    this.opt_gift=true;
+                    this.gift=gift;
+                    this.title=title;
+                    this.desc="Ouvrir pour savoir si vous avez gagné"
+                    this.tokenizer(token.fee);
+                  });
+              },"number",20);
+          },"number",20);
+        });
       }
     },"Visuel de vos billets");
   }

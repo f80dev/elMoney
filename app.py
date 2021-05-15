@@ -308,6 +308,8 @@ def open_nft(token_id:str,data:dict=None):
         data = json.loads(str(request.data, encoding="utf-8"))
 
     pem_file = get_pem_file(data)
+    addr=Account(pem_file=pem_file).address.bech32()
+
     if len(SECRET_KEY)>0:
         response=data["response"]
         response=aes256.encrypt(response,SECRET_KEY).hex()
@@ -318,22 +320,27 @@ def open_nft(token_id:str,data:dict=None):
     os.remove(pem_file)
 
     if "smartContractResults" in tx:
-        if tx["status"]=="fail":
+        if tx["status"]=="fail" or "returnMessage" in tx["smartContractResults"][0]>0:
             rc=tx["smartContractResults"][0]["returnMessage"]
         else:
-            rc=tx["smartContractResults"][0]["data"]
-            #rc=str(base64.b64decode(tx["smartContractResults"][0]["data"]))[2:]
-            if "@" in rc:rc=rc.split("@")[2]
-            #if len(rc)>0:rc=rc[0:len(rc) - 1]
-            try:
-                if len(SECRET_KEY)>0:
-                    rc=str(aes256.decrypt(bytearray.fromhex(rc),SECRET_KEY),"utf8")
-                else:
-                    rc=str(bytearray.fromhex(rc),"utf8")
-            except:
-                rc=str(bytearray.fromhex(rc),"utf8")
+            for t in tx["smartContractResults"]:
+                rc=t["data"]
+                #rc=str(base64.b64decode(tx["smartContractResults"][0]["data"]))[2:]
+                if "@" in rc:
+                    rc=rc.split("@")[2]
+                    try:
+                        if len(SECRET_KEY)>0:
+                            rc=str(aes256.decrypt(bytearray.fromhex(rc),SECRET_KEY),"utf8")
+                        else:
+                            rc=str(bytearray.fromhex(rc),"utf8")
+                    except:
+                        rc=str(bytearray.fromhex(rc),"utf8")
     else:
         rc="Impossible d'ouvrir le token"
+
+    send(socketio,"refresh_account",addr,"")
+    send(socketio,"refresh_nft",addr)
+
     return jsonify({"response":rc,"cost":tx["cost"]})
 
 
