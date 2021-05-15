@@ -205,6 +205,8 @@ export class ImporterComponent implements OnInit {
     if(this.direct_sell)properties=properties       +0b00000100;
     if(this.self_destruction)properties=properties  +0b00001000;
     if(this.find_secret)properties=properties       +0b00010000; //L'utilisateur doit fournir le secret dans l'open pour recevoir le cadeau
+    if(this.opt_gift)properties=properties          +0b00100000; //On affiche l'option d'ouverture même si aucun secret
+
 
     let obj={
       pem:this.user.pem,
@@ -228,7 +230,6 @@ export class ImporterComponent implements OnInit {
       properties:properties,
       direct_sell:this.direct_sell,
       miner_ratio:this.miner_ratio,
-      opt_gift:this.opt_gift,
       money:this.selected_money.identifier
     };
 
@@ -558,9 +559,7 @@ export class ImporterComponent implements OnInit {
           }
         });
       }
-
     },"Visuel de votre invitation");
-
   }
 
 

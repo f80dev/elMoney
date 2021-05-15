@@ -504,6 +504,7 @@ class ElrondNet:
         while timeout>0:
             sleep(interval)
             rc=self._proxy.get_transaction(tx_hash=tx,with_results=True)
+
             if len(equal)>0 and rc[field]==equal:break
             if len(not_equal) > 0 and rc[field] != not_equal: break
             timeout=timeout-interval
@@ -590,7 +591,6 @@ class ElrondNet:
             return None
 
         tr = self.wait_transaction(tx, "status", not_equal="pending",timeout=timeout)
-        if not "txHash" in tr:tr["txHash"]=tx
         return tr
 
 

@@ -496,10 +496,8 @@ def mint(count:str,data:dict=None):
     gift=int(float(data["gift"])*100)
     money:str=data["money"]
 
-    opt_gift=0
     pay_count=int(count)
-    if data["opt_gift"]:
-        opt_gift=1
+    if data["properties"] & 0b00100000>0:
         pay_count=1 #Nombre de payment
 
     value=fee+pay_count*gift*1e16
@@ -519,7 +517,6 @@ def mint(count:str,data:dict=None):
                  properties,
                  miner_ratio,
                  gift,
-                 opt_gift,
                  "0x" + money.encode().hex()]
 
     result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,
