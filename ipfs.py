@@ -17,8 +17,11 @@ class IPFS:
         filename=str(datetime.now().timestamp())+".tmp"
 
         f=open('./temp/'+filename, 'wb')
-        if "base64," in body:
-            f.write(base64.b64decode(body.split("base64,")[1]))
+        if type(body)==str:
+            if str(body).startswith("base64,"):
+                f.write(base64.b64decode(body.split("base64,")[1]))
+            else:
+                f.write(bytearray(body,"utf8"))
         else:
             f.write(bytes(body,"utf8"))
 

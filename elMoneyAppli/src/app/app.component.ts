@@ -56,7 +56,6 @@ export class AppComponent implements OnInit,OnDestroy {
 
       this.user.init(addr,pem_key,
         (r)=> {
-
           if(filter){this.router.navigate(["store"],{queryParams:{id:filter}});return;}
           if(addr) {this.router.navigate(["nfts-perso"]);return;};
           if(miner){this.router.navigate(["miner"],{queryParams:{miner:miner}});return;}

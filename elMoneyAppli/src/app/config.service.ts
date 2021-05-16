@@ -5,7 +5,6 @@ import {Platform} from "@angular/cdk/platform";
 import {HttpClient} from "@angular/common/http";
 import { Location } from '@angular/common';
 import {$$, initAvailableCameras} from "./tools";
-import {DeviceDetectorService} from "ngx-device-detector";
 
 @Injectable({
   providedIn: 'root'
@@ -24,20 +23,19 @@ export class ConfigService {
   query_cache: any[]; //Conserve le contenu de la dernière requete
   unity: string ="";
   server: any={bank:""};
-  private device: { isDesktop: any; isTablet: any; isMobile: any; infos: any };
+  device: { isDesktop: any; isMobile: any };
   tags: any={};
+  egold_price:number=160;
+  egold_unity:string="€";
 
   constructor(private location: Location,
               private http: HttpClient,
-              public deviceService: DeviceDetectorService,
               public platform:Platform,
               public api:ApiService) {
 
     this.device={
-      isMobile:this.deviceService.isMobile(),
-      isTablet:this.deviceService.isTablet(),
-      isDesktop:this.deviceService.isDesktop(),
-      infos:this.deviceService.getDeviceInfo()
+      isMobile:this.platform.ANDROID || this.platform.IOS,
+      isDesktop:this.platform.isBrowser,
     }
     this.domain_server=environment.domain_server;
   }
