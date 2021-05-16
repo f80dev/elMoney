@@ -21,7 +21,7 @@ class IPFS:
             if str(body).startswith("base64,"):
                 f.write(base64.b64decode(body.split("base64,")[1]))
             else:
-                f.write(bytearray(body,"utf8"))
+                f.write(bytes(body.replace("'","\""),"utf8"))
         else:
             f.write(bytes(body,"utf8"))
 
