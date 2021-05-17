@@ -13,24 +13,32 @@
 
 
 
-  <table id="seller_zone" style="margin: 5px;width:95%;"><tr>
+  <table id="seller_zone" style="margin: 2%;width:96%;vertical-align: text-top;"><tr>
 
-    <td style="width: 100px;margin:0;padding:0;text-align: left;" *ngIf="selected_dealer?.shop_visual?.length>0">
-      <img [src]="selected_dealer?.shop_visual" style="width:90px;" class="mat-elevation-z4">
+    <td style="width: auto;padding:5px;text-align: left;" *ngIf="selected_dealer?.shop_visual?.length>0">
+      <img [src]="selected_dealer?.shop_visual" style="width:50px;">
     </td>
 
     <td style="padding:0px;text-align: left;line-height: 90%;">
-      <mat-form-field appearance="fill"
-                      style="max-width:200px">
-        <mat-label>Revendeur</mat-label>
-        <mat-select id="selOrder" [(ngModel)]="selected_dealer" (selectionChange)="refresh()" style="margin: 0px;">
+
+        <mat-select id="selOrder" [(ngModel)]="selected_dealer" (selectionChange)="refresh()"
+                    style="margin: 0px;width: 100px;">
           <mat-option *ngFor="let dealer of dealers" [value]="dealer">
             {{dealer.shop_name}}
           </mat-option>
         </mat-select>
-      </mat-form-field>
+
       <br>
-      {{selected_dealer?.description}}
+      <small>{{selected_dealer?.description}}</small>
+    </td>
+    <td style="text-align: left;">
+      <button mat-raised-button mat-icon-button
+              mat-button class="icon-button"
+              title="Changement de distributeur"
+              *ngIf="dealers?.length>0"
+              (click)="change_dealer()">
+        <mat-icon>logout</mat-icon>
+      </button>
     </td>
     <td style="text-align: right;">
 

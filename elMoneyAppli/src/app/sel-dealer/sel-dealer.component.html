@@ -1,29 +1,55 @@
-<mat-dialog-content>
-  <table style="width: 100%;" *ngIf="dealers?.length>0">
-    <tr *ngFor="let dealer of dealers">
-      <td style="width: 60px">
-        <img [src]="dealer.visual" style="width:60px;">
-      </td>
-      <td style="text-align: left;">
-        {{dealer.name}}
-      </td>
-      <td>
-        <mat-slide-toggle
-          (change)="eval_selected_dealer($event)"
-          [(ngModel)]="dealer.selected">
-        </mat-slide-toggle>
-      </td>
-    </tr>
-  </table>
+<mat-dialog-content style="padding: 8px !important;">
+  <h3>{{data.title}}</h3>
+
+  <div *ngFor="let dealer of dealers" style="display: inline-block;width:100%;">
+
+    <table style="width: 100%;vertical-align: top;" *ngIf="dealer.address!='0x0'">
+      <tr>
+        <td style="width: 60px">
+          <img [src]="dealer.shop_visual"
+               style="width:100px;margin:5px;">
+        </td>
+
+        <td style="text-align: left;vertical-align: text-top;padding: 5px;">
+
+          <div style="font-size: large;font-weight: lighter;margin: 5px;display: inline;">{{dealer.name}}</div>
+
+          <br>
+
+          {{dealer.shop_description}}
+
+        </td>
+        <td style="text-align: right;width: auto;">
+          <mat-slide-toggle
+            *ngIf="!data.direct_sel"
+            (change)="eval_selected_dealer($event)"
+            [(ngModel)]="dealer.selected">
+          </mat-slide-toggle>
+
+          <button class="icon-button"
+                  *ngIf="data.direct_sel"
+                  mat-button mat-icon-button
+                  [mat-dialog-close]="dealer">
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+
+        </td>
+      </tr>
+    </table>
+
+
+  </div>
+
 
   <div *ngIf="dealers?.length==0">
-    Aucun distributeur ne vous a référencé.
-    Demander votre référencement depuis la marketplace
+    {{data.no_dealer_message}}
   </div>
 
 </mat-dialog-content>
+
+
 <mat-dialog-actions style="text-align: right;width:100%;">
   <button id="cmdNo" class="app-button" mat-button mat-raised-button [mat-dialog-close]="{}">Annuler</button>
-  <button *ngIf="sel_dealers?.length>0" id="cmdYes" class="app-button" mat-button mat-raised-button (click)="return_dealers()">Ajouter</button>
+  <button *ngIf="sel_dealers?.length>0 && !data.direct_sel" id="cmdYes" class="app-button" mat-button mat-raised-button (click)="return_dealers()">Ajouter</button>
 </mat-dialog-actions>
 

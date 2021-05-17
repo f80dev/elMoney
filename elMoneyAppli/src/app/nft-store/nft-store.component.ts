@@ -7,6 +7,8 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {Socket} from "ngx-socket-io";
 import {environment} from "../../environments/environment";
 import {ConfigService} from "../config.service";
+import {SelDealerComponent} from "../sel-dealer/sel-dealer.component";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-nft-store',
@@ -39,11 +41,12 @@ export class NftStoreComponent implements OnInit {
 
   constructor(public api: ApiService,
               public routes: ActivatedRoute,
-              public toast: MatSnackBar,
+              public toast:  MatSnackBar,
               public socket: Socket,
-              public config:ConfigService,
+              public dialog: MatDialog,
+              public config: ConfigService,
               public router: Router,
-              public user: UserService
+              public user:   UserService
   ) {
     subscribe_socket(this, "refresh_nft", () => {
       setTimeout(() => {
@@ -52,6 +55,24 @@ export class NftStoreComponent implements OnInit {
     });
   }
 
+
+  change_dealer(){
+    this.dialog.open(SelDealerComponent, {
+      position: {left: '2vw', top: '5vh'},
+      width: '96vw', height: 'auto',maxWidth:'500px',
+      data:{
+        title:"Selectionner un distributeur",
+        dealers:this.dealers,
+        direct_sel:true,
+        no_dealer_message:"Aucun distributeur disponible"
+      }
+    }).afterClosed().subscribe((result:any) => {
+      if (result && Object.keys(result).length > 0) {
+        this.selected_dealer=result;
+        this.refresh(false);
+      }
+    });
+  }
 
 
   ngOnInit(): void {
@@ -79,7 +100,6 @@ export class NftStoreComponent implements OnInit {
     this.refresh();
 
     this.api._get("dealers/","").subscribe((dealers:any)=>{
-
       for(let dealer of dealers){
         this.dealers.push(dealer);
         if (store && store==dealer.address)

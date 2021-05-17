@@ -317,10 +317,12 @@ export class ImporterComponent implements OnInit {
 
   add_seller() {
     this.dialog.open(SelDealerComponent, {
-      position:
-        {left: '5vw', top: '5vh'},
-      maxWidth: 400, width: '90vw', height: 'auto', data:{
-        title:"Ajouter mes distributeurs"
+      position: {left: '5vw', top: '5vh'},
+      maxWidth: 500, width: '95vw', height: 'auto',
+      data:{
+        title:"Ajouter mes distributeurs",
+        direct_sel:false,
+        no_dealer_message:"Aucun distributeur ne vous a référencé. Demander votre référencement depuis la marketplace"
       }
     }).afterClosed().subscribe((result:any) => {
       if (result && Object.keys(result).length>0) {

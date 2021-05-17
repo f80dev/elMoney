@@ -1,23 +1,22 @@
-<div style="overflow: hidden;">
-    <h2>Destinataire</h2>
-
-    <mat-form-field appearance="fill" class="app-field">
-      <mat-label>Mail ou adresse Elrond du destinataire</mat-label>
-      <input matInput type="text" max="50" [(ngModel)]="email"
-             (ngModelChange)="refresh_pseudo($event)"
-             (keypress)="add_contact($event)">
-    </mat-form-field>
+<mat-dialog-content>
+  <h3>Destinataire</h3>
+  <mat-form-field appearance="fill" class="app-field">
+    <mat-label>Mail ou adresse Elrond du destinataire</mat-label>
+    <input matInput type="text" max="50" [(ngModel)]="email"
+           (ngModelChange)="refresh_pseudo($event)"
+           (keypress)="add_contact($event)">
+  </mat-form-field>
   <br>
-<!--  <mat-form-field appearance="fill" class="app-field">-->
-<!--      <mat-label>Pseudo</mat-label>-->
-<!--      <input matInput type="text" max="50" [(ngModel)]="pseudo" (keypress)="add_contact($event)">-->
-<!--    <mat-hint>Ajouter un pseudo, prénom, pour reconnaitre le profil dans vos contacts</mat-hint>-->
-<!--   </mat-form-field>-->
-<!--  <br><br>-->
+  <!--  <mat-form-field appearance="fill" class="app-field">-->
+  <!--      <mat-label>Pseudo</mat-label>-->
+  <!--      <input matInput type="text" max="50" [(ngModel)]="pseudo" (keypress)="add_contact($event)">-->
+  <!--    <mat-hint>Ajouter un pseudo, prénom, pour reconnaitre le profil dans vos contacts</mat-hint>-->
+  <!--   </mat-form-field>-->
+  <!--  <br><br>-->
 
 
   <div style="width: 100%;text-align: center" *ngIf="showScanner">
-    <small>Pointez le QRCode d'un wallet Elrond pour déclencher l'envoie</small><br>
+    <small>Pointez le QRCode d'un wallet Elrond pour déclencher l'envoie</small><br><br>
     <app-scanner [size]="220"
                  autofocus
                  (click)="showScanner=false"
@@ -26,17 +25,18 @@
     <br><br>
   </div>
 
+</mat-dialog-content>
 
-<div style="text-align: right;">
-  <button mat-raised-button
-        mat-button class="app-button"
-        (click)="_close(true)">
-    Envoyer
-  </button>
-  <button mat-raised-button
-        mat-button class="app-button"
-        (click)="_close(false)">
-    Annuler
-  </button>
-</div>
-</div>
+<mat-dialog-actions style="text-align: right;width:100%;">
+
+    <button mat-raised-button
+            mat-button class="app-button"
+            (click)="_close(true)">
+      Envoyer
+    </button>
+    <button mat-raised-button mat-icon-button
+            mat-button class="icon-button"
+            (click)="_close(false)">
+      <mat-icon>cancel</mat-icon>
+    </button>
+</mat-dialog-actions>
