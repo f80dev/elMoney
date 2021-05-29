@@ -72,6 +72,7 @@ import { PublicMinerComponent } from './public-miner/public-miner.component';
 import { SelDealerComponent } from './sel-dealer/sel-dealer.component';
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatChipsModule} from "@angular/material/chips";
+import {DatePipe} from "@angular/common";
 
 const config: SocketIoConfig = {
   url: environment.domain_server,
@@ -162,6 +163,7 @@ const config: SocketIoConfig = {
       useValue: {
         autoLogin: false,
         providers: [
+
           {
             id: GoogleLoginProvider.PROVIDER_ID,
             provider: new GoogleLoginProvider('794055474370-qrdn0gb051k774mtetvo7lifcslmlpgg.apps.googleusercontent.com'),

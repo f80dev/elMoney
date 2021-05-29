@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {$$, isNull, showMessage} from "../tools";
+import {$$, showMessage} from "../tools";
 import {ApiService} from "../api.service";
 import {UserService} from "../user.service";
 import {ImageSelectorComponent} from "../image-selector/image-selector.component";
@@ -14,7 +14,7 @@ import {PromptComponent} from "../prompt/prompt.component";
 import {SelDealerComponent} from "../sel-dealer/sel-dealer.component";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import {FormControl} from "@angular/forms";
-import {iif, Observable} from "rxjs";
+import {Observable} from "rxjs";
 import {MatAutocomplete, MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {MatChipInputEvent} from "@angular/material/chips";
 import {map, startWith} from "rxjs/operators";
@@ -391,9 +391,13 @@ export class ImporterComponent implements OnInit {
 
 
 
-  ask_for_text(title:string,question:string,func:Function,_type="string",_max=0){
+  ask_for_text(title:string,question:string,func:Function,_type="string",_max=0,_default:any=""){
+    let _data={title: title,question: question,type:_type,max:_max,onlyConfirm:false,lbl_ok:"Ok",lbl_cancel:"Annuler"};
+    if(_type=="number" && _default=="")_default=0;
+    if(_type=="date" && _default=="")_default=new Date();
+    if(_default!="")_data['value']=_default;
     this.dialog.open(PromptComponent,{width: '320px',
-      data:{title: title,question: question,type:_type,max:_max,onlyConfirm:false,lbl_ok:"Ok",lbl_cancel:"Annuler"}})
+      data:_data})
       .afterClosed().subscribe((rc) => {
       if(rc=="no")rc=null;
       func(rc);
@@ -572,21 +576,27 @@ export class ImporterComponent implements OnInit {
   quick_lifeevents(token: any) {
     this.ask_for_text("Donner un titre à votre souvenir","",(title)=> {
       if (title) {
-        this.ask_for_text("Commentaire", "Ajouter un commentaire, une impression, un lieu, une date", (desc) => {
-          this.add_visual((visual:any)=>{
-            this.files[0]=visual.img;
-            this.title=title;
-            this.desc=desc;
-            if(token.tags)this.desc=this.desc+" "+token.tags;
-            this.owner_can_sell=false;
-            this.owner_can_transfer=true;
-            this.price=0;
-            this.tokenizer(token.fee);
-          },"Ajouter une belle photo de cet événement",800,800);
+        this.ask_for_text("Commentaire", "Ajouter un commentaire, une impression, un lieu", (desc) => {
+          this.ask_for_text("Dater", "Dater votre événement", (dt) => {
+            this.add_visual((visual: any) => {
+              if(visual){
+                this.files[0] = visual.img;
+                this.title = title;
+                this.desc = desc+" - "+new Date(dt).toLocaleDateString();
+                if (token.tags) this.desc = this.desc + " " + token.tags;
+                this.owner_can_sell = false;
+                this.owner_can_transfer = true;
+                this.price = 0;
+                this.tokenizer(token.fee);
+              }
+            }, "Ajouter une belle photo de cet événement", 800, 800);
+          },"date");
         });
       }
     });
   }
+
+
 
   quick_file($event: any,token:any,title="Télécharger un visuel") {
     this.files[0]=$event.file;
