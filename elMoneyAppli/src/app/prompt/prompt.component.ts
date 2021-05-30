@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 
 
@@ -6,6 +6,7 @@ export interface DialogData {
   title: string;
   result: string;
   question:string;
+  placeholder:string;
   onlyConfirm:boolean;
   min:number,
   max:number,
@@ -24,7 +25,7 @@ export interface DialogData {
   styleUrls: ['./prompt.component.sass']
 })
 
-export class PromptComponent {
+export class PromptComponent implements OnInit {
 
   showEmoji=false;
   _type="text";
@@ -65,5 +66,8 @@ export class PromptComponent {
 
   select_option(value: any) {
     this.dialogRef.close(value);
+  }
+
+  ngOnInit(): void {
   }
 }

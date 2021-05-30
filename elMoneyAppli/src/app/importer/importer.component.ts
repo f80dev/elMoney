@@ -391,11 +391,12 @@ export class ImporterComponent implements OnInit {
 
 
 
-  ask_for_text(title:string,question:string,func:Function,_type="string",_max=0,_default:any=""){
-    let _data={title: title,question: question,type:_type,max:_max,onlyConfirm:false,lbl_ok:"Ok",lbl_cancel:"Annuler"};
+  ask_for_text(title:string,question:string,func:Function,_type="string",_max=0,_default:any="",placeholder=""){
+    let _data={title: title,question: question,type:_type,max:_max,onlyConfirm:false,lbl_ok:"Ok",lbl_cancel:"Annuler",placeholder:placeholder,result:""};
     if(_type=="number" && _default=="")_default=0;
-    if(_type=="date" && _default=="")_default=new Date();
-    if(_default!="")_data['value']=_default;
+    if(_type=="date" && _default=="")_default=new Date().toDateString();
+    if(_default!="")_data.result=_default;
+
     this.dialog.open(PromptComponent,{width: '320px',
       data:_data})
       .afterClosed().subscribe((rc) => {
@@ -577,7 +578,7 @@ export class ImporterComponent implements OnInit {
     this.ask_for_text("Donner un titre à votre souvenir","",(title)=> {
       if (title) {
         this.ask_for_text("Commentaire", "Ajouter un commentaire, une impression, un lieu", (desc) => {
-          this.ask_for_text("Dater", "Dater votre événement", (dt) => {
+          this.ask_for_text("Dater l'événement", "Dater votre événement", (dt) => {
             this.add_visual((visual: any) => {
               if(visual){
                 this.files[0] = visual.img;
