@@ -18,6 +18,7 @@ import {Observable} from "rxjs";
 import {MatAutocomplete, MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {MatChipInputEvent} from "@angular/material/chips";
 import {map, startWith} from "rxjs/operators";
+import {IpfsService} from "../ipfs.service";
 
 export interface SellerProperties {
   address: string;
@@ -32,7 +33,10 @@ export interface SellerProperties {
 export class ImporterComponent implements OnInit {
 
   message: string="";
-  files:string[]=["",""];
+
+  picture:string="";
+  visual:string=""
+
   count: number=1;
   gift:number=0;
   secret: string="";
@@ -88,6 +92,7 @@ export class ImporterComponent implements OnInit {
   constructor(public api:ApiService,
               public user:UserService,
               public config:ConfigService,
+              public ipfs:IpfsService,
               public dialog:MatDialog,
               public toast:MatSnackBar,
               public router:Router) {
@@ -183,7 +188,8 @@ export class ImporterComponent implements OnInit {
         }
     }).afterClosed().subscribe((rep) => {
       if (rep=="yes") {
-        this.files[0]=fileInputEvent.file;
+        if(index_file==0)this.picture=fileInputEvent.file;
+        if(index_file==1)this.visual=fileInputEvent.file;
         this.filename=fileInputEvent.filename;
       }
     });
@@ -191,6 +197,7 @@ export class ImporterComponent implements OnInit {
 
 
   tokenizer(fee=0,func=null,func_error=null) {
+
     //properties est stoké sur 8 bits : 00000<vente directe possible><le propriétaire peut vendre><le propriétaire peut offrir>
     if(this.min_price<0 || this.max_price<0 || this.price<0){
       showMessage(this,"Données incorrectes");
@@ -208,53 +215,58 @@ export class ImporterComponent implements OnInit {
     if(this.opt_gift)properties=properties          +0b00100000; //On affiche l'option d'ouverture même si aucun secret
 
 
-    let obj={
-      pem:this.user.pem,
-      owner:this.user.addr,
-      file:this.files[0],
-      visual:this.files[1],
-      filename:this.filename,
-      format:this.file_format,
-      signature:this.title,
-      secret:this.secret,
-      price:this.price,
-      fee:fee,
-      tags: this.tags,
-      description:this.desc,
-      gift:this.gift,
-      fullscreen:this.full_flyer,
-      find_secret:this.find_secret,
-      max_markup:this.max_price,
-      min_markup:this.min_price,
-      dealers:this.dataSource.data,
-      properties:properties,
-      direct_sell:this.direct_sell,
-      miner_ratio:this.miner_ratio,
-      money:this.selected_money.identifier
-    };
+    this.ipfs.add(this.visual,this,(cid_visual)=>{
+      this.ipfs.add(this.picture,this,(cid_picture)=> {
+        let obj = {
+          pem: this.user.pem,
+          owner: this.user.addr,
+          file: cid_picture,
+          visual: cid_visual,
+          filename: this.filename,
+          format: this.file_format,
+          signature: this.title,
+          secret: this.secret,
+          price: this.price,
+          fee: fee,
+          tags: this.tags,
+          description: this.desc,
+          gift: this.gift,
+          fullscreen: this.full_flyer,
+          find_secret: this.find_secret,
+          max_markup: this.max_price,
+          min_markup: this.min_price,
+          dealers: this.dataSource.data,
+          properties: properties,
+          opt_lot: Number(this.opt_gift),
+          direct_sell: this.direct_sell,
+          miner_ratio: this.miner_ratio,
+          money: this.selected_money.identifier
+        };
 
-    $$("Création du token ",obj);
+        $$("Création du token ", obj);
 
 
-    this.message="Enregistrement dans la blockchain";
-    window.scrollTo(0,0);
-    this.show_zone_upload=false;
-    this.api._post("mint/"+this.count,"",obj).subscribe((r:any)=>{
-      $$("Enregistrement dans la blockchain");
-      if(r){
-        this.message="";
-        showMessage(this,"Fichier tokeniser pour "+r.cost+" xEgld");
-        this.user.refresh_balance(()=>{
-          this.router.navigate(["nfts-perso"],{queryParams:{index:2}});
+        this.message = "Enregistrement dans la blockchain";
+        window.scrollTo(0, 0);
+        this.show_zone_upload = false;
+        this.api._post("mint/" + this.count, "", obj).subscribe((r: any) => {
+          $$("Enregistrement dans la blockchain");
+          if (r) {
+            this.message = "";
+            showMessage(this, "Fichier tokeniser pour " + r.cost + " xEgld");
+            this.user.refresh_balance(() => {
+              this.router.navigate(["nfts-perso"], {queryParams: {index: 2}});
+            });
+            if (func) func();
+          }
+        }, (err) => {
+          $$("!Erreur de création");
+          this.message = "";
+          showMessage(this, err.error);
+          if (func_error) func_error();
         });
-        if(func)func();
-      }
-    },(err)=>{
-      $$("!Erreur de création");
-      this.message="";
-      showMessage(this,err.error);
-      if(func_error)func_error();
-    })
+      });
+    });
   }
 
 
@@ -264,7 +276,7 @@ export class ImporterComponent implements OnInit {
         title:this.title,
         description:this.desc,
         secret:this.secret,
-        visual:this.files[0],
+        visual:this.visual,
         miner:"0x1",
         owner:"0x2",
         state:0,
@@ -277,12 +289,11 @@ export class ImporterComponent implements OnInit {
 
 
   add_visual(func=null,title="",width=200,height=200,square=true) {
-    this.dialog.open(ImageSelectorComponent, {position:
-        {left: '5vw', top: '5vh'},
+    this.dialog.open(ImageSelectorComponent, {position:{left: '5vw', top: '5vh'},
       maxWidth: 400, maxHeight: 700, width: '90vw', height: 'auto', data:
         {
           title:title,
-          result: this.files[1],
+          result: this.visual,
           checkCode: true,
           square:square,
           width: width,
@@ -294,9 +305,10 @@ export class ImporterComponent implements OnInit {
         }
     }).afterClosed().subscribe((result) => {
       if (result) {
+        this.visual=result.img;
         if(func)func(result);
       } else {
-        if(func)func(null);
+        showMessage(this,"Action annulée");
       }
     });
   }
@@ -397,9 +409,7 @@ export class ImporterComponent implements OnInit {
     if(_type=="date" && _default=="")_default=new Date().toDateString();
     if(_default!="")_data.result=_default;
 
-    this.dialog.open(PromptComponent,{width: '320px',
-      data:_data})
-      .afterClosed().subscribe((rc) => {
+    this.dialog.open(PromptComponent,{width: '320px',data:_data}).afterClosed().subscribe((rc) => {
       if(rc=="no")rc=null;
       func(rc);
     });
@@ -410,7 +420,6 @@ export class ImporterComponent implements OnInit {
   quick_pow(token:any,w,h){
     this.add_visual((result:any)=>{
       if(result && result.img){
-        this.files[1]=result.img;
         this.ask_for_text("Titre","Donner un titre à votre NFC",(title)=> {
           this.ask_for_text("Signer","Indiquer votre signature publique (pseudo, nom)",(signature)=> {
             if (title && title.length > 0) {
@@ -436,8 +445,8 @@ export class ImporterComponent implements OnInit {
 
   quick_photo(token:any,title="",w=400,h=400,square=true) {
     this.add_visual((result:any)=>{
-      this.files[1]=result.img;
-      this.files[0]=result.original;
+      this.visual=result.img;
+      this.picture=result.original;
       this.filename=result.file.name;
       this.file_format=result.file.type;
       this.ask_for_text("Titre","Donner un titre à votre NFC",(title)=>{
@@ -518,14 +527,15 @@ export class ImporterComponent implements OnInit {
   quick_loterie(token:any){
     this.add_visual((visual:any)=> {
       if(visual){
-        this.files[1]=visual.img;
+        this.filename=visual.file.name;
         this.ask_for_text("Titre de l'événement","",(title)=> {
           this.ask_for_text("Nombre de billet","",(num_billets)=> {
             if(num_billets)
               this.ask_for_text("Montant du billet gagnant","",(gift)=> {
                 if(gift)
                   this.ask_for_price("Prix unitaire du billet",(price)=>{
-                    this.count=num_billets
+                    this.count=num_billets;
+                    this.self_destruction=true;
                     this.opt_gift=true;
                     this.gift=gift;
                     this.title=title;
@@ -546,7 +556,6 @@ export class ImporterComponent implements OnInit {
   quick_tickets($event:any,token:any){
     this.add_visual((visual:any)=>{
       if(visual){
-        this.files[1]=visual.img;
         this.ask_for_text("Titre de votre évenement","",(title)=> {
           if (title) {
             this.ask_for_text("Lieu et Date","Indiquer l'adresse et l'horaire",(desc)=> {
@@ -581,7 +590,8 @@ export class ImporterComponent implements OnInit {
           this.ask_for_text("Dater l'événement", "Dater votre événement", (dt) => {
             this.add_visual((visual: any) => {
               if(visual){
-                this.files[0] = visual.img;
+                this.visual="";
+                this.picture = visual.img;
                 this.title = title;
                 this.desc = desc+" - "+new Date(dt).toLocaleDateString();
                 if (token.tags) this.desc = this.desc + " " + token.tags;
@@ -600,10 +610,9 @@ export class ImporterComponent implements OnInit {
 
 
   quick_file($event: any,token:any,title="Télécharger un visuel") {
-    this.files[0]=$event.file;
+    this.picture=$event.file;
     this.filename=$event.filename;
     this.add_visual((visual)=>{
-      if(visual)this.files[1]=visual.img;
       this.ask_for_text("Titre","Titre de votre annonce",(title)=>{
         if(title) {
           this.ask_for_text("Description","Rédigez une courte phrase pour donner envie de l'acheter",(desc)=>{
@@ -675,4 +684,7 @@ export class ImporterComponent implements OnInit {
   update_user_solde() {
     this.solde_user=Number(this.user.moneys[this.selected_money.identifier].balance);
   }
+
+
+
 }

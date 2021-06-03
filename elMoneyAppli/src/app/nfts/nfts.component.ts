@@ -5,12 +5,9 @@ import {NgNavigatorShareService} from "ng-navigator-share";
 import {ClipboardService} from "ngx-clipboard";
 import {Router} from "@angular/router";
 import {ApiService} from "../api.service";
-import {NewContactComponent} from "../new-contact/new-contact.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {PromptComponent} from "../prompt/prompt.component";
 import {MatDialog} from "@angular/material/dialog";
-import {NewDealerComponent} from "../new-dealer/new-dealer.component";
-import {SellerProperties} from "../importer/importer.component";
 import {SelDealerComponent} from "../sel-dealer/sel-dealer.component";
 
 @Component({

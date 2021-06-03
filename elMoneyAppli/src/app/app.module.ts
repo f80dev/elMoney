@@ -72,7 +72,7 @@ import { PublicMinerComponent } from './public-miner/public-miner.component';
 import { SelDealerComponent } from './sel-dealer/sel-dealer.component';
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatChipsModule} from "@angular/material/chips";
-import {DatePipe} from "@angular/common";
+import {CommonModule, DatePipe} from "@angular/common";
 
 const config: SocketIoConfig = {
   url: environment.domain_server,
@@ -153,7 +153,8 @@ const config: SocketIoConfig = {
     MatStepperModule,
     MatGridListModule,
     ImageCropperModule,
-    MatChipsModule
+    MatChipsModule,
+    CommonModule
   ],
   providers: [
     ApiService,

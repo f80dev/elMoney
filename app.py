@@ -464,14 +464,7 @@ def mint(count:str,data:dict=None):
 
     if data["gift"] is None:data["gift"]=0
 
-    #Chargement des fichiers
-    client = IPFS(IPFS_NODE)
-    if "file" in data and len(data["file"])>0:
-        res = client.add(data["file"])
-        log("Transfert IPFS du fichier : https://ipfs.io/ipfs/"+res)
-        secret=res
-    else:
-        secret = data["secret"]
+    secret = data["secret"]
 
     # TODO: ajouter ici un encodage du secret dont la clé est connu par le contrat
     if len(secret)>0:
@@ -484,7 +477,7 @@ def mint(count:str,data:dict=None):
 
     res_visual = ""
     if "visual" in data and len(data["visual"])>0:
-        res_visual = "%%" + client.add(data["visual"])
+        res_visual = "%%" + data["visual"]
         if data["fullscreen"]:res_visual=res_visual.replace("%%","!!")
 
     pem_file=get_pem_file(data)
@@ -523,7 +516,7 @@ def mint(count:str,data:dict=None):
                  price, min_markup, max_markup,
                  properties,
                  miner_ratio,
-                 gift,
+                 gift,int(data["opt_lot"]),
                  "0x" + money.encode().hex()]
 
     result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,
@@ -537,23 +530,26 @@ def mint(count:str,data:dict=None):
         else:
             if "smartContractResults" in result and len(result["smartContractResults"])>0:
                 return_string=result["smartContractResults"][0]["data"]
-                last_new_id=int(return_string.split("@")[2],16)
-                tokenids=range(last_new_id-int(count),last_new_id)
+                if len(return_string.split("@"))>2:
+                    last_new_id=int(return_string.split("@")[2],16)
+                    tokenids=range(last_new_id-int(count),last_new_id)
 
-                #TODO: a optimiser pour pouvoir passer plusieurs distributeurs à plusieurs billet
-                if "dealers" in data and len(data["dealers"])>0:
-                    for dealer in data["dealers"]:
-                        i=0
-                        for tokenid in tokenids:
-                            _dealer=Account(address=dealer["address"])
-                            name="Dealer"+str(i)
-                            arguments=[tokenid,"0x"+_dealer.address.hex()]
-                            tx=bc.add_dealer(NETWORKS[bc.network_name]["nft"],pem_file,arguments)
-                            i=i+1
+                    #TODO: a optimiser pour pouvoir passer plusieurs distributeurs à plusieurs billet
+                    if "dealers" in data and len(data["dealers"])>0:
+                        for dealer in data["dealers"]:
+                            i=0
+                            for tokenid in tokenids:
+                                _dealer=Account(address=dealer["address"])
+                                name="Dealer"+str(i)
+                                arguments=[tokenid,"0x"+_dealer.address.hex()]
+                                tx=bc.add_dealer(NETWORKS[bc.network_name]["nft"],pem_file,arguments)
+                                i=i+1
 
-            send(socketio, "refresh_nft")
-            send(socketio, "refresh_balance",owner.address.bech32())
-            os.remove(pem_file)
+                send(socketio, "refresh_nft")
+                send(socketio, "refresh_balance",owner.address.bech32())
+                os.remove(pem_file)
+            else:
+                return result["smartContractResults"][0]["returnMessage"],500
 
             return jsonify(result), 200
     else:
@@ -639,6 +635,11 @@ def transactions(user:str=""):
 
     return jsonify(rc),200
 
+
+@app.route('/api/upload_file/',methods=["POST"])
+def upload_file():
+    cid=client.add(request.data)
+    return jsonify({"cid":cid})
 
 
 @app.route('/api/new_dealer/',methods=["POST"])
@@ -983,7 +984,7 @@ if __name__ == '__main__':
     scheduler.start()
     #vérifier la connexion avec IPFS
     client:IPFS = IPFS(IPFS_NODE)
-    log("Adresse du client IPFS: "+client.addr)
+
 
     if "debug" in sys.argv:
         socketio.run(app,host="0.0.0.0", port=_port, debug=True)

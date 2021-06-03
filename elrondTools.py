@@ -2,12 +2,11 @@ import base64
 import json
 import logging
 import os
-import urllib
-import requests as rq
 from datetime import datetime
 
 from time import sleep
 
+import requests
 from erdpy.proxy import ElrondProxy
 from erdpy import config
 from erdpy.accounts import Account, AccountsRepository, Address
@@ -15,6 +14,7 @@ from erdpy.contracts import SmartContract
 from erdpy.environments import TestnetEnvironment
 from erdpy.transactions import Transaction
 from erdpy.wallet import derive_keys
+from flask import request
 
 from Tools import log, base_alphabet_to_10, str_to_hex, hex_to_str, nbr_to_hex, translate
 from definitions import LIMIT_GAS, ESDT_CONTRACT, NETWORKS, IPFS_NODE, ESDT_PRICE
@@ -57,13 +57,14 @@ class ElrondNet:
         log("Initialisation de l'environnement "+proxy)
         logging.basicConfig(level=logging.DEBUG)
 
+        log("Initialisation du proxy")
         self._proxy=ElrondProxy(proxy)
         self.chain_id=self._proxy.get_chain_id()
 
-
-        log("On utilise le testnet, la production n'étant pas encore disponible")
+        log("Initialisation de l'environnement")
         self.environment = TestnetEnvironment(proxy)
 
+        log("Initialisation de la bank")
         self.init_bank()
 
         log("Initialisation terminée")
@@ -125,15 +126,13 @@ class ElrondNet:
     def getMoneys(self,_user:Account):
         url = self._proxy.url + '/address/' + _user.address.bech32() + "/esdt"
         log("Interrogation de la balance : " + url)
+        lst = []
         try:
-            with urllib.request.urlopen(url) as response:
-                txt = response.read()
-            result=json.loads(txt)
-        except:
-            log("L'interrogation des tokens ne fonctionne pas")
-            lst=[]
+            result=requests.get(url).json()
+            lst = list(result["data"]["esdts"].values())
+        except Exception as arg:
+            log("L'interrogation des tokens ne fonctionne pas="+str(arg))
 
-        lst=list(result["data"]["esdts"].values())
         lst.append({
             "tokenIdentifier":"EGLD",
             "balance": self._proxy.get_account_balance(_user.address)
@@ -364,14 +363,15 @@ class ElrondNet:
                     "addr": user.address.bech32()
                     }
         else:
-            log("Déploiement du nouveau contrat réussi voir transaction "+self.getExplorer(t["txHash"]))
+            log("Déploiement du nouveau contrat réussi voir transaction "+self.getExplorer(t["blockHash"]))
             id=""
             if "smartContractResults" in t:
                 for result in t["smartContractResults"]:
-                    id=str(base64.b64decode(result["data"]),"utf-8")
+                    id=result["data"]
                     if id.startswith("ESDTTransfer"):
                         id=id.split("@")[1]
                         id=hex_to_str(int(id,16))
+                        log("Déploiement de la nouvelle monnaie standard "+id)
                         break
             else:
                 log("On doit être sur le testnet qui ne retourne pas scResults")
@@ -895,7 +895,7 @@ class ElrondNet:
     def getTransactionsByRest(self,addr):
         _c=SmartContract(address=addr)
         #rc=rq.get(self._proxy.url+"/transactions/"+addr).json()
-        rc=rq.get(self._proxy.url+"/address/"+_c.address.bech32()+"/transactions")
+        rc=requests.get(self._proxy.url+"/address/"+_c.address.bech32()+"/transactions")
         if rc.status_code==200:
             rc=json.loads(rc.text)["data"]["transactions"]
         else:

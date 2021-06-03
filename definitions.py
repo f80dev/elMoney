@@ -31,7 +31,8 @@ ESDT_PRICE=5e18
 LIMIT_GAS=60000000
 
 #IPFS_NODE="http://207.180.198.227:5001" Server main
-IPFS_NODE="http://161.97.75.165:5001"
+#IPFS_NODE="http://161.97.75.165:5001"
+IPFS_NODE="/dns/161.97.75.165/tcp/5001/http"
 
 NETWORKS={
     "testnet":{
@@ -50,7 +51,7 @@ NETWORKS={
         "new_account":float(4*1e18),
         "bank":"bank",
         "unity":"xEgld",
-        "identifier":"TFC-99d533",
+        "identifier":"TFC-4dd76f",
         "faucet":"https://r3d4.fr/elrond/devnet/index.php",
         "proxy":"https://devnet-gateway.elrond.com",
         "explorer":"https://devnet-explorer.elrond.com",
