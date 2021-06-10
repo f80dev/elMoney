@@ -4,7 +4,7 @@
             [ngStyle]="{'min-height':'150px','max-width':max_w,width:_w,height: 'fit-content','margin':'1%','margin-bottom':'5px',padding:'7px'}"
             *ngFor="let nft of nfts | filter: ['search',filter]">
 
-    <mat-card-header *ngIf="!nft.fullscreen" style="height: 35px">
+    <mat-card-header *ngIf="!nft.fullscreen || force_text" style="height: 35px">
       <img *ngIf="with_icon" mat-card-avatar [src]="nft.icon"
            class="image-icon"
            style="margin:0;">
@@ -51,7 +51,7 @@
            (click)="show_fullscreen(nft)">
 
 
-      <div *ngIf="!nft.fullscreen"
+      <div *ngIf="!nft.fullscreen || force_text"
            style="width:90%;margin:5%;line-height: 95%;font-size: small;text-align: center;">
         {{nft.description}}<br>
 
@@ -70,7 +70,7 @@
 
     </mat-card-content>
     <!--      <mat-card-actions class="app-card-action" style="position: absolute;bottom:16px;width:96%;text-align: right;">-->
-    <mat-card-actions class="app-card-action">
+    <mat-card-actions class="app-card-action" *ngIf="with_actions">
 
      <div *ngIf="nft.message?.length>0" style="width:100%;display: inline-block;text-align: center;">
         <app-hourglass [message]="nft.message" fontsize="small"></app-hourglass>

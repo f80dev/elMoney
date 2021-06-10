@@ -14,7 +14,6 @@ from erdpy.contracts import SmartContract
 from erdpy.environments import TestnetEnvironment
 from erdpy.transactions import Transaction
 from erdpy.wallet import derive_keys
-from flask import request
 
 from Tools import log, base_alphabet_to_10, str_to_hex, hex_to_str, nbr_to_hex, translate
 from definitions import LIMIT_GAS, ESDT_CONTRACT, NETWORKS, IPFS_NODE, ESDT_PRICE

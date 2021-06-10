@@ -73,6 +73,7 @@ import { SelDealerComponent } from './sel-dealer/sel-dealer.component';
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatChipsModule} from "@angular/material/chips";
 import {CommonModule, DatePipe} from "@angular/common";
+import { NftBuyComponent } from './nft-buy/nft-buy.component';
 
 const config: SocketIoConfig = {
   url: environment.domain_server,
@@ -119,7 +120,8 @@ const config: SocketIoConfig = {
     UploadFileComponent,
     MinersComponent,
     PublicMinerComponent,
-    SelDealerComponent
+    SelDealerComponent,
+    NftBuyComponent
   ],
   imports: [
     MatButtonModule,

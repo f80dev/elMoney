@@ -155,14 +155,19 @@ export class NftStoreComponent implements OnInit {
   }
 
 
-  on_buy($event: any) {
-    this.user.refresh_balance();
-    this.router.navigate(['nfts-perso'],{queryParams:{index:0}})
-  }
 
   ask_reference(dealer:any) {
     this.api._get("ask_ref/"+this.user.addr+"/"+dealer.address+"/","").subscribe(()=>{
       showMessage(this,"La demande de referencement a été envoyé");
     });
+  }
+
+  on_buy($event: any) {
+    this.router.navigate(['nft-buy'],
+      {queryParams:{
+          nft:JSON.stringify($event),
+          seller:JSON.stringify(this.selected_dealer),
+        }
+      });
   }
 }

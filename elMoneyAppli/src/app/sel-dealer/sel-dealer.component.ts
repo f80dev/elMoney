@@ -3,6 +3,8 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {UserService} from "../user.service";
 import {ConfigService} from "../config.service";
 import {ApiService} from "../api.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {showMessage} from "../tools";
 
 
 export interface DealerData {
@@ -22,11 +24,11 @@ export class SelDealerComponent implements OnInit {
   dealers: any[];
   sel_dealers: any[];
 
-
   constructor(
     public dialogRef: MatDialogRef<SelDealerComponent>,
     public user:UserService,
     public api:ApiService,
+    public toast:MatSnackBar,
     public config:ConfigService,
     @Inject(MAT_DIALOG_DATA) public data: DealerData) { }
 
@@ -35,7 +37,11 @@ export class SelDealerComponent implements OnInit {
       this.dealers=this.data.dealers;
     } else {
       this.api._get("dealers/"+this.user.addr+"/","").subscribe((r:any)=>{
-      this.dealers=r;
+        this.dealers=r;
+        if(this.dealers.length==0){
+          showMessage(this,"Aucun distributeur disponible");
+          this.dialogRef.close();
+        }
     });
     }
   }

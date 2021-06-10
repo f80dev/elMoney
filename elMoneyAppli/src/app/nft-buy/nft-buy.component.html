@@ -1,0 +1,38 @@
+<div class="mainform">
+  <h2>Confirmer l'achat ?</h2>
+  <span style="font-size: xx-large">{{nft.price | number:'1.0-3'}} {{nft.unity}}</span>
+  <br><br>
+
+  <app-hourglass [message]="message"></app-hourglass>
+  <img src="./assets/gears.gif" style="width: 150px;display: inline;" *ngIf="message.length>0">
+
+  <app-nfts [with_icon]="false"
+            *ngIf="message?.length==0"
+            [with_actions]="false"
+            [force_text]="true"
+            [user]="user" [nfts]="[nft]"></app-nfts>
+
+  <br>
+
+  <p *ngIf="message?.length==0">
+    Distribué par {{seller?.shop_name}}<br>
+    Réalisé par <a [href]="miner?.website">{{miner?.pseudo}}</a><br>
+  </p>
+
+</div>
+<div class="bottom-bar">
+    <hr>
+    <button mat-raised-button mat-button
+            class="app-button"
+                (click)="cancel()">
+          Annuler
+    </button>
+  &nbsp;
+    <button mat-raised-button mat-button
+            class="app-button"
+                color="primary"
+                title="Confirmation de l'achat"
+                (click)="buy()">
+          Acheter
+    </button>
+</div>

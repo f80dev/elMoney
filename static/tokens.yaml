@@ -24,7 +24,7 @@ content:
         <li>Prenez une photo ou sélectionner une photo déjà prise,</li><br>
         <li>Charger la photo, et sélectionner une partie qui sera utiliser pour l'apperçu,</li><br>
         <li>Donner lui un titre et faites en une description pour encourager l'achat,</li><br>
-        <li>fixer un prix en eGold</li>
+        <li>fixer un prix en eGold ou dans la monnaie de votre choix</li>
       </ul>
       </small>
       <br>
@@ -48,7 +48,7 @@ content:
              <li>Prenez une photo de l'oeuvre,</li><br>
              <li>Donner un titre</li><br>
              <li>Donner une information vous authentifiant formellement (numéro de passeport, email,numéro de SS)</li><br>
-             <li>fixer un prix en eGold si vous souhaitez vendre l'oeuvre</li>
+             <li>fixer un prix en eGold (ou dans la monnaie de votre choix) si vous souhaitez vendre l'oeuvre</li>
            </ul>
 
            <br>
@@ -94,7 +94,7 @@ content:
           <ul>
             <li>Charger le fichier dans TokenForge,</li><br>
             <li>Donner lui un titre et faites en une description pour encourager l'achat</li><br>
-            <li>fixer un prix en eGold</li>
+            <li>fixer un prix en eGold ou dans la monnaie de votre choix</li>
           </ul>
           <br>
            Ce fichier ne pourrat être télécharger que par l'acheteur
@@ -118,7 +118,7 @@ content:
                 <li>Récupérer votre musique sous forme d'un fichier audio de n'importe quel format,</li><br>
                 <li>Donner lui un titre et faites en une description pour encourager l'achat</li><br>
                 <li>Ajouter un eventuel visuel</li><br>
-                <li>fixer un prix en eGold</li>
+                <li>fixer un prix en eGold ou dans la monnaie de votre choix</li>
               </ul>
               </small>
               <br>
@@ -210,7 +210,7 @@ content:
     title: Loterie
     icon: casino
     nft_icon: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/279/game-die_1f3b2.png
-    description: Organiser une loterie, des cartes à grater en récompensant le gagnant en eGold
+    description: Organiser une loterie, des cartes à grater en récompensant le gagnant en eGold ou dans la monnaie de votre choix
     fee: 0.003
     tuto: "
           Pour embarquer un film, vous devez l'avoir uploader sur une plate forme comme youtube et récupéré le lien de partage.<br>

@@ -2989,7 +2989,6 @@ h3 {
   margin-top: 5px;
   font-size: x-large;
   font-weight: lighter;
-  font-feature-settings: "smcp", "c2sc";
   font-variant-caps: all-small-caps;
   width: 100%;
   text-align: center;

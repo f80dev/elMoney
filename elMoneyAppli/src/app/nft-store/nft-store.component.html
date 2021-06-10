@@ -22,7 +22,7 @@
     <td style="padding:0px;text-align: left;line-height: 90%;">
 
         <mat-select id="selOrder" [(ngModel)]="selected_dealer" (selectionChange)="refresh()"
-                    style="margin: 0px;width: 100px;">
+                    style="margin: 0px;width: 120px;">
           <mat-option *ngFor="let dealer of dealers" [value]="dealer">
             {{dealer.shop_name}}
           </mat-option>
@@ -104,8 +104,8 @@
             [width]="selected_mode.width"
             [fontsize]="selected_mode.fontsize"
             [with_icon]="selected_mode.with_icon"
-            (refresh)="refresh(true)"
-            (buy)="on_buy($event)">
+            (buy)="on_buy($event)"
+            (refresh)="refresh(true)">
   </app-nfts>
 
   <br><br>

@@ -22,6 +22,8 @@ export class NftsComponent implements OnChanges {
   @Input("nfts") nfts:any;
   @Input("fontsize") fontsize:string="normal";
   @Input("with_icon") with_icon:boolean=true;
+  @Input("with_actions") with_actions:boolean=true;
+  @Input("force_text") force_text:boolean=false;      //Force l'affichage de la description même si l'image en fullscreen
   @Input("width") _w:string="350px";
   @Input("maxwidth") max_w:string="500px";
   @Input("height") _h:string="auto"
@@ -30,7 +32,6 @@ export class NftsComponent implements OnChanges {
   @Output("refresh") onrefresh:EventEmitter<any>=new EventEmitter();
   @Output("buy") onbuy:EventEmitter<any>=new EventEmitter();
   @Output("transfer") ontransfer:EventEmitter<any>=new EventEmitter();
-
 
   constructor(
     public ngNavigatorShareService:NgNavigatorShareService,
@@ -72,48 +73,7 @@ export class NftsComponent implements OnChanges {
 
   buy(nft: any) {
     if(this.preview)return;
-
-    this.dialog.open(PromptComponent, {
-      data: {
-        title: 'Acheter ce token pour '+nft.price+" "+nft.unity,
-        question: 'Etes vous sûr ?',
-        onlyConfirm: true,
-        lbl_ok: 'Oui',
-        lbl_cancel: 'Non'
-      }}).afterClosed().subscribe((result:any) => {
-      if (!result || result == "no")return;
-
-      let identifier=nft.identifier;
-      if(identifier=="")identifier="EGLD";
-
-      if(nft.price>0){
-
-        if (!this.user.moneys.hasOwnProperty(identifier) || nft.price > Number(this.user.moneys[identifier].balance)/ 1e18 ) {
-
-          showMessage(this, "Votre solde est insuffisant (prix + frais de transaction)", 5000, () => {
-            if(nft.identifier.startsWith("EGLD"))
-              this.router.navigate(["faucet"]);
-            else
-              this.router.navigate(["main"]);
-          }, "Recharger ?");
-          return false;
-        }
-      }
-
-
-      nft.message = "En cours d'achat";
-      let price = nft.price;
-      this.api._post("buy_nft/" + nft.token_id + "/" + price + "/" + this.seller, "", {pem:this.user.pem,identifier:nft.identifier}).subscribe((r: any) => {
-        nft.message = "";
-        showMessage(this, "Achat du token pour " + (nft.price + r.cost) + " "+nft.unity);
-        this.user.refresh_balance(() => {
-          this.onbuy.emit();
-        });
-      }, () => {
-        nft.message = "";
-        showMessage(this, "Achat annulé");
-      });
-    });
+    this.onbuy.emit(nft);
   }
 
 
@@ -124,7 +84,7 @@ export class NftsComponent implements OnChanges {
       nft.message = "";
       let mes="Votre token n'est plus en vente";
       if(new_state==0)mes="Votre token est en vente"
-      showMessage(this, mes+"Frais de service " + (r.cost) + " xEgld");
+      if(r)showMessage(this, mes+"Frais de service " + (r.cost) + " xEgld");
       this.user.refresh_balance(() => {
         this.onrefresh.emit();
       });
@@ -240,8 +200,6 @@ export class NftsComponent implements OnChanges {
         });
       }
     });
-
-
   }
 
 
@@ -249,7 +207,7 @@ export class NftsComponent implements OnChanges {
     this.dialog.open(SelDealerComponent, {
       position:
         {left: '5vw', top: '5vh'},
-      maxWidth: 400, width: '90vw', height: 'auto', data:{
+        maxWidth: 500, width: '90vw', height: 'auto', data:{
         result:this.user.addr
       }
     }).afterClosed().subscribe((result) => {

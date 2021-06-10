@@ -17,10 +17,11 @@ import {ValidateComponent} from "./validate/validate.component";
 import {NftsPersoComponent} from "./nfts-perso/nfts-perso.component";
 import {PromoComponent} from "./promo/promo.component";
 import {RouterModule, Routes} from "@angular/router";
-import {NgModule} from "@angular/core";
 import {TransactionsComponent} from "./transactions/transactions.component";
 import {MinersComponent} from "./miners/miners.component";
 import {PublicMinerComponent} from "./public-miner/public-miner.component";
+import {NftBuyComponent} from "./nft-buy/nft-buy.component";
+import {NgModule} from "@angular/core";
 
 const routes: Routes = [
   { path: 'admin', component: AdminComponent},
@@ -45,6 +46,7 @@ const routes: Routes = [
   { path: 'miner', component:PublicMinerComponent},
   { path: 'main', component: MainComponent},
   { path: 'wallet', component: MainComponent},
+  { path: 'nft-buy', component: NftBuyComponent},
   { path: 'contacts', component: ContactsComponent},
   { path: '**', component: NftStoreComponent},
 ];
