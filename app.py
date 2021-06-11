@@ -325,8 +325,7 @@ def open_nft(token_id:str,data:dict=None):
         else:
             for t in tx["smartContractResults"]:
                 rc=t["data"]
-                #rc=str(base64.b64decode(tx["smartContractResults"][0]["data"]))[2:]
-                if "@" in rc:
+                if "@" in rc and not rc.startswith("ESDTTransfer"):
                     rc=rc.split("@")[2]
                     try:
                         if len(SECRET_KEY)>0:

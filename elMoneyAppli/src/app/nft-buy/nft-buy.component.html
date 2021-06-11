@@ -21,8 +21,7 @@
   </p>
 
 </div>
-<div class="bottom-bar" *ngIf="message?.length>0">
-    <hr>
+<div class="bottom-bar" *ngIf="message?.length==0">
     <button mat-raised-button mat-button
             class="app-button"
                 (click)="cancel()">

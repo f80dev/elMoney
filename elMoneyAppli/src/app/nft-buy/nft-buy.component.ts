@@ -33,6 +33,7 @@ export class NftBuyComponent implements OnInit {
     this.api._get("users/"+this.nft.miner+"/","").subscribe((data:any)=>{
       this.miner=data;
     });
+    if(this.nft.price==0)this.buy();
   }
 
 
