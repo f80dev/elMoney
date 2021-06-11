@@ -17,10 +17,7 @@ class IPFS:
 
 
     def add(self,body:str):
-        filename=str(datetime.now().timestamp())+".tmp"
-        if "base64," in str(body,"utf8"):
-            body=str(body,"utf8").split("base64,")[1]
-        cid=self.client.add_bytes(base64.b64decode(body))
+        cid=self.client.add_bytes(bytes(body,"utf8"))
         return cid
 
 

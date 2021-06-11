@@ -3,8 +3,9 @@
   <span style="font-size: xx-large">{{nft.price | number:'1.0-3'}} {{nft.unity}}</span>
   <br><br>
 
+
+  <img src="./assets/gears.gif" style="width: 150px;display: inline;" *ngIf="message.length>0"><br>
   <app-hourglass [message]="message"></app-hourglass>
-  <img src="./assets/gears.gif" style="width: 150px;display: inline;" *ngIf="message.length>0">
 
   <app-nfts [with_icon]="false"
             *ngIf="message?.length==0"
@@ -20,7 +21,7 @@
   </p>
 
 </div>
-<div class="bottom-bar">
+<div class="bottom-bar" *ngIf="message?.length>0">
     <hr>
     <button mat-raised-button mat-button
             class="app-button"

@@ -205,9 +205,12 @@ export class NftsComponent implements OnChanges {
 
   add_dealer(nft: any) {
     this.dialog.open(SelDealerComponent, {
+
       position:
         {left: '5vw', top: '5vh'},
-        maxWidth: 500, width: '90vw', height: 'auto', data:{
+        maxWidth: 500, width: '90vw', height: 'auto',
+      data:{
+        title: "Se faire distribuer",
         result:this.user.addr
       }
     }).afterClosed().subscribe((result) => {
