@@ -89,6 +89,8 @@ def analyse_pem():
     if body.endswith(".pem"):
         _to=Account(pem_file="./PEM/"+body)
         address=_to.address.bech32()
+        with open(_to.pem_file, "r") as myfile:
+            body = myfile.readlines()
     else:
         body=str(base64.b64decode(body.split("base64,")[1]),"utf-8")
         address="erd"+body.split("erd")[1].split("----")[0]

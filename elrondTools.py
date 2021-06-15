@@ -558,7 +558,7 @@ class ElrondNet:
         if fund>0:
             log("On transfere un peu d'eGold pour assurer les premiers transferts"+str(fund))
             tx=self.credit(self.bank,_u,"%.0f" % fund)
-            if tx["status"]!="success":
+            if tx is None or tx["status"]!="success":
                 log("Le compte "+_u.address.bech32()+" n'a pas recu d'eGld pour les transactions")
 
         return _u,pem

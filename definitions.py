@@ -23,10 +23,10 @@ MAIN_DECIMALS=18
 MAIN_NAME="TokenForgeCoin"
 MAIN_URL="https://tf.f80.fr/assets/cmk.html"
 TOTAL_DEFAULT_UNITY=1000000
-CREDIT_FOR_NEWACCOUNT=200
+CREDIT_FOR_NEWACCOUNT=100
 
 ESDT_CONTRACT="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
-ESDT_PRICE=5e18
+ESDT_PRICE=5e16
 
 LIMIT_GAS=60000000
 
@@ -48,15 +48,15 @@ NETWORKS={
     },
 
     "devnet":{
-        "new_account":float(4*1e18),
+        "new_account":float(1*1e18),
         "bank":"bank",
         "unity":"xEgld",
-        "identifier":"TFC-4dd76f",
+        "identifier":"TFC-bc8f10",
         "faucet":"https://r3d4.fr/elrond/devnet/index.php",
         "proxy":"https://devnet-gateway.elrond.com",
         "explorer":"https://devnet-explorer.elrond.com",
         "wallet":"https://devnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgq4rtsdj89dwhuavjlj25yq4y5ph0cunqvd8ssw55790"
+        "nft":"erd1qqqqqqqqqqqqqpgqak8zt22wl2ph4tswtyc39namqx6ysa2sd8ss4xmlj3"
     },
 
     "server":{

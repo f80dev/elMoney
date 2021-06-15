@@ -39,7 +39,7 @@ export class SettingsComponent implements OnInit,OnDestroy {
               public routes:ActivatedRoute,
               public ngNavigatorShareService:NgNavigatorShareService,
               public _clipboardService:ClipboardService,
-              public config:ConfigService) { }
+              public config:ConfigService) {}
 
   ngOnInit(): void {
     let obj:any=this.user.pem;
