@@ -75,7 +75,7 @@ export class PrivateComponent implements OnInit {
       localStorage.removeItem("addr");
       localStorage.removeItem("pem");
       this.user.init(r.address, {pem: r.pem},()=>{
-        this._location.go(".");
+        this.router.navigate(["store"]);
       });
     },(err)=>{showError(this)});
   }
