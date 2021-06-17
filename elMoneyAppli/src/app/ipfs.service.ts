@@ -27,6 +27,9 @@ export class IpfsService {
         $$("Enregistrement de https://ipfs.io/ipfs/"+result.cid);
         showMessage(vm,"Upload");
         if(func)func(result.cid);
+      },(err)=>{
+        showError(vm,err);
+        debugger;
       })
     }
   }

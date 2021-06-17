@@ -828,8 +828,9 @@ def server_config():
         "domain_appli":DOMAIN_APPLI,
         "esdt_contract": ESDT_CONTRACT,
         "bank_gas":bc._proxy.get_account_balance(bc.bank.address),
-        "explorer":bc._proxy.url.replace("-api","-explorer"),
-        "wallet": bc._proxy.url.replace("-api", "-wallet")+"/unlock/pem"
+        "explorer":bc._proxy.url.replace("-gateway","-explorer"),
+        "contract_explorer": bc._proxy.url.replace("-api", "-explorer")+"/address/"+NETWORKS[bc.network_name]["nft"],
+        "wallet": bc._proxy.url.replace("-gateway", "-wallet")+"/unlock/pem"
     }
 
     bank_balance=bc.getMoneys(bc.bank)

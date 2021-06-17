@@ -17,7 +17,8 @@ class IPFS:
 
 
     def add(self,body:str):
-        cid=self.client.add_bytes(bytes(body,"utf8"))
+        if type(body)==str:body=bytes(body,"utf8")
+        cid=self.client.add_bytes(body)
         return cid
 
 

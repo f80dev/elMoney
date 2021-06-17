@@ -214,7 +214,7 @@ export class ImporterComponent implements OnInit {
     if(this.find_secret)properties=properties       +0b00010000; //L'utilisateur doit fournir le secret dans l'open pour recevoir le cadeau
     if(this.opt_gift)properties=properties          +0b00100000; //On affiche l'option d'ouverture même si aucun secret
 
-
+    debugger
     this.ipfs.add(this.visual,this,(cid_visual)=>{
       this.ipfs.add(this.picture,this,(cid_picture)=> {
         let obj = {
@@ -396,7 +396,7 @@ export class ImporterComponent implements OnInit {
       if(price){
         this.price=price.replace(",",".");
         this.min_price=0;this.max_price=this.price*2;this.miner_ratio=0;
-        if(func)func(this.price); else this.tokenizer(fee);
+        if(func)func(Number(this.price)); else this.tokenizer(fee);
       }
     });
   }

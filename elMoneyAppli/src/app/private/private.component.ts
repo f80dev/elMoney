@@ -80,6 +80,9 @@ export class PrivateComponent implements OnInit {
     },(err)=>{showError(this)});
   }
 
+
+
+
   select_model($event: any) {
     this.message="";
     this.dialog.open(PromptComponent, {
