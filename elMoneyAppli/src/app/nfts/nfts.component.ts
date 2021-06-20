@@ -117,7 +117,7 @@ export class NftsComponent implements OnChanges {
       nft.message = "";
       nft.open = r.response;
       if(nft.open.length==46)nft.open="https://ipfs.io/ipfs/"+nft.open;
-      this.user.refresh_balance(() => {});
+      //this.user.refresh_balance(() => {});
 
       //Indique que le message est programmé pour s'autodétruire
       if((nft.properties & 0b1000) > 0){

@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {$$, showMessage} from "../tools";
+import {$$, autoRotate, cropToSquare, resizeBase64Img, showMessage} from "../tools";
 import {ApiService} from "../api.service";
 import {UserService} from "../user.service";
 import {ImageSelectorComponent} from "../image-selector/image-selector.component";
@@ -84,7 +84,7 @@ export class ImporterComponent implements OnInit {
   tagCtrl = new FormControl();
   filteredTags: Observable<string[]>;
   tags: string[] = [];
-  allTags: string[] = ['Photos', 'Musique','Evénement',"Secret"];
+  allTags: string[] = ['Photos', 'Musique','Evénement',"Secret","Souvenir","Peinture","Scoop"];
 
   @ViewChild('tagsInput') tagInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
@@ -179,20 +179,14 @@ export class ImporterComponent implements OnInit {
 
 
   _import(fileInputEvent: any,index_file=0,prompt="",func=null) {
-    this.dialog.open(PromptComponent,{width: '250px',data:
-        {
-          title: prompt,
-          onlyConfirm:true,
-          lbl_ok:"Continuer",
-          lbl_cancel:"Annuler"
-        }
-    }).afterClosed().subscribe((rep) => {
-      if (rep=="yes") {
-        if(index_file==0)this.picture=fileInputEvent.file;
-        if(index_file==1)this.visual=fileInputEvent.file;
-        this.filename=fileInputEvent.filename;
-      }
-    });
+        var vm:any=this;
+        var reader = new FileReader();
+        reader.onload = ()=>{
+          if(index_file==0)vm.picture=reader.result;
+          if(index_file==1)vm.visual=reader.result;
+        };
+        reader.readAsDataURL(fileInputEvent.target.files[0]);
+        this.filename=fileInputEvent.target.files[0].name;
   }
 
 
@@ -214,7 +208,7 @@ export class ImporterComponent implements OnInit {
     if(this.find_secret)properties=properties       +0b00010000; //L'utilisateur doit fournir le secret dans l'open pour recevoir le cadeau
     if(this.opt_gift)properties=properties          +0b00100000; //On affiche l'option d'ouverture même si aucun secret
 
-    debugger
+    this.message="Transfert des fichiers vers IPFS";
     this.ipfs.add(this.visual,this,(cid_visual)=>{
       this.ipfs.add(this.picture,this,(cid_picture)=> {
         let obj = {
@@ -244,7 +238,6 @@ export class ImporterComponent implements OnInit {
         };
 
         $$("Création du token ", obj);
-
 
         this.message = "Enregistrement dans la blockchain";
         window.scrollTo(0, 0);

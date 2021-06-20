@@ -97,22 +97,30 @@
                      (change)="_import($event,0,'Commençons par charger le fichier dans le NFC')"
                      accept="*"/>
 
-              <button mat-raised-button
+              <table><tr>
+                <td>
+                  <button mat-raised-button
                       id="cmdImportFile"
                       mat-button class="app-button"
                       (click)="csvInput.click()">
                 Un fichier
               </button>
+                </td>
+                <td>
+                  <span *ngIf="picture.length>0">'{{filename}}' est caché dans votre NFT</span>
+                </td>
+              </tr></table>
 
-              <br><br>
-              <span *ngIf="picture.length>0">'{{filename}}' est caché dans votre NFT</span>
+              <br>
+
+
 
               <strong *ngIf="picture.length==0">ou</strong>
 
               <br>
 
               <mat-form-field appearance="fill" class="app-field" *ngIf="picture.length==0">
-                <mat-label>Ecrire un secret</mat-label>
+                <mat-label>Une phrase secrete</mat-label>
                 <input matInput type="text" (focusin)="focus_idx=1"
                        id="txtSecret"
                        maxlength="200" [(ngModel)]="secret" [ngModelOptions]="{standalone: true}">
@@ -275,8 +283,8 @@
                       id="cmdDefaultPrice"
                       mat-button class="small-button"
                       style="max-width: 0px"
-                      (click)="inc_price(0.5)">
-                +0,5
+                      (click)="inc_price(0.1)">
+                +0,1
               </button>
 
 

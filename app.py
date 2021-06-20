@@ -476,6 +476,9 @@ def mint(count:str,data:dict=None):
     else:
         secret=""
 
+    if "file" in data and len(secret)==0:
+        secret=data["file"].encode().hex()
+
     res_visual = ""
     if "visual" in data and len(data["visual"])>0:
         res_visual = "%%" + data["visual"]
@@ -519,17 +522,17 @@ def mint(count:str,data:dict=None):
                  miner_ratio,
                  gift,int(data["opt_lot"]),
                  "0x" + money.encode().hex()]
-
+    log("Minage du token "+str(data))
     result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,
                    arguments=arguments,
                    gas_limit=int(LIMIT_GAS*(1+int(count)/4)),
                    value=value)
 
     if not result is None:
-        if result["status"] == "fail":
-            return result["smartContractResults"][0]["returnMessage"],500
+        if result["status"] == "fail" or not "smartContractResults" in result:
+            return "Erreur de création du token",500
         else:
-            if "smartContractResults" in result and len(result["smartContractResults"])>0:
+            if True:
                 return_string=result["smartContractResults"][0]["data"]
                 if len(return_string.split("@"))>2:
                     last_new_id=int(return_string.split("@")[2],16)
@@ -546,11 +549,11 @@ def mint(count:str,data:dict=None):
                                 tx=bc.add_dealer(NETWORKS[bc.network_name]["nft"],pem_file,arguments)
                                 i=i+1
 
-                send(socketio, "refresh_nft")
-                send(socketio, "refresh_balance",owner.address.bech32())
-                os.remove(pem_file)
-            else:
-                return result["smartContractResults"][0]["returnMessage"],500
+                    send(socketio, "refresh_nft")
+                    send(socketio, "refresh_balance",owner.address.bech32())
+                    os.remove(pem_file)
+                else:
+                    return result["smartContractResults"][0]["returnMessage"],500
 
             return jsonify(result), 200
     else:
@@ -639,7 +642,7 @@ def transactions(user:str=""):
 
 @app.route('/api/upload_file/',methods=["POST"])
 def upload_file():
-    cid=client.add(request.data)
+    cid=client.add(str(request.data,"utf8"))
     return jsonify({"cid":cid})
 
 

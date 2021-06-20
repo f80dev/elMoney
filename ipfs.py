@@ -17,10 +17,14 @@ class IPFS:
 
 
     def add(self,body:str):
-        if type(body)==str:body=bytes(body,"utf8")
+        if type(body)==str:
+            if body.startswith("data:"):
+                body=base64.b64decode(body.split("base64,")[1])
+            else:
+                body=bytes(body,"utf8")
+
         cid=self.client.add_bytes(body)
         return cid
-
 
 
     def get_dict(self,token):
@@ -31,4 +35,3 @@ class IPFS:
             return json.loads(str(r,"utf8").replace("'","\""))
         except:
             return r
-

@@ -18,8 +18,7 @@ export class IpfsService {
     //this.domain="http://161.97.75.165:5001";
   }
 
-  add(content: string,vm=null,func=null,_type="image/jpeg",withDomain=false) {
-    debugger
+  add(content: any,vm=null,func=null,_type="image/jpeg",withDomain=false) {
     if(!content || content.length==0){
       func();
     } else {
@@ -31,6 +30,8 @@ export class IpfsService {
         showError(vm,err);
         debugger;
       })
+
+
     }
   }
 
