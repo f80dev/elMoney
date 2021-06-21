@@ -18,22 +18,41 @@ export class IpfsService {
     //this.domain="http://161.97.75.165:5001";
   }
 
-  add(content: any,vm=null,func=null,_type="image/jpeg",withDomain=false) {
+  add(content: any,vm=null,func=null,filename="") {
     if(!content || content.length==0){
       func();
     } else {
-      this.api._post("upload_file","",content).subscribe((result:any)=>{
-        $$("Enregistrement de https://ipfs.io/ipfs/"+result.cid);
-        showMessage(vm,"Upload");
-        if(func)func(result.cid);
-      },(err)=>{
-        showError(vm,err);
-        debugger;
-      })
-
-
+      if(filename.length>0){
+        this.api._post_file("upload_file",content).subscribe((result:any)=>{
+          showMessage(vm,"Upload");
+          if(func)func(result.cid);
+        });
+      } else {
+        this.api._post("upload_file/","",content,60,{
+          "Content-Type":"multipart/form-data",
+          "Accept": "application/json"
+        }).subscribe((result:any)=>{
+          $$("Enregistrement de https://ipfs.io/ipfs/"+result.cid);
+          showMessage(vm,"Upload");
+          if(func)func(result.cid);
+        },(err)=>{
+          showError(vm,err);
+          debugger;
+        })
+      }
     }
   }
+
+  // direct_add(file:File){
+  //   let url="http://161.97.75.165:5000/api/v0/add";
+  //   let formData = new FormData();
+  //   formData.append('data',file,file.name);
+  //   this.api._post(url,"", {path:file.name,content:"coucouc"}).subscribe((r:any)=>{
+  //     debugger;
+  //   });
+  // }
+
+
 
   // add_old(content:string,vm=null,func=null,_type="image/jpeg",withDomain=false){
   //   if(!content || content.length==0){

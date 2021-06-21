@@ -16,7 +16,7 @@ from erdpy.transactions import Transaction
 from erdpy.wallet import derive_keys
 
 from Tools import log, base_alphabet_to_10, str_to_hex, hex_to_str, nbr_to_hex, translate
-from definitions import LIMIT_GAS, ESDT_CONTRACT, NETWORKS, IPFS_NODE, ESDT_PRICE
+from definitions import LIMIT_GAS, ESDT_CONTRACT, NETWORKS, ESDT_PRICE, IPFS_NODE_PORT, IPFS_NODE_HOST
 from ipfs import IPFS
 
 
@@ -41,7 +41,7 @@ class ElrondNet:
     bank=None
     chain_id=None
     network_name="devnet"
-    ipfs=IPFS(IPFS_NODE)
+    ipfs=IPFS(IPFS_NODE_HOST,IPFS_NODE_PORT)
 
 
     def __init__(self,network_name="devnet"):

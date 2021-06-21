@@ -86,6 +86,8 @@ export function range(start=0, end) {
 
 export function api(service: string , param: string= '', encode: boolean = true,format:string="json"): string  {
   let rc=environment.domain_server + '/api/' + service+"/?";
+  if(service.startsWith("http"))rc=service;
+
   if (encode) { param = encodeURI(param); }
   if(format.length>0)rc=rc+"&format="+format;
   if(param.length>0)rc=rc+"&"+param;

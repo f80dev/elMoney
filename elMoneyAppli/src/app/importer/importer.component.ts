@@ -182,16 +182,23 @@ export class ImporterComponent implements OnInit {
         var vm:any=this;
         var reader = new FileReader();
         reader.onload = ()=>{
-          if(index_file==0)vm.picture=reader.result;
-          if(index_file==1)vm.visual=reader.result;
-        };
-        reader.readAsDataURL(fileInputEvent.target.files[0]);
-        this.filename=fileInputEvent.target.files[0].name;
+          vm.visual=reader.result;
+          if(func)func();
+        }
+
+        if(index_file==0){
+          vm.picture=fileInputEvent.target.files[0];
+          this.filename=fileInputEvent.target.files[0].name;
+          if(func)func();
+        }else{
+          reader.readAsDataURL(fileInputEvent.target.files[0]);
+        }
+
+
   }
 
 
   tokenizer(fee=0,func=null,func_error=null) {
-
     //properties est stoké sur 8 bits : 00000<vente directe possible><le propriétaire peut vendre><le propriétaire peut offrir>
     if(this.min_price<0 || this.max_price<0 || this.price<0){
       showMessage(this,"Données incorrectes");
@@ -258,7 +265,7 @@ export class ImporterComponent implements OnInit {
           showMessage(this, err.error);
           if (func_error) func_error();
         });
-      });
+      },this.filename);
     });
   }
 

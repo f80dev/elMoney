@@ -20,8 +20,8 @@ from apiTools import create_app
 
 from dao import DAO
 from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, \
-    MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, IPFS_NODE, \
-    MAIN_NAME, MAIN_DECIMALS, NETWORKS, ESDT_CONTRACT, LIMIT_GAS, SECRET_KEY, ESDT_PRICE
+    MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, \
+    MAIN_NAME, MAIN_DECIMALS, NETWORKS, ESDT_CONTRACT, LIMIT_GAS, SECRET_KEY, ESDT_PRICE, IPFS_NODE_HOST,IPFS_NODE_PORT
 from elrondTools import ElrondNet
 from ipfs import IPFS
 
@@ -340,7 +340,6 @@ def open_nft(token_id:str,data:dict=None):
         rc="Impossible d'ouvrir le token"
 
     send(socketio,"refresh_account",addr,"")
-    send(socketio,"refresh_nft",addr)
 
     return jsonify({"response":rc,"cost":tx["cost"]})
 
@@ -639,10 +638,13 @@ def transactions(user:str=""):
 
     return jsonify(rc),200
 
-
 @app.route('/api/upload_file/',methods=["POST"])
 def upload_file():
-    cid=client.add(str(request.data,"utf8"))
+    if len(request.files)>0:
+        cid=client.add_file(request.files.get("file"))
+    else:
+        cid=client.add(str(request.data,"utf8"))
+
     return jsonify({"cid":cid})
 
 
@@ -750,7 +752,7 @@ def add_miner(data:dict=None):
     if not "pseudo" in _profil or len(_profil["pseudo"])==0:
         return jsonify({"error":"Le créateur doit au moins avoir un pseudo"}),500
 
-    ipfs_token=IPFS(IPFS_NODE).add(str({"pseudo":_profil["pseudo"],"visual":_profil["visual"]}))
+    ipfs_token=IPFS(IPFS_NODE_HOST,IPFS_NODE_PORT).add(str({"pseudo":_profil["pseudo"],"visual":_profil["visual"]}))
 
     tx=bc.add_miner(NETWORKS[bc.network_name]["nft"],
                     pem_file,["0x" + _miner.address.hex(),"0x"+ipfs_token.encode().hex()]
@@ -982,13 +984,11 @@ def getname(contract:str):
 
 
 
-
-
 if __name__ == '__main__':
     _port=int(sys.argv[1])
     scheduler.start()
     #vérifier la connexion avec IPFS
-    client:IPFS = IPFS(IPFS_NODE)
+    client:IPFS = IPFS(IPFS_NODE_HOST,IPFS_NODE_PORT)
 
 
     if "debug" in sys.argv:

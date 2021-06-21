@@ -23,9 +23,7 @@ export class ApiService {
 
   getHttpOptions(){
     const httpOptions: any = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
+      headers: new HttpHeaders({'Content-Type': 'application/json'})
     };
     if (!this.token) {this.token = localStorage.getItem('token'); }
     if (this.token) {httpOptions.headers.Authorization = 'Token ' + this.token; }
@@ -39,9 +37,22 @@ export class ApiService {
     return this.http.get(url, this.getHttpOptions()).pipe(timeout(_timeoutInSec * 1000));
   }
 
-  _post(url, params= '', body, _timeoutInSec= 60){
+  _post_file(url,file){
+    let formData = new FormData();
+    formData.append("file", file,file.name);
+    url = api(url, "", true, '');
+    //let headers = this.getHttpOptions();
+    //headers.headers.append('Content-Type','multipart/form-data');
+    return this.http.post(url, formData);
+  }
+
+  _post(url, params= '', body, _timeoutInSec= 60,header_options={}){
     url = api(url, params, true, '');
-    return this.http.post(url, body, this.getHttpOptions()).pipe(timeout(_timeoutInSec * 1000));
+    var header=this.getHttpOptions();
+    for(let key of Object.keys(header_options)){
+      header.headers.append(key,header_options[key]);
+    }
+    return this.http.post(url, body, header).pipe(timeout(_timeoutInSec * 1000));
   }
 
   _delete(url, params= '') {
