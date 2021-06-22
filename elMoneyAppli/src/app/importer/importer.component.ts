@@ -132,11 +132,9 @@ export class ImporterComponent implements OnInit {
     }
   }
 
-
-
   //Gestion des tags
   solde_user: number;
-
+  extensions: string="*";
 
 
   add(event: MatChipInputEvent): void {
@@ -383,9 +381,10 @@ export class ImporterComponent implements OnInit {
   ask_for_price(question="",func:Function=null,fee=0){
     this.dialog.open(PromptComponent,{width: '280px',data:
         {
-          title: "Prix de vente",
+          title: "Prix de vente (eGld)",
           question: question,
           result:0,
+          default:0,
           min:0,max:10,
           type:"number",
           onlyConfirm:false,
@@ -417,7 +416,8 @@ export class ImporterComponent implements OnInit {
 
 
 
-  quick_pow(token:any,w,h){
+  quick_pow(token:any,w,h,extension="*"){
+    this.extensions=extension;
     this.add_visual((result:any)=>{
       if(result && result.img){
         this.ask_for_text("Titre","Donner un titre à votre NFC",(title)=> {
@@ -446,7 +446,7 @@ export class ImporterComponent implements OnInit {
   quick_photo(token:any,title="",w=400,h=400,square=true) {
     this.add_visual((result:any)=>{
       this.visual=result.img;
-      this.picture=result.original;
+      this.picture=result.file;
       this.filename=result.file.name;
       this.file_format=result.file.type;
       this.ask_for_text("Titre","Donner un titre à votre NFC",(title)=>{
@@ -612,6 +612,7 @@ export class ImporterComponent implements OnInit {
   quick_file($event: any,token:any,title="Télécharger un visuel") {
     this.picture=$event.file;
     this.filename=$event.filename;
+    this.extensions="*";
     this.add_visual((visual)=>{
       this.ask_for_text("Titre","Titre de votre annonce",(title)=>{
         if(title) {
@@ -630,8 +631,9 @@ export class ImporterComponent implements OnInit {
   }
 
 
-  show_fileupload(redirect: number,prompt:string,token:any) {
+  show_fileupload(redirect: number,prompt:string,token:any,extension="*") {
     this.show_zone_upload=true;
+    this.extensions=extension;
     this.prompt=prompt;
     this.redirect=redirect;
   }
@@ -652,7 +654,7 @@ export class ImporterComponent implements OnInit {
   open_wizard(token:any){
     if(token.index=="photo")this.quick_photo(token,"Télécharger votre photo",null,null,false);
     if(token.index=="pow")this.quick_pow(token,300,300);
-    if(token.index=="music")this.show_fileupload(1,'Téléverser le fichier musical',token);
+    if(token.index=="music")this.show_fileupload(1,'Téléverser le fichier musical',token,"audio/*");
     if(token.index=="film")this.quick_secret(token,'coller le lien secret (fourni par youtube) du film');
     if(token.index=="file")this.show_fileupload(1,'Téléverser le fichier à embarquer dans votre token',token);
     if(token.index=="secret")this.quick_secret(token);

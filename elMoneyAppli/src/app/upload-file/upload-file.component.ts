@@ -17,6 +17,7 @@ export class UploadFileComponent implements OnInit {
   @Input("maxsize") maxsize:number=1000000;
   @Output("uploaded") onupload:EventEmitter<any>=new EventEmitter();
   @Output("canceled") oncancel:EventEmitter<any>=new EventEmitter();
+  @Input("extensions") extensions:string="*";
 
 
   constructor(
@@ -24,6 +25,12 @@ export class UploadFileComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+  }
+
+
+  cancel(){
+    debugger
+    this.oncancel.emit();
   }
 
   import(fileInputEvent: any) {

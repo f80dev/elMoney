@@ -5,13 +5,21 @@
 <input #csvInput [hidden]="true"
        type="file" onclick="this.value=null"
        (change)="import($event)"
-       accept="*"/>
+       [accept]="extensions"/>
 
 <button mat-raised-button
         mat-button class="app-button"
         (click)="csvInput.click()">
   {{label}}
 </button>
+
+<button mat-raised-button
+        mat-button class="app-button"
+        (click)="cancel()">
+  Annuler
+</button>
+
+
 <br>
 {{filename}}
 

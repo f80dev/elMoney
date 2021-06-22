@@ -1,5 +1,6 @@
 import base64
 import json
+import os
 from datetime import datetime
 from os import remove
 
@@ -22,8 +23,6 @@ class IPFS:
         log("Enregistrement du fichier "+cid["Hash"]+" sur IPFS")
         return cid["Hash"]
 
-
-
     def add(self,body:str):
         if type(body)==str:
             if body.startswith("data:"):
@@ -37,6 +36,8 @@ class IPFS:
 
             cids=self.client.add(filename)
             cid=cids[0]["Hash"]
+
+            os.remove(f)
 
 
         log("Enregistrement du fichier https://ipfs.io/ipfs/" + cid + " sur IPFS")

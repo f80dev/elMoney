@@ -37,6 +37,8 @@
       <br>
       <app-upload-file *ngIf="show_zone_upload"
                        [maxsize]="config.values.max_file_size"
+                       [extensions]="extensions"
+                       (canceled)="show_zone_upload=false"
                        (uploaded)="onupload($event)">
         {{prompt}}
       </app-upload-file>
@@ -135,8 +137,8 @@
               </div>
 
 
-              <mat-form-field appearance="fill" class="app-field" style="width: 150px;">
-                <mat-label>Récompense</mat-label>
+              <mat-form-field appearance="fill" class="app-field" style="width: 175px;">
+                <mat-label>Récompense à l'ouverture</mat-label>
                 <input matInput type="number"
                        id="txtGift"
                        (focusin)="focus_idx=1.5" step="0.1" min="0" [max]="user.gas/1e18" [(ngModel)]="gift"
