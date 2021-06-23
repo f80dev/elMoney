@@ -89,6 +89,7 @@ class DAO:
         return self.db["users"].replace_one(filter={"addr": addr}, replacement=body, upsert=True)
 
     def get_user(self, addr):
-        return self.db["users"].find_one(filter={"addr": addr})
+        rc=self.db["users"].find_one(filter={"addr": addr})
+        return rc
 
 

@@ -26,7 +26,13 @@ export class PrivateComponent implements OnInit {
     {label:"Franck",value:"franck.pem"},
     {label:"Ivan",value:"ivan.pem"},
     {label:"Mallory",value:"mallory.pem"},
-    {label:"Judy",value:"judy.pem"}
+    {label:"Judy",value:"judy.pem"},
+    {label:"Thomas",value:"thomas.pem"},
+    {label:"Herve",value:"herve.pem"},
+    {label:"Test1",value:"test1.pem"},
+    {label:"Test2",value:"test2.pem"},
+    {label:"Test3",value:"test3.pem"},
+    {label:"Test4",value:"test4.pem"}
   ]
   test_profil: any;
 
@@ -50,21 +56,10 @@ export class PrivateComponent implements OnInit {
     this.message = "Signature ...";
     reader.onload = () => {
       this.message = "Changement de compte";
-      this.api._post("analyse_pem", "", reader.result.toString(), 240).subscribe((r: any) => {
-        if (this.user.addr != r.address) {
-          this.change_user(r);
-        } else {
-          this.user.init(r.address, {pem: r.pem});
-          this._location.back();
-        }
-      },(err)=>{
-        showError(this,err);
-      });
+      this.change_user(reader.result.toString());
     }
     reader.readAsDataURL(fileInputEvent.target.files[0]);
   }
-
-
 
 
 
@@ -72,10 +67,14 @@ export class PrivateComponent implements OnInit {
     this.message="Chargement du profil de test";
     this.api._post("analyse_pem", "", profil, 240).subscribe((r: any) => {
       this.message="";
-      localStorage.removeItem("addr");
-      localStorage.removeItem("pem");
+      if (this.user.addr != r.address) {
+        localStorage.removeItem("addr");
+        localStorage.removeItem("pem");
+      }
       this.user.init(r.address, {pem: r.pem},()=>{
-        this.router.navigate(["store"]);
+        this.user.refresh_balance(()=>{
+          this.router.navigate(["store"]);
+        })
       });
     },(err)=>{showError(this)});
   }
@@ -102,11 +101,11 @@ export class PrivateComponent implements OnInit {
       }
     });
 
-}
+  }
 
 
 
-_faq(index: string) {
-  openFAQ(this,index);
-}
+  _faq(index: string) {
+    openFAQ(this,index);
+  }
 }

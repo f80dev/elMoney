@@ -8,7 +8,8 @@
 
 
 <mat-toolbar class="toolbar-app"
-             (mousedown)="closeMenu()" *ngIf="message?.length==0">
+             (mousedown)="closeMenu()"
+             *ngIf="message?.length==0">
     <mat-icon
       title="Accédez au menu principal" id="cmdMenu"
       (click)="drawer.toggle()" style="cursor: pointer;">
@@ -35,7 +36,8 @@
 <mat-drawer-container class="container" autosize>
 
     <mat-drawer #drawer class="sidemenu"
-                [mode]="sidemenu_mode" *ngIf="message.length==0">
+                [mode]="sidemenu_mode"
+                *ngIf="message.length==0">
       <app-sidemenu (logout)="logout()" (click)="closeMenu()">
       </app-sidemenu>
     </mat-drawer>
@@ -47,8 +49,6 @@
           <app-hourglass marginTop="40px" fontsize="large"
                          [diameter]="40" [message]="message"></app-hourglass>
         </div>
-
-<!--        filter: saturate(2) invert() blur(1px) grayscale(100%)-->
 
         <img src="./assets/img/coin.png"
              style="width:60vw;max-width:300px;display: inline;margin:0px;margin-top: 50px;"

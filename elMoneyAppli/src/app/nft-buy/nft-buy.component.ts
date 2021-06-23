@@ -56,7 +56,6 @@ export class NftBuyComponent implements OnInit {
         }
       }
 
-
       this.message = "Achat en cours";
       let price = this.nft.price;
       this.api._post("buy_nft/" + this.nft.token_id + "/" + price + "/" + this.seller.address, "", {pem:this.user.pem,identifier:this.nft.identifier}).subscribe((r: any) => {

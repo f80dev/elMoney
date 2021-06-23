@@ -12,6 +12,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import yaml
 from erdpy.accounts import Account
 from erdpy.contracts import SmartContract
+from erdpy.wallet import pem
 
 from flask import Response, request, jsonify, send_file, make_response
 
@@ -88,17 +89,16 @@ def analyse_pem():
 
     if body.endswith(".pem"):
         _to=Account(pem_file="./PEM/"+body)
-        address=_to.address.bech32()
+        pubkey=_to.address.bech32()
         with open(_to.pem_file, "r") as myfile:
             body = myfile.readlines()
+        body="".join(body)
+        body=body.replace("\n","")
     else:
         body=str(base64.b64decode(body.split("base64,")[1]),"utf-8")
-        address="erd"+body.split("erd")[1].split("----")[0]
-        _to=Account(address)
+        pubkey="erd"+body.split("-----")[1].split("erd")[1]
 
-    _erc20=dao.get_money_by_name(MAIN_UNITY,bc._proxy.url)
-
-    return jsonify({"address":address,"pem":body}),200
+    return jsonify({"address":pubkey,"pem":body}),200
 
 
 

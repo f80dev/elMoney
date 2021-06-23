@@ -9,6 +9,8 @@ import {MatSidenav} from "@angular/material/sidenav";
 import {Location} from "@angular/common";
 import {fromEvent, Observable,Subscription} from "rxjs";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {DialogData, PromptComponent} from "./prompt/prompt.component";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-root',
@@ -33,51 +35,83 @@ export class AppComponent implements OnInit,OnDestroy {
               public router:Router,
               public toast:MatSnackBar,
               public _location:Location,
+              public dialog:MatDialog,
               public user:UserService,
               public api:ApiService){
 
     this.appVersion=environment.appVersion;
     this.message="Connexion";
 
-    this.config.init(()=>{
+    this.config.init(()=> {
       this.config.init_tags();
-      this.message="";
+      this.message = "";
       $$("Recherche du contrat à utiliser pour le device");
       this.api.init_identifier(this.routes.snapshot.queryParamMap.get("contract"))
 
       $$("Initialisation de l'utilisateur");
-      let addr=this.routes.snapshot.queryParamMap.get("user");
-      let miner=this.routes.snapshot.queryParamMap.get("miner");
-      let q=this.routes.snapshot.queryParamMap.get("q");
-      let store=this.routes.snapshot.queryParamMap.get("store");
-      let filter=this.routes.snapshot.queryParamMap.get("filter");
-      let profil=this.routes.snapshot.queryParamMap.get("profil");
+      let addr = this.routes.snapshot.queryParamMap.get("user");
+      if(!addr)addr=localStorage.getItem("addr");
 
-      let pem_key=localStorage.getItem("pem");
-      if(pem_key)pem_key=JSON.parse(pem_key);
+      let pem_key = localStorage.getItem("pem");
+      if (pem_key) pem_key = JSON.parse(pem_key);
 
-      this.user.init(addr,pem_key,
-        (r)=> {
-          if (profil){this.router.navigate(["private"],{queryParams:{profil:profil}});return;}
-          if (filter){this.router.navigate(["store"],{queryParams:{id:filter}});return;}
-          if (addr)  {this.router.navigate(["nfts-perso"]);return;};
-          if (miner) {this.router.navigate(["miner"],{queryParams:{miner:miner}});return;}
-          if (store) {this.router.navigate(["store"],{queryParams:{store:store}});return;}
-          if(this._location.path().indexOf("/admin")==-1 && localStorage.getItem("last_screen") && !miner){this.router.navigate([localStorage.getItem("last_screen")]);return;}
-          if(this.config.hasESDT() && !q && !filter){this.router.navigate(["main"]);return;}
-          //this.router.navigate(["store"],{queryParams:{q:q,filter:filter}});
-        },
-        (err)=>{
-          $$("Evaluation de la balance impossible, on propose un changement de contrat");
-          showMessage(this,"Le compte est corrompu, changement de compte proposé");
-          this.router.navigate(["settings"]);
-        },this
-      );
+      let profil = this.routes.snapshot.queryParamMap.get("profil");
+      if (!addr) {
+        if(profil){
+          this.router.navigate(["private"],{queryParams:{profil:profil}});
+        }else{
+          this.dialog.open(PromptComponent, {
+            width: 'auto',
+            data: {
+              title: 'Premier lancement',
+              question: 'Créer un compte ou utiliser un compte existant ?',
+              onlyConfirm: true,
+              lbl_ok: 'Nouveau compte',
+              lbl_cancel: 'Compte existant'
+            }
+          }).afterClosed().subscribe((result_code) => {
+            if (result_code == "yes") {
+              this.start_connect(addr,profil,pem_key);
+            } else {
+              this.router.navigate(["private"]);
+            }
+          });
+        }
+      } else {
+        this.start_connect(addr,profil,pem_key);
+      }
     },()=>{
       this.message="";
       $$("!Probléme d'initialisation de la configuration");
       this.router.navigate(["support"],{queryParams:{message:"Serveur non disponible"}});
     });
+  }
+
+
+  //démarre la connexion
+  start_connect(addr,profil,pem_key){
+    let miner = this.routes.snapshot.queryParamMap.get("miner");
+    let q = this.routes.snapshot.queryParamMap.get("q");
+    let store = this.routes.snapshot.queryParamMap.get("store");
+    let filter = this.routes.snapshot.queryParamMap.get("filter");
+
+    this.user.init(addr,pem_key,
+      (r)=> {
+        if (profil){this.router.navigate(["private"],{queryParams:{profil:profil}});return;}
+        if (filter){this.router.navigate(["store"],{queryParams:{id:filter}});return;}
+        if (addr)  {this.router.navigate(["nfts-perso"]);return;};
+        if (miner) {this.router.navigate(["miner"],{queryParams:{miner:miner}});return;}
+        if (store) {this.router.navigate(["store"],{queryParams:{store:store}});return;}
+        if(this._location.path().indexOf("/admin")==-1 && localStorage.getItem("last_screen") && !miner){this.router.navigate([localStorage.getItem("last_screen")]);return;}
+        if(this.config.hasESDT() && !q && !filter){this.router.navigate(["main"]);return;}
+        //this.router.navigate(["store"],{queryParams:{q:q,filter:filter}});
+      },
+      (err)=> {
+        $$("Evaluation de la balance impossible, on propose un changement de contrat");
+        showMessage(this, "Le compte est corrompu, changement de compte proposé");
+        this.router.navigate(["settings"]);
+      },this
+    );
   }
 
   init_event_for_network_status() {
