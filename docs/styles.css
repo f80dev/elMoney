@@ -2832,7 +2832,7 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
 .mainform {
   text-align: center;
   min-height: 100vh;
-  background-color: #323232;
+  background-color: #686868;
   color: white;
   padding: 0px;
 }
@@ -2906,7 +2906,7 @@ h2 {
   justify-content: center;
 }
 body {
-  background-color: #323232 !important;
+  background-color: #3d3d3d !important;
   font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif;
   color: white;
   margin: 0px;
@@ -2914,7 +2914,7 @@ body {
 html {
   font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif;
   font-weight: lighter;
-  background-color: #323232 !important;
+  background-color: #3d3d3d !important;
   overflow: scroll;
   overflow-x: hidden;
 }
@@ -2938,7 +2938,7 @@ input {
   color: lightgray;
 }
 mat-dialog-container {
-  background-color: #323232 !important;
+  background-color: #3d3d3d !important;
 }
 td {
   color: white !important;
@@ -2958,7 +2958,7 @@ mat-icon {
   background-color: #303030;
 }
 mat-dialog-content {
-  background-color: #323232 !important;
+  background-color: #3d3d3d !important;
   color: lightgrey !important;
   margin: 0;
   overflow: hidden !important;
@@ -3000,7 +3000,7 @@ h3 {
 .app-panel {
   width: 96%;
   margin: 2%;
-  background-color: #323232;
+  background-color: #3d3d3d;
   color: white;
 }
 .app-mat-panel-description {
@@ -3076,7 +3076,7 @@ mat-card-content {
   background-color: #20202b;
 }
 mat-expansion-panel-header {
-  background-color: #323232;
+  background-color: #3d3d3d;
 }
 .photo {
   border: white solid 1px;
