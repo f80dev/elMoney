@@ -23,6 +23,7 @@ export class NftStoreComponent implements OnInit {
   filter_id: number=null;
   filter_ids: any[]=[];
   dealers:any[]=[{name:'tous',address:'0x0'}];
+  art:boolean=false;
 
 
   handle:any;

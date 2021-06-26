@@ -1,0 +1,70 @@
+$card-color: white
+
+.gallery
+  justify-content: center
+  align-items: center
+  align-content: space-between
+  flex-direction: row
+  width: 100%
+
+.tableau
+  margin: 20px
+  width: 350px
+  text-align: center
+  position: relative
+  display: inline-block
+  height: 350px
+  background-color: transparent
+  perspective: 1000px
+
+
+
+.tag
+  color: slategray
+  position: relative
+  line-height: 90%
+  padding: 15px
+  margin: 5px
+  font-size: large
+  font-weight: lighter
+  text-align: left
+  display: inline-block
+  height: 100%
+  width: 100%
+
+
+
+.flip-card-inner
+  position: relative
+  width: 100%
+  height: 100%
+  text-align: center
+  transition: transform 0.6s
+  transform-style: preserve-3d
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)
+
+
+.tableau:hover .flip-card-inner
+  transform: rotateY(180deg)
+
+
+.flip-card-front, .flip-card-back
+  position: absolute
+  width: 100%
+  height: 100%
+  -webkit-backface-visibility: hidden
+  backface-visibility: hidden
+
+
+.flip-card-front
+  background-color: $card-color
+  color: black
+
+
+.flip-card-back
+  background-color: $card-color
+  color: white
+  position: relative
+  width: 100%
+  height: 100%
+  transform: rotateY(180deg)

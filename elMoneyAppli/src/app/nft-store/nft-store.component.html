@@ -40,6 +40,9 @@
         <mat-icon>logout</mat-icon>
       </button>
     </td>
+    <td style="text-align: left;">
+      <mat-slide-toggle [(ngModel)]="art">Art</mat-slide-toggle>
+    </td>
     <td style="text-align: right;">
 
       <button mat-raised-button
@@ -51,6 +54,8 @@
       </button>
 
     </td>
+
+
   </tr></table>
 
 
@@ -96,6 +101,7 @@
   </div>
 
   <app-nfts [nfts]="nfts"
+            [art]="art"
             *ngIf="message?.length==0"
             [user]="user"
             [filter]="filter+selected_tag"

@@ -18,6 +18,7 @@ import {SelDealerComponent} from "../sel-dealer/sel-dealer.component";
 export class NftsComponent implements OnChanges {
 
   @Input("user") user:any;
+  @Input("art") art:boolean=true;
   @Input("filter") filter:string="*";
   @Input("nfts") nfts:any;
   @Input("fontsize") fontsize:string="normal";

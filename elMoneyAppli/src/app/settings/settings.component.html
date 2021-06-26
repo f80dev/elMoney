@@ -12,9 +12,7 @@
   <!--    <div class="bloc-bouton">Sauvegardez<br>votre compte</div>-->
   <!--  </button>-->
 
-  <mat-accordion style="width:96%;display: inline-block;" *ngIf="message?.length==0">
-
-
+  <mat-accordion *ngIf="message?.length==0">
     <mat-expansion-panel class="app-panel" [expanded]="open_section==0">
       <mat-expansion-panel-header>Changer de compte</mat-expansion-panel-header>
 
@@ -38,7 +36,8 @@
       <br>
 
 
-      <br>_____<br>
+      <br>_____<br><br>
+
       <h3>Changer de compte</h3>
 
       <button mat-raised-button mat-button
