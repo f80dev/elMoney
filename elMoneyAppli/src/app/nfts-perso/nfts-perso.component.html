@@ -7,7 +7,7 @@
       <app-tuto label="Retrouvez ici tout les NFTs pour lesquels vous disposez d'un mandat de vente"></app-tuto>
       <app-nfts [user]="user" [nfts]="nfts[0]"
                 [filter]="{state:0,isDealer:true}"
-                [with_icon]="false"
+                [with_icon]="false" [art]="false"
                 height="fit-content"
                 (refresh)="refresh()">
       </app-nfts>
@@ -25,6 +25,7 @@
         <app-nfts [user]="user" [nfts]="nfts[1]"
                   [with_icon]="true" height="fit-content" width="90%"
                   (refresh)="refresh()"
+                  [art]="false"
                   (transfer)="transfer($event)">
         </app-nfts>
         <br>

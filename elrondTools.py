@@ -737,6 +737,9 @@ class ElrondNet:
                         i=i+1
 
                 desc=desc.strip()
+
+                premium=(len(visual)>0 and len(desc)>10 and len(title)>5)
+
                 obj=dict({"token_id": id,
                           "title": title,
                           "tags":" ".join(tags),
@@ -751,6 +754,7 @@ class ElrondNet:
                           "owner":owner_addr,
                           "visual":visual,
                           "unity":unity,
+                          "premium":premium,
                           "identifier":identifier,
                           "fullscreen":fullscreen,
                           "properties":properties

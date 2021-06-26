@@ -168,7 +168,6 @@ const config: SocketIoConfig = {
       useValue: {
         autoLogin: false,
         providers: [
-
           {
             id: GoogleLoginProvider.PROVIDER_ID,
             provider: new GoogleLoginProvider('794055474370-qrdn0gb051k774mtetvo7lifcslmlpgg.apps.googleusercontent.com'),

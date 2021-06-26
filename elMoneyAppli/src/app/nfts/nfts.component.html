@@ -2,7 +2,7 @@
 
   <div *ngIf="!art">
     <mat-card class="app-card mat-elevation-z16"
-              [ngStyle]="{'min-height':'150px','max-width':max_w,width:_w,height: 'fit-content','margin':'1%','margin-bottom':'5px',padding:'7px'}"
+              [ngStyle]="{'min-height':'150px','max-width':max_w,width:_w,height: 'fit-content','margin':'1%','margin-bottom':'5px',padding:'7px','color':'white'}"
               *ngFor="let nft of nfts | filter: ['search',filter]">
 
       <mat-card-header *ngIf="!nft.fullscreen || force_text" style="height: 35px">
@@ -192,7 +192,7 @@
   <div *ngIf="art" class="gallery">
     <div *ngFor="let nft of nfts | filter: ['search',filter]" style="display: inline-block;">
 
-      <div *ngIf="nft.visual?.length>0" class="tableau">
+      <div *ngIf="nft.visual?.length>0 && nft.premium" class="tableau">
       <div class="flip-card-inner">
         <div class="flip-card-front mat-elevation-z8">
           <img [src]="nft.visual"

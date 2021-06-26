@@ -119,7 +119,6 @@ export class NftStoreComponent implements OnInit {
     if (withMessage) this.message = "Chargement des tokens ...";
     this.api._get("nfts/"+this.selected_dealer.address+"/").subscribe((r: any) => {
       this.message = "";
-
       this.nfts=group_tokens(r,this.config.tags,(item)=>{
         if (!this.filter_id || this.filter_id == item.token_id) {
           if (item.state == 0 && item.properties >= 4 && item.owner != this.user.addr) {
