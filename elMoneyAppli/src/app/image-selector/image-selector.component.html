@@ -36,7 +36,7 @@
   </div>
   <div style="width: 100%;text-align: center;">
     <div *ngIf="imageBase64"
-         style="display: inline-block;width:80%;max-width: 300px;">
+         style="display: inline-block;width:80%;max-width: 600px;">
       <image-cropper
         [imageBase64]="imageBase64"
         [maintainAspectRatio]="true"
@@ -53,8 +53,9 @@
   </div>
 
 </mat-dialog-content>
+<br>
 <hr>
-<mat-dialog-actions style="text-align: center;width:100%;">
+<mat-dialog-actions style="text-align: right !important;width:100%;">
 
   <button id="cmdTurn" mat-button mat-raised-button mat-icon-button
           class="icon-button"

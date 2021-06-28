@@ -23,7 +23,7 @@
 
     <mat-form-field appearance="fill" class="app-field" style="max-width: 320px">
       <mat-label>Nom complet de votre monnaie</mat-label>
-      <input matInput autocomplete="off" type="text" minlength="3" maxlength="20" [(ngModel)]="name" (focusout)="format_name()" (focusin)="focus_idx=1" autofocus>
+      <input matInput autocomplete="off" type="text" minlength="3" maxlength="20" [(ngModel)]="name" (focusout)="format_name()" (focusin)="focus_idx=1" cdkFocusInitial>
       <mat-hint *ngIf="focus_idx==1">entre 3 et 20 caractères sans espace</mat-hint>
     </mat-form-field>
     &nbsp;&nbsp;

@@ -163,6 +163,7 @@ const config: SocketIoConfig = {
   providers: [
     ApiService,
     TransPipe,
+    DatePipe,
     {
       provide: 'SocialAuthServiceConfig',
       useValue: {

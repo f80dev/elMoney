@@ -15,7 +15,8 @@ export interface DialogData {
   type:string,
   lbl_cancel:string,
   lbl_sup:string,
-  options:any[]
+  options:any[],
+  subtitle:string
 }
 
 

@@ -2884,6 +2884,9 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
 h2 {
   color: white;
 }
+h1 {
+  color: white;
+}
 .div-center {
   width: 100%;
   text-align: center;
@@ -2937,6 +2940,13 @@ input {
 }
 mat-dialog-container {
   background-color: #3d3d3d !important;
+  color: white;
+}
+mat-dialog-title {
+  color: white !important;
+}
+mat-dialog-content {
+  color: white !important;
 }
 td {
   color: white !important;

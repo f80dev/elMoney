@@ -19,6 +19,7 @@ import {MatAutocomplete, MatAutocompleteSelectedEvent} from "@angular/material/a
 import {MatChipInputEvent} from "@angular/material/chips";
 import {map, startWith} from "rxjs/operators";
 import {IpfsService} from "../ipfs.service";
+import {DatePipe, formatDate} from "@angular/common";
 
 export interface SellerProperties {
   address: string;
@@ -95,6 +96,7 @@ export class ImporterComponent implements OnInit {
               public ipfs:IpfsService,
               public dialog:MatDialog,
               public toast:MatSnackBar,
+              public datepipe:DatePipe,
               public router:Router) {
     this.filteredTags = this.tagCtrl.valueChanges.pipe(
       startWith(null),
@@ -286,9 +288,9 @@ export class ImporterComponent implements OnInit {
   }
 
 
-  add_visual(func=null,title="",width=200,height=200,square=true) {
-    this.dialog.open(ImageSelectorComponent, {position:{left: '5vw', top: '5vh'},
-      maxWidth: 400, maxHeight: 700, width: '90vw', height: 'auto', data:
+  add_visual(func=null,title="",width=200,height=200,square=true,can_be_null:boolean=true) {
+    this.dialog.open(ImageSelectorComponent, {position:{left: '10vw', top: '20vh'},
+      maxWidth: 800, maxHeight: 700, width: '80vw', height: 'auto', data:
         {
           title:title,
           result: this.visual,
@@ -306,7 +308,12 @@ export class ImporterComponent implements OnInit {
         this.visual=result.img;
         if(func)func(result);
       } else {
-        showMessage(this,"Action annulée");
+        if(can_be_null){
+          func(null);
+        } else {
+          showMessage(this,"Action annulée");
+        }
+
       }
     });
   }
@@ -381,10 +388,10 @@ export class ImporterComponent implements OnInit {
   ask_for_price(question="",func:Function=null,fee=0){
     this.dialog.open(PromptComponent,{width: '280px',data:
         {
-          title: "Prix de vente (eGld)",
+          title: "Prix de vente ?",
           question: question,
           result:0,
-          default:0,
+          subtitle:"Montant en EGold",
           min:0,max:10,
           type:"number",
           onlyConfirm:false,
@@ -402,8 +409,18 @@ export class ImporterComponent implements OnInit {
 
 
 
-  ask_for_text(title:string,question:string,func:Function,_type="string",_max=0,_default:any="",placeholder=""){
-    let _data={title: title,question: question,type:_type,max:_max,onlyConfirm:false,lbl_ok:"Ok",lbl_cancel:"Annuler",placeholder:placeholder,result:""};
+  ask_for_text(title:string,question:string,func:Function,subtitle:string="",_type="string",_max=0,_default:any="",placeholder=""){
+    let _data= {
+      title: title,
+      question: question,
+      type: _type, max: _max,
+      onlyConfirm: false,
+      lbl_ok: "Ok",
+      lbl_cancel: "Annuler",
+      placeholder: placeholder,
+      result: "",
+      subtitle:subtitle
+    }
     if(_type=="number" && _default=="")_default=0;
     if(_type=="date" && _default=="")_default=new Date().toDateString();
     if(_default!="")_data.result=_default;
@@ -457,9 +474,9 @@ export class ImporterComponent implements OnInit {
             this.desc=legende;
             if(token.tags)this.desc=this.desc+" "+token.tags;
             this.ask_for_price("Quel prix pour votre photo",null,token.fee);
-          });
+          },"Exemple: Tirage argentique numérisé, objectif 24/36");
         } else this.show_zone_upload=false;
-      });
+      },"Exemple: La route");
     },title,w,h,square)
   }
 
@@ -515,12 +532,11 @@ export class ImporterComponent implements OnInit {
                   this.ask_for_price("Combien coute la participation",null,token.fee);
                 });
               });
-
             }
-          })
-        });
+          },"Exemple: Calcul mental")
+        },"Exemple: 168");
       }
-    });
+    },"Exemple: Combien font 12 x 14 ?");
   }
 
 
@@ -542,9 +558,9 @@ export class ImporterComponent implements OnInit {
                     this.desc="Ouvrir pour savoir si vous avez gagné"
                     this.tokenizer(token.fee);
                   });
-              },"number",20);
-          },"number",20);
-        });
+              },"Montant en eGold","number",20);
+          },"Prix en eGold","number",20);
+        },"Exemple: la grande loterie");
       }
     },"Visuel de vos billets");
   }
@@ -558,26 +574,28 @@ export class ImporterComponent implements OnInit {
       if(visual){
         this.ask_for_text("Titre de votre évenement","",(title)=> {
           if (title) {
-            this.ask_for_text("Lieu et Date","Indiquer l'adresse et l'horaire",(desc)=> {
-              if (desc) {
-                this.title=title+" - "+desc;
-                this.secret="Billet: @id@";
-                this.desc=desc;
-                if(token.tags)this.desc=this.desc+" "+token.tags;
-                this.ask_for_price("Prix unitaire du billet",(price)=>{
-                  this.ask_for_text("Combien de billets","Indiquer le nombre de billets à fabriquer (maximum 30)",(num)=>{
-                    this.count=Number(num);
-                    if(this.count<31)
-                      this.tokenizer(token.fee);
-                    else {
-                      showMessage(this,"Maximum 30 billets en une seule fois");
-                    }
-                  },"number",30);
-                })
-              }
-            });
+            this.ask_for_text("Adresse","Indiquer l'adresse",(lieu)=> {
+                this.ask_for_text("La date","Quel jour à lieu votre événement",(dt)=> {
+                  this.ask_for_text("Heure","Indiquer L'heure",(hr)=> {
+                    this.desc =lieu +" - "+ this.datepipe.transform(dt,"dd/MM/yyyy") +" à "+hr;
+                    this.title = title + " - "
+                    this.secret = "Billet: @id@";
+                    if (token.tags) this.desc = this.desc + " " + token.tags;
+                    this.ask_for_price("Prix unitaire du billet", (price) => {
+                      this.ask_for_text("Combien de billets", "Indiquer le nombre de billets à fabriquer (maximum 30)", (num) => {
+                        this.count = Number(num);
+                        if (this.count < 31)
+                          this.tokenizer(token.fee);
+                        else {
+                          showMessage(this, "Maximum 30 billets en une seule fois");
+                        }
+                      }, "", "number", 30);
+                    })
+                  },"Exemple: 20:30")
+                },"","date")
+            },"Exemple: Rendez-vous 12 rue Martel, Paris");
           }
-        });
+        },"Exemple: Les dessins de Picasso");
       }
     },"Visuel de votre invitation");
   }
@@ -601,19 +619,20 @@ export class ImporterComponent implements OnInit {
                 this.tokenizer(token.fee);
               }
             }, "Ajouter une belle photo de cet événement", 800, 800);
-          },"date");
-        });
+          },"","date");
+        },"Exemple: une super journée à la mer");
       }
-    });
+    },"Exemple: L'anniversaire de Lola");
   }
 
 
 
-  quick_file($event: any,token:any,title="Télécharger un visuel") {
+  quick_file($event: any,token:any,title="Ajouter un visuel") {
     this.picture=$event.file;
     this.filename=$event.filename;
     this.extensions="*";
     this.add_visual((visual)=>{
+      if(!visual)showMessage(this,"Pas de visuel");
       this.ask_for_text("Titre","Titre de votre annonce",(title)=>{
         if(title) {
           this.ask_for_text("Description","Rédigez une courte phrase pour donner envie de l'acheter",(desc)=>{
@@ -623,9 +642,9 @@ export class ImporterComponent implements OnInit {
               this.title=title;
               this.ask_for_price("Quel est votre prix pour ce fichier",null,token.fee);
             }
-          })
+          },"Exemple: Ce manuel de fonctionnement couvre l'utilisation courante du synthétiseur")
         }
-      });
+      },"Exemple: Manuel de fonctionnement de la TB-303");
     },title);
 
   }

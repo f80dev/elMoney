@@ -127,7 +127,6 @@ export class NftStoreComponent implements OnInit {
         return false;
         }
       });
-
       this.tags=extract_tags(this.nfts);
     });
   }

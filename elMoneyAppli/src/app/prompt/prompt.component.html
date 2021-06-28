@@ -8,7 +8,7 @@
       </iframe>
     </div>
 
-    <mat-form-field *ngIf="!data.onlyConfirm && !data.options" style="width: 95%;">
+    <mat-form-field *ngIf="!data.onlyConfirm && !data.options" style="width: 95%;color: white">
       <input id="txtPrompt" [type]="_type"
              [max]="_max" [min]="_min"
              matInput
@@ -17,6 +17,7 @@
              cdkFocusInitial
              (keypress)="onEnter($event)">
       <mat-icon *ngIf="data.emojis" matSuffix (click)="showEmoji=!showEmoji">emoji_emotions</mat-icon>
+      <mat-hint *ngIf="data.subtitle?.length>0">{{data.subtitle}}</mat-hint>
     </mat-form-field>
 
 
