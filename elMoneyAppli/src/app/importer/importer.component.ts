@@ -65,7 +65,7 @@ export class ImporterComponent implements OnInit {
   show_zone_upload: boolean=false;
   redirect: number=0;
   prompt: string="";
-  tokens: any[]=[];
+  tokens: any[]=[]; //Liste des types de tokens
   full_flyer: boolean=true;
   file_format: string="";
   selected_token: any;
@@ -178,23 +178,9 @@ export class ImporterComponent implements OnInit {
   }
 
 
-  _import(fileInputEvent: any,index_file=0,prompt="",func=null) {
-        var vm:any=this;
-        var reader = new FileReader();
-        reader.onload = ()=>{
-          vm.visual=reader.result;
-          if(func)func();
-        }
-
-        if(index_file==0){
-          vm.picture=fileInputEvent.target.files[0];
-          this.filename=fileInputEvent.target.files[0].name;
-          if(func)func();
-        }else{
-          reader.readAsDataURL(fileInputEvent.target.files[0]);
-        }
-
-
+  _import(_file: any,index_file=0,prompt="",func=null) {
+    this.picture=_file.file;
+    this.filename=_file.name;
   }
 
 
@@ -265,7 +251,7 @@ export class ImporterComponent implements OnInit {
           showMessage(this, err.error);
           if (func_error) func_error();
         });
-      },this.filename);
+      });
     });
   }
 
@@ -627,10 +613,11 @@ export class ImporterComponent implements OnInit {
 
 
 
-  quick_file($event: any,token:any,title="Ajouter un visuel") {
+  quick_file($event: any,token:any,title="Ajouter un visuel",subtitle="Exemple: Manuel de fonctionnement de la TB-303",desc="Exemple: Ce manuel de fonctionnement couvre l'utilisation courante du synthétiseur") {
     this.picture=$event.file;
     this.filename=$event.filename;
     this.extensions="*";
+
     this.add_visual((visual)=>{
       if(!visual)showMessage(this,"Pas de visuel");
       this.ask_for_text("Titre","Titre de votre annonce",(title)=>{
@@ -642,9 +629,9 @@ export class ImporterComponent implements OnInit {
               this.title=title;
               this.ask_for_price("Quel est votre prix pour ce fichier",null,token.fee);
             }
-          },"Exemple: Ce manuel de fonctionnement couvre l'utilisation courante du synthétiseur")
+          },desc)
         }
-      },"Exemple: Manuel de fonctionnement de la TB-303");
+      },subtitle);
     },title);
 
   }
@@ -660,9 +647,10 @@ export class ImporterComponent implements OnInit {
 
 
   onupload($event: any) {
-    if(this.redirect==1)this.quick_file($event,this.tokens[2]);
-    if(this.redirect==2)this.quick_tickets($event,this.tokens[4]);
+    if(this.redirect==3)this.quick_file($event,this.tokens[4],"Ajouter la pochette du titre","Exemple: Karma Police","Exemple: Radiohead");
+    if(this.redirect==1)this.quick_file($event,this.tokens[3]);
   }
+
 
   create_token(token: any) {
     this.selected_token=token;
@@ -673,7 +661,7 @@ export class ImporterComponent implements OnInit {
   open_wizard(token:any){
     if(token.index=="photo")this.quick_photo(token,"Télécharger votre photo",null,null,false);
     if(token.index=="pow")this.quick_pow(token,300,300);
-    if(token.index=="music")this.show_fileupload(1,'Téléverser le fichier musical',token,"audio/*");
+    if(token.index=="music")this.show_fileupload(3,'Téléverser le fichier musical',token,"audio/*");
     if(token.index=="film")this.quick_secret(token,'coller le lien secret (fourni par youtube) du film');
     if(token.index=="file")this.show_fileupload(1,'Téléverser le fichier à embarquer dans votre token',token);
     if(token.index=="secret")this.quick_secret(token);

@@ -36,6 +36,7 @@
 
       <br>
       <app-upload-file *ngIf="show_zone_upload"
+                       [send_file]="true"
                        [maxsize]="config.values.max_file_size"
                        [extensions]="extensions"
                        (canceled)="show_zone_upload=false"
@@ -94,19 +95,15 @@
 
             <form>
               <ng-template matStepLabel>Embarquer dans le NFT</ng-template>
-              <input #csvInput [hidden]="true"
-                     type="file" onclick="this.value=null"
-                     (change)="_import($event,0,'Commençons par charger le fichier dans le NFC')"
-                     accept="*"/>
 
               <table><tr>
                 <td>
-                  <button mat-raised-button
-                      id="cmdImportFile"
-                      mat-button class="app-button"
-                      (click)="csvInput.click()">
-                Un fichier
-              </button>
+                  <app-upload-file
+                    [send_file]="true"
+                    [maxsize]="config.values.max_file_size"
+                    (uploaded)="_import($event,0,'Commençons par charger le fichier dans le NFT')">
+                    {{prompt}}
+                  </app-upload-file>
                 </td>
                 <td>
                   <span *ngIf="picture.length>0">'{{filename}}' est caché dans votre NFT</span>
@@ -161,9 +158,9 @@
 
             <div *ngIf="gift>0">
               <mat-slide-toggle
-                      color="primary"
-                      *ngIf="secret.length>0"
-                      [(ngModel)]="find_secret">Trouver le secret pour avoir la récompense
+                color="primary"
+                *ngIf="secret.length>0"
+                [(ngModel)]="find_secret">Trouver le secret pour avoir la récompense
               </mat-slide-toggle>
             </div>
 
@@ -272,7 +269,7 @@
               </mat-form-field>
 
               &nbsp;
-               <mat-form-field appearance="fill" style="max-width:100px">
+              <mat-form-field appearance="fill" style="max-width:100px">
                 <mat-label>Monnaie</mat-label>
                 <mat-select [(ngModel)]="selected_money" name="money" (ngModelChange)="update_user_solde()">
                   <mat-option *ngFor="let money of moneys" [value]="money">
@@ -429,13 +426,13 @@
 
               <br>
 
-               <mat-slide-toggle
-                      color="primary"
-                      *ngIf="count>1 && gift>0"
-                      name="opt_gift"
-                      [(ngModel)]="opt_gift">
-                 N'attribuer la récompense qu'a un seul NFT sur les {{count}}(loterie)
-                </mat-slide-toggle>
+              <mat-slide-toggle
+                color="primary"
+                *ngIf="count>1 && gift>0"
+                name="opt_gift"
+                [(ngModel)]="opt_gift">
+                N'attribuer la récompense qu'a un seul NFT sur les {{count}}(loterie)
+              </mat-slide-toggle>
               <br>
 
               <br>

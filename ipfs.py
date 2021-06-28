@@ -46,8 +46,8 @@ class IPFS:
     def get_dict(self,token):
         if len(token)!=46: return token
         url="https://ipfs.io/ipfs/"+token
-        r=self.client.get_json(token)
+        r=requests.get(url)
         try:
-            return json.loads(str(r,"utf8").replace("'","\""))
+            return json.loads(r.text.replace("'","\""))
         except:
             return r

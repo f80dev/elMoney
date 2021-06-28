@@ -113,6 +113,7 @@ export class NftsComponent implements OnChanges {
 
 
   open(nft: any,reponse="") {
+    showMessage(this,"Vous allez pouvoir accéder au contenu de votre NFT dans quelques instants");
     nft.message = "En cours d'ouverture";
     this.api._post("open_nft/" + nft.token_id + "/", "", {pem:this.user.pem,response:reponse}).subscribe((r: any) => {
       nft.message = "";

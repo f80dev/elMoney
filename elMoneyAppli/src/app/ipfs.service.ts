@@ -18,11 +18,11 @@ export class IpfsService {
     //this.domain="http://161.97.75.165:5001";
   }
 
-  add(content: any,vm=null,func=null,filename="") {
+  add(content: any,vm=null,func=null) {
     if(!content || content.length==0){
       func();
     } else {
-      if(filename.length>0){
+      if(typeof(content)=="object"){
         this.api._post_file("upload_file",content).subscribe((result:any)=>{
           showMessage(vm,"Upload");
           if(func)func(result.cid);
