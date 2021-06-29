@@ -36,7 +36,7 @@
   </div>
   <div style="width: 100%;text-align: center;">
     <div *ngIf="imageBase64"
-         style="display: inline-block;width:80%;max-width: 600px;">
+         style="display: inline-block;width:80%;max-width: 500px;">
       <image-cropper
         [imageBase64]="imageBase64"
         [maintainAspectRatio]="true"
@@ -65,7 +65,11 @@
     <mat-icon>refresh</mat-icon>
   </button>
 
-  <button id="cmdCancel" class="app-button" mat-button mat-raised-button (click)="onNoClick()">Annuler</button>
+  <button id="cmdCancel" class="icon-button"
+          title="Annuler"
+          mat-button mat-icon-button mat-raised-button (click)="onNoClick()">
+    <mat-icon>cancel</mat-icon>
+  </button>
   <button id="cmdValide" class="app-button" mat-button mat-raised-button
           [mat-dialog-close]="{img:data.result,original:original,file:originalFile}">
     Ok

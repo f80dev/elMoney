@@ -275,8 +275,8 @@ export class ImporterComponent implements OnInit {
 
 
   add_visual(func=null,title="",width=200,height=200,square=true,can_be_null:boolean=true) {
-    this.dialog.open(ImageSelectorComponent, {position:{left: '10vw', top: '20vh'},
-      maxWidth: 800, maxHeight: 700, width: '80vw', height: 'auto', data:
+    this.dialog.open(ImageSelectorComponent, {position:{left: '10vw', top: '10vh'},
+      maxWidth: 900, maxHeight: 900, width: '80vw', height: 'auto', data:
         {
           title:title,
           result: this.visual,
