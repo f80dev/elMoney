@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {UserService} from "../user.service";
 import {ApiService} from "../api.service";
-import {$$, group_tokens, subscribe_socket} from "../tools";
+import {$$, group_tokens, showMessage, subscribe_socket} from "../tools";
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormControl} from "@angular/forms";
 import {Socket, SocketIoModule} from "ngx-socket-io";
@@ -9,6 +9,7 @@ import {NewContactComponent} from "../new-contact/new-contact.component";
 import {ConfigService} from "../config.service";
 import {MatDialog} from "@angular/material/dialog";
 import {environment} from "../../environments/environment";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-nfts-perso',
@@ -30,6 +31,7 @@ export class NftsPersoComponent implements OnInit {
     public api:ApiService,
     public config:ConfigService,
     public socket:Socket,
+    public toast:MatSnackBar,
     public dialog:MatDialog,
     public router:Router,
     public user:UserService,
@@ -50,6 +52,17 @@ export class NftsPersoComponent implements OnInit {
     localStorage.setItem("last_screen","nfts-perso");
   }
 
+  reroutage(){
+    let total=0;
+    for(let i of [0,1,2])
+      total=total+this.nfts[i].length;
+
+    if(total==0){
+      showMessage(this,"Vous n'avez aucun NFT, je vous redirige vers les boutiques")
+      this.router.navigate(["store"]);
+    }
+  }
+
 
    refresh() {
     this.user.refresh_balance();
@@ -65,15 +78,19 @@ export class NftsPersoComponent implements OnInit {
           r[i].fullscreen=false;
         }
 
-
         this.nfts[identifier]=group_tokens(r,this.config.tags,(i)=>{
           if(!this.filter || identifier!=2 || this.filter.key=="" || i[this.filter.key]==this.filter.value) {
             return true;
           }
           return false;
         });
+
+        if(identifier==2)setTimeout(()=>{this.reroutage();},500);
+
+
       });
     }
+
   }
 
   transfer(nft:any){

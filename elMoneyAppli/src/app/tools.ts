@@ -358,7 +358,7 @@ export function getMarkerLayer(map:any):any {
  * @param s
  * @param duration
  */
-export function showMessage(vm:any,s:string="",duration=2000,func=null,label_button="ok"){
+export function showMessage(vm:any,s:string="",duration=4000,func=null,label_button="ok"){
   if(s==null || s.length==0)return false;
   s=s+"";
   $$("Affichage du message :",s)

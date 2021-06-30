@@ -115,7 +115,7 @@
       <mat-form-field appearance="fill" class="app-field">
         <mat-label>Nom de votre marketplace</mat-label>
         <input matInput type="url" (focusin)="focus_idx=4" maxlength="200" [(ngModel)]="user.shop_name" [ngModelOptions]="{standalone: true}">
-        <mat-hint *ngIf="focus_idx==4">L'adresse de votre site internet</mat-hint>
+        <mat-hint *ngIf="focus_idx==4">Pour devenir distributeur vous devez avoir un nom de boutique</mat-hint>
       </mat-form-field>
       <br>
 
