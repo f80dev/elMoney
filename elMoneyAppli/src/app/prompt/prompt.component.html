@@ -9,15 +9,25 @@
     </div>
 
     <mat-form-field *ngIf="!data.onlyConfirm && !data.options" style="width: 95%;color: white">
-      <input id="txtPrompt" [type]="_type"
-             [max]="_max" [min]="_min"
-             matInput
-             [(ngModel)]="data.result"
-             [placeholder]="data.placeholder"
-             cdkFocusInitial
-             (keypress)="onEnter($event)">
-      <mat-icon *ngIf="data.emojis" matSuffix (click)="showEmoji=!showEmoji">emoji_emotions</mat-icon>
-      <mat-hint *ngIf="data.subtitle?.length>0">{{data.subtitle}}</mat-hint>
+
+      <div *ngIf="_type!='memo'">
+        <input id="txtPrompt" [type]="_type"
+               [max]="_max" [min]="_min"
+               matInput
+               [(ngModel)]="data.result"
+               [placeholder]="data.placeholder"
+               cdkFocusInitial
+               (keypress)="onEnter($event)">
+        <mat-icon *ngIf="data.emojis" matSuffix (click)="showEmoji=!showEmoji">emoji_emotions</mat-icon>
+        <mat-hint *ngIf="data.subtitle?.length>0">{{data.subtitle}}</mat-hint>
+      </div>
+
+      <div *ngIf="_type=='memo'">
+        <textarea matInput type="text"
+                  [maxlength]="_max" [(ngModel)]="data.result" cdkFocusInitial></textarea>
+      </div>
+
+
     </mat-form-field>
 
 
@@ -26,12 +36,12 @@
   <div *ngIf="data.options?.length>0" style="width:100%;text-align: center;">
     <div *ngFor="let option of data.options" style="margin:5px;">
       <button
-            class="app-button"
-            [ngStyle]="{width:option.width,verticalAlign:'middle'}"
-            [title]="option.title"
-            (click)="select_option(option.value)"
-            [innerHTML]="option.label"
-            mat-button mat-raised-button>
+        class="app-button"
+        [ngStyle]="{width:option.width,verticalAlign:'middle'}"
+        [title]="option.title"
+        (click)="select_option(option.value)"
+        [innerHTML]="option.label"
+        mat-button mat-raised-button>
       </button>
     </div>
     <hr>

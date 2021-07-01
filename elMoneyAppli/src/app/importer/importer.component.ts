@@ -487,7 +487,7 @@ export class ImporterComponent implements OnInit {
                   this.ask_for_price("Quel prix pour votre secret",null,token.fee);
                 });
               }
-            })
+            },"","memo")
         });
       }
     });
@@ -606,7 +606,7 @@ export class ImporterComponent implements OnInit {
               }
             }, "Ajouter une belle photo de cet événement", 800, 800);
           },"","date");
-        },"Exemple: une super journée à la mer");
+        },"Exemple: une super journée à la mer","memo");
       }
     },"Exemple: L'anniversaire de Lola");
   }
@@ -629,7 +629,7 @@ export class ImporterComponent implements OnInit {
               this.title=title;
               this.ask_for_price("Quel est votre prix pour ce fichier",null,token.fee);
             }
-          },desc)
+          },desc,"memo")
         }
       },subtitle);
     },title);
