@@ -87,7 +87,7 @@ class ElrondNet:
             return self._proxy.url+"/"+type+"/"+tx
 
 
-    def send_transaction(self,_sender:Account,_receiver:Account,_sign:Account,value:str,data:str):
+    def send_transaction(self,_sender:Account,_receiver:Account,_sign:Account,value:str,data:str,gas_limit=LIMIT_GAS):
         """
         Envoi d'une transaction signée
         :param _sender:
@@ -103,8 +103,8 @@ class ElrondNet:
         t.version = config.get_tx_version()
         t.data = data
         t.chainID = self._proxy.get_chain_id()
-        t.gasLimit = LIMIT_GAS
-        t.value = value
+        t.gasLimit = gas_limit
+        t.value = str(value)
         t.sender = _sender.address.bech32()
         t.receiver = _receiver.address.bech32()
         t.gasPrice = config.DEFAULT_GAS_PRICE
@@ -118,6 +118,7 @@ class ElrondNet:
             tr=self.wait_transaction(tx, not_equal="pending")
             return tr
         except Exception as inst:
+            log("Exception d'execution de la requete "+str(inst.args))
             return None
 
 
@@ -518,6 +519,39 @@ class ElrondNet:
         return rc
 
 
+    def update_account(self,pem_file,values:dict):
+        if "addr" in values:del values["addr"]
+        if "pem" in values:del values["pem"]
+        data = "SaveKeyValue"
+        required_gas=250000+50000
+        for k in values.keys():
+            key=str_to_hex(k,False)
+            value=str_to_hex(values[k],False)
+            if len(value)>0:
+                data=data+"@"+key+"@"+value
+                required_gas=required_gas+10000*(len(value)+len(key))
+
+        _sender=Account(pem_file=pem_file)
+        self.send_transaction(_sender,_sender,_sender,0,data)
+
+
+    def get_account(self, addr):
+        """
+        Récupération des informations du compte
+        :see https://docs.elrond.com/sdk-and-tools/rest-api/addresses/
+        :param addr:
+        :return:
+        """
+        rc = requests.get(self._proxy.url + "/address/" + addr + "/keys")
+        if rc.status_code == 200:
+            obj=dict()
+            rc = dict(json.loads(rc.text)["data"]["pairs"])
+            for k in rc.keys():
+                obj[hex_to_str(k)]=hex_to_str(rc[k])
+            rc=obj
+        else:
+            rc = {"error": rc.status_code, "message": rc.text}
+        return rc
 
 
     def create_account(self,fund="",name=None,seed_phrase=""):
@@ -562,6 +596,7 @@ class ElrondNet:
                 log("Le compte "+_u.address.bech32()+" n'a pas recu d'eGld pour les transactions")
 
         return _u,pem
+
 
 
 
@@ -949,6 +984,8 @@ class ElrondNet:
                           arguments=[hex(state)],
                           )
         return tx
+
+
 
 
 

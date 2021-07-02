@@ -56,6 +56,7 @@ def base_alphabet_to_10(letters):
 
 
 def str_to_hex(letters,zerox=True):
+    if type(letters)==list:letters=",".join(letters)
     rc=""
     for letter in letters:
         rc=rc+hex(ord(letter))[2:]
@@ -79,7 +80,8 @@ def nbr_to_hex(number,zerox=True):
 
 
 def hex_to_str(number):
-    number=hex(number)[2:]
+    if not type(number)==str:
+        number=hex(number)[2:]
     rc=""
     for i in range(0,len(number),2):
         rc=rc+chr(int(number[i:i+2],16))

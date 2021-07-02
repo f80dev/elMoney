@@ -19,7 +19,7 @@ import {ClipboardService} from "ngx-clipboard";
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.sass']
 })
-export class SettingsComponent implements OnInit,OnDestroy {
+export class SettingsComponent implements OnInit {
   fileUrl;
   contrat="";
   focus_idx: number;
@@ -101,11 +101,9 @@ export class SettingsComponent implements OnInit,OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
-    this.user.save_user();
-  }
 
   make_store() {
+    if(!this.user.pem)this.router.navigate(["private"],{queryParams:{redirect:"private"}})
     this.user.save_user(()=>{
       this.message="Création / modification de la boutique";
       if(this.user.shop_website.length+this.user.shop_name.length+this.user.shop_description.length>0){
@@ -144,5 +142,15 @@ export class SettingsComponent implements OnInit,OnDestroy {
       .catch( (error) => {
         this._clipboardService.copyFromContent(this.user.shop_website);
       });
+  }
+
+  update_user() {
+    if(!this.user.pem)
+      this.router.navigate(["private"],{queryParams:{redirect:"private"}})
+    else{
+      this.user.save_user();
+      showMessage(this,"Informations enregistrées");
+    }
+
   }
 }

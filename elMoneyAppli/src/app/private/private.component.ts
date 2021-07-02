@@ -17,6 +17,7 @@ import {MatDialog} from "@angular/material/dialog";
 export class PrivateComponent implements OnInit {
 
   message:string="";
+  title:string="";
   savePrivateKey={value:false};
   profils: any=[
     {label:"Alice",value:"alice.pem"},
@@ -45,6 +46,11 @@ export class PrivateComponent implements OnInit {
               public _location:Location) { }
 
   ngOnInit(): void {
+    this.title=this.routes.snapshot.queryParamMap.get("title") || "Changer de compte";
+
+    if(this.routes.snapshot.queryParamMap.get("redirect") && this.title=="Changer de compte")
+      this.title="Cette action requiert votre clé";
+
     let profil=this.routes.snapshot.queryParamMap.get("profil");
     if(profil){
       this.change_user(profil+".pem");
@@ -71,9 +77,14 @@ export class PrivateComponent implements OnInit {
         localStorage.removeItem("addr");
         localStorage.removeItem("pem");
       }
-      this.user.init(r.address, {pem: r.pem},()=>{
+      this.user.init(r.address, r.pem,()=>{
         this.user.refresh_balance(()=>{
-          this.router.navigate(["store"]);
+          let redirect=this.routes.snapshot.queryParamMap.get("redirect");
+          if(redirect){
+            this.router.navigate([redirect]);
+          }else{
+            this.router.navigate(["store"]);
+          }
         })
       });
     },(err)=>{showError(this)});

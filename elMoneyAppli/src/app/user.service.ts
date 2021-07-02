@@ -63,25 +63,30 @@ export class UserService {
 
 
   save_user(func=null){
-    let body={
-      addr:this.addr,
-      contacts:this.contacts,
-      description:this.description,
-      pseudo:this.pseudo,
-      visual:this.visual,
-      website:this.website,
-      shop_visual:this.shop_visual,
-      shop_name:this.shop_name,
-      shop_description:this.shop_description,
-      email:this.email,
-      shop_website:this.shop_website,
-      pem:this.pem
-    };
+    if(this.pem){
+      let body={
+        addr:this.addr,
+        contacts:this.contacts,
+        description:this.description,
+        pseudo:this.pseudo,
+        visual:this.visual,
+        website:this.website,
+        shop_visual:this.shop_visual,
+        shop_name:this.shop_name,
+        shop_description:this.shop_description,
+        email:this.email,
+        shop_website:this.shop_website,
+        pem:this.pem
+      };
 
-    this.api._post("users/","",body).subscribe((id:any)=>{
-      $$("Enregistrement de l'utilisateur");
-      if(func)func();
-    })
+      this.api._post("users/","",body).subscribe((id:any)=>{
+        $$("Enregistrement de l'utilisateur");
+        if(func)func();
+      })
+    }else {
+      $$("Impossible d'enregistrer sans PEM");
+    }
+
 
   }
 
@@ -126,6 +131,7 @@ export class UserService {
     this.save_user();
   }
 
+
   del_contact(email: any) {
     for(let c of this.contacts){
       if(c.email==email)
@@ -135,33 +141,23 @@ export class UserService {
   }
 
 
-  create_new_account(func,func_error){
-    $$("Création d'un nouveau compte");
-    this.api._get("new_account/","",120).subscribe((r:any)=> {
-      this.api.set_identifier(r["default_money"])
-      if (r.pem.length > 0) {
-        $$("Initialisation du userService avec le fichier PEM correct");
-        func(r)
-      }
-    },(err)=>{
-      func_error(err);
-      $$("!Impossible de créer le compte");
-    });
-  }
 
 
   init(addr: string,pem:any=null,func=null,func_error=null,vm=null) {
+    debugger
     $$("Initialisation de l'utilisateur avec ",addr);
     if(!addr)addr=localStorage.getItem("addr");
     if(!addr) {
       if(vm)vm.message="Ouverture d'un nouveau compte sur le "+this.config.server.network+". Cela prendra moins de 1 minute, le temps de créditer quelques eGold pour les transactions et quelques 'TFC', la monnaie par défaut de l'application";
-      this.create_new_account((r)=>{
-          if(vm)vm.message="";
-          this.init(r.address, {pem:r.pem},func,func_error);},
-        ()=>{
-          $$("Probleme de fabrication du nouveau compte")
-          func_error();
-        });
+      $$("Création d'un nouveau compte");
+      this.api._get("new_account/","",120).subscribe((r:any)=> {
+        this.api.set_identifier(r["default_money"])
+        this.init(r.address, r.pem,func,func_error);
+      },(err)=>{
+        func_error(err);
+        $$("!Impossible de créer le compte");
+      });
+
     } else {
       $$("Initialisation de l'utilisateur à l'adresse ",addr);
 
@@ -173,20 +169,19 @@ export class UserService {
       this.addr=addr;
       $$("Enregistrement de "+this.addr+" sur le device");
       localStorage.setItem("addr",this.addr);
-      this.visual="/assets/img/anonymous.jpg";
-      this.shop_visual="/assets/img/shop.png";
+
       this.pem=pem;
+
 
       $$("Chargement de l'utilisateur");
       this.api._get("users/"+this.addr).subscribe((body:any)=>{
-        this.contacts=body.contacts;
-        this.pseudo=body.pseudo
-        this.visual=body.visual;
-        this.description=body.description;
-        this.shop_name=body.shop_name;
-        this.email=body.email;
-        this.shop_visual=body.shop_visual;
-        this.pem=body.pem;
+        this.contacts=body.contacts || [];
+        this.pseudo=body.pseudo || "";
+        this.visual=body.visual || "/assets/img/anonymous.jpg";
+        this.description=body.description || "";
+        this.shop_name=body.shop_name || "";
+        this.email=body.email || "";
+        this.shop_visual=body.shop_visual || "/assets/img/shop.png";
         func(body);
       },(err)=>{
         if(err.status==404) {
@@ -194,7 +189,7 @@ export class UserService {
           this.save_user();
           func();
         } else
-          if(func_error)func_error();
+        if(func_error)func_error();
       });
 
     }

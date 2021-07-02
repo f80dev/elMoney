@@ -107,6 +107,13 @@
         <mat-hint *ngIf="focus_idx==3">En tant que créateur de NFT vous disposez peut être d'un site</mat-hint>
       </mat-form-field>
 
+      <br>
+      <button mat-raised-button mat-button
+              class="app-button"
+              (click)="update_user()">
+        Enregistrer
+      </button>
+
     </mat-expansion-panel>
 
 
@@ -144,7 +151,7 @@
       <br>
       <button mat-raised-button mat-button
               class="app-button"
-              [disabled]="user.shop_website.length+user.shop_name.length+user.shop_description.length==0"
+              [disabled]="user.shop_website?.length+user.shop_name?.length+user.shop_description?.length==0"
               (click)="make_store()">
         <div class="bloc-bouton" *ngIf="!user.isDealer()">Créer la<br>boutique</div>
         <div class="bloc-bouton" *ngIf="user.isDealer()">Modifier la<br>boutique</div>

@@ -93,7 +93,7 @@ def analyse_pem():
         with open(_to.pem_file, "r") as myfile:
             body = myfile.readlines()
         body="".join(body)
-        body=body.replace("\n","")
+        #body=body.replace("\n","")
     else:
         body=str(base64.b64decode(body.split("base64,")[1]),"utf-8")
         pubkey="erd"+body.split("-----")[1].split("erd")[1]
@@ -223,15 +223,19 @@ def evalprice(sender,data="",value=0):
 @app.route('/api/users/',methods=["POST"])
 def post_user(data:dict=None):
     data = json.loads(str(request.data, encoding="utf-8"))
-    dao.save_user(data["addr"],data)
+    #dao.save_user(data["addr"], data)
+
+    pem_file = get_pem_file(data)
+    bc.update_account(pem_file,data)
+
     return jsonify({"reponse": "ok"})
 
 
 
 @app.route('/api/users/<addr>/',methods=["GET"])
 def get_user(addr:str):
-    data = dao.get_user(addr)
-    if data is None:return Response("User unknow",404)
+    data = bc.get_account(addr)
+    if data is None:return Response("User unknown",404)
     if "_id" in data: del data["_id"]
     return jsonify(data)
 
@@ -291,6 +295,8 @@ def nfts(seller_filter="0x0",owner_filter="0x0",miner_filter="0x0"):
 
     if format=="csv":
         return Response(dictlist_to_csv(rc),mimetype="text/csv")
+
+
 
 
 @app.route('/api/update_price/<token_id>/',methods=["POST"])
@@ -640,6 +646,8 @@ def transactions(user:str=""):
 
     return jsonify(rc),200
 
+
+
 @app.route('/api/upload_file/',methods=["POST"])
 def upload_file():
     if len(request.files)>0:
@@ -648,6 +656,8 @@ def upload_file():
         cid=client.add(str(request.data,"utf8"))
 
     return jsonify({"cid":cid})
+
+
 
 
 @app.route('/api/new_dealer/',methods=["POST"])

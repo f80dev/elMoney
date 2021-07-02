@@ -53,18 +53,21 @@ export class MainComponent implements OnInit {
   refresh(){
     this.friends=[];
     let i=6
-    for(let c of this.user.contacts){
-      i=i-1;if(i<0)break;
-      if(!c.pseudo)c.pseudo="";
-      if(c.pseudo.length>15)c.pseudo=c.pseudo.substr(0,14);
-      this.friends.push({
-        label:c.pseudo,
-        selected:false,
-        icon:"person",
-        email:c.email,
-        color:"white"
-      })
+    if(this.user.contacts){
+      for(let c of this.user.contacts){
+        i=i-1;if(i<0)break;
+        if(!c.pseudo)c.pseudo="";
+        if(c.pseudo.length>15)c.pseudo=c.pseudo.substr(0,14);
+        this.friends.push({
+          label:c.pseudo,
+          selected:false,
+          icon:"person",
+          email:c.email,
+          color:"white"
+        })
+      }
     }
+
 
     if(this.api.identifier && this.user.moneys[this.user.selected_money]){
       this._max=this.user.moneys[this.user.selected_money].solde;
