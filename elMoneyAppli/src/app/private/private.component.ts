@@ -47,8 +47,12 @@ export class PrivateComponent implements OnInit {
 
   ngOnInit(): void {
     this.title=this.routes.snapshot.queryParamMap.get("title") || "Changer de compte";
+    let redirect=this.routes.snapshot.queryParamMap.get("redirect");
 
-    if(this.routes.snapshot.queryParamMap.get("redirect") && this.title=="Changer de compte")
+    if(redirect && this.user.pem)
+      this.router.navigate([redirect]);
+
+    if(redirect && this.title=="Changer de compte")
       this.title="Cette action requiert votre clé";
 
     let profil=this.routes.snapshot.queryParamMap.get("profil");
@@ -56,6 +60,7 @@ export class PrivateComponent implements OnInit {
       this.change_user(profil+".pem");
     }
   }
+
 
   import(fileInputEvent: any) {
     var reader = new FileReader();
