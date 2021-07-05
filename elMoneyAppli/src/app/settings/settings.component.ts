@@ -20,20 +20,19 @@ import {ClipboardService} from "ngx-clipboard";
   styleUrls: ['./settings.component.sass']
 })
 export class SettingsComponent implements OnInit {
-  fileUrl;
+
   contrat="";
   focus_idx: number;
 
   message: string="";
   filename: string="";
-  open_section=-1;
+  open_section=1;
   domain_appli=environment.domain_appli;
 
   constructor(public router:Router,
               public user:UserService,
               public dialog:MatDialog,
               public toast:MatSnackBar,
-              private sanitizer: DomSanitizer,
               public api:ApiService,
               public _location:Location,
               public routes:ActivatedRoute,
@@ -42,34 +41,12 @@ export class SettingsComponent implements OnInit {
               public config:ConfigService) {}
 
   ngOnInit(): void {
-    let obj:any=this.user.pem;
-
-    if(this.user.pem){
-      const blob = new Blob([obj.pem], { type: 'text/plain' });
-      this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(blob));
-    }
     this.open_section=Number(this.routes.snapshot.queryParamMap.get("section"));
   }
 
 
 
-  raz_account() {
-    this.dialog.open(PromptComponent, {
-      width: '80%',
-      maxWidth: '300px',
-      data: {
-        title: 'Effacer votre compte',
-        question: 'Si vous effacer votre compte, vous perdez immédiatement l\'ensemble de votre wallet. Etes vous sûr ?',
-        onlyConfirm: true,
-        lbl_ok: 'Oui',
-        lbl_cancel: 'Non'
-      }
-    }).afterClosed().subscribe((result_code) => {
-      if(result_code=="yes")
-        this.user.reset();
-    });
 
-  }
 
 
   informe_clipboard() {
@@ -103,7 +80,7 @@ export class SettingsComponent implements OnInit {
 
 
   make_store() {
-    if(!this.user.pem)this.router.navigate(["private"],{queryParams:{redirect:"private"}})
+    if(!this.user.pem)this.router.navigate(["private"],{queryParams:{redirect:"private",can_change:false}})
     this.user.save_user(()=>{
       this.message="Création / modification de la boutique";
       if(this.user.shop_website.length+this.user.shop_name.length+this.user.shop_description.length>0){

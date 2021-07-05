@@ -143,6 +143,7 @@ export class ConfigService {
   }
 
 
-
-
+  isMobile() {
+    return this.device.isMobile;
+  }
 }

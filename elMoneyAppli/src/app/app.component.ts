@@ -57,26 +57,7 @@ export class AppComponent implements OnInit,OnDestroy {
 
       let profil = this.routes.snapshot.queryParamMap.get("profil");
       if (!addr) {
-        if(profil){
-          this.router.navigate(["private"],{queryParams:{profil:profil}});
-        }else{
-          this.dialog.open(PromptComponent, {
-            width: 'auto',
-            data: {
-              title: 'Premier lancement',
-              question: 'Créer un compte ou utiliser un compte existant ?',
-              onlyConfirm: true,
-              lbl_ok: 'Nouveau compte',
-              lbl_cancel: 'Compte existant'
-            }
-          }).afterClosed().subscribe((result_code) => {
-            if (result_code == "yes") {
-              this.start_connect(addr,profil,pem_key);
-            } else {
-              this.router.navigate(["private"]);
-            }
-          });
-        }
+        this.router.navigate(["private"],{queryParams:{profil:profil,title:"Premier lancement"}});
       } else {
         this.start_connect(addr,profil,pem_key);
       }

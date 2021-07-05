@@ -148,16 +148,7 @@ export class UserService {
     $$("Initialisation de l'utilisateur avec ",addr);
     if(!addr)addr=localStorage.getItem("addr");
     if(!addr) {
-      if(vm)vm.message="Ouverture d'un nouveau compte sur le "+this.config.server.network+". Cela prendra moins de 1 minute, le temps de créditer quelques eGold pour les transactions et quelques 'TFC', la monnaie par défaut de l'application";
-      $$("Création d'un nouveau compte");
-      this.api._get("new_account/","",120).subscribe((r:any)=> {
-        this.api.set_identifier(r["default_money"])
-        this.init(r.address, r.pem,func,func_error);
-      },(err)=>{
-        func_error(err);
-        $$("!Impossible de créer le compte");
-      });
-
+      $$("Pas de compte dispo sur le device")
     } else {
       $$("Initialisation de l'utilisateur à l'adresse ",addr);
 

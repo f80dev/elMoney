@@ -126,6 +126,7 @@
 
   <a title="Modifier vos préférences"
      routerLink="settings"
+     [queryParams]="{section:1}"
      mat-list-item
      id="cmdSetting">
     <mat-icon>person</mat-icon>&nbsp;
@@ -138,6 +139,14 @@
      id="cmdRefund">
     <mat-icon>account_balance</mat-icon>&nbsp;
     Recharger mon compte
+  </a>
+
+  <a title="Se deconnecter"
+     routerLink="private"
+     mat-list-item
+     id="cmdLogout">
+    <mat-icon>logout</mat-icon>&nbsp;
+    Se déconnecter
   </a>
 
   <br>

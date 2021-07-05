@@ -13,47 +13,6 @@
   <!--  </button>-->
 
   <mat-accordion *ngIf="message?.length==0">
-    <mat-expansion-panel class="app-panel" [expanded]="open_section==0">
-      <mat-expansion-panel-header>Changer de compte</mat-expansion-panel-header>
-
-       <a [href]="fileUrl"
-         title="Ce fichier est strictement confidentiel, il ne doit être communiquer à personne et conserver précieusement."
-         *ngIf="user.pem"
-         download="macle.pem">
-          <table class="app-button" style="display: inline-block;width:200px;border-radius: 7px;"><tr>
-          <td><mat-icon>download</mat-icon></td>
-          <td>Télécharger votre clé privée</td>
-        </tr></table>
-       </a>
-
-
-
-
-      <br>
-        <small>
-          pour pouvoir y accéder depuis le <a [href]="config.server.wallet" target="_blank">wallet Elrond</a> par exemple
-        </small>
-      <br>
-
-
-      <br>_____<br><br>
-
-      <h3>Changer de compte</h3>
-
-      <button mat-raised-button mat-button
-              class="app-button"
-              (click)="router.navigate(['private'])">
-        <div class="bloc-bouton">Utiliser un<br>autre compte</div>
-      </button>
-      &nbsp;
-      <button mat-raised-button mat-button
-              class="app-button"
-              (click)="raz_account()">
-        <div class="bloc-bouton">Nouveau<br>compte</div>
-      </button>
-      <br>
-    </mat-expansion-panel>
-
 
     <mat-expansion-panel class="app-panel" [expanded]="open_section==1">
       <mat-expansion-panel-header>Modifier votre profil</mat-expansion-panel-header>
@@ -201,6 +160,17 @@
   <br>
   <a routerLink="/transactions">Voir mes transactions</a>
 
+      <small>
+          pour pouvoir y accéder depuis le <a [href]="config.server.wallet" target="_blank">wallet Elrond</a> par exemple
+        </small>
+
+
+    <br><br>
+    <button mat-raised-button mat-button
+              class="app-button"
+              (click)="router.navigate(['private'])">
+        <div class="bloc-bouton">Utiliser un<br>autre compte</div>
+      </button>
 
   </div>
 

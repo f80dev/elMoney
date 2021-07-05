@@ -1,5 +1,5 @@
-import {Component, OnInit } from '@angular/core';
-import {showError, showMessage,openFAQ} from "../tools";
+import {Component, OnInit, Sanitizer} from '@angular/core';
+import {showError, showMessage, openFAQ, $$} from "../tools";
 import {ConfigService} from "../config.service";
 import {Location} from "@angular/common";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -7,6 +7,7 @@ import {UserService} from "../user.service";
 import {ApiService} from "../api.service";
 import {PromptComponent} from "../prompt/prompt.component";
 import {MatDialog} from "@angular/material/dialog";
+import {DomSanitizer} from "@angular/platform-browser";
 
 
 @Component({
@@ -15,7 +16,7 @@ import {MatDialog} from "@angular/material/dialog";
   styleUrls: ['./private.component.sass']
 })
 export class PrivateComponent implements OnInit {
-
+  fileUrl;
   message:string="";
   title:string="";
   savePrivateKey={value:false};
@@ -36,16 +37,26 @@ export class PrivateComponent implements OnInit {
     {label:"Test4",value:"test4.pem"}
   ]
   test_profil: any;
+  canChange: boolean;
 
   constructor(public config:ConfigService,
               public router:Router,
               public api:ApiService,
               public dialog:MatDialog,
+              public sanitizer:DomSanitizer,
               public routes:ActivatedRoute,
               public user:UserService,
               public _location:Location) { }
 
   ngOnInit(): void {
+
+    let obj:any=this.user.pem;
+    if(this.user.pem){
+      const blob = new Blob([obj.pem], { type: 'text/plain' });
+      this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(blob));
+    }
+
+    this.canChange=(this.routes.snapshot.queryParamMap.get("can_change")=="true") || true;
     this.title=this.routes.snapshot.queryParamMap.get("title") || "Changer de compte";
     let redirect=this.routes.snapshot.queryParamMap.get("redirect");
 
@@ -73,6 +84,17 @@ export class PrivateComponent implements OnInit {
   }
 
 
+  quit(){
+    this.user.refresh_balance(()=>{
+          let redirect=this.routes.snapshot.queryParamMap.get("redirect");
+          if(redirect){
+            this.router.navigate([redirect]);
+          }else{
+            this.router.navigate(["store"]);
+          }
+        })
+  }
+
 
   change_user(profil:string){
     this.message="Chargement du profil de test";
@@ -83,14 +105,7 @@ export class PrivateComponent implements OnInit {
         localStorage.removeItem("pem");
       }
       this.user.init(r.address, r.pem,()=>{
-        this.user.refresh_balance(()=>{
-          let redirect=this.routes.snapshot.queryParamMap.get("redirect");
-          if(redirect){
-            this.router.navigate([redirect]);
-          }else{
-            this.router.navigate(["store"]);
-          }
-        })
+        this.quit();
       });
     },(err)=>{showError(this)});
   }
@@ -100,28 +115,61 @@ export class PrivateComponent implements OnInit {
 
   select_model($event: any) {
     this.message="";
+    if(this.user.pem || this.user.gas>1){
+      this.dialog.open(PromptComponent, {
+        width: '80%',
+        data: {
+          title: 'Changement de compte ???',
+          question: "Cette clé ne correspond pas à votre compte actuel, changer de compte (assurez vous d'avoir sauvegardé la clé du compte actuel) ?",
+          onlyConfirm: true,
+          lbl_ok: 'Oui',
+          lbl_cancel: 'Non'
+        }
+      }).afterClosed().subscribe((result_code) => {
+        if (result_code == "yes") {
+          this.change_user($event);
+        } else {
+          this._location.back();
+        }
+      });
+    } else {
+      this.change_user($event);
+    }
+
+
+  }
+
+  raz_account() {
     this.dialog.open(PromptComponent, {
       width: '80%',
+      maxWidth: '300px',
       data: {
-        title: 'Changement de compte ???',
-        question: "Cette clé ne correspond pas à votre compte actuel, changer de compte (assurez vous d'avoir sauvegardé la clé du compte actuel) ?",
+        title: 'Effacer votre compte',
+        question: 'Si vous effacer votre compte, vous perdez immédiatement l\'ensemble de votre wallet. Etes vous sûr ?',
         onlyConfirm: true,
         lbl_ok: 'Oui',
         lbl_cancel: 'Non'
       }
     }).afterClosed().subscribe((result_code) => {
-      if (result_code == "yes") {
-        this.change_user($event);
-      } else {
-        this._location.back();
-      }
+      if(result_code=="yes")
+        this.user.reset();
     });
-
   }
-
 
 
   _faq(index: string) {
     openFAQ(this,index);
+  }
+
+  new_account() {
+      this.message="Ouverture d'un nouveau compte sur le "+this.config.server.network+". Cela prendra moins de 1 minute, le temps de créditer quelques eGold pour les transactions et quelques 'TFC', la monnaie par défaut de l'application";
+      $$("Création d'un nouveau compte");
+      this.api._get("new_account/","",120).subscribe((r:any)=> {
+        this.api.set_identifier(r["default_money"])
+        this.user.init(r.address, r.pem,()=>{this.quit();});
+      },(err)=>{
+        showError(this);
+        $$("!Impossible de créer le compte");
+      });
   }
 }

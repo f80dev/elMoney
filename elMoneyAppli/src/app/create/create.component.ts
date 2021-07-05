@@ -34,7 +34,7 @@ export class CreateComponent implements OnInit {
   ngOnInit(): void {
      if(!this.user.pem){
        $$("Fichier PEM non disponible, il est nécéssaire d'un ajouter un");
-       this.router.navigate(["private"]);
+       this.router.navigate(["private"],{queryParams:{can_change:false}});
      }
      this.user.refresh_balance((r:any)=>{
        if(r.EGLD.solde<this.config.server.new_esdt_price){

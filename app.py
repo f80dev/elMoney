@@ -273,8 +273,9 @@ def nfts(seller_filter="0x0",owner_filter="0x0",miner_filter="0x0"):
     rc=[]
 
     for uri in bc.get_tokens(seller_filter,owner_filter,miner_filter):
-        _miner = dao.get_user(uri["miner"])
-        uri["miner_name"]=_miner["pseudo"]
+        _miner = bc.get_account(uri["miner"])
+        if "pseudo" in _miner:
+            uri["miner_name"]=_miner["pseudo"]
         rc.append(uri)
 
     format=request.args.get("format","json")
