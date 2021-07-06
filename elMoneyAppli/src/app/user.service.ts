@@ -4,6 +4,9 @@ import {environment} from "../environments/environment";
 import {$$, showError, showMessage, subscribe_socket} from "./tools";
 import {ConfigService} from "./config.service";
 import {Socket} from "ngx-socket-io";
+import {MatDialog} from "@angular/material/dialog";
+import {PromptComponent} from "./prompt/prompt.component";
+import {PrivateComponent} from "./private/private.component";
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +33,7 @@ export class UserService {
 
   constructor(public api:ApiService,
               public socket:Socket,
+              public dialog:MatDialog,
               public config:ConfigService) {
     subscribe_socket(this,"refresh_account",()=>{this.refresh_balance();})
     if(localStorage.getItem("contacts"))this.contacts=JSON.parse(localStorage.getItem("contacts"));
@@ -144,7 +148,6 @@ export class UserService {
 
 
   init(addr: string,pem:any=null,func=null,func_error=null,vm=null) {
-    debugger
     $$("Initialisation de l'utilisateur avec ",addr);
     if(!addr)addr=localStorage.getItem("addr");
     if(!addr) {
@@ -230,6 +233,40 @@ export class UserService {
     },()=>{
       $$("Probleme de création du distributeur");
       if(func_error)func_error();
+    });
+  }
+
+  check_pem(func,title="Charger votre clé pour cette opération",func_abort=null) {
+    if(this.pem){
+      func()
+    } else {
+      this.dialog.open(PrivateComponent,{width: '300px',height:"fit-contain",data:
+        {
+          canChange:false,
+          title: title,
+        }
+    }).afterClosed().subscribe((result:any) => {
+      if(result){
+        this.pem=result.pem;
+        this.addr=result.address;
+        func();
+      } else {
+        if(func_abort)func_abort();
+      }
+
+    });
+    }
+
+  }
+
+  logout(title="Veuillez indiquer votre clé",func=null,height="fit-contain") {
+    this.dialog.open(PrivateComponent,{width: '350px',height:height,data:
+        {
+          canChange:true,
+          title: title,
+        }
+    }).afterClosed().subscribe((result:any) => {
+      if(result && func)func(result);
     });
   }
 }

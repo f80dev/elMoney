@@ -19,7 +19,7 @@ import {MatAutocomplete, MatAutocompleteSelectedEvent} from "@angular/material/a
 import {MatChipInputEvent} from "@angular/material/chips";
 import {map, startWith} from "rxjs/operators";
 import {IpfsService} from "../ipfs.service";
-import {DatePipe, formatDate} from "@angular/common";
+import {DatePipe, formatDate, Location} from "@angular/common";
 
 export interface SellerProperties {
   address: string;
@@ -94,6 +94,7 @@ export class ImporterComponent implements OnInit {
               public user:UserService,
               public config:ConfigService,
               public ipfs:IpfsService,
+              public _location:Location,
               public dialog:MatDialog,
               public toast:MatSnackBar,
               public datepipe:DatePipe,
@@ -105,24 +106,20 @@ export class ImporterComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.api._get("evalprice/"+this.user.addr+"/kjfdkljgklfdjgklfdjklgfdlk/0/").subscribe((r:any)=>{
-    //   if(!r.hasOwnProperty("error")){
-    //     this.cost=r.txGasUnits;
-    //   }
-    // })
-    if(!this.user.pem || this.user.pem.length==0){
-      this.router.navigate(["private"],{queryParams:{redirect:"importer",title:"Charger votre signature pour créer un token",can_change:false}})
-    }
-
-    localStorage.setItem("last_screen","importer");
-    this.api._get("moneys/"+this.user.addr).subscribe((r:any)=>{
-      for(let money of Object.values(r)){
-        if(money.hasOwnProperty("tokenIdentifier")){
-          this.moneys.push({identifier:money["tokenIdentifier"],label:money["unity"]})
+    this.user.check_pem(()=>{
+      localStorage.setItem("last_screen","importer");
+      this.api._get("moneys/"+this.user.addr).subscribe((r:any)=>{
+        for(let money of Object.values(r)){
+          if(money.hasOwnProperty("tokenIdentifier")){
+            this.moneys.push({identifier:money["tokenIdentifier"],label:money["unity"]})
+          }
         }
-      }
-      this.selected_money=this.moneys[0];
-    });
+        this.selected_money=this.moneys[0];
+      });
+    },"Création d'un NFT",()=>{
+      this._location.back();
+    })
+
 
 
     this.api.getyaml("tokens").subscribe((r:any)=>{
@@ -565,24 +562,24 @@ export class ImporterComponent implements OnInit {
         this.ask_for_text("Titre de votre évenement","",(title)=> {
           if (title) {
             this.ask_for_text("Adresse","Indiquer l'adresse",(lieu)=> {
-                this.ask_for_text("La date","Quel jour à lieu votre événement",(dt)=> {
-                  this.ask_for_text("Heure","Indiquer L'heure",(hr)=> {
-                    this.desc =lieu +" - "+ this.datepipe.transform(dt,"dd/MM/yyyy") +" à "+hr;
-                    this.title = title + " - "
-                    this.secret = "Billet: @id@";
-                    if (token.tags) this.desc = this.desc + " " + token.tags;
-                    this.ask_for_price("Prix unitaire du billet", (price) => {
-                      this.ask_for_text("Combien de billets", "Indiquer le nombre de billets à fabriquer (maximum 30)", (num) => {
-                        this.count = Number(num);
-                        if (this.count < 31)
-                          this.tokenizer(token.fee);
-                        else {
-                          showMessage(this, "Maximum 30 billets en une seule fois");
-                        }
-                      }, "", "number", 30);
-                    })
-                  },"Exemple: 20:30")
-                },"","date")
+              this.ask_for_text("La date","Quel jour à lieu votre événement",(dt)=> {
+                this.ask_for_text("Heure","Indiquer L'heure",(hr)=> {
+                  this.desc =lieu +" - "+ this.datepipe.transform(dt,"dd/MM/yyyy") +" à "+hr;
+                  this.title = title + " - "
+                  this.secret = "Billet: @id@";
+                  if (token.tags) this.desc = this.desc + " " + token.tags;
+                  this.ask_for_price("Prix unitaire du billet", (price) => {
+                    this.ask_for_text("Combien de billets", "Indiquer le nombre de billets à fabriquer (maximum 30)", (num) => {
+                      this.count = Number(num);
+                      if (this.count < 31)
+                        this.tokenizer(token.fee);
+                      else {
+                        showMessage(this, "Maximum 30 billets en une seule fois");
+                      }
+                    }, "", "number", 30);
+                  })
+                },"Exemple: 20:30")
+              },"","date")
             },"Exemple: Rendez-vous 12 rue Martel, Paris");
           }
         },"Exemple: Les dessins de Picasso");

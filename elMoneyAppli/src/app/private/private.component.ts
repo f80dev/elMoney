@@ -1,12 +1,12 @@
-import {Component, OnInit, Sanitizer} from '@angular/core';
+import {Component, Inject, OnInit, Sanitizer} from '@angular/core';
 import {showError, showMessage, openFAQ, $$} from "../tools";
 import {ConfigService} from "../config.service";
 import {Location} from "@angular/common";
 import {ActivatedRoute, Router} from "@angular/router";
 import {UserService} from "../user.service";
 import {ApiService} from "../api.service";
-import {PromptComponent} from "../prompt/prompt.component";
-import {MatDialog} from "@angular/material/dialog";
+import {DialogData, PromptComponent} from "../prompt/prompt.component";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {DomSanitizer} from "@angular/platform-browser";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
@@ -19,7 +19,6 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 export class PrivateComponent implements OnInit {
   fileUrl;
   message:string="";
-  title:string="";
   savePrivateKey={value:false};
   profils: any=[
     {label:"Alice",value:"alice.pem"},
@@ -38,36 +37,24 @@ export class PrivateComponent implements OnInit {
     {label:"Test4",value:"test4.pem"}
   ]
   test_profil: any;
-  canChange: boolean=true;
 
   constructor(public config:ConfigService,
-              public router:Router,
+              public dialogRef: MatDialogRef<PrivateComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: any,
               public api:ApiService,
               public dialog:MatDialog,
               public toast:MatSnackBar,
               public sanitizer:DomSanitizer,
-              public routes:ActivatedRoute,
               public user:UserService,
               public _location:Location) { }
 
   ngOnInit(): void {
-  debugger
-    let obj:any=this.user.pem;
-    if(this.user.pem){
-      const blob = new Blob([obj.pem], { type: 'text/plain' });
-      this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(blob));
-    }
 
-    this.canChange=(this.routes.snapshot.queryParamMap.get("can_change")=="true");
-    this.title=this.routes.snapshot.queryParamMap.get("title") || "Changer de compte";
-    let redirect=this.routes.snapshot.queryParamMap.get("redirect");
+    this.data.title=this.data.title || "Changer de compte";
 
-    if(redirect && this.user.pem)
-      this.router.navigate([redirect]);
 
-    let profil=this.routes.snapshot.queryParamMap.get("profil");
-    if(profil){
-      this.change_user(profil+".pem");
+    if(this.data.profil){
+      this.change_user(this.data.profil+".pem");
     }
   }
 
@@ -83,32 +70,33 @@ export class PrivateComponent implements OnInit {
   }
 
 
-  quit(){
-    this.user.refresh_balance(()=>{
-          let redirect=this.routes.snapshot.queryParamMap.get("redirect");
-          if(redirect){
-            this.router.navigate([redirect]);
-          }else{
-            this.router.navigate(["store"]);
-          }
-        })
+
+
+  quit(result=null){
+    this.user.refresh_balance(()=> {
+      this.dialogRef.close(result);
+    },()=>{
+      $$("Probleme de rafraichissement");
+    });
   }
 
 
   change_user(profil:string){
-    this.message="Chargement du profil de test";
+    this.message="Vérification la clé";
     this.api._post("analyse_pem", "", profil, 240).subscribe((r: any) => {
       this.message="";
 
       if (this.user.addr != r.address) {
-        if(this.canChange){
+        if(this.data.canChange){
           $$("Changement de compte");
           localStorage.removeItem("addr");
-          this.user.init(r.address, r.pem,()=>{this.quit();});
-        localStorage.removeItem("pem");
+          this.user.init(r.address, r.pem,()=>{this.quit(r);});
+          localStorage.setItem("save_key","true");
         } else {
           showMessage(this,"Cette signature ne correspond pas à votre compte");
         }
+      } else {
+        this.quit(r);
       }
     },(err)=>{showError(this)});
   }
@@ -131,6 +119,7 @@ export class PrivateComponent implements OnInit {
       }).afterClosed().subscribe((result_code) => {
         if (result_code == "yes") {
           this.change_user($event);
+          localStorage.setItem("save_key","true");
         } else {
           this._location.back();
         }
@@ -169,7 +158,7 @@ export class PrivateComponent implements OnInit {
       $$("Création d'un nouveau compte");
       this.api._get("new_account/","",120).subscribe((r:any)=> {
         this.api.set_identifier(r["default_money"])
-        this.user.init(r.address, r.pem,()=>{this.quit();});
+        this.user.init(r.address, r.pem,()=>{this.quit(r);});
       },(err)=>{
         showError(this);
         $$("!Impossible de créer le compte");

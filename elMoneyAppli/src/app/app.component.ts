@@ -57,7 +57,9 @@ export class AppComponent implements OnInit,OnDestroy {
 
       let profil = this.routes.snapshot.queryParamMap.get("profil");
       if (!addr) {
-        this.router.navigate(["private"],{queryParams:{profil:profil,title:"Premier lancement",can_change:true}});
+        this.user.logout("Premier lancement",()=>{
+          this.router.navigate(["store"]);
+        },"400px");
       } else {
         this.start_connect(addr,profil,pem_key);
       }

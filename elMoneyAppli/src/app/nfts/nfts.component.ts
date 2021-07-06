@@ -72,71 +72,76 @@ export class NftsComponent implements OnChanges {
       }});
   }
 
+
   buy(nft: any) {
     if(this.preview)return;
     this.onbuy.emit(nft);
   }
 
 
-
   setstate(nft: any, new_state, message) {
-    nft.message = message;
-    this.api._post("state_nft/" + nft.token_id + "/" + new_state, "", this.user.pem).subscribe((r: any) => {
-      nft.message = "";
-      let mes="Votre token n'est plus en vente";
-      if(new_state==0)mes="Votre token est en vente"
-      if(r)showMessage(this, mes+"Frais de service " + (r.cost) + " xEgld");
-      this.user.refresh_balance(() => {
-        this.onrefresh.emit();
+    this.user.check_pem(()=>{
+      nft.message = message;
+      this.api._post("state_nft/" + nft.token_id + "/" + new_state, "", this.user.pem).subscribe((r: any) => {
+        nft.message = "";
+        let mes="Votre token n'est plus en vente";
+        if(new_state==0)mes="Votre token est en vente"
+        if(r)showMessage(this, mes+"Frais de service " + (r.cost) + " xEgld");
+        this.user.refresh_balance(() => {
+          this.onrefresh.emit();
+        });
       });
-    });
+    })
   }
 
 
   give_response(nft:any){
-   if ((nft.properties & 0b10000) > 0) {
-     this.dialog.open(PromptComponent, {
-      data: {
-        title: 'Donner la réponse pour gagner (souvent en 1 seul mot ou un seul nombre)',
-        question:nft.description,
-        onlyConfirm: false,
-        lbl_ok: 'Répondre',
-        lbl_cancel: 'Abandonner'
-      }}).afterClosed().subscribe((result:any) => {
-       if (result) {
-         this.open(nft,result.toLowerCase());
-       }
-     });
-   } else
-     this.open(nft);
+    if ((nft.properties & 0b10000) > 0) {
+      this.dialog.open(PromptComponent, {
+        data: {
+          title: 'Donner la réponse pour gagner (souvent en 1 seul mot ou un seul nombre)',
+          question:nft.description,
+          onlyConfirm: false,
+          lbl_ok: 'Répondre',
+          lbl_cancel: 'Abandonner'
+        }}).afterClosed().subscribe((result:any) => {
+        if (result) {
+          this.open(nft,result.toLowerCase());
+        }
+      });
+    } else
+      this.open(nft);
   }
 
 
   open(nft: any,reponse="") {
-    showMessage(this,"Vous allez pouvoir accéder au contenu de votre NFT dans quelques instants");
-    nft.message = "En cours d'ouverture";
-    this.api._post("open_nft/" + nft.token_id + "/", "", {pem:this.user.pem,response:reponse}).subscribe((r: any) => {
-      nft.message = "";
-      nft.open = r.response;
-      if(nft.open.length==46)nft.open="https://ipfs.io/ipfs/"+nft.open;
-      this.user.refresh_balance(() => {});
+    this.user.check_pem(()=>{
+      showMessage(this,"Vous allez pouvoir accéder au contenu de votre NFT dans quelques instants");
+      nft.message = "En cours d'ouverture";
+      this.api._post("open_nft/" + nft.token_id + "/", "", {pem:this.user.pem,response:reponse}).subscribe((r: any) => {
+        nft.message = "";
+        nft.open = r.response;
+        if(nft.open.length==46)nft.open="https://ipfs.io/ipfs/"+nft.open;
+        this.user.refresh_balance(() => {});
 
-      //Indique que le message est programmé pour s'autodétruire
-      if((nft.properties & 0b1000) > 0){
-        nft.delay=15;
-        nft.timer=setInterval(()=>{
-          nft.delay=nft.delay-1;
-          nft.message="Notez ce message, il s'auto-détruira dans "+nft.delay+" secondes";
-          if(nft.delay==0){
-            clearInterval(nft.timer);
-            this.onrefresh.emit();
-          }
-        },1000);
-      }
+        //Indique que le message est programmé pour s'autodétruire
+        if((nft.properties & 0b1000) > 0){
+          nft.delay=15;
+          nft.timer=setInterval(()=>{
+            nft.delay=nft.delay-1;
+            nft.message="Notez ce message, il s'auto-détruira dans "+nft.delay+" secondes";
+            if(nft.delay==0){
+              clearInterval(nft.timer);
+              this.onrefresh.emit();
+            }
+          },1000);
+        }
 
-    },(err)=>{
-      showMessage(this,"Impossible d'ouvrir ce NFT");
-    });
+      },(err)=>{
+        showMessage(this,"Impossible d'ouvrir ce NFT");
+      });
+    })
+
   }
 
 
@@ -151,12 +156,14 @@ export class NftsComponent implements OnChanges {
         lbl_cancel: 'Non'
       }}).afterClosed().subscribe((result:any) => {
       if (result=="yes") {
-        nft.message = "En cours de destruction";
-        this.api._post("burn/" + nft.token_id + "/", "", this.user.pem).subscribe((r: any) => {
-          nft.message = "";
-          showMessage(this, "Votre token n'existe plus");
-          this.onrefresh.emit();
-          this.user.refresh_balance();
+        this.user.check_pem(()=>{
+          nft.message = "En cours de destruction";
+          this.api._post("burn/" + nft.token_id + "/", "", this.user.pem).subscribe((r: any) => {
+            nft.message = "";
+            showMessage(this, "Votre token n'existe plus");
+            this.onrefresh.emit();
+            this.user.refresh_balance();
+          });
         });
       }
     });
@@ -210,7 +217,7 @@ export class NftsComponent implements OnChanges {
 
       position:
         {left: '5vw', top: '5vh'},
-        maxWidth: 500, width: '90vw', height: 'auto',
+      maxWidth: 500, width: '90vw', height: 'auto',
       data:{
         title: "Se faire distribuer",
         result:this.user.addr

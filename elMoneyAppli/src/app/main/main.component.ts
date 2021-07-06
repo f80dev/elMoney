@@ -87,28 +87,25 @@ export class MainComponent implements OnInit {
 
 
   transfer(email:string){
-    if(!this.user.pem){
-      showMessage(this,"Avant tout transfert vous devez vous identifier avec votre fichier PEM ou votre clé secrète");
-      this.router.navigate(["private"],{queryParams:{can_change:false}});
-      return;
-    }
+    this.user.check_pem(()=>{
+      let pem=JSON.stringify(this.user.pem);
+      $$("Demande de transfert vers "+email+" avec pem="+pem);
+      this.message=this.hand+" "+this.user.moneys[this.user.selected_money].unity+" en cours de transfert à "+email;
+      this.api._post("transfer/" + this.api.identifier + "/" +  email+ "/" + this.hand+"/"+this.user.moneys[this.user.selected_money].unity+"/",
+        "",
+        pem,180).subscribe((r: any) => {
+        this.message="";
+        showMessage(this, "Fond transféré, pour "+r["cost"]+" xeGld de frais de réseau",4000);
+        this.user.refresh_balance(()=>{this.refresh();})
+        this.user.moneys[this.user.selected_money].solde=this.user.moneys[this.user.selected_money].solde-this.hand;
+        this.hand=0;
+        this.refresh();
+      },(err)=>{
+        this.message="";
+        showMessage(this,"Problème technique, transfert non effectué");
+      });
+    })
 
-    let pem=JSON.stringify(this.user.pem);
-    $$("Demande de transfert vers "+email+" avec pem="+pem);
-    this.message=this.hand+" "+this.user.moneys[this.user.selected_money].unity+" en cours de transfert à "+email;
-    this.api._post("transfer/" + this.api.identifier + "/" +  email+ "/" + this.hand+"/"+this.user.moneys[this.user.selected_money].unity+"/",
-      "",
-      pem,180).subscribe((r: any) => {
-      this.message="";
-      showMessage(this, "Fond transféré, pour "+r["cost"]+" xeGld de frais de réseau",4000);
-      this.user.refresh_balance(()=>{this.refresh();})
-      this.user.moneys[this.user.selected_money].solde=this.user.moneys[this.user.selected_money].solde-this.hand;
-      this.hand=0;
-      this.refresh();
-    },(err)=>{
-      this.message="";
-      showMessage(this,"Problème technique, transfert non effectué");
-    });
   }
 
 

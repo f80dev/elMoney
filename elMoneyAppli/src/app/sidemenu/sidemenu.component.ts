@@ -24,4 +24,10 @@ export class SidemenuComponent implements OnInit {
     },500);
   }
 
+  logout() {
+    this.user.logout("Se déconnecter",()=>{
+      localStorage.removeItem("save_key");
+      this.router.navigate(["store"])
+    });
+  }
 }

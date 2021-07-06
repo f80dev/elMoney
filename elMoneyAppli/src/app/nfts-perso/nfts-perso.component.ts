@@ -94,12 +94,10 @@ export class NftsPersoComponent implements OnInit {
   }
 
   transfer(nft:any){
-      let height='620px';
-      if(this.config.webcamsAvailable==0)height="350px";
         this.dialog.open(NewContactComponent, {
           position: {left: '10vw', top: '5vh'},
           maxWidth: 450,
-          width: '80vw',height: height,
+          width: '80vw',height: 'fit-content',
           data:{}
         }).afterClosed().subscribe((result:any) => {
           if(result){

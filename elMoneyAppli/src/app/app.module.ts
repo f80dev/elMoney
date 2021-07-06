@@ -74,6 +74,7 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatChipsModule} from "@angular/material/chips";
 import {CommonModule, DatePipe} from "@angular/common";
 import { NftBuyComponent } from './nft-buy/nft-buy.component';
+import { SavekeyComponent } from './savekey/savekey.component';
 
 
 const config: SocketIoConfig = {
@@ -122,7 +123,8 @@ const config: SocketIoConfig = {
     MinersComponent,
     PublicMinerComponent,
     SelDealerComponent,
-    NftBuyComponent
+    NftBuyComponent,
+    SavekeyComponent
   ],
   imports: [
     MatButtonModule,

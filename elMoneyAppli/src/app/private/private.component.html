@@ -1,36 +1,22 @@
-<div class="mainform">
+<div class="app-prompt" style="text-align: center;color:white;">
 
-  <h2>{{title}}</h2>
+  <h2>{{data.title}}</h2>
   <app-hourglass [message]="message"></app-hourglass>
 
   <div *ngIf="message?.length==0">
 
-    <div *ngIf="user.pem">
-      <br>
-      Le changement de compte implique une sauvegarde préalable de votre signature actuelle
-      <br>
 
-      <a [href]="fileUrl"
-         title="Ce fichier est strictement confidentiel, il ne doit être communiquer à personne et conserver précieusement."
-         *ngIf="user.pem"
-         download="macle.pem">
-        <table class="app-button" style="display: inline-block;width:200px;border-radius: 7px;"><tr>
-          <td><mat-icon>download</mat-icon></td>
-          <td>Télécharger votre clé privée</td>
-        </tr></table>
-      </a>
-    </div>
 
     <br>
 
 
-    <div *ngIf="!user.pem">
+    <div *ngIf="!user.pem || data.canChange">
 
-      <app-tuto label="Charger le fichier PEM du compte que vous souhaitez utiliser avec NFTForge ou utiliser un compte de test"></app-tuto>
+      <app-tuto [if]="!data.canChange" label="Charger le fichier PEM contenant votre signature"></app-tuto>
 
       <button mat-raised-button
               mat-button class="app-button"
-              *ngIf="canChange"
+              *ngIf="data.canChange"
               (click)="new_account()">
         Nouveau compte
       </button>
@@ -44,11 +30,11 @@
       <button mat-raised-button
               mat-button class="app-button"
               (click)="csvInput.click()">
-        <span *ngIf="canChange">Compte existant</span>
-        <span *ngIf="!canChange">Votre signature</span>
+        <span *ngIf="data.canChange">Compte existant</span>
+        <span *ngIf="!data.canChange">Votre signature</span>
       </button>
 
-      <br><br>
+      <br>
       <div *ngIf="config.isMobile()">
         <mat-checkbox  [(ngModel)]="savePrivateKey">Conserver ma clé privée sur cet appareil</mat-checkbox>
         <mat-icon (click)="_faq('private_key')" style="font-size: small;cursor: pointer;">help</mat-icon>
@@ -56,11 +42,9 @@
 
 
 
-      <br><br>
-      ____
-      <br>
-
-      <div *ngIf="canChange">
+      <div *ngIf="data.canChange">
+        <br><br>
+        ... ou utiliser un ... <br><br>
         <app-tuto label="Il est possible d'utiliser des comptes pour tester cette application. En revanche plusieurs personnes pouvant utiliser les mêmes comptes, il est possible que le comportement soit parfois imprevisible"></app-tuto>
         <mat-form-field class="app-field" style="max-width: 200px;">
           <mat-label>Profils de test</mat-label>
@@ -75,5 +59,14 @@
     </div>
 
   </div>
+
+  <br>
+  <hr>
+
+   <button mat-raised-button
+              mat-button class="app-button"
+              (click)="dialogRef.close()">
+        Annuler
+      </button>
 
 </div>

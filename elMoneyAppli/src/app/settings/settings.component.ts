@@ -80,22 +80,22 @@ export class SettingsComponent implements OnInit {
 
 
   make_store() {
-    if(!this.user.pem)this.router.navigate(["private"],{queryParams:{redirect:"private",can_change:false}})
-    this.user.save_user(()=>{
-      this.message="Création / modification de la boutique";
-      if(this.user.shop_website.length+this.user.shop_name.length+this.user.shop_description.length>0){
-        if(!this.user.shop_website || this.user.shop_website=="")
-          this.user.shop_website=environment.domain_appli+"/?store="+this.user.addr;
+    this.user.check_pem(()=>{
+      this.user.save_user(()=>{
+        this.message="Création / modification de la boutique";
+        if(this.user.shop_website.length+this.user.shop_name.length+this.user.shop_description.length>0){
+          if(!this.user.shop_website || this.user.shop_website=="")
+            this.user.shop_website=environment.domain_appli+"/?store="+this.user.addr;
 
-        this.user.new_dealer(()=>{
-          this.message="";
-          showMessage(this,"Vous avez été ajouté comme distributeur. Référencez des créateurs dés maintenant si vous pouvez");
-        },(err)=>{
-          showError(this,err);
-        });
-      }
-    });
-
+          this.user.new_dealer(()=>{
+            this.message="";
+            showMessage(this,"Vous avez été ajouté comme distributeur. Référencez des créateurs dés maintenant si vous pouvez");
+          },(err)=>{
+            showError(this,err);
+          });
+        }
+      });
+    })
   }
 
   openclose_store() {
@@ -108,7 +108,7 @@ export class SettingsComponent implements OnInit {
 
   share(){
     this.informe_clipboard();
-     this.ngNavigatorShareService.share({
+    this.ngNavigatorShareService.share({
       title: this.user.shop_name,
       text: "Achetez des NFTs",
       url: this.user.shop_website
@@ -122,12 +122,9 @@ export class SettingsComponent implements OnInit {
   }
 
   update_user() {
-    if(!this.user.pem)
-      this.router.navigate(["private"],{queryParams:{redirect:"private"}})
-    else{
+    this.user.check_pem(()=>{
       this.user.save_user();
       showMessage(this,"Informations enregistrées");
-    }
-
+    });
   }
 }

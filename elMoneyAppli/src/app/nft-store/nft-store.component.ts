@@ -162,11 +162,14 @@ export class NftStoreComponent implements OnInit {
   }
 
   on_buy($event: any) {
-    this.router.navigate(['nft-buy'],
+    this.user.check_pem(()=>{
+      this.router.navigate(['nft-buy'],
       {queryParams:{
           nft:JSON.stringify($event),
           seller:JSON.stringify(this.selected_dealer),
         }
       });
+    })
+
   }
 }
