@@ -8,6 +8,7 @@ import {ApiService} from "../api.service";
 import {PromptComponent} from "../prompt/prompt.component";
 import {MatDialog} from "@angular/material/dialog";
 import {DomSanitizer} from "@angular/platform-browser";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 
 @Component({
@@ -37,34 +38,32 @@ export class PrivateComponent implements OnInit {
     {label:"Test4",value:"test4.pem"}
   ]
   test_profil: any;
-  canChange: boolean;
+  canChange: boolean=true;
 
   constructor(public config:ConfigService,
               public router:Router,
               public api:ApiService,
               public dialog:MatDialog,
+              public toast:MatSnackBar,
               public sanitizer:DomSanitizer,
               public routes:ActivatedRoute,
               public user:UserService,
               public _location:Location) { }
 
   ngOnInit(): void {
-
+  debugger
     let obj:any=this.user.pem;
     if(this.user.pem){
       const blob = new Blob([obj.pem], { type: 'text/plain' });
       this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(blob));
     }
 
-    this.canChange=(this.routes.snapshot.queryParamMap.get("can_change")=="true") || true;
+    this.canChange=(this.routes.snapshot.queryParamMap.get("can_change")=="true");
     this.title=this.routes.snapshot.queryParamMap.get("title") || "Changer de compte";
     let redirect=this.routes.snapshot.queryParamMap.get("redirect");
 
     if(redirect && this.user.pem)
       this.router.navigate([redirect]);
-
-    if(redirect && this.title=="Changer de compte")
-      this.title="Cette action requiert votre clé";
 
     let profil=this.routes.snapshot.queryParamMap.get("profil");
     if(profil){
@@ -100,13 +99,17 @@ export class PrivateComponent implements OnInit {
     this.message="Chargement du profil de test";
     this.api._post("analyse_pem", "", profil, 240).subscribe((r: any) => {
       this.message="";
+
       if (this.user.addr != r.address) {
-        localStorage.removeItem("addr");
+        if(this.canChange){
+          $$("Changement de compte");
+          localStorage.removeItem("addr");
+          this.user.init(r.address, r.pem,()=>{this.quit();});
         localStorage.removeItem("pem");
+        } else {
+          showMessage(this,"Cette signature ne correspond pas à votre compte");
+        }
       }
-      this.user.init(r.address, r.pem,()=>{
-        this.quit();
-      });
     },(err)=>{showError(this)});
   }
 
@@ -117,10 +120,10 @@ export class PrivateComponent implements OnInit {
     this.message="";
     if(this.user.pem || this.user.gas>1){
       this.dialog.open(PromptComponent, {
-        width: '80%',
+        width: '300px',
         data: {
-          title: 'Changement de compte ???',
-          question: "Cette clé ne correspond pas à votre compte actuel, changer de compte (assurez vous d'avoir sauvegardé la clé du compte actuel) ?",
+          title: 'Changement de compte ?',
+          question: "Un changement de compte entrainera la perte de votre solde si vous n'avez pas enregistrer votre clé",
           onlyConfirm: true,
           lbl_ok: 'Oui',
           lbl_cancel: 'Non'

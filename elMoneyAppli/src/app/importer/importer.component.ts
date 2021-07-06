@@ -110,6 +110,10 @@ export class ImporterComponent implements OnInit {
     //     this.cost=r.txGasUnits;
     //   }
     // })
+    if(!this.user.pem || this.user.pem.length==0){
+      this.router.navigate(["private"],{queryParams:{redirect:"importer",title:"Charger votre signature pour créer un token",can_change:false}})
+    }
+
     localStorage.setItem("last_screen","importer");
     this.api._get("moneys/"+this.user.addr).subscribe((r:any)=>{
       for(let money of Object.values(r)){

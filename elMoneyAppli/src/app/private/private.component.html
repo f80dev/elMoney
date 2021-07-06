@@ -5,18 +5,21 @@
 
   <div *ngIf="message?.length==0">
 
+    <div *ngIf="user.pem">
+      <br>
+      Le changement de compte implique une sauvegarde préalable de votre signature actuelle
+      <br>
 
-    <app-tuto [if]="user.pem">Le changement de compte implique une sauvegarde préalable de votre signature actuelle</app-tuto>
-
-    <a [href]="fileUrl"
-       title="Ce fichier est strictement confidentiel, il ne doit être communiquer à personne et conserver précieusement."
-       *ngIf="user.pem"
-       download="macle.pem">
-      <table class="app-button" style="display: inline-block;width:200px;border-radius: 7px;"><tr>
-        <td><mat-icon>download</mat-icon></td>
-        <td>Télécharger votre clé privée</td>
-      </tr></table>
-    </a>
+      <a [href]="fileUrl"
+         title="Ce fichier est strictement confidentiel, il ne doit être communiquer à personne et conserver précieusement."
+         *ngIf="user.pem"
+         download="macle.pem">
+        <table class="app-button" style="display: inline-block;width:200px;border-radius: 7px;"><tr>
+          <td><mat-icon>download</mat-icon></td>
+          <td>Télécharger votre clé privée</td>
+        </tr></table>
+      </a>
+    </div>
 
     <br>
 
@@ -41,7 +44,8 @@
       <button mat-raised-button
               mat-button class="app-button"
               (click)="csvInput.click()">
-        Compte existant
+        <span *ngIf="canChange">Compte existant</span>
+        <span *ngIf="!canChange">Votre signature</span>
       </button>
 
       <br><br>
