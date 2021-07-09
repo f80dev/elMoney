@@ -36,20 +36,22 @@ export class NftsPersoComponent implements OnInit {
     public router:Router,
     public user:UserService,
   ) {
-     subscribe_socket(this, "refresh_nft", () => {
+    subscribe_socket(this, "refresh_nft", () => {
       setTimeout(() => {this.refresh();}, 200)
     });
 
   }
 
   ngOnInit(): void {
-    if (this.routes.snapshot.queryParamMap.has("index")) {
-      this.selected.value=Number(this.routes.snapshot.queryParamMap.get("index"));
-    }
+    this.user.check_email(()=>{
+      if (this.routes.snapshot.queryParamMap.has("index")) {
+        this.selected.value=Number(this.routes.snapshot.queryParamMap.get("index"));
+      }
 
-    this.filter = this.filters[0].option;
-    this.refresh();
-    localStorage.setItem("last_screen","nfts-perso");
+      this.filter = this.filters[0].option;
+      this.refresh();
+      localStorage.setItem("last_screen","nfts-perso");
+    },()=>{this.router.navigate(["store"])});
   }
 
   reroutage(){
@@ -64,7 +66,7 @@ export class NftsPersoComponent implements OnInit {
   }
 
 
-   refresh() {
+  refresh() {
     this.user.refresh_balance();
     for(let identifier of [0,1,2]){
       let filters=["0x0","0x0","0x0"];
@@ -94,21 +96,21 @@ export class NftsPersoComponent implements OnInit {
   }
 
   transfer(nft:any){
-        this.dialog.open(NewContactComponent, {
-          position: {left: '10vw', top: '5vh'},
-          maxWidth: 450,
-          width: '80vw',height: 'fit-content',
-          data:{}
-        }).afterClosed().subscribe((result:any) => {
-          if(result){
-            nft.message="En cours de transfert";
-            let body={pem:this.user.pem,message:"",title:nft.uri,from:this.config.server.explorer+"/account/"+this.user.addr};
-            this.api._post("transfer_nft/"+nft.token_id+"/"+result.email+"/","",body).subscribe(()=>{
-              nft.message="";
-              this.refresh();
-            });
-          }
+    this.dialog.open(NewContactComponent, {
+      position: {left: '10vw', top: '5vh'},
+      maxWidth: 450,
+      width: '80vw',height: 'fit-content',
+      data:{}
+    }).afterClosed().subscribe((result:any) => {
+      if(result){
+        nft.message="En cours de transfert";
+        let body={pem:this.user.pem,message:"",title:nft.uri,from:this.config.server.explorer+"/account/"+this.user.addr};
+        this.api._post("transfer_nft/"+nft.token_id+"/"+result.email+"/","",body).subscribe(()=>{
+          nft.message="";
+          this.refresh();
         });
+      }
+    });
   }
 
   open_store() {

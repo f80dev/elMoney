@@ -934,30 +934,41 @@ def getyaml(name):
 
 @app.route('/api/new_account/')
 def new_account():
-    _a,pem=bc.create_account(NETWORKS[bc.network_name]["new_account"])
+    email=request.args.get("email")
+    _user=dao.get_user(email)
+    if _user is None:
+        _a,pem=bc.create_account(NETWORKS[bc.network_name]["new_account"])
+        dao.save_user(email,_a.address.bech32())
+        log("Création du compte " + _a.address.bech32() + ". Demande de transfert de la monnaie par defaut")
 
-    log("Création du compte " + _a.address.bech32() +". Demande de transfert de la monnaie par defaut")
+        send_mail(open_html_file("new_account",{}),email,subject="Ouverture de votre compte",attach=pem)
 
-    #TODO: private key a crypter
-    keys = {"public": _a.address.bech32(), "private": _a.private_key_seed}
-    rc={"address":_a.address.bech32(),
-        "keys":keys,
-        "pem":pem
-        }
+        private=_a.private_key_seed
+        # TODO: private key a crypter
 
-    if "identifier" in NETWORKS[bc.network_name]:
-        decimals=18
-        if "decimals" in NETWORKS[bc.network_name]:decimals=int(NETWORKS[bc.network_name]["decimals"])
-        bc.transferESDT(idx=NETWORKS[bc.network_name]["identifier"],
-                        user_from=bc.bank,
-                        user_to=_a.address.bech32(),
-                        amount=CREDIT_FOR_NEWACCOUNT*(10**decimals)
-                        )
-        rc["default_money"]=NETWORKS[bc.network_name]["identifier"]
-        rc["default_name"]=NETWORKS[bc.network_name]["unity"]
+        if "identifier" in NETWORKS[bc.network_name]:
+            decimals = 18
+            if "decimals" in NETWORKS[bc.network_name]: decimals = int(NETWORKS[bc.network_name]["decimals"])
+            bc.transferESDT(idx=NETWORKS[bc.network_name]["identifier"],
+                            user_from=bc.bank,
+                            user_to=_a.address.bech32(),
+                            amount=CREDIT_FOR_NEWACCOUNT * (10 ** decimals)
+                            )
+        else:
+            log("Pas de monnaie par défaut")
     else:
-        log("Pas de monnaie par défaut")
+        _a = Account(address=_user["addr"])
+        pem=""
+        private=""
 
+
+    rc = dict({
+        "address": _a.address.bech32(),
+        "keys": {"public": _a.address.bech32(), "private": private},
+        "pem": pem,
+        "default_money":NETWORKS[bc.network_name]["identifier"],
+        "default_name": NETWORKS[bc.network_name]["unity"]
+    })
 
     return jsonify(rc),200
 

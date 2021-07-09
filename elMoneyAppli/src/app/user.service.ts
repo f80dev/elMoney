@@ -7,6 +7,7 @@ import {Socket} from "ngx-socket-io";
 import {MatDialog} from "@angular/material/dialog";
 import {PromptComponent} from "./prompt/prompt.component";
 import {PrivateComponent} from "./private/private.component";
+import {AuthentComponent} from "./authent/authent.component";
 
 @Injectable({
   providedIn: 'root'
@@ -54,16 +55,16 @@ export class UserService {
 
 
 
-  loadFromDevice(){
-    if(!this.addr)this.addr=localStorage.getItem("addr");
-    if(!this.addr || this.addr.length<10 || this.addr=="null"){
-      this.addr=null;
-      $$("Pas de compte disponible sur le device");
-      return false;
-    }
-    $$("Chargement de compte ok depuis le device, adresse de l'utilisateur "+this.addr);
-    return true;
-  }
+  // loadFromDevice(){
+  //   if(!this.addr)this.addr=localStorage.getItem("addr");
+  //   if(!this.addr || this.addr.length<10 || this.addr=="null"){
+  //     this.addr=null;
+  //     $$("Pas de compte disponible sur le device");
+  //     return false;
+  //   }
+  //   $$("Chargement de compte ok depuis le device, adresse de l'utilisateur "+this.addr);
+  //   return true;
+  // }
 
 
   save_user(func=null){
@@ -86,7 +87,7 @@ export class UserService {
       this.api._post("users/","",body).subscribe((id:any)=>{
         $$("Enregistrement de l'utilisateur");
         if(func)func();
-      })
+      });
     }else {
       $$("Impossible d'enregistrer sans PEM");
     }
@@ -147,52 +148,43 @@ export class UserService {
 
 
 
-  init(addr: string,pem:any=null,func=null,func_error=null,vm=null) {
-    $$("Initialisation de l'utilisateur avec ",addr);
-    if(!addr)addr=localStorage.getItem("addr");
-    if(!addr) {
-      $$("Pas de compte dispo sur le device")
-    } else {
-      $$("Initialisation de l'utilisateur à l'adresse ",addr);
+  init(addr: string,func=null,func_error=null) {
 
-      if(this.config.hasESDT()){
-        if(this.selected_money.length==0)this.selected_money=this.api.identifier;
-        this.refresh_balance(func,func_error);
-      }
+    this.addr=addr;
+    localStorage.setItem("addr",addr);
 
-      this.addr=addr;
-      $$("Enregistrement de "+this.addr+" sur le device");
-      localStorage.setItem("addr",this.addr);
-
-      this.pem=pem;
-
-
-      $$("Chargement de l'utilisateur");
-      this.api._get("users/"+this.addr).subscribe((body:any)=>{
-        this.contacts=body.contacts || [];
-        this.pseudo=body.pseudo || "";
-        this.visual=body.visual || "/assets/img/anonymous.jpg";
-        this.description=body.description || "";
-        this.shop_name=body.shop_name || "";
-        this.email=body.email || "";
-        this.shop_visual=body.shop_visual || "/assets/img/shop.png";
-        func(body);
-      },(err)=>{
-        if(err.status==404) {
-          $$("Impossible de charger l'user");
-          this.save_user();
-          func();
-        } else
-        if(func_error)func_error();
-      });
-
+    if(this.config.hasESDT()){
+      if(this.selected_money.length==0)this.selected_money=this.api.identifier;
+      this.refresh_balance(func,func_error);
     }
+
+    $$("Chargement de l'utilisateur");
+    this.api._get("users/"+this.addr).subscribe((body:any)=>{
+      this.contacts=body.contacts || [];
+      this.pseudo=body.pseudo || "";
+      this.visual=body.visual || "/assets/img/anonymous.jpg";
+      this.description=body.description || "";
+      this.shop_name=body.shop_name || "";
+      this.email=body.email || "";
+      this.shop_visual=body.shop_visual || "/assets/img/shop.png";
+      func(body);
+    },(err)=>{
+      if(err.status==404) {
+        $$("Impossible de charger l'user");
+        this.save_user();
+        func();
+      } else
+      if(func_error)func_error();
+    });
+
 
   }
 
 
 
   reset() {
+    this.addr=null;
+    this.email=null;
     localStorage.removeItem("addr");
     localStorage.removeItem("contacts");
     localStorage.removeItem("email");
@@ -236,37 +228,79 @@ export class UserService {
     });
   }
 
-  check_pem(func,title="Charger votre clé pour cette opération",func_abort=null) {
-    if(this.pem){
+
+  check_email(func,func_abort=null,title="Authentification requise"){
+    if(!this.addr)this.addr=localStorage.getItem("addr");
+    if(this.addr && this.addr.length>0){
+      this.init(this.addr,()=>{
+        func();
+      });
+    }else{
+      this.dialog.open(AuthentComponent,{width: '300px',height:"fit-contain",data:
+          {
+            title: title,
+          }
+      }).afterClosed().subscribe((result:any) => {
+        if(result){
+          this.email=result.email;
+          this.init(result.address,()=>{
+            // $$("Enregistrement de "+this.email+" sur le device");
+            // localStorage.setItem("email",this.email);
+            this.refresh_balance(func);
+          });
+        } else {
+          if(func_abort)func_abort();
+        }
+
+      });
+    }
+  }
+
+
+
+  check_pem(func,vm=null,title="Charger votre clé pour cette opération",func_abort=null) {
+    if(this.pem && this.pem.length>0){
       func()
     } else {
       this.dialog.open(PrivateComponent,{width: '300px',height:"fit-contain",data:
-        {
-          canChange:false,
-          title: title,
+          {
+            canChange:false,
+            title: title,
+          }
+      }).afterClosed().subscribe((result:any) => {
+        if(result){
+          if(this.addr && this.addr!=result.address){
+            showMessage(vm,"cette clé ne correspond pas au compte");
+            func_abort();
+          } else {
+            if(!this.addr)this.init(result.addr);
+            this.pem=result.pem;
+            func();
+          }
+        } else {
+          if(func_abort)func_abort("annulation");
         }
-    }).afterClosed().subscribe((result:any) => {
-      if(result){
-        this.pem=result.pem;
-        this.addr=result.address;
-        func();
-      } else {
-        if(func_abort)func_abort();
-      }
 
-    });
+      });
     }
 
   }
 
   logout(title="Veuillez indiquer votre clé",func=null,height="fit-contain") {
-    this.dialog.open(PrivateComponent,{width: '350px',height:height,data:
+    this.dialog.open(PromptComponent,{width: '350px',height:height,data:
         {
-          canChange:true,
-          title: title,
+          title: "Confirmez la deconnexion ?",
+          onlyConfirm:true,
+          lbl_ok:"Ok",
+          lbl_cancel:"Annuler"
         }
     }).afterClosed().subscribe((result:any) => {
-      if(result && func)func(result);
+      if(result){
+        this.reset();
+        if(func)func();
+      } else {
+        if(func)func();
+      }
     });
   }
 }

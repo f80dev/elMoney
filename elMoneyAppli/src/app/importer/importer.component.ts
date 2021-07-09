@@ -116,7 +116,7 @@ export class ImporterComponent implements OnInit {
         }
         this.selected_money=this.moneys[0];
       });
-    },"Création d'un NFT",()=>{
+    },this,"Création d'un NFT",()=>{
       this._location.back();
     })
 

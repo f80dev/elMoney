@@ -48,21 +48,14 @@ export class AppComponent implements OnInit,OnDestroy {
       $$("Recherche du contrat à utiliser pour le device");
       this.api.init_identifier(this.routes.snapshot.queryParamMap.get("contract"))
 
-      $$("Initialisation de l'utilisateur");
-      let addr = this.routes.snapshot.queryParamMap.get("user");
-      if(!addr)addr=localStorage.getItem("addr");
-
-      let pem_key = localStorage.getItem("pem");
-      if (pem_key) pem_key = JSON.parse(pem_key);
-
       let profil = this.routes.snapshot.queryParamMap.get("profil");
-      if (!addr) {
-        this.user.logout("Premier lancement",()=>{
-          this.router.navigate(["store"]);
-        },"400px");
-      } else {
-        this.start_connect(addr,profil,pem_key);
-      }
+      // if (!addr) {
+      //   this.user.logout("Premier lancement",()=>{
+      //     this.router.navigate(["store"]);
+      //   },"400px");
+      // } else {
+      //   this.start_connect(addr,profil,pem_key);
+      // }
     },()=>{
       this.message="";
       $$("!Probléme d'initialisation de la configuration");
@@ -78,7 +71,7 @@ export class AppComponent implements OnInit,OnDestroy {
     let store = this.routes.snapshot.queryParamMap.get("store");
     let filter = this.routes.snapshot.queryParamMap.get("filter");
 
-    this.user.init(addr,pem_key,
+    this.user.init(addr,
       (r)=> {
         if (profil){this.router.navigate(["private"],{queryParams:{profil:profil}});return;}
         if (filter){this.router.navigate(["store"],{queryParams:{id:filter}});return;}
@@ -89,11 +82,11 @@ export class AppComponent implements OnInit,OnDestroy {
         if(this.config.hasESDT() && !q && !filter){this.router.navigate(["main"]);return;}
         //this.router.navigate(["store"],{queryParams:{q:q,filter:filter}});
       },
-      (err)=> {
+      (err) => {
         $$("Evaluation de la balance impossible, on propose un changement de contrat");
         showMessage(this, "Le compte est corrompu, changement de compte proposé");
         this.router.navigate(["settings"]);
-      },this
+      }
     );
   }
 

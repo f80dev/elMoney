@@ -91,7 +91,7 @@ export class NftsComponent implements OnChanges {
           this.onrefresh.emit();
         });
       });
-    })
+    },this);
   }
 
 
@@ -164,7 +164,7 @@ export class NftsComponent implements OnChanges {
             this.onrefresh.emit();
             this.user.refresh_balance();
           });
-        });
+        },this);
       }
     });
   }

@@ -1,0 +1,51 @@
+<div class="app-prompt">
+  <h2>Se connecter</h2>
+  <app-hourglass [message]="message"></app-hourglass>
+
+
+  <mat-form-field appearance="fill" class="app-field">
+    <mat-label>Indiquez votre mail</mat-label>
+    <input matInput type="text" max="50" [(ngModel)]="user.email" (keypress)="on_keypress($event)">
+  </mat-form-field>
+
+  <br>
+
+
+  <div style="width: 100%;text-align: center" *ngIf="showScanner">
+    <small>Pointez le QRCode du wallet à connecter</small><br><br>
+    <app-scanner [size]="230"
+                 autofocus
+                 (click)="showScanner=false"
+                 (flash)="onflash_event($event)">
+    </app-scanner>
+    <br>
+  </div>
+
+  <br>
+  <br>Choisissez un ...
+  <mat-form-field class="app-field" style="max-width: 250px;">
+          <mat-label>Profils de test</mat-label>
+          <mat-select [(ngModel)]="test_profil" (ngModelChange)="change_user($event)">
+            <mat-option *ngFor="let profil of profils" [value]="profil.value">{{profil.label}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+<app-tuto label="Il est possible d'utiliser des comptes pour tester cette application. En revanche plusieurs personnes pouvant utiliser les mêmes comptes, il est possible que le comportement soit parfois imprevisible"></app-tuto>
+  <br>
+  <hr>
+
+
+
+  <button mat-raised-button
+              mat-button class="app-button"
+              (click)="dialogRef.close()">
+        Annuler
+      </button>
+
+   <button mat-raised-button
+              mat-button class="app-button"
+              (click)="udpate_mail()">
+        Se connecter
+      </button>
+
+
+</div>

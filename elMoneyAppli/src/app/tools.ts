@@ -235,7 +235,9 @@ export function subscribe_socket(vm:any,event_name:string,func=null){
     $$("Installation de la socket pour l'event "+event_name);
 
     vm.socket.on(event_name, (data: any) => {
-      if (data.to == localStorage.getItem("addr") || data.to=="*") {
+      let addr=vm.user.addr;
+      debugger
+      if (data.to ==addr || data.to=="*") {
         $$("Réception de "+event_name+" avec data=",data);
         if(vm.toast!=null && data.message!=null && data.message.length>0)showMessage(vm,data.message);
 

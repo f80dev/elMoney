@@ -169,7 +169,7 @@ export class NftStoreComponent implements OnInit {
           seller:JSON.stringify(this.selected_dealer),
         }
       });
-    })
+    },this)
 
   }
 }

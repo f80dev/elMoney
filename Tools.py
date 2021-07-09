@@ -121,6 +121,7 @@ def open_html_file(name:str,replace=dict(),domain_appli=DOMAIN_APPLI):
 
     replace["signature"]=SIGNATURE
     replace["appname"]=APPNAME
+    replace["appdomain"]=domain_appli
 
     for k in list(replace.keys()):
         body=body.replace("{{"+k+"}}",str(replace.get(k)))

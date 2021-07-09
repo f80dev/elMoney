@@ -40,12 +40,12 @@ export class SettingsComponent implements OnInit {
               public _clipboardService:ClipboardService,
               public config:ConfigService) {}
 
+
   ngOnInit(): void {
-    this.open_section=Number(this.routes.snapshot.queryParamMap.get("section"));
+    this.user.check_email(()=>{
+      this.open_section=Number(this.routes.snapshot.queryParamMap.get("section"));
+    },this.router)
   }
-
-
-
 
 
 
@@ -95,7 +95,7 @@ export class SettingsComponent implements OnInit {
           });
         }
       });
-    })
+    },this);
   }
 
   openclose_store() {

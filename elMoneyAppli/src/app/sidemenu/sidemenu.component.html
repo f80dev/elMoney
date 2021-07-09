@@ -1,9 +1,7 @@
 
 <mat-nav-list class="sidemenu">
-
-  <br>
-
-  <div style="width: 80%;text-align: center;margin-left:10%;">
+  <div *ngIf="user?.addr" id="account_zone" style="width: 80%;text-align: center;margin-left:10%;">
+    <br>
     <table><tr style="width: 100%;">
 
       <td style="width: 60%;text-align: center;" routerLink="/transactions">
@@ -22,11 +20,8 @@
         </button>
       </td>
     </tr></table>
-
+    <hr style="margin:10%;">
   </div>
-
- <div style="width:100%;text-align: center;margin:10px;">____</div>
-
 
 
     <a title="Wallet"
@@ -142,6 +137,7 @@
   </a>
 
   <a title="Se deconnecter"
+     *ngIf="user.addr"
      (click)="logout()"
      style="color:white"
      mat-list-item
