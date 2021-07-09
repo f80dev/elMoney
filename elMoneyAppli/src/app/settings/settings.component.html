@@ -1,9 +1,6 @@
 <div class="mainform">
 
-  <app-savekey></app-savekey>
-
   <app-hourglass [message]="message"></app-hourglass>
-
 
   <app-tuto label="Si besoin, télécharger votre clé privée et conserver là en lieu sûr pour effecture les transferts et la création de nouvelle monnaie"></app-tuto>
 
@@ -169,13 +166,10 @@
         </small>
 
 
-    <br><br>
-    <button mat-raised-button mat-button
-              class="app-button"
-              (click)="router.navigate(['private'])">
-        <div class="bloc-bouton">Utiliser un<br>autre compte</div>
-      </button>
+    <br>
 
   </div>
+  <br>
+  <app-savekey></app-savekey>
 
 </div>

@@ -12,37 +12,37 @@ export function showError(vm:any,err:any=null){
 
 
 export function translateQuery(text:string):string {
-    if(text.length==0)return "";
-    let dict={
-      "nom":"lastname",
-      "prenom":"firstname",
-      "prénom":"firstname",
-      "code postal":"cp",
-      "film":"works__title",
-      "ville":"town",
-      "promotion":"promo",
-      "job":"works__job"
-    }
-    for(let k in dict){
-      text=text.replace(k+":",dict[k]+":");
-    }
-
-    if(text.indexOf(":")>0){
-      let rc="";
-      for(let term of text.split(" ")){
-        rc=rc + term.replace(":","=")+"&"
-      }
-      return rc.substr(0,rc.length-1);
-    }
-
-    if(text.indexOf("&")>-1){
-      text="title__terms="+text.split("&")[0].trim()+"&title__terms="+text.split("&")[1].trim();
-    }
-    else
-      text="search="+text;
-
-    return text;
+  if(text.length==0)return "";
+  let dict={
+    "nom":"lastname",
+    "prenom":"firstname",
+    "prénom":"firstname",
+    "code postal":"cp",
+    "film":"works__title",
+    "ville":"town",
+    "promotion":"promo",
+    "job":"works__job"
   }
+  for(let k in dict){
+    text=text.replace(k+":",dict[k]+":");
+  }
+
+  if(text.indexOf(":")>0){
+    let rc="";
+    for(let term of text.split(" ")){
+      rc=rc + term.replace(":","=")+"&"
+    }
+    return rc.substr(0,rc.length-1);
+  }
+
+  if(text.indexOf("&")>-1){
+    text="title__terms="+text.split("&")[0].trim()+"&title__terms="+text.split("&")[1].trim();
+  }
+  else
+    text="search="+text;
+
+  return text;
+}
 
 export function brand_text(text:string,config:any){
   if(text==null || text.length==0)return "";
@@ -371,16 +371,19 @@ export function showMessage(vm:any,s:string="",duration=4000,func=null,label_but
     if(s.length>0)setTimeout(()=>{vm.showMessage=true;},500);
   } else {
     //Affichage en mode toaster
-    var toaster=vm.toast || vm.snackBar || vm.toaster;
-    if(toaster!=null){
-      if(func){
-        toaster.open(s,label_button,{duration:duration}).onAction().subscribe(()=>{
-          func();
-        });
+    if(vm){
+      var toaster=vm.toast || vm.snackBar || vm.toaster;
+      if(toaster!=null){
+        if(func){
+          toaster.open(s,label_button,{duration:duration}).onAction().subscribe(()=>{
+            func();
+          });
+        }
+        else
+          toaster.open(s,"",{duration:duration});
       }
-      else
-        toaster.open(s,"",{duration:duration});
     }
+
 
   }
 }
@@ -398,16 +401,16 @@ export function askForAuthent(vm:any,message:string,redirect:string){
     $$("L'utilisateur n'est pas encore authentifié, il est renvoyé vers la page de login");
     vm.router.navigate(["login"],{queryParams:{message:message,redirect:redirect}});
   } else {
-      $$("Email renseigne "+vm.config.user.user.email+", redirection vers "+redirect);
-      if(redirect.startsWith("http")){
-        redirect=redirect.replace("{{email}}",vm.config.user.user.email);
-        open(redirect,"_blank");
-      } else{
-        if(redirect.indexOf("?")>-1)
-          vm.router.navigateByUrl(redirect);
-        else
-          vm.router.navigate([redirect]);
-      }
+    $$("Email renseigne "+vm.config.user.user.email+", redirection vers "+redirect);
+    if(redirect.startsWith("http")){
+      redirect=redirect.replace("{{email}}",vm.config.user.user.email);
+      open(redirect,"_blank");
+    } else{
+      if(redirect.indexOf("?")>-1)
+        vm.router.navigateByUrl(redirect);
+      else
+        vm.router.navigate([redirect]);
+    }
 
   }
 }
@@ -798,65 +801,65 @@ export function arrayRemove(arr, value) {
 }
 
 export function stringDistance(a: string, b: string): number {
-	const an = a ? a.length : 0;
-	const bn = b ? b.length : 0;
-	if (an === 0)
-	{
-		return bn;
-	}
-	if (bn === 0)
-	{
-		return an;
-	}
-	const matrix = new Array<number[]>(bn + 1);
-	for (let i = 0; i <= bn; ++i)
-	{
-		let row = matrix[i] = new Array<number>(an + 1);
-		row[0] = i;
-	}
-	const firstRow = matrix[0];
-	for (let j = 1; j <= an; ++j)
-	{
-		firstRow[j] = j;
-	}
-	for (let i = 1; i <= bn; ++i)
-	{
-		for (let j = 1; j <= an; ++j)
-		{
-			if (b.charAt(i - 1) === a.charAt(j - 1))
-			{
-				matrix[i][j] = matrix[i - 1][j - 1];
-			}
-			else
-			{
-				matrix[i][j] = Math.min(
-					matrix[i - 1][j - 1], // substitution
-					matrix[i][j - 1], // insertion
-					matrix[i - 1][j] // deletion
-				) + 1;
-			}
-		}
-	}
-	return matrix[bn][an];
+  const an = a ? a.length : 0;
+  const bn = b ? b.length : 0;
+  if (an === 0)
+  {
+    return bn;
+  }
+  if (bn === 0)
+  {
+    return an;
+  }
+  const matrix = new Array<number[]>(bn + 1);
+  for (let i = 0; i <= bn; ++i)
+  {
+    let row = matrix[i] = new Array<number>(an + 1);
+    row[0] = i;
+  }
+  const firstRow = matrix[0];
+  for (let j = 1; j <= an; ++j)
+  {
+    firstRow[j] = j;
+  }
+  for (let i = 1; i <= bn; ++i)
+  {
+    for (let j = 1; j <= an; ++j)
+    {
+      if (b.charAt(i - 1) === a.charAt(j - 1))
+      {
+        matrix[i][j] = matrix[i - 1][j - 1];
+      }
+      else
+      {
+        matrix[i][j] = Math.min(
+          matrix[i - 1][j - 1], // substitution
+          matrix[i][j - 1], // insertion
+          matrix[i - 1][j] // deletion
+        ) + 1;
+      }
+    }
+  }
+  return matrix[bn][an];
 }
 
 
 
 export function fixTagPage(meta:any,coupon:any){
-    meta.removeTag('name = "og:url"');
-    meta.removeTag('name = "og:type"');
-    meta.removeTag('name = "og:title"');
-    meta.removeTag('name = "og:description"');
-    meta.removeTag('name = "og:image"');
+  meta.removeTag('name = "og:url"');
+  meta.removeTag('name = "og:type"');
+  meta.removeTag('name = "og:title"');
+  meta.removeTag('name = "og:description"');
+  meta.removeTag('name = "og:image"');
 
-    meta.addTags([
-      {name:"og:url",content:coupon.url},
-      {name:"og:type",content:"website"},
-      {name:"og:locale",content:"fr_FR"},
-      {name:"og:title",content:coupon.label},
-      {name:"og:description",content:"Ouvrir pour profiter vous aussi de la promotion"},
-      {name:"og:image",content:coupon.picture}
-    ],true);
+  meta.addTags([
+    {name:"og:url",content:coupon.url},
+    {name:"og:type",content:"website"},
+    {name:"og:locale",content:"fr_FR"},
+    {name:"og:title",content:coupon.label},
+    {name:"og:description",content:"Ouvrir pour profiter vous aussi de la promotion"},
+    {name:"og:image",content:coupon.picture}
+  ],true);
 }
 
 
@@ -944,12 +947,12 @@ export function autoRotate(src: string, quality: number, func) {
 
   });
 
-    //   }else{
-    //     debugger;
-    //     rotate(src, -90, quality, func);
-    //   }
-    //
-    // });
+  //   }else{
+  //     debugger;
+  //     rotate(src, -90, quality, func);
+  //   }
+  //
+  // });
 }
 
 // export function autoRotate(src: string, quality: number, func) {

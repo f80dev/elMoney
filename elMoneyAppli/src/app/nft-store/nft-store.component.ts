@@ -170,6 +170,5 @@ export class NftStoreComponent implements OnInit {
         }
       });
     },this)
-
   }
 }

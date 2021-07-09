@@ -101,6 +101,7 @@ export class UserService {
     if(!this.addr || this.addr.length<10 || this.addr=="null"){
       $$("Refresh de la balance annulé pour address non conforme");
       if(func_error)func_error();
+      return;
     }
 
     $$("Balance("+this.addr+")");
@@ -137,6 +138,7 @@ export class UserService {
   }
 
 
+
   del_contact(email: any) {
     for(let c of this.contacts){
       if(c.email==email)
@@ -149,7 +151,6 @@ export class UserService {
 
 
   init(addr:string=null,func=null,func_error=null) {
-
     addr=addr || this.addr;
     this.addr=addr;
     localStorage.setItem("addr",addr);
@@ -237,7 +238,7 @@ export class UserService {
         func();
       });
     }else{
-      this.dialog.open(AuthentComponent,{width: '300px',height:"fit-contain",data:
+      this.dialog.open(AuthentComponent,{width: '350px',height:"400px",data:
           {
             title: title,
           }
@@ -259,7 +260,8 @@ export class UserService {
 
 
 
-  check_pem(func,vm=null,title="Charger votre clé pour cette opération",func_abort=null) {
+  check_pem(func,vm=null,title=null,func_abort=null) {
+    title=title || "Charger votre clé pour cette opération";
     if(this.pem && this.pem.length>0){
       func()
     } else {
@@ -270,11 +272,11 @@ export class UserService {
           }
       }).afterClosed().subscribe((result:any) => {
         if(result){
-          if(this.addr && this.addr!=result.address){
+          debugger
+          if(this.addr && this.addr!=result.addr){
             showMessage(vm,"cette clé ne correspond pas au compte");
             if(func_abort)func_abort();
           } else {
-
             if(!this.addr)this.init(result.addr);
             this.pem=result.pem;
             func();
@@ -282,10 +284,8 @@ export class UserService {
         } else {
           if(func_abort)func_abort("annulation");
         }
-
       });
     }
-
   }
 
   logout(title="Veuillez indiquer votre clé",func=null,height="fit-contain") {

@@ -81,11 +81,12 @@ export class SettingsComponent implements OnInit {
 
   make_store() {
     this.user.check_pem(()=>{
+      this.message="Création / Modification de la boutique";
       this.user.save_user(()=>{
-        this.message="Création / modification de la boutique";
         if(this.user.shop_website.length+this.user.shop_name.length+this.user.shop_description.length>0){
-          if(!this.user.shop_website || this.user.shop_website=="")
+          if(!this.user.shop_website || this.user.shop_website==""){
             this.user.shop_website=environment.domain_appli+"/?store="+this.user.addr;
+          }
 
           this.user.new_dealer(()=>{
             this.message="";
@@ -123,8 +124,11 @@ export class SettingsComponent implements OnInit {
 
   update_user() {
     this.user.check_pem(()=>{
-      this.user.save_user();
-      showMessage(this,"Informations enregistrées");
+      this.message="Enregistrement en cours ...";
+      this.user.save_user(()=>{
+        this.message="";
+        showMessage(this,"Informations enregistrées");
+      });
     });
   }
 }

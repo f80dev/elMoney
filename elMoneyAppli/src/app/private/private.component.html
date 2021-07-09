@@ -1,12 +1,12 @@
 <div class="app-prompt" style="text-align: center;color:white;">
 
-  <h2>{{data.title}}</h2>
+  <h2 *ngIf="frm_dialog">{{data.title}}</h2>
+
   <app-hourglass [message]="message"></app-hourglass>
 
   <div *ngIf="message?.length==0">
 
-
-    <div *ngIf="!user.pem">
+    <div *ngIf="!user.pem" style="margin: 35px">
 
       <input #csvInput hidden="true"
              type="file" onclick="this.value=null"
@@ -24,13 +24,18 @@
 
   </div>
 
+  <div *ngIf="frm_dialog">
   <br>
+
   <hr>
 
    <button mat-raised-button
-              mat-button class="app-button"
-              (click)="dialogRef.close()">
+
+           mat-button class="app-button"
+           (click)="dialogRef.close()">
         Annuler
-      </button>
+   </button>
+
+  </div>
 
 </div>

@@ -25,7 +25,9 @@ export class NftBuyComponent implements OnInit {
     public user:UserService,
     public toast:MatSnackBar,
     public routes:ActivatedRoute
-  ) { }
+  ) {
+    this.user.check_pem(null,this,null,()=>{this.router.navigate(["store"])});
+  }
 
   ngOnInit(): void {
     this.nft=JSON.parse(this.routes.snapshot.queryParamMap.get("nft"));

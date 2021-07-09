@@ -14,7 +14,7 @@ import {$$, showError, showMessage} from "../tools";
   styleUrls: ['./authent.component.sass']
 })
 export class AuthentComponent implements OnInit {
-  message: string;
+  message: string="";
   showScanner=true;
   profils: any=[
     {label:"Alice",value:"alice.pem"},
@@ -77,10 +77,7 @@ export class AuthentComponent implements OnInit {
     this.api._post("analyse_pem", "", profil, 240).subscribe((r: any) => {
       this.message="";
       $$("Changement de compte");
-      localStorage.removeItem("addr");
       this.user.init(r.address, r.pem,()=>{this.quit(r);});
-      localStorage.setItem("save_key","true");
-      this.quit(r);
     },(err)=>{showError(this)});
   }
 
@@ -93,5 +90,15 @@ export class AuthentComponent implements OnInit {
 
   onflash_event($event: any) {
     this.quit({addr:$event.data})
+  }
+
+  authent_by_key(evt: any) {
+    this.user.init(evt.addr,()=>{
+      this.message="";
+      this.user.pem=evt.pem;
+      this.quit(evt);
+    },()=>{
+      showMessage(this,"Problème de reconnaissance");
+    })
   }
 }

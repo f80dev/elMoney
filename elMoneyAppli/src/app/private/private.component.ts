@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit, Sanitizer} from '@angular/core';
+import {Component, EventEmitter, Inject, Input, OnInit, Output, Sanitizer} from '@angular/core';
 import {showError, showMessage, openFAQ, $$} from "../tools";
 import {ConfigService} from "../config.service";
 import {Location} from "@angular/common";
@@ -21,6 +21,8 @@ export class PrivateComponent implements OnInit {
   message:string="";
   savePrivateKey={value:false};
 
+  @Input("dialog") frm_dialog:boolean=true;
+  @Output('load') onload: EventEmitter<any>=new EventEmitter();
 
   constructor(public config:ConfigService,
               public dialogRef: MatDialogRef<PrivateComponent>,
@@ -47,14 +49,8 @@ export class PrivateComponent implements OnInit {
     reader.onload = () => {
       this.message = "Changement de compte";
       this.api._post("analyse_pem", "", btoa(reader.result.toString()), 240).subscribe((r: any) => {
-        if(!this.user.addr || this.user.addr==r.addr){
-          this.user.pem=r.pem;
-          this.quit({pem:this.user.pem,addr:r.address});
-        } else {
-          showMessage(this,"Clé incorrecte");
-        }
+        this.quit({pem:r.pem,addr:r.address});
       });
-
     }
     reader.readAsBinaryString(fileInputEvent.target.files[0]);
   }
@@ -63,7 +59,10 @@ export class PrivateComponent implements OnInit {
 
 
   quit(result=null){
-    this.dialogRef.close(result);
+    if(this.frm_dialog)
+      this.dialogRef.close(result);
+    else
+      this.onload.emit(result);
   }
 
 
