@@ -532,7 +532,7 @@ class ElrondNet:
                 required_gas=required_gas+10000*(len(value)+len(key))
 
         _sender=Account(pem_file=pem_file)
-        self.send_transaction(_sender,_sender,_sender,0,data)
+        return self.send_transaction(_sender,_sender,_sender,0,data)
 
 
     def get_account(self, addr):

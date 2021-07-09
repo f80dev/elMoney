@@ -46,21 +46,24 @@ export class PrivateComponent implements OnInit {
     this.message = "Signature ...";
     reader.onload = () => {
       this.message = "Changement de compte";
-      this.user.pem=btoa(reader.result.toString());
-      this.user.check_pem(()=>{this.quit()});
+      this.api._post("analyse_pem", "", btoa(reader.result.toString()), 240).subscribe((r: any) => {
+        if(!this.user.addr || this.user.addr==r.addr){
+          this.user.pem=r.pem;
+          this.quit({pem:this.user.pem,addr:r.address});
+        } else {
+          showMessage(this,"Clé incorrecte");
+        }
+      });
+
     }
-    reader.readAsDataURL(fileInputEvent.target.files[0]);
+    reader.readAsBinaryString(fileInputEvent.target.files[0]);
   }
 
 
 
 
   quit(result=null){
-    this.user.refresh_balance(()=> {
-      this.dialogRef.close(result);
-    },()=>{
-      $$("Probleme de rafraichissement");
-    });
+    this.dialogRef.close(result);
   }
 
 

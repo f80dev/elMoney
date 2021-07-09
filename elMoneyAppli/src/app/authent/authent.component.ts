@@ -7,7 +7,6 @@ import {DomSanitizer} from "@angular/platform-browser";
 import {UserService} from "../user.service";
 import {Location} from "@angular/common";
 import {$$, showError, showMessage} from "../tools";
-import {PromptComponent} from "../prompt/prompt.component";
 
 @Component({
   selector: 'app-authent',
@@ -43,11 +42,15 @@ export class AuthentComponent implements OnInit {
               public toast:MatSnackBar,
               public sanitizer:DomSanitizer,
               public user:UserService,
-              public _location:Location) { }
+              public _location:Location) {
+    if(!this.user.addr)this.user.addr=localStorage.getItem("addr");
+    if(this.user.addr){
+      this.quit({address:this.user.addr});
+    }
+  }
 
   ngOnInit(): void {
-    this.user.email=localStorage.getItem("email");
-    if(this.user.email)this.udpate_mail();
+
   }
 
   quit(result:any){

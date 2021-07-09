@@ -95,7 +95,8 @@ def analyse_pem():
         body="".join(body)
         #body=body.replace("\n","")
     else:
-        body=str(base64.b64decode(body.split("base64,")[1]),"utf-8")
+        if "base64" in body:body=body.split("base64,")[1]
+        body=str(base64.b64decode(body),"utf-8")
         pubkey="erd"+body.split("-----")[1].split("erd")[1]
 
     return jsonify({"address":pubkey,"pem":body}),200
@@ -207,7 +208,12 @@ def get_pem_file(data):
         if type(data["pem"]) == dict and "pem" in data["pem"]:data["pem"]=data["pem"]["pem"]
         rc="./PEM/temp"+str(now()*1000)+".pem"
         log("Fabrication d'un fichier PEM pour la signature et enregistrement sur " + rc)
-        with open(rc, "w") as file:file.write(data["pem"])
+
+        content=data["pem"]
+        if not "BEGIN PRIVATE KEY" in content:
+            content=str(base64.b64decode(content),"utf8")
+
+        with open(rc, "w") as file:file.write(content)
     return rc
 
 
@@ -226,7 +232,12 @@ def post_user(data:dict=None):
     #dao.save_user(data["addr"], data)
 
     pem_file = get_pem_file(data)
-    bc.update_account(pem_file,data)
+    try:
+        bc.update_account(pem_file,data)
+        os.remove(pem_file)
+    except:
+        os.remove(pem_file)
+        return jsonify({"error": "Probleme technique"}),500
 
     return jsonify({"reponse": "ok"})
 
@@ -716,9 +727,7 @@ def get_miners(seller:str):
 def get_dealers(addr:str="0x0"):
     rc=[]
     for dealer in bc.dealers(addr):
-        _dealer=dao.get_user(dealer["address"]) | dealer
-        del _dealer["_id"]
-        del _dealer["visual"]
+        _dealer=bc.get_account(dealer["address"]) | dealer
         rc.append(_dealer)
     return jsonify(rc), 200
 

@@ -89,7 +89,7 @@ export class UserService {
         if(func)func();
       });
     }else {
-      $$("Impossible d'enregistrer sans PEM");
+      $$("Impossible d'enregistrer");
     }
 
 
@@ -100,7 +100,7 @@ export class UserService {
   refresh_balance(func=null,func_error=null){
     if(!this.addr || this.addr.length<10 || this.addr=="null"){
       $$("Refresh de la balance annulé pour address non conforme");
-      return false;
+      if(func_error)func_error();
     }
 
     $$("Balance("+this.addr+")");
@@ -148,8 +148,9 @@ export class UserService {
 
 
 
-  init(addr: string,func=null,func_error=null) {
+  init(addr:string=null,func=null,func_error=null) {
 
+    addr=addr || this.addr;
     this.addr=addr;
     localStorage.setItem("addr",addr);
 
@@ -271,8 +272,9 @@ export class UserService {
         if(result){
           if(this.addr && this.addr!=result.address){
             showMessage(vm,"cette clé ne correspond pas au compte");
-            func_abort();
+            if(func_abort)func_abort();
           } else {
+
             if(!this.addr)this.init(result.addr);
             this.pem=result.pem;
             func();

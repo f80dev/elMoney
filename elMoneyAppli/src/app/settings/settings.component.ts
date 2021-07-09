@@ -1,10 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {ConfigService} from "../config.service";
-import {DomSanitizer} from "@angular/platform-browser";
 import {Location} from "@angular/common";
 import {UserService} from "../user.service";
-import {PromptComponent} from "../prompt/prompt.component";
 import {MatDialog} from "@angular/material/dialog";
 import {showError, showMessage} from "../tools";
 import {MatSnackBar} from "@angular/material/snack-bar";
@@ -38,11 +36,13 @@ export class SettingsComponent implements OnInit {
               public routes:ActivatedRoute,
               public ngNavigatorShareService:NgNavigatorShareService,
               public _clipboardService:ClipboardService,
-              public config:ConfigService) {}
+              public config:ConfigService) {
+
+  }
 
 
   ngOnInit(): void {
-    this.user.check_email(()=>{
+    this.user.check_email((r)=>{
       this.open_section=Number(this.routes.snapshot.queryParamMap.get("section"));
     },this.router)
   }

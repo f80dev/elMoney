@@ -64,6 +64,7 @@ class DAO:
     def raz(self,proxy):
         self.db["moneys"].remove({"proxy":proxy})
         self.db["contacts"].drop()
+        self.db["users"].drop()
         return True
 
 
