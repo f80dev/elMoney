@@ -7,6 +7,7 @@ import {DomSanitizer} from "@angular/platform-browser";
 import {UserService} from "../user.service";
 import {Location} from "@angular/common";
 import {$$, showError, showMessage} from "../tools";
+import {WalletconnectService} from "../walletconnect.service";
 
 @Component({
   selector: 'app-authent',
@@ -33,6 +34,7 @@ export class AuthentComponent implements OnInit {
     {label:"Test4",value:"test4.pem"}
   ]
   test_profil: any;
+  authent_method: any="email";
 
   constructor(public config:ConfigService,
               public dialogRef: MatDialogRef<AuthentComponent>,
@@ -40,6 +42,7 @@ export class AuthentComponent implements OnInit {
               public api:ApiService,
               public dialog:MatDialog,
               public toast:MatSnackBar,
+              public walletconnect:WalletconnectService,
               public sanitizer:DomSanitizer,
               public user:UserService,
               public _location:Location) {
@@ -77,7 +80,8 @@ export class AuthentComponent implements OnInit {
     this.api._post("analyse_pem", "", profil, 240).subscribe((r: any) => {
       this.message="";
       $$("Changement de compte");
-      this.user.init(r.address, r.pem,()=>{this.quit(r);});
+      this.user.pem=r.pem;
+      this.user.init(r.address, ()=>{this.quit(r);});
     },(err)=>{showError(this)});
   }
 

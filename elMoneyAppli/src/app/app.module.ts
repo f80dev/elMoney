@@ -76,6 +76,8 @@ import {CommonModule, DatePipe} from "@angular/common";
 import { NftBuyComponent } from './nft-buy/nft-buy.component';
 import { SavekeyComponent } from './savekey/savekey.component';
 import { AuthentComponent } from './authent/authent.component';
+import {WalletconnectService} from "./walletconnect.service";
+import {MatButtonToggleModule} from "@angular/material/button-toggle";
 
 
 const config: SocketIoConfig = {
@@ -130,6 +132,7 @@ const config: SocketIoConfig = {
   ],
   imports: [
     MatButtonModule,
+    MatButtonToggleModule,
     MatDialogModule,
     MatIconModule,
     MatAutocompleteModule,
@@ -165,6 +168,7 @@ const config: SocketIoConfig = {
   ],
   providers: [
     ApiService,
+    WalletconnectService,
     TransPipe,
     DatePipe,
     {

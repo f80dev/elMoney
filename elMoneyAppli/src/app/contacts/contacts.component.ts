@@ -3,7 +3,7 @@ import {ApiService} from "../api.service";
 import {Location} from "@angular/common";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {UserService} from "../user.service";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-contacts',
@@ -18,8 +18,11 @@ export class ContactsComponent implements OnInit {
   constructor(public api:ApiService,
               public user:UserService,
               public toast:MatSnackBar,
+              public router:Router,
               public routes:ActivatedRoute,
-              public _location:Location) { }
+              public _location:Location) {
+    this.user.check_email(null,this.router);
+  }
 
   ngOnInit(): void {
 

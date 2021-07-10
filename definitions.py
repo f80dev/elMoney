@@ -53,7 +53,7 @@ NETWORKS={
         "new_account":float(1*1e18),
         "bank":"bank",
         "unity":"xEgld",
-        "identifier":"TFC-bc8f10",
+        "identifier":"TFC-35b1d0",
         "faucet":"https://r3d4.fr/elrond/devnet/index.php",
         "proxy":"https://devnet-gateway.elrond.com",
         "explorer":"https://devnet-explorer.elrond.com",

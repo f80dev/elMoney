@@ -251,7 +251,13 @@ export class UserService {
             this.refresh_balance(func);
           });
         } else {
-          if(func_abort)func_abort();
+          if(func_abort){
+            if(typeof(func_abort)=="object") {
+            func_abort.navigate(["store"]);
+          }else{
+            func_abort();
+          }
+          }
         }
 
       });

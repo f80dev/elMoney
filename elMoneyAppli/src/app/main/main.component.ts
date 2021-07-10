@@ -37,7 +37,8 @@ export class MainComponent implements OnInit {
               public user:UserService,
               public api:ApiService,
               public config:ConfigService) {
-    subscribe_socket(this,"refresh_account",($event)=>{
+    this.user.check_email(()=>{
+      subscribe_socket(this,"refresh_account",($event)=>{
       if($event.param.comment){
         let unity=$event.param.comment;
         if(unity!=this.user.moneys[this.user.selected_money].unity){
@@ -47,6 +48,9 @@ export class MainComponent implements OnInit {
       }
       this.refresh();
     });
+    },this.router)
+
+
   }
 
 

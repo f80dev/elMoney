@@ -11,16 +11,17 @@ export class WalletconnectService implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    debugger
     this.connector = new WalletConnect({
       bridge: "https://bridge.walletconnect.org" // Required
     });
 
     if (!this.connector.connected) {
       // create new session
+
       this.connector.createSession().then(() => {
         // get uri for QR Code modal
         const uri = this.connector.uri;
-        debugger
         // display QR Code modal
         WalletConnectQRCodeModal.open(uri, () => {
           console.log("QR Code Modal closed");

@@ -2,60 +2,72 @@
   <h2>Se connecter</h2>
   <app-hourglass [message]="message"></app-hourglass>
 
-  <mat-tab-group animationDuration="1000ms" *ngIf="message?.length==0" mat-align-tabs="center">
+  <mat-button-toggle-group [(ngModel)]="authent_method" aria-label="Methode de connexion">
+    <mat-button-toggle value="email">Email</mat-button-toggle>
+    <mat-button-toggle value="qrcode">QRCode</mat-button-toggle>
+    <mat-button-toggle value="cle">Clés</mat-button-toggle>
+    <mat-button-toggle value="profil">Test</mat-button-toggle>
+  </mat-button-toggle-group>
 
-    <mat-tab label="Par mail" style="text-align: right">
-      <div style="width: 100%;text-align: center">
-        <br>
-        <mat-form-field appearance="fill" class="app-field" >
-          <mat-label>Indiquez votre mail</mat-label>
-          <input matInput type="text" max="50" [(ngModel)]="user.email" (keypress)="on_keypress($event)">
-        </mat-form-field>
 
-        <button mat-raised-button
-                mat-button class="app-button"
-                (click)="udpate_mail()">
-          Se connecter
-        </button>
-      </div>
-    </mat-tab>
 
-    <mat-tab label="par QRCode">
+  <div *ngIf="authent_method=='email'" class="method_zone">
+    <div style="width: 100%;text-align: center">
       <br>
-      <div style="width: 100%;text-align: center" *ngIf="showScanner">
-        <small>Pointez le QRCode du wallet à connecter</small><br><br>
-        <app-scanner [size]="230"
-                     autofocus
-                     (click)="showScanner=false"
-                     (flash)="onflash_event($event)">
-        </app-scanner>
-        <br>
-      </div>
-    </mat-tab>
-
-
-    <mat-tab label="par profil">
-      <br>
-      Pour tester l'application, choisissez un profil
-      <mat-form-field class="app-field" style="max-width: 250px;">
-        <mat-label>Profils de test</mat-label>
-        <mat-select [(ngModel)]="test_profil" (ngModelChange)="change_user($event)">
-          <mat-option *ngFor="let profil of profils" [value]="profil.value">{{profil.label}}</mat-option>
-        </mat-select>
+      <mat-form-field appearance="fill" class="app-field" >
+        <mat-label>Indiquez votre mail</mat-label>
+        <input matInput type="text" max="50" [(ngModel)]="user.email" (keypress)="on_keypress($event)">
       </mat-form-field>
-      <app-tuto label="Il est possible d'utiliser des comptes pour tester cette application. En revanche plusieurs personnes pouvant utiliser les mêmes comptes, il est possible que le comportement soit parfois imprevisible"></app-tuto>
-    </mat-tab>
 
-    <mat-tab label="par clé privée">
-      <app-private [dialog]="false" (load)="authent_by_key($event)"></app-private>
-    </mat-tab>
+      <button mat-raised-button
+              [disabled]="user.email.indexOf('@')==-1"
+              mat-button class="app-button"
+              (click)="udpate_mail()">
+        Se connecter
+      </button>
+    </div>
+  </div>
 
-  </mat-tab-group>
+
+  <div *ngIf="authent_method=='qrcode'" class="method_zone">
+    <br>
+    <div style="width: 100%;text-align: center" *ngIf="showScanner">
+      <small>Pointez le QRCode du wallet à connecter</small><br><br>
+      <app-scanner [size]="230"
+                   autofocus
+                   (click)="showScanner=false"
+                   (flash)="onflash_event($event)">
+      </app-scanner>
+      <br>
+    </div>
+  </div>
+
+
+  <div *ngIf="authent_method=='profil'" class="method_zone">
+    <br>
+    Pour tester l'application, choisissez un profil
+    <mat-form-field class="app-field" style="max-width: 250px;">
+      <mat-label>Profils de test</mat-label>
+      <mat-select [(ngModel)]="test_profil" (ngModelChange)="change_user($event)">
+        <mat-option *ngFor="let profil of profils" [value]="profil.value">{{profil.label}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <app-tuto label="Il est possible d'utiliser des comptes pour tester cette application. En revanche plusieurs personnes pouvant utiliser les mêmes comptes, il est possible que le comportement soit parfois imprevisible"></app-tuto>
+  </div>
+
+
+  <div *ngIf="authent_method=='cle'" class="method_zone">
+    <app-private [dialog]="false" (load)="authent_by_key($event)"></app-private>
+  </div>
 
 
 </div>
 
-<div class="bottom-bar">
+
+
+
+
+<div style="text-align: center;width:100%;">
   <hr>
   <button mat-raised-button
           mat-button class="app-button"
