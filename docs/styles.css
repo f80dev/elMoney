@@ -3108,13 +3108,13 @@ a {
   margin: 4px;
   text-align: left;
   display: inline-block;
-  background-color: #20202b;
+  background-color: #3d3d4b;
 }
 mat-card-header {
-  background-color: #20202b;
+  background-color: #3d3d4b;
 }
 mat-card-content {
-  background-color: #20202b;
+  background-color: #3d3d4b;
 }
 mat-expansion-panel-header {
   background-color: #3d3d3d;

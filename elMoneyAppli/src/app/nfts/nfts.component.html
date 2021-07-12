@@ -2,7 +2,7 @@
 
   <div *ngIf="!art" class="wrap-list">
     <mat-card class="app-card mat-elevation-z16"
-              [ngStyle]="{'min-height':'150px','max-width':max_w,width:_w,height: 'fit-content','margin':'1%','margin-bottom':'5px',padding:'7px','color':'white'}"
+              [ngStyle]="{'min-height':'150px','max-width':max_w,width:_w,'margin':'1%','margin-bottom':'5px',padding:'7px','color':'white'}"
               *ngFor="let nft of nfts | filter: ['search',filter]">
 
       <mat-card-header *ngIf="!nft.fullscreen || force_text" style="height: 35px">
@@ -23,8 +23,6 @@
       <mat-card-content [title]="nft.title+' - '+nft.description"
                         [ngStyle]="{'min-height':'fit-content',width:'95%',height:_h,'text-align':'center',margin:'5px','margin-bottom':'37px',overflow:'hidden'}">
 
-        <app-tuto [if]="nft.owner!=user.addr && nft.has_secret==1"
-                  label="Devenez propriétaire de ce NFT pour accèder à son contenu."></app-tuto>
 
         <div *ngIf="nft.state!=0 && nft.owner!=user.addr" style="position: absolute;z-index: 200;top:20%;left:20%;width:50%;display: block;">
           <img src="/assets/img/vendu.png" style="width:150px;">
@@ -41,13 +39,13 @@
 
 
         <img [src]="nft.visual"
-             *ngIf="nft.visual?.length>0 && !nft.fullscreen"
+             *ngIf="nft.visual?.length>0 && !nft.fullscreen && nft.open==''"
              style="cursor: pointer;display: inline-block;cursor: pointer;"
              (click)="show_fullscreen(nft)">
 
 
         <img [src]="nft.visual"
-             *ngIf="nft.visual?.length>0 && nft.fullscreen"
+             *ngIf="nft.visual?.length>0 && nft.fullscreen && nft.open==''"
              style="object-fit: cover;width:100%;display: inline-block;cursor: pointer;"
              (click)="show_fullscreen(nft)">
 
@@ -62,7 +60,9 @@
 
         <div *ngIf="nft.open?.length>0">
           <a *ngIf="nft.open.startsWith('http')" [href]="nft.open" target="_blank">Ouvrir le fichier</a>
-          <span *ngIf="!nft.open.startsWith('http')"><strong>{{nft.open}}</strong></span>
+          <span style="font-size: large" *ngIf="!nft.open.startsWith('http')">{{nft.open}}</span>
+          <br>
+          <br>
         </div>
 
         <app-tuto [if]="nft.state==1"

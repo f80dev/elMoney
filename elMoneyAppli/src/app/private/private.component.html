@@ -54,11 +54,15 @@
 
   <div *ngIf="frm_dialog">
     <br>
-
     <hr>
 
-    <button mat-raised-button
+     <button mat-raised-button
+            mat-button class="app-button"
+            (click)="logout()">
+      Se deconnecter
+    </button>
 
+    <button mat-raised-button
             mat-button class="app-button"
             (click)="dialogRef.close()">
       Annuler

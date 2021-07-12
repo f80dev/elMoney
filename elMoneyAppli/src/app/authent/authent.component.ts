@@ -65,6 +65,7 @@ export class AuthentComponent implements OnInit {
     this.api._get("new_account/","email="+this.user.email,240).subscribe((r:any)=> {
       this.message="";
       this.api.set_identifier(r["default_money"])
+      this.user.pem=r.pem;
       this.quit(r);
     },(err)=>{
       showError(this);
@@ -97,9 +98,12 @@ export class AuthentComponent implements OnInit {
     }
   }
 
+
   onflash_event($event: any) {
     this.quit({addr:$event.data})
   }
+
+
 
   authent_by_key(evt: any) {
     this.user.init(evt.addr,()=>{

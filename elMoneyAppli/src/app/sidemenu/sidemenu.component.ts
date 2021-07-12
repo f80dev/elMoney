@@ -26,7 +26,6 @@ export class SidemenuComponent implements OnInit {
 
   logout() {
     this.user.logout("Se déconnecter",()=>{
-      localStorage.removeItem("save_key");
       this.router.navigate(["store"])
     });
   }

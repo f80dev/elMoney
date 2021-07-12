@@ -956,7 +956,7 @@ def new_account():
     email=request.args.get("email")
     _user=dao.get_user(email)
     if _user is None:
-        _a,pem=bc.create_account(NETWORKS[bc.network_name]["new_account"],name=name,email=email)
+        _a,pem=bc.create_account(NETWORKS[bc.network_name]["new_account"],email=email)
         dao.save_user(email,_a.address.bech32())
         log("Création du compte " + _a.address.bech32() + ". Demande de transfert de la monnaie par defaut")
 

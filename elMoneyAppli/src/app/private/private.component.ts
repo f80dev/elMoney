@@ -32,6 +32,7 @@ export class PrivateComponent implements OnInit {
               public api:ApiService,
               public dialog:MatDialog,
               public toast:MatSnackBar,
+              public router: Router,
               public sanitizer:DomSanitizer,
               public user:UserService,
               public _location:Location) { }
@@ -98,5 +99,11 @@ export class PrivateComponent implements OnInit {
     if(this.private_key.length==80){
       this.quit({private_key:this.private_key});
     }
+  }
+
+  logout() {
+   this.user.logout("Se déconnecter",()=>{
+      this.router.navigate(["store"])
+    });
   }
 }

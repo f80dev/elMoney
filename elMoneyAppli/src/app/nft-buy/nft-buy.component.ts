@@ -26,8 +26,10 @@ export class NftBuyComponent implements OnInit {
     public toast:MatSnackBar,
     public routes:ActivatedRoute
   ) {
-    this.user.check_pem(null,this,null,()=>{this.router.navigate(["store"])});
+    this.user.check_pem(null,this,"L'achat nécessite une signature",()=>{this.router.navigate(["store"])});
   }
+
+
 
   ngOnInit(): void {
     this.nft=JSON.parse(this.routes.snapshot.queryParamMap.get("nft"));
@@ -35,7 +37,7 @@ export class NftBuyComponent implements OnInit {
     this.api._get("users/"+this.nft.miner+"/","").subscribe((data:any)=>{
       this.miner=data;
     });
-    if(this.nft.price==0)this.buy();
+    if(this.nft.price==0 && this.user.pem)this.buy();
   }
 
 

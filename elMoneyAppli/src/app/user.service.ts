@@ -279,12 +279,12 @@ export class UserService {
       }).afterClosed().subscribe((result:any) => {
         if(result){
           if(this.addr && this.addr!=result.addr){
-            showMessage(vm,"cette clé ne correspond pas au compte");
+            showMessage(vm,"cette clé ne correspond pas au compte, si vous souhaitez vraiment l'utiliser vous devez préalablement vous déconnecter");
             if(func_abort)func_abort();
           } else {
             if(!this.addr)this.init(result.addr);
             this.pem=result.pem;
-            func();
+            if(func)func();
           }
         } else {
           if(func_abort)func_abort("annulation");
