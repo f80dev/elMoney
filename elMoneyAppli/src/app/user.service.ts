@@ -169,7 +169,7 @@ export class UserService {
       this.shop_name=body.shop_name || "";
       this.email=body.email || "";
       this.shop_visual=body.shop_visual || "/assets/img/shop.png";
-      func(body);
+      if(func)func(body);
     },(err)=>{
       if(err.status==404) {
         $$("Impossible de charger l'user");
@@ -238,7 +238,7 @@ export class UserService {
         func();
       });
     }else{
-      this.dialog.open(AuthentComponent,{width: '350px',height:"400px",data:
+      this.dialog.open(AuthentComponent,{width: '350px',height:"500px",data:
           {
             title: title,
           }
@@ -269,7 +269,7 @@ export class UserService {
   check_pem(func,vm=null,title=null,func_abort=null) {
     title=title || "Charger votre clé pour cette opération";
     if(this.pem && this.pem.length>0){
-      func()
+      if(func)func();
     } else {
       this.dialog.open(PrivateComponent,{width: '300px',height:"fit-contain",data:
           {
@@ -278,7 +278,6 @@ export class UserService {
           }
       }).afterClosed().subscribe((result:any) => {
         if(result){
-          debugger
           if(this.addr && this.addr!=result.addr){
             showMessage(vm,"cette clé ne correspond pas au compte");
             if(func_abort)func_abort();

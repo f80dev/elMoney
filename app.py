@@ -234,6 +234,13 @@ def post_user(data:dict=None):
     #dao.save_user(data["addr"], data)
 
     pem_file = get_pem_file(data)
+    if data["visual"].startswith("data:"):
+        data["visual"]=client.add(data["visual"])
+
+    if "shop_visual" in data and data["shop_visual"].startswith("data:"):
+        data["shop_visual"]=client.add(data["shop_visual"])
+
+
     try:
         bc.update_account(pem_file,data)
         os.remove(pem_file)
@@ -248,8 +255,9 @@ def post_user(data:dict=None):
 @app.route('/api/users/<addr>/',methods=["GET"])
 def get_user(addr:str):
     data = bc.get_account(addr)
-    if data is None:return Response("User unknown",404)
-    if "_id" in data: del data["_id"]
+    if data is None: return Response("User unknown", 404)
+    if "visual" in data and len(data["visual"])==46:data["visual"]="https://ipfs.io/ipfs/"+data["visual"]
+    if "shop_visual" in data and len(data["shop_visual"])==46:data["shop_visual"]="https://ipfs.io/ipfs/"+data["shop_visual"]
     return jsonify(data)
 
 
@@ -948,7 +956,7 @@ def new_account():
     email=request.args.get("email")
     _user=dao.get_user(email)
     if _user is None:
-        _a,pem=bc.create_account(NETWORKS[bc.network_name]["new_account"])
+        _a,pem=bc.create_account(NETWORKS[bc.network_name]["new_account"],name=name,email=email)
         dao.save_user(email,_a.address.bech32())
         log("Création du compte " + _a.address.bech32() + ". Demande de transfert de la monnaie par defaut")
 

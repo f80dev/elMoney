@@ -554,7 +554,7 @@ class ElrondNet:
         return rc
 
 
-    def create_account(self,fund="",name=None,seed_phrase=""):
+    def create_account(self,fund="",name=None,email=None,seed_phrase=""):
         """
 
         :param fund:
@@ -567,7 +567,10 @@ class ElrondNet:
 
         if len(seed_phrase)==0:
             if name is None:
-                name = "User" + str(datetime.now().timestamp() * 1000).split(".")[0]
+                if email is None:
+                    name = "User" + str(datetime.now().timestamp() * 1000).split(".")[0]
+                else:
+                    name=email.split("@")[0].split(".")[0]
 
             AccountsRepository("./PEM").generate_account(name)
             for f in os.listdir("./PEM"):

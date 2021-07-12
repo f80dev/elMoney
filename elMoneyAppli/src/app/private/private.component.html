@@ -6,38 +6,63 @@
 
   <div *ngIf="message?.length==0">
 
+
+
     <div *ngIf="!user.pem" style="margin: 35px">
 
-      <input #csvInput hidden="true"
-             type="file" onclick="this.value=null"
-             (change)="import($event)"
-             accept=".pem"/>
+      <mat-button-toggle-group [(ngModel)]="private_method" aria-label="Methode de connexion">
+        <mat-button-toggle value="file"><div class="bloc-bouton">Fichier<br>PEM</div></mat-button-toggle>
+        <mat-button-toggle value="input"><div class="bloc-bouton">Clé<br>privée</div></mat-button-toggle>
+        <mat-button-toggle value="walletconnect"><div class="bloc-bouton">Wallet<br>Connect</div></mat-button-toggle>
+      </mat-button-toggle-group>
 
-      <button mat-raised-button
-              mat-button class="app-button"
-              title="Charger le fichier PEM de votre clé privée"
-              (click)="csvInput.click()">
-        Fichier de clé
-      </button>
+      <br><br>
+      <div *ngIf="private_method=='file'" class="method_zone">
+        <input #csvInput hidden="true"
+               type="file" onclick="this.value=null"
+               (change)="import($event)"
+               accept=".pem"/>
+
+        <button mat-raised-button
+                mat-button class="app-button"
+                title="Charger le fichier PEM de votre clé privée"
+                (click)="csvInput.click()">
+          Fichier de clé
+        </button>
 
 
-      <p style="font-size: x-small;line-height:90%;font-weight: lighter;margin: 20px;">Votre fichier de signature vous a été envoyé sur votre mail à votre première connexion</p>
+        <p style="font-size: x-small;line-height:90%;font-weight: lighter;margin: 20px;">Votre fichier de signature vous a été envoyé sur votre mail à votre première connexion</p>
+
+      </div>
+
+
+      <div *ngIf="private_method=='input'" class="method_zone">
+        <mat-form-field appearance="fill" class="app-field">
+          <mat-label>Coller votre clé privée</mat-label>
+          <input matInput type="text" maxlength="200" [(ngModel)]="private_key" [ngModelOptions]="{standalone: true}" (change)="keyOnChange()">
+        </mat-form-field>
+      </div>
+
+      <div *ngIf="private_method=='walletconnect'" class="method_zone">
+        <img src="https://gblobscdn.gitbook.com/spaces%2F-LJJeCjcLrr53DcT1Ml7%2Favatar.png?alt=media" style="width:60px">
+        <p>En construction</p>
+      </div>
 
     </div>
 
   </div>
 
   <div *ngIf="frm_dialog">
-  <br>
+    <br>
 
-  <hr>
+    <hr>
 
-   <button mat-raised-button
+    <button mat-raised-button
 
-           mat-button class="app-button"
-           (click)="dialogRef.close()">
-        Annuler
-   </button>
+            mat-button class="app-button"
+            (click)="dialogRef.close()">
+      Annuler
+    </button>
 
   </div>
 

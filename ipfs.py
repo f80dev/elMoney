@@ -37,6 +37,8 @@ class IPFS:
             cids=self.client.add(filename)
             cid=cids[0]["Hash"]
 
+            os.remove(filename)
+
 
         log("Enregistrement du fichier https://ipfs.io/ipfs/" + cid + " sur IPFS")
         return cid

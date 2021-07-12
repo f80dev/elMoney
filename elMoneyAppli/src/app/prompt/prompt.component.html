@@ -19,7 +19,7 @@
                cdkFocusInitial
                (keypress)="onEnter($event)">
         <mat-icon *ngIf="data.emojis" matSuffix (click)="showEmoji=!showEmoji">emoji_emotions</mat-icon>
-        <mat-hint *ngIf="data.subtitle?.length>0">{{data.subtitle}}</mat-hint>
+
       </div>
 
       <div *ngIf="_type=='memo'">
@@ -27,6 +27,7 @@
                   [maxlength]="_max" [(ngModel)]="data.result" cdkFocusInitial></textarea>
       </div>
 
+      <mat-hint *ngIf="data.subtitle?.length>0">{{data.subtitle}}</mat-hint>
 
     </mat-form-field>
 

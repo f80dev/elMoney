@@ -20,9 +20,11 @@ export class PrivateComponent implements OnInit {
   fileUrl;
   message:string="";
   savePrivateKey={value:false};
+  private_key="";
 
   @Input("dialog") frm_dialog:boolean=true;
   @Output('load') onload: EventEmitter<any>=new EventEmitter();
+  private_method="file";
 
   constructor(public config:ConfigService,
               public dialogRef: MatDialogRef<PrivateComponent>,
@@ -92,4 +94,9 @@ export class PrivateComponent implements OnInit {
   }
 
 
+  keyOnChange() {
+    if(this.private_key.length==80){
+      this.quit({private_key:this.private_key});
+    }
+  }
 }

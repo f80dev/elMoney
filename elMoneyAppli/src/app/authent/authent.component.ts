@@ -88,8 +88,13 @@ export class AuthentComponent implements OnInit {
 
 
 
-  on_keypress($event: KeyboardEvent) {
-    if($event.keyCode==13)this.udpate_mail();
+  on_keypress($event: KeyboardEvent,email=true) {
+    if($event.keyCode==13) {
+      if (email)
+        this.udpate_mail();
+      else
+        this.quit({addr: this.user.addr})
+    }
   }
 
   onflash_event($event: any) {

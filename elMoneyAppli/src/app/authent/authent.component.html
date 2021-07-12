@@ -1,12 +1,12 @@
-<div class="app-prompt" style="height:300px">
+<div class="app-prompt" style="height:400px">
   <h2>Se connecter</h2>
   <app-hourglass [message]="message"></app-hourglass>
 
   <mat-button-toggle-group [(ngModel)]="authent_method" aria-label="Methode de connexion">
     <mat-button-toggle value="email">Email</mat-button-toggle>
-    <mat-button-toggle value="qrcode">QRCode</mat-button-toggle>
+    <mat-button-toggle value="qrcode"><div class="bloc-bouton">clé<br>publique</div></mat-button-toggle>
     <mat-button-toggle value="cle">Clés</mat-button-toggle>
-    <mat-button-toggle value="profil">Test</mat-button-toggle>
+    <mat-button-toggle value="profil"><div class="bloc-bouton">profils<br>tests</div></mat-button-toggle>
   </mat-button-toggle-group>
 
 
@@ -16,7 +16,7 @@
       <br>
       <mat-form-field appearance="fill" class="app-field" >
         <mat-label>Indiquez votre mail</mat-label>
-        <input matInput type="text" max="50" [(ngModel)]="user.email" (keypress)="on_keypress($event)">
+        <input matInput type="text" max="50" autofocus [(ngModel)]="user.email" (keypress)="on_keypress($event)" cdkFocusInitial>
       </mat-form-field>
 
       <button mat-raised-button
@@ -39,6 +39,26 @@
                    (flash)="onflash_event($event)">
       </app-scanner>
       <br>
+      <table style="width: 80%"><tr style="vertical-align: top;">
+        <td>
+          <mat-form-field appearance="fill" class="app-field" style="width:150px">
+        <mat-label>Coller votre adresse</mat-label>
+        <input matInput type="text" max="50" [(ngModel)]="user.addr" (keypress)="on_keypress($event,false)">
+      </mat-form-field>
+        </td>
+        <td style="text-align: right">
+      <button mat-icon-button mat-raised-button
+              [disabled]="user.addr?.indexOf('erd')!=0"
+              class="icon-button" style="margin-top: 10px;"
+              (click)="quit({addr:user.addr})">
+        <mat-icon>checkmarck</mat-icon>
+      </button>
+
+        </td>
+
+      </tr></table>
+
+
     </div>
   </div>
 
