@@ -19,9 +19,10 @@ export class SidemenuComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLocal=!environment.production;
-    setTimeout(()=>{
-      this.user.refresh_balance();
-    },500);
+    if(localStorage.getItem("addr")){
+      this.user.init(localStorage.getItem("addr"),()=>{this.user.refresh_balance();});
+    }
+
   }
 
   logout() {

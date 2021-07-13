@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Inject, Input, OnInit, Output, Sanitizer} from '@angular/core';
-import {showError, showMessage, openFAQ, $$} from "../tools";
+import {showError, showMessage, openFAQ, $$, extract_addr} from "../tools";
 import {ConfigService} from "../config.service";
 import {Location} from "@angular/common";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -19,7 +19,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 export class PrivateComponent implements OnInit {
   fileUrl;
   message:string="";
-  savePrivateKey={value:false};
+  savePrivateKey=true;
   private_key="";
 
   @Input("dialog") frm_dialog:boolean=true;
@@ -35,13 +35,19 @@ export class PrivateComponent implements OnInit {
               public router: Router,
               public sanitizer:DomSanitizer,
               public user:UserService,
-              public _location:Location) { }
+              public _location:Location) {
+
+  }
 
   ngOnInit(): void {
     this.data.title=this.data.title || "Changer de compte";
     if(this.data.profil){
       //TODO a corriger
       this.user.pem=this.data.profil;
+    }
+    if(!this.user.pem && localStorage.getItem("pem")){
+      if(!this.user.addr || extract_addr(localStorage.getItem("pem"))==this.user.addr)
+        this.quit({pem:localStorage.getItem("pem"),addr:extract_addr(localStorage.getItem("pem"))});
     }
   }
 
@@ -62,6 +68,10 @@ export class PrivateComponent implements OnInit {
 
 
   quit(result=null){
+    if(result.pem && this.savePrivateKey){
+      localStorage.setItem("pem",result.pem);
+    }
+
     if(this.frm_dialog)
       this.dialogRef.close(result);
     else

@@ -240,7 +240,6 @@ def post_user(data:dict=None):
     if "shop_visual" in data and data["shop_visual"].startswith("data:"):
         data["shop_visual"]=client.add(data["shop_visual"])
 
-
     try:
         bc.update_account(pem_file,data)
         os.remove(pem_file)
@@ -718,6 +717,8 @@ def add_dealer(token_id:str,data:dict=None):
     return jsonify(tx), 200
 
 
+
+
 @app.route('/api/miners/<seller>/',methods=["GET"])
 def get_miners(seller:str):
     miners = bc.miners(seller)
@@ -881,6 +882,12 @@ def server_config():
 
     return jsonify(infos),200
 
+
+
+@app.route('/api/del_user/<email>/',methods=["DELETE"])
+def del_user(email:str):
+    rows=dao.del_user(email)
+    return jsonify({"message":"account remove"})
 
 
 

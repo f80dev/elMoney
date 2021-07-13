@@ -6,11 +6,9 @@
 
   <div *ngIf="message?.length==0">
 
+    <div *ngIf="!user.pem" style="margin: 35px;height: 160px;">
 
-
-    <div *ngIf="!user.pem" style="margin: 35px">
-
-      <mat-button-toggle-group [(ngModel)]="private_method" aria-label="Methode de connexion">
+      <mat-button-toggle-group [(ngModel)]="private_method" aria-label="Methode de connexion" appearance="legacy" >
         <mat-button-toggle value="file"><div class="bloc-bouton">Fichier<br>PEM</div></mat-button-toggle>
         <mat-button-toggle value="input"><div class="bloc-bouton">Clé<br>privée</div></mat-button-toggle>
         <mat-button-toggle value="walletconnect"><div class="bloc-bouton">Wallet<br>Connect</div></mat-button-toggle>
@@ -49,6 +47,8 @@
       </div>
 
     </div>
+
+    <mat-slide-toggle [(ngModel)]="savePrivateKey">Conserver ma clé sur cet appareil</mat-slide-toggle>
 
   </div>
 

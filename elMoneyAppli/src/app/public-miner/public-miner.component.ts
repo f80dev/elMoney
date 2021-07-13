@@ -22,7 +22,7 @@ export class PublicMinerComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    let addr=this.routes.snapshot.queryParamMap.get("miner");
+    let addr=this.routes.snapshot.queryParamMap.get("addr");
     this.api._get("users/"+addr+"/","").subscribe((data:any)=>{
       this.miner=data;
     });

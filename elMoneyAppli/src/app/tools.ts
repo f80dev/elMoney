@@ -389,6 +389,13 @@ export function showMessage(vm:any,s:string="",duration=4000,func=null,label_but
 }
 
 
+export function extract_addr(pem:string=null){
+  if(!pem || pem.indexOf("erd")==-1)return null;
+  let addr="erd"+pem.split("erd")[1].split("---")[0]
+  return addr;
+}
+
+
 /**
  * Demande l'authentification
  * @param vm

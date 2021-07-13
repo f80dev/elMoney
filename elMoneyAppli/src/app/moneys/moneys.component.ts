@@ -31,7 +31,9 @@ export class MoneysComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.refresh();
+    this.user.check_email(()=>{
+      this.refresh();
+    })
   }
 
   refresh(){

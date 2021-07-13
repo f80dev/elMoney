@@ -1,12 +1,18 @@
 <div class="app-prompt" style="height:400px">
   <h2>Se connecter</h2>
   <app-hourglass [message]="message"></app-hourglass>
+  <div style="width: 100%;text-align: center">
+  <img src="./assets/gears.gif" style="width: 100px;margin-top:20px;display: inline;" *ngIf="message.length>0">
+  </div>
+
 
   <div *ngIf="message==''">
-  <mat-button-toggle-group [(ngModel)]="authent_method" aria-label="Methode de connexion">
+  <mat-button-toggle-group [(ngModel)]="authent_method"
+                           appearance="legacy"
+                           aria-label="Methode de connexion">
     <mat-button-toggle value="email">Email</mat-button-toggle>
-    <mat-button-toggle value="qrcode"><div class="bloc-bouton">clé<br>publique</div></mat-button-toggle>
-    <mat-button-toggle value="cle">Clés</mat-button-toggle>
+    <mat-button-toggle value="qrcode">Adresse</mat-button-toggle>
+    <mat-button-toggle value="cle"><div class="bloc-bouton">Clés<br>privées</div></mat-button-toggle>
     <mat-button-toggle value="profil"><div class="bloc-bouton">profils<br>tests</div></mat-button-toggle>
   </mat-button-toggle-group>
 
@@ -79,16 +85,13 @@
 
 
   <div *ngIf="authent_method=='cle'" class="method_zone">
+    <br>
     <app-private [dialog]="false" (load)="authent_by_key($event)"></app-private>
   </div>
 
   </div>
 
-
 </div>
-
-
-
 
 
 <div style="text-align: center;width:100%;">

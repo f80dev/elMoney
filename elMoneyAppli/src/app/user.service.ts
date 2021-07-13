@@ -279,6 +279,7 @@ export class UserService {
       }).afterClosed().subscribe((result:any) => {
         if(result){
           if(this.addr && this.addr!=result.addr){
+            localStorage.removeItem("pem");
             showMessage(vm,"cette clé ne correspond pas au compte, si vous souhaitez vraiment l'utiliser vous devez préalablement vous déconnecter");
             if(func_abort)func_abort();
           } else {
@@ -309,5 +310,9 @@ export class UserService {
         if(func)func();
       }
     });
+  }
+
+  remove_account() {
+    return this.api._delete("del_user/"+this.email+"/");
   }
 }

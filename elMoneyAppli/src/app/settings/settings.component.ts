@@ -131,4 +131,18 @@ export class SettingsComponent implements OnInit {
       });
     });
   }
+
+  delete_account(){
+    if(this.user.gas>0.01 && this.config.isProd()){
+      showMessage(this,"Le solde du compte doit être nul pour pouvoir le supprimer");
+    } else {
+      this.user.check_pem(()=>{
+        this.user.remove_account().subscribe(()=>{
+          showMessage(this,"Compte supprimé");
+          this.user.reset();
+        })
+      },this,"Signer pour supprimer votre compte");
+    }
+
+  }
 }

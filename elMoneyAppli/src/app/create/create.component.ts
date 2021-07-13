@@ -32,7 +32,9 @@ export class CreateComponent implements OnInit {
               public toast:MatSnackBar) { }
 
   ngOnInit(): void {
-    this.user.check_pem(()=>{
+    this.user.check_email(()=>{
+      this.email_confirm=this.user.email;
+      this.user.check_pem(()=>{
        this.user.refresh_balance((r:any)=>{
        if(r.EGLD.solde<this.config.server.new_esdt_price){
          showMessage(this,"Vous n'avez pas assez d'eGold pour créer une nouvelle monnaie. recharger votre compte jusqu'a 5 eGold");
@@ -40,7 +42,9 @@ export class CreateComponent implements OnInit {
        }
        }
      );
-    },"Création d'une monnaie")
+    },"Création d'une monnaie");
+    })
+
 
   }
 
