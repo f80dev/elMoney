@@ -2964,6 +2964,9 @@ mat-icon {
 mat-tab-group {
   color: white !important;
 }
+mat-button-toggle-group {
+  display: inline-block;
+}
 .app-table {
   width: 90%;
   padding: 0;

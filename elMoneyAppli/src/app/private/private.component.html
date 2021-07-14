@@ -1,12 +1,12 @@
 <div class="app-prompt" style="text-align: center;color:white;">
 
-  <h2 *ngIf="frm_dialog">{{data.title}}</h2>
+  <h3 *ngIf="frm_dialog">{{data.title}}</h3>
 
   <app-hourglass [message]="message"></app-hourglass>
 
-  <div *ngIf="message?.length==0">
+  <div *ngIf="message?.length==0" style="margin: 0px;height: fit-content;overflow: hidden;">
 
-    <div *ngIf="!user.pem" style="margin: 35px;height: 160px;">
+    <div *ngIf="!user.pem">
 
       <mat-button-toggle-group [(ngModel)]="private_method" aria-label="Methode de connexion" appearance="legacy" >
         <mat-button-toggle value="file"><div class="bloc-bouton">Fichier<br>PEM</div></mat-button-toggle>
@@ -14,7 +14,7 @@
         <mat-button-toggle value="walletconnect"><div class="bloc-bouton">Wallet<br>Connect</div></mat-button-toggle>
       </mat-button-toggle-group>
 
-      <br><br>
+      <br><br><br>
       <div *ngIf="private_method=='file'" class="method_zone">
         <input #csvInput hidden="true"
                type="file" onclick="this.value=null"
@@ -52,7 +52,7 @@
 
   </div>
 
-  <div *ngIf="frm_dialog">
+  <div *ngIf="frm_dialog" style="display: inline-block">
     <br>
     <hr>
 
