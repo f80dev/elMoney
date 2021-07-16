@@ -24,7 +24,7 @@ content:
         un wallet multi-monnaies permettant le transfert de fond à vos contacts,
       </li>
       <li>
-        un outil de création de nouvelles monnaies (sur la base du protocol ERC20),
+        un outil de création de nouvelles monnaies (sur base des ESDT),
       </li>
       <li>
         un outil de création de NFT permettant de vendre des fichiers ou des secrets accessibles uniquement au propriétaire.
@@ -46,7 +46,7 @@ content:
     format: html
     content: "
       <p>
-      Techniquement {{appname}} s'appuie sur les API ESDT et un smartcontract déployé sur la blockchaine de test en charge de la gestion des NFTs.<br>
+      Techniquement {{appname}} s'appuie sur les API ESDT et un smartcontract déployé sur la blockchaine en charge de la gestion des NFTs.<br>
       Ce smartcontract respect la norme ERC721 et ajoute quelques fonctionnalités pour gérer une logique d'achat / vente via un prix fixé par le créateur (mineur) du NFT.
       </p>
       "

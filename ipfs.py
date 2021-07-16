@@ -5,7 +5,7 @@ from datetime import datetime
 from os import remove
 
 import requests
-from ipfsApi import Client, multipart
+from ipfsapi import Client
 from werkzeug.datastructures import FileStorage
 
 from Tools import log
