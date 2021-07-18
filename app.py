@@ -253,6 +253,13 @@ def post_user(data:dict=None):
 
 @app.route('/api/users/<addr>/',methods=["GET"])
 def get_user(addr:str):
+    if "@" in addr:
+        _user=dao.get_user(addr)
+        if _user is None:
+            return jsonify({})
+        else:
+            addr=_user["addr"]
+
     data = bc.get_account(addr)
     if data is None: return Response("User unknown", 404)
     if "visual" in data and len(data["visual"])==46:data["visual"]="https://ipfs.io/ipfs/"+data["visual"]

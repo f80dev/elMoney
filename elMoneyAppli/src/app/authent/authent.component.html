@@ -28,7 +28,7 @@
       </mat-form-field>
       <br><br>
       <button mat-raised-button
-              *ngIf="user.email.indexOf('@')>2"
+              *ngIf="user.email.indexOf('@')>0"
               mat-button class="app-button"
               (click)="udpate_mail()">
         Se connecter
@@ -90,6 +90,17 @@
   </div>
 
   </div>
+
+  <div *ngIf="showSaveKey">
+    <br>
+    <mat-slide-toggle [(ngModel)]="savePrivateKey">Enregistrer ma signature sur cet appareil</mat-slide-toggle>
+    <br><br>
+    <p style="font-size: x-small;line-height: 92%;width:80%;margin-left:10%;">
+      si vous êtes le seul à utiliser cet appareil et l'accès à celui-ci est protéger (code, mot de passe)
+    </p>
+  </div>
+
+
 
 </div>
 

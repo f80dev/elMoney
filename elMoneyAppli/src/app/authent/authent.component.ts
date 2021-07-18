@@ -34,7 +34,9 @@ export class AuthentComponent implements OnInit {
     {label:"Test4",value:"test4.pem"}
   ]
   test_profil: any;
-  authent_method: any="email";
+  authent_method: string="email";
+  showSaveKey: boolean=false;
+  savePrivateKey=false;
 
   constructor(public config:ConfigService,
               public dialogRef: MatDialogRef<AuthentComponent>,
@@ -61,16 +63,29 @@ export class AuthentComponent implements OnInit {
   }
 
   udpate_mail(){
-    this.message="Récupération de votre compte ou ouverture d'un nouveau compte sur le "+this.config.server.network;
-    this.api._get("new_account/","email="+this.user.email,240).subscribe((r:any)=> {
-      this.message="";
+    this.showSaveKey=false;
+    this.api._get("users/"+this.user.email+"/").subscribe((r:any)=> {
       this.api.set_identifier(r["default_money"])
-      this.user.pem=r.pem;
-      this.quit(r);
+      if(!r.hasOwnProperty('addr')){
+        this.message="ouverture d'un nouveau compte sur le "+this.config.server.network+" elrond";
+        this.showSaveKey=true;
+        this.api._get("new_account/","email="+this.user.email,240).subscribe((r:any)=> {
+          this.message = "";
+          this.user.pem = r.pem;
+          if(this.savePrivateKey)localStorage.setItem('pem',r.pem);
+          this.quit(r);
+        });
+      } else {
+
+        this.user.pem = r.pem;
+        this.quit(r);
+      }
     },(err)=>{
       showError(this);
       $$("!Impossible de créer le compte");
     });
+
+
   }
 
 

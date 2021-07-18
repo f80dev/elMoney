@@ -18,6 +18,7 @@ L'architecture de la solution repose sur
 
 
 #Renouvellement des certificats du serveur
+désactiver le parefeu depuis cockpit
 <pre>
 certbot certonly --standalone -d server.f80.fr
 cp /etc/letsencrypt/live/server.f80.fr/* /root/certs

@@ -184,7 +184,7 @@ export class UserService {
 
 
 
-  reset() {
+  reset(reload=true) {
     this.addr=null;
     this.email=null;
     localStorage.removeItem("addr");
@@ -195,8 +195,10 @@ export class UserService {
     localStorage.removeItem("last_to");
     localStorage.removeItem("last_amount");
     localStorage.removeItem("last_screen");
-    window.location.href=environment.domain_appli;
-    window.location.reload();
+    if(reload){
+      window.location.href=environment.domain_appli;
+      window.location.reload();
+    }
   }
 
   get_gas() {
@@ -294,7 +296,7 @@ export class UserService {
     }
   }
 
-  logout(title="Veuillez indiquer votre clé",func=null,height="fit-contain") {
+  logout(title="Veuillez indiquer votre clé",func=null,height="fit-contain",reload=true) {
     this.dialog.open(PromptComponent,{width: '350px',height:height,data:
         {
           title: "Confirmez la deconnexion ?",
@@ -304,7 +306,7 @@ export class UserService {
         }
     }).afterClosed().subscribe((result:any) => {
       if(result){
-        this.reset();
+        this.reset(reload);
         if(func)func();
       } else {
         if(func)func();

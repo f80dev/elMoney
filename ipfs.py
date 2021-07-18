@@ -34,8 +34,8 @@ class IPFS:
             with open(filename,"wb") as f: f.write(data)
             f.close()
 
-            cids=self.client.add(filename)
-            cid=cids[0]["Hash"]
+            cid=self.client.add(filename)
+            cid=cid["Hash"]
 
             os.remove(filename)
 

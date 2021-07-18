@@ -113,7 +113,8 @@ export class PrivateComponent implements OnInit {
 
   logout() {
    this.user.logout("Se déconnecter",()=>{
-      this.router.navigate(["store"])
-    });
+     this.dialogRef.close();
+     this.router.navigate(["store"]);
+    },"fit-contain",false);
   }
 }
