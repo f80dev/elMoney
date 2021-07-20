@@ -6,6 +6,7 @@ import os
 import ssl
 import sys
 
+import requests
 from AesEverywhere import aes256
 from apscheduler.schedulers.background import BackgroundScheduler
 

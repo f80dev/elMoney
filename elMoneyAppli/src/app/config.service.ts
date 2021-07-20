@@ -25,8 +25,9 @@ export class ConfigService {
   server: any={bank:""};
   device: { isDesktop: any; isMobile: any };
   tags: any={};
-  egold_price:number=160;
-  egold_unity:string="€";
+  egold_price:number=60;
+  egold_unity:string="eGld";
+  fiat_unity: string="$";
 
   constructor(private location: Location,
               private http: HttpClient,
@@ -56,6 +57,15 @@ export class ConfigService {
 
   public async getJson(jsonFile:string): Promise<any> {
     return Promise.resolve((await this.http.get(jsonFile).toPromise()));
+  }
+
+  get_price(func){
+    this.api._get("https://data.elrond.com/market/quotes/egld/price","",60,"").subscribe((result:any)=>{
+      if(result.length>0){
+        this.egold_price=result[result.length-1].value;
+      }
+      func();
+    });
   }
 
 

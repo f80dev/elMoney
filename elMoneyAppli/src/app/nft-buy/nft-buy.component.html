@@ -1,6 +1,6 @@
 <div class="mainform">
   <h2 *ngIf="message?.length==0">Confirmer l'achat ?</h2>
-  <span style="font-size: xx-large">{{nft.price | number:'1.0-3'}} {{nft.unity}}</span>
+  <app-unity [value]="nft.price" fontsize="3em" fontsize_unity="large"></app-unity>
   <br><br>
 
 

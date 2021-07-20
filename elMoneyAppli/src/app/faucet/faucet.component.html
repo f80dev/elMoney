@@ -8,9 +8,7 @@
 
   <div style="line-height: 180%">
     Vous disposez de<br>
-    <span style="font-size: xx-large">
-      {{user.gas/1e18 | number:'1.0-3'}}
-    </span>xEgld
+      <app-unity fontsize="large" [value]="user.gas/1e18"></app-unity>
     <br>
     pour vos transactions
   </div>

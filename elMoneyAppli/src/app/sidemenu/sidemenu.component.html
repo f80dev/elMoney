@@ -4,11 +4,8 @@
     <br>
     <table><tr style="width: 100%;">
 
-      <td style="width: 60%;text-align: center;" routerLink="/transactions">
-        <span style="font-size: xx-large;" [title]="config.egold_price*user.gas/1e18 + ' '+config.egold_unity">
-          {{user.gas/1e18 | number:'1.1-3'}}
-        </span>&nbsp;
-        <small>xEgld</small>
+      <td style="width: 70%;text-align: center;" routerLink="/transactions">
+        <app-unity [value]="user.gas/1e18" fontsize="xx-large"></app-unity>
       </td>
 
       <td style="text-align: right">

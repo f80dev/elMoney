@@ -32,8 +32,8 @@ export class ApiService {
 
 
 
-  _get(url, params: string= '', _timeoutInSec= 60){
-    url = api(url, params);
+  _get(url, params: string= '', _timeoutInSec= 60,format="json"){
+    url = api(url, params,true,format);
     return this.http.get(url, this.getHttpOptions()).pipe(timeout(_timeoutInSec * 1000));
   }
 

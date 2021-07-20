@@ -22,7 +22,9 @@
 
     <ng-container matColumnDef="value" >
       <th mat-header-cell style="padding:6px;" *matHeaderCellDef>Montant (xEgld)</th>
-      <td mat-cell *matCellDef="let element"> {{element.value | number:'1.0-5'}}</td>
+      <td mat-cell *matCellDef="let element">
+        <app-unity [value]="element.value" [decimal]="5"></app-unity>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="gas">
