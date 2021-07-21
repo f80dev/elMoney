@@ -542,6 +542,10 @@ class ElrondNet:
         :param addr:
         :return:
         """
+
+        if not addr.startswith("erd"):
+            addr=Account(address=addr).address.bech32()
+
         rc = requests.get(self._proxy.url + "/address/" + addr + "/keys")
         if rc.status_code == 200:
             obj=dict()
@@ -967,18 +971,24 @@ class ElrondNet:
         tx = self.query("dealers",[miner_filter])
         rc = []
         if len(tx)>0 and tx[0]!='' and len(tx[0].hex)>0:
-            for dealer in str(tx[0].hex).split("000000"):
-                if len(dealer)>100:
-                    address=dealer[0:64]
-                    state=int("0x"+dealer[64:66],16)
-                    content=self.get_account(address)
-                    #content=self.ipfs.get_dict(bytes.fromhex(dealer[66:]).decode("utf-8"))
-                    if type(content)!=dict:
-                        content={"visual":base64.b64encode(content)}
+            i=0
+            ss=str(tx[0].hex)
+            while i<len(ss):
 
-                    content["address"]=Account(address=address).address.bech32()
-                    content["state"]=state
-                    rc.append(content)
+                address=ss[i:i+64]
+                state=int("0x"+ss[i+64:i+66],16)
+
+                content=self.get_account(address)
+                #content=self.ipfs.get_dict(bytes.fromhex(dealer[66:]).decode("utf-8"))
+                if type(content)!=dict:
+                    content={"visual":base64.b64encode(content)}
+
+                content["address"]=Account(address=address).address.bech32()
+                content["state"]=state
+                rc.append(content)
+
+                i=i+66
+
         return rc
 
 

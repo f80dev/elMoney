@@ -30,7 +30,7 @@
     </td>
 
     <td style="text-align: left;">
-      <mat-slide-toggle [(ngModel)]="art">Premium</mat-slide-toggle>
+      <mat-slide-toggle *ngIf="nfts?.length>0" [(ngModel)]="art">Premium</mat-slide-toggle>
     </td>
     <td style="text-align: right;">
 

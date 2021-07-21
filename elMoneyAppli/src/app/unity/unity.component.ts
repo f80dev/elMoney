@@ -16,10 +16,11 @@ export class UnityComponent implements OnChanges {
     @Input("fontsize_unity") fontsize_unity="small";
    showValue: number;
 
-  constructor(public config:ConfigService) { }
+  constructor(public config:ConfigService) {
+    if(this.value>99 && this.decimals>2)this.decimals=2;
+  }
 
   refresh(){
-
       if(localStorage.getItem("unity")=="fiat"){
         this.config.get_price(()=>{
           this.unity=this.config.fiat_unity;

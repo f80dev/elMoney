@@ -209,20 +209,7 @@ export class UserService {
   }
 
   new_dealer(func:Function,func_error:Function=null) {
-    let body={
-      pem:this.pem,
-      shop:{
-        description:this.shop_description,
-        name:this.shop_name,
-        website:this.shop_website,
-        visual: this.shop_visual,
-        contact:this.email
-      },
-      pseudo:this.pseudo,
-      addr:this.addr,
-      email:this.email
-    }
-    this.api._post("new_dealer/","",body).subscribe((r:any)=>{
+    this.api._post("new_dealer/","",{pem:this.pem}).subscribe((r:any)=>{
       setTimeout(()=>{
         this.config.refresh_dealers();
         func();
@@ -238,7 +225,7 @@ export class UserService {
     if(!this.addr)this.addr=localStorage.getItem("addr");
     if(this.addr && this.addr.length>0){
       this.init(this.addr,()=>{
-        func();
+        if(func)func();
       });
     }else{
       this.dialog.open(AuthentComponent,{width: '350px',height:"500px",data:

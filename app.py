@@ -205,14 +205,18 @@ def get_pem_file(data):
     :param data:
     :return:
     """
-    if not "pem" in data:
+    if type(data)==dict and not "pem" in data:
         rc="./PEM/"+NETWORKS[bc.network_name]["bank"]+".pem"
     else:
-        if type(data["pem"]) == dict and "pem" in data["pem"]:data["pem"]=data["pem"]["pem"]
+        if not type(data)==str and type(data["pem"]) == dict and "pem" in data["pem"]:data["pem"]=data["pem"]["pem"]
         rc="./PEM/temp"+str(now()*1000)+".pem"
         log("Fabrication d'un fichier PEM pour la signature et enregistrement sur " + rc)
 
-        content=data["pem"]
+        if type(data)==str:
+            content=data
+        else:
+            content=data["pem"]
+
         if not "BEGIN PRIVATE KEY" in content:
             content=str(base64.b64decode(content),"utf8")
 
@@ -695,7 +699,6 @@ def new_dealer(data:dict=None):
         data = json.loads(str(request.data, encoding="utf-8"))
 
     pem_file = get_pem_file(data["pem"])
-    _dealer = Account(address=data["addr"])
 
     tx=bc.execute(NETWORKS[bc.network_name]["nft"],pem_file,
                  function="new_dealer",arguments=[],
@@ -786,7 +789,7 @@ def add_miner(data:dict=None):
     pem_file = get_pem_file(data["pem"])
 
     _miner = Account(address=data["address"])
-    _profil=dao.get_user(data["address"])
+    _profil=bc.get_account(data["address"])
     if not "pseudo" in _profil or len(_profil["pseudo"])==0:
         return jsonify({"error":"Le créateur doit au moins avoir un pseudo"}),500
 
