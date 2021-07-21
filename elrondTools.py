@@ -971,7 +971,8 @@ class ElrondNet:
                 if len(dealer)>100:
                     address=dealer[0:64]
                     state=int("0x"+dealer[64:66],16)
-                    content=self.ipfs.get_dict(bytes.fromhex(dealer[66:]).decode("utf-8"))
+                    content=self.get_account(address)
+                    #content=self.ipfs.get_dict(bytes.fromhex(dealer[66:]).decode("utf-8"))
                     if type(content)!=dict:
                         content={"visual":base64.b64encode(content)}
 

@@ -94,14 +94,14 @@
              style="max-width:150px;">
       </div>
 
-       <mat-form-field appearance="fill" class="app-field">
+      <mat-form-field appearance="fill" class="app-field">
         <mat-label>Description de votre marketplace</mat-label>
         <textarea matInput matInput type="text" (focusin)="focus_idx=5" maxlength="400" [(ngModel)]="user.shop_description" [ngModelOptions]="{standalone: true}"></textarea>
         <mat-hint *ngIf="focus_idx==5">La description permet à vos clients de savoir quel type de NFT vous distribuez</mat-hint>
       </mat-form-field>
       <br>
 
-       <mat-form-field appearance="fill" class="app-field">
+      <mat-form-field appearance="fill" class="app-field">
         <mat-label>L'adresse internet de votre marketplace</mat-label>
         <input matInput type="url" (focusin)="focus_idx=6" maxlength="200" [(ngModel)]="user.shop_website" [ngModelOptions]="{standalone: true}">
         <mat-hint *ngIf="focus_idx==6">Votre market place peut être accessible en dehors de TokenForge</mat-hint>
@@ -141,30 +141,29 @@
 
 
   <div *ngIf="message?.length==0">
-  <br><br>
+    <br><br>
 
-  <small>Votre adresse publique</small>:<br>
-  <qrcode
-    [width]="150"
-    ngxClipboard
-    [cdkCopyToClipboard]="user.addr"
-    (click)="informe_clipboard()"
-    style="display: inline-block;"
-    [elementType]="'svg'"
-    [errorCorrectionLevel]="'M'"
-    [qrdata]="user.addr">
-  </qrcode>
+    <small>Votre adresse publique</small>:<br>
+    <qrcode
+      [width]="150"
+      ngxClipboard
+      [cdkCopyToClipboard]="user.addr"
+      (click)="informe_clipboard()"
+      style="display: inline-block;"
+      [elementType]="'svg'"
+      [errorCorrectionLevel]="'M'"
+      [qrdata]="user.addr">
+    </qrcode>
 
-  <br>
-  <app-tuto label="Votre adresse publique peut être flashé pour recevoir des fonds, vérifier que vous êtes le propriétaire d'un NFT, être déclaré comme distributeur ... et pleins d'autres choses encore"></app-tuto>
-  <br>
-  <br>
-  <a routerLink="/transactions">Voir mes transactions</a>
+    <br>
+    <app-tuto label="Votre adresse publique peut être flashé pour recevoir des fonds, vérifier que vous êtes le propriétaire d'un NFT, être déclaré comme distributeur ... et pleins d'autres choses encore"></app-tuto>
+    <br>
+    <br>
+    <a routerLink="/transactions">Voir mes transactions</a>
 
-      <small>
-          pour pouvoir y accéder depuis le <a [href]="config.server.wallet" target="_blank">wallet Elrond</a> par exemple
-        </small>
-
+    <small>
+      pour pouvoir y accéder depuis le <a [href]="config.server.wallet" target="_blank">wallet Elrond</a> par exemple
+    </small>
 
     <br>
 
@@ -173,10 +172,10 @@
   <app-savekey style="display: inline-block;"></app-savekey>
   <br>
   <button mat-raised-button mat-button
-              class="app-button"
-              color="alert"
-              [disabled]="!this.user.email"
-              (click)="delete_account()">
-        Supprimer le compte
-      </button>
+          class="app-button"
+          color="alert"
+          [disabled]="!this.user.email"
+          (click)="delete_account()">
+    Supprimer le compte
+  </button>
 </div>

@@ -265,7 +265,7 @@ def get_user(addr:str):
     if data is None: return Response("User unknown", 404)
     if "visual" in data and len(data["visual"])==46:data["visual"]="https://ipfs.io/ipfs/"+data["visual"]
     if "shop_visual" in data and len(data["shop_visual"])==46:data["shop_visual"]="https://ipfs.io/ipfs/"+data["shop_visual"]
-    return jsonify(data)
+    return jsonify(data),200
 
 
 
@@ -697,11 +697,8 @@ def new_dealer(data:dict=None):
     pem_file = get_pem_file(data["pem"])
     _dealer = Account(address=data["addr"])
 
-    ipfs=client.add(str(data["shop"]))
-    tx=bc.execute(NETWORKS[bc.network_name]["nft"],
-                    pem_file,
-                 function="new_dealer",
-                 arguments=["0x"+ipfs.encode().hex()],
+    tx=bc.execute(NETWORKS[bc.network_name]["nft"],pem_file,
+                 function="new_dealer",arguments=[],
                  )
     os.remove(pem_file)
 

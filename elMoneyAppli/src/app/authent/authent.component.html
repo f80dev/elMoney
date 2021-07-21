@@ -56,7 +56,7 @@
         </td>
         <td style="text-align: right">
       <button mat-icon-button mat-raised-button
-              [disabled]="user.addr?.indexOf('erd')!=0"
+              [disabled]="!user.addr || user.addr?.indexOf('erd')!=0"
               class="icon-button" style="margin-top: 10px;"
               (click)="quit({addr:user.addr})">
         <mat-icon>checkmarck</mat-icon>

@@ -167,6 +167,7 @@ export class UserService {
       this.visual=body.visual || "/assets/img/anonymous.jpg";
       this.description=body.description || "";
       this.shop_name=body.shop_name || "";
+      this.shop_description=body.shop_description || "";
       this.email=body.email || "";
       this.shop_visual=body.shop_visual || "/assets/img/shop.png";
       if(func)func(body);

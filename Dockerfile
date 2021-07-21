@@ -51,9 +51,8 @@ RUN pip3 -v install pymongo
 RUN pip3 -v install flask-socketio==4.3.2
 RUN pip3 -v install aes-everywhere
 RUN pip3 -v install flask-excel
-RUN pip3 -v install ipfs-api
 RUN pip3 -v install pandas
-
+RUN pip3 -v install ipfsapi
 
 
 WORKDIR /
