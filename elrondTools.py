@@ -552,6 +552,7 @@ class ElrondNet:
             rc = dict(json.loads(rc.text)["data"]["pairs"])
             for k in rc.keys():
                 obj[hex_to_str(k)]=hex_to_str(rc[k])
+            obj["addr"]=addr
             rc=obj
         else:
             rc = {"error": rc.status_code, "message": rc.text}
@@ -952,13 +953,14 @@ class ElrondNet:
         seller_addr=Account(seller).address.hex()
         tx = self.query("miners",["0x"+seller_addr])
         rc=[]
-        if len(tx)>0 and len(tx[0].hex)>=64:
-            for miner in tx[0].hex.split("000000"):
-                if len(miner)>100:
-                    addr=miner[0:64].upper()
-                    ipfs=miner[64:]
-                    _acc=Account(address=addr)
-                    rc.append({"address":_acc.address.bech32(),"ipfs":ipfs})
+        if len(tx)>0 :
+            s=tx[0].hex
+            i=0
+            while i<len(s):
+                addr=s[i:i+64].upper()
+                _acc=self.get_account(addr)
+                rc.append(_acc)
+                i=i+64
         return rc
 
 

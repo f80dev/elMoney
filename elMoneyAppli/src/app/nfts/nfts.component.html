@@ -39,12 +39,14 @@
 
 
         <app-image [src]="nft.visual" maxwidth="250px"
+                   [border]="!is_transparent(nft.properties)"
              *ngIf="nft.visual?.length>0 && !nft.fullscreen && nft.open==''"
              style="cursor: pointer;display: inline-block;cursor: pointer;"
                    (click)="show_fullscreen(nft)"></app-image>
 
 
         <app-image [src]="nft.visual" maxwidth="250px"
+                   [border]="!is_transparent(nft.properties)"
              *ngIf="nft.visual?.length>0 && nft.fullscreen && nft.open==''"
              style="object-fit: cover;width:100%;display: inline-block;cursor: pointer;"
                    (click)="show_fullscreen(nft)"></app-image>
@@ -195,8 +197,10 @@
       <div *ngIf="nft.visual?.length>0 && nft.premium" class="tableau">
       <div class="flip-card-inner">
         <div class="flip-card-front mat-elevation-z8">
-          <img [src]="nft.visual"
-               style="margin:2%;cursor: pointer;display: inline-block;cursor: pointer;width:96%;">
+          <app-image [src]="nft.visual"
+                     [border]="!is_transparent(nft.properties)"
+                     maxwidth="100%"
+                     style="margin:2%;cursor: pointer;display: inline-block;cursor: pointer;width:96%;"></app-image>
         </div>
         <div class="flip-card-back">
           <div class="tag">

@@ -161,15 +161,17 @@
 
     <br>
 
-  </div>
-  <br>
-  <app-savekey style="display: inline-block;"></app-savekey>
-  <br>
-  <button mat-raised-button mat-button
+    <button mat-raised-button mat-button
           class="app-button"
           color="alert"
           [disabled]="!this.user.email"
           (click)="delete_account()">
     Supprimer le compte
   </button>
+
+  </div>
+  <br>
+  <app-savekey style="display: inline-block;"></app-savekey>
+  <br>
+
 </div>

@@ -584,9 +584,7 @@ def mint(count:str,data:dict=None):
                             i=0
                             for tokenid in tokenids:
                                 _dealer=Account(address=dealer["address"])
-                                name="Dealer"+str(i)
-                                arguments=[tokenid,"0x"+_dealer.address.hex()]
-                                tx=bc.add_dealer(NETWORKS[bc.network_name]["nft"],pem_file,arguments)
+                                tx=bc.add_dealer(NETWORKS[bc.network_name]["nft"],pem_file,[tokenid,"0x"+_dealer.address.hex()])
                                 i=i+1
 
                     send(socketio, "refresh_nft")
@@ -730,14 +728,7 @@ def add_dealer(token_id:str,data:dict=None):
 @app.route('/api/miners/<seller>/',methods=["GET"])
 def get_miners(seller:str):
     miners = bc.miners(seller)
-    rc=[]
-    for miner in miners:
-        _miner=dao.get_user(miner["address"])
-        if not _miner is None:
-            del _miner["_id"]
-            del _miner["pem"]
-            rc.append(_miner)
-    return jsonify(rc), 200
+    return jsonify(miners), 200
 
 
 #http://localhost:6660/api/dealers/
@@ -793,10 +784,10 @@ def add_miner(data:dict=None):
     if not "pseudo" in _profil or len(_profil["pseudo"])==0:
         return jsonify({"error":"Le créateur doit au moins avoir un pseudo"}),500
 
-    ipfs_token=IPFS(IPFS_NODE_HOST,IPFS_NODE_PORT).add(str({"pseudo":_profil["pseudo"],"visual":_profil["visual"]}))
+    #ipfs_token=IPFS(IPFS_NODE_HOST,IPFS_NODE_PORT).add(str({"pseudo":_profil["pseudo"],"visual":_profil["visual"]}))
 
     tx=bc.add_miner(NETWORKS[bc.network_name]["nft"],
-                    pem_file,["0x" + _miner.address.hex(),"0x"+ipfs_token.encode().hex()]
+                    pem_file,["0x" + _miner.address.hex()]
                     )
     os.remove(pem_file)
 

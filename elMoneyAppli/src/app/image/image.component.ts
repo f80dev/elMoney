@@ -32,23 +32,8 @@ export class ImageComponent implements OnChanges,OnInit {
 
   ngOnChanges(changes: SimpleChanges): void {
     if(this.img){
-      if(this.img.endsWith('.png') || this.img.indexOf("image/gif")>0)this.border=false;
-
-      // setTimeout(()=>{
-      //   if(this.imgObject){
-      //     this.imgObject.nativeElement.onload=(buffer)=>{
-      //       let canvas=document.createElement("canvas").getContext("2d");
-      //       canvas.drawImage(buffer.currentTarget,0,0);
-      //       let a=canvas.getImageData();
-      //     }
-      //   }
-      // },100);
-
-
-
-      if(!this.border){
-        this.imgObject.nativeElement.className="";
-      }
+      if(this.img.endsWith('.png') || this.img.indexOf("image/gif")>0)
+        this.border=false;
     }
   }
 

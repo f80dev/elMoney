@@ -245,12 +245,19 @@ export class NftsComponent implements OnChanges {
     });
   }
 
-  can_sell(properties: number) {
+  can_sell(properties: number):boolean {
     let b=properties & 0b00000010;
     return (b>0);
   }
 
-  can_transfer(properties: number) {
+
+  is_transparent(properties: number):boolean {
+    let b=properties & 0b01000000;
+    return (b>0);
+  }
+
+
+  can_transfer(properties: number):boolean {
     let b=properties & 0b00000001;
     return (b>0);
   }

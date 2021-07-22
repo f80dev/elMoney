@@ -1,7 +1,13 @@
 
 
 <img class="mat-elevation-z4"
-     #imgObject
+     *ngIf="border"
      (click)="onclick.emit()"
      [src]="img"
-     style="max-width:150px;">
+     [ngStyle]="{'max-width':maxwidth}">
+
+<img
+     *ngIf="!border"
+     (click)="onclick.emit()"
+     [src]="img"
+     [ngStyle]="{'max-width':maxwidth}">
