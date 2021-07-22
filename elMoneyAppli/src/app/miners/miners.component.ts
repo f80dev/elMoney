@@ -39,7 +39,6 @@ export class MinersComponent implements OnInit {
 
   refresh(){
     this.message="Récupération de la liste des fabricants validés";
-    debugger
     this.api._get("miners/"+this.user.addr,"").subscribe((r:any)=>{
       this.message="";
 

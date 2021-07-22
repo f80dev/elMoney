@@ -5,7 +5,6 @@ import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ApiService} from "../api.service";
 import {ImageCroppedEvent} from "ngx-image-cropper";
-import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-image-selector',
@@ -61,7 +60,7 @@ export class ImageSelectorComponent implements OnInit {
       this.imageBase64=res;
       this.original=original;
       this.originalFile=event.target.files[0];
-      if(original.indexOf("image/gif")>-1 || original.indexOf("image/png")>-1) {
+      if(original.indexOf("image/gif")>-1 || original.indexOf("image/png")>-1 || original.indexOf("image/webp")>-1) {
         this.dialogRef.close({img:original,original:original,file:this.originalFile});
       }
     });

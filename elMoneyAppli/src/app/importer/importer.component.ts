@@ -202,7 +202,6 @@ export class ImporterComponent implements OnInit {
     if(this.self_destruction)properties=properties  +0b00001000;
     if(this.find_secret)properties=properties       +0b00010000; //L'utilisateur doit fournir le secret dans l'open pour recevoir le cadeau
     if(this.opt_gift)properties=properties          +0b00100000; //On affiche l'option d'ouverture même si aucun secret
-    debugger
     if(this.transparent)properties=properties       +0b01000000; //on affiche un cadre autour de l'image ou pas
 
     this.message="Transfert des fichiers vers IPFS";
@@ -295,7 +294,7 @@ export class ImporterComponent implements OnInit {
         }
     }).afterClosed().subscribe((result) => {
       if (result) {
-        this.transparent=result.img.indexOf("image/gif")>0 || result.img.indexOf("image/png")>0;
+        this.transparent=result.img.indexOf("image/gif")>0 || result.img.indexOf("image/png")>0 || result.img.indexOf("webp")>0;
         this.visual=result.img;
         if(func)func(result);
       } else {

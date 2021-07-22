@@ -185,9 +185,10 @@
               <br>
 
               <div *ngIf="visual?.length>0"  style="text-align: right;width:50%;">
-                <img class="mat-elevation-z4"
+                <app-image [border]="false"
                      [src]="visual"
-                     style="max-width:150px;border: white 1px solid">
+                     maxwidth="150px">
+                </app-image>
               </div>
               <br>
 

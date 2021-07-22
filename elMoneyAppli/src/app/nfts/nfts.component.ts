@@ -82,11 +82,11 @@ export class NftsComponent implements OnChanges {
   setstate(nft: any, new_state, message) {
     this.user.check_pem(()=>{
       nft.message = message;
-      this.api._post("state_nft/" + nft.token_id + "/" + new_state, "", this.user.pem).subscribe((r: any) => {
+      this.api._post("state_nft/" + nft.token_id + "/" + new_state, "", {pem:this.user.pem}).subscribe((r: any) => {
         nft.message = "";
         let mes="Votre token n'est plus en vente";
         if(new_state==0)mes="Votre token est en vente"
-        if(r)showMessage(this, mes+"Frais de service " + (r.cost) + " xEgld");
+        if(r)showMessage(this, mes+". Frais de service " + (r.cost) + " xEgld");
         this.user.refresh_balance(() => {
           this.onrefresh.emit();
         });

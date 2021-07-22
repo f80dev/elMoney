@@ -11,7 +11,6 @@ export class WalletconnectService implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    debugger
     this.connector = new WalletConnect({
       bridge: "https://bridge.walletconnect.org" // Required
     });
