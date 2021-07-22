@@ -1,4 +1,4 @@
-<div [ngStyle]="{display: 'inline-block','font-size':fontsize}">
+<div [ngStyle]="{display: 'inline-block','font-size':fontsize}" (click)="switch_fiat()">
   {{showValue | number:'1.0-'+decimals }}
-  <span (click)="switch_fiat()" *ngIf="showUnity" [ngStyle]="{'font-size':fontsize_unity}">{{unity}}</span>
+  <span *ngIf="showUnity" [ngStyle]="{'font-size':fontsize_unity}">{{unity}}</span>
 </div>

@@ -1,7 +1,7 @@
 <div class="mainform" style="text-align: center;padding: 10px;">
   <table style="width: 100%;"><tr style="width: 100%;">
     <td style="width: 120px;">
-      <img style="width: 100px;" class="photo" [src]="miner?.visual">
+      <app-image maxwidth="100px" [src]="miner?.visual" [border]="false"></app-image>
     </td>
     <td style="width:max-content;vertical-align: text-top;text-align: left;padding: 5px;">
       <span style="font-size: xx-large;">{{miner?.pseudo}}</span>

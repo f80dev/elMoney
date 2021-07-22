@@ -1,0 +1,55 @@
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
+import {autoRotate, cropToSquare, resizeBase64Img} from "../tools";
+
+@Component({
+  selector: 'app-image',
+  templateUrl: './image.component.html',
+  styleUrls: ['./image.component.sass']
+})
+export class ImageComponent implements OnChanges,OnInit {
+  @Input("src") img:string;
+  @Input("maxwidth") maxwidth="150px";
+  @Output('click') onclick: EventEmitter<any>=new EventEmitter();
+  @Input('border') border=true;
+  @ViewChild('imgObject') imgObject: ElementRef<HTMLImageElement>;
+
+  constructor() { }
+
+  ngOnInit(): void {
+
+
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if(this.img){
+      if(this.img.endsWith('.png') || this.img.indexOf("image/gif")>0)this.border=false;
+
+      // setTimeout(()=>{
+      //   if(this.imgObject){
+      //     this.imgObject.nativeElement.onload=(buffer)=>{
+      //       let canvas=document.createElement("canvas").getContext("2d");
+      //       canvas.drawImage(buffer.currentTarget,0,0);
+      //       let a=canvas.getImageData();
+      //     }
+      //   }
+      // },100);
+
+
+
+      if(!this.border){
+        this.imgObject.nativeElement.className="";
+      }
+    }
+  }
+
+}

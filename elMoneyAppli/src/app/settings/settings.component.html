@@ -39,10 +39,7 @@
       <div *ngIf="user.visual" style="display: inline-block;text-align: center;width: 100%">
         <h4>Visuel de votre profil</h4>
 
-        <img class="mat-elevation-z4"
-             (click)="change_visual('visual')"
-             [src]="user.visual"
-             style="max-width:150px;">
+        <app-image (click)="change_visual('visual')" [src]="user.visual" [border]="false"></app-image>
 
       </div>
       <br>
@@ -88,10 +85,7 @@
 
       <div *ngIf="user.shop_visual" style="display: inline-block;text-align: center;width: 100%">
         <h4>Visuel de votre marketplace</h4>
-        <img class="mat-elevation-z4"
-             (click)="change_visual('shop_visual')"
-             [src]="user.shop_visual"
-             style="max-width:150px;">
+        <app-image maxwidth="150" [src]="user.shop_visual" (click)="change_visual('shop_visual')"></app-image>
       </div>
 
       <mat-form-field appearance="fill" class="app-field">

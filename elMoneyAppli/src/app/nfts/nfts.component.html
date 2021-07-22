@@ -38,16 +38,16 @@
         </div>
 
 
-        <img [src]="nft.visual"
+        <app-image [src]="nft.visual" maxwidth="250px"
              *ngIf="nft.visual?.length>0 && !nft.fullscreen && nft.open==''"
              style="cursor: pointer;display: inline-block;cursor: pointer;"
-             (click)="show_fullscreen(nft)">
+                   (click)="show_fullscreen(nft)"></app-image>
 
 
-        <img [src]="nft.visual"
+        <app-image [src]="nft.visual" maxwidth="250px"
              *ngIf="nft.visual?.length>0 && nft.fullscreen && nft.open==''"
              style="object-fit: cover;width:100%;display: inline-block;cursor: pointer;"
-             (click)="show_fullscreen(nft)">
+                   (click)="show_fullscreen(nft)"></app-image>
 
 
         <div *ngIf="!nft.fullscreen || force_text"

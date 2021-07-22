@@ -61,6 +61,9 @@ export class ImageSelectorComponent implements OnInit {
       this.imageBase64=res;
       this.original=original;
       this.originalFile=event.target.files[0];
+      if(original.indexOf("image/gif")>-1){
+        this.dialogRef.close({img:original,original:original,file:this.originalFile});
+      }
     });
   }
 

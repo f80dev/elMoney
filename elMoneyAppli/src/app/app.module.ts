@@ -79,6 +79,7 @@ import { AuthentComponent } from './authent/authent.component';
 import {WalletconnectService} from "./walletconnect.service";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import { UnityComponent } from './unity/unity.component';
+import { ImageComponent } from './image/image.component';
 
 
 const config: SocketIoConfig = {
@@ -130,7 +131,8 @@ const config: SocketIoConfig = {
     NftBuyComponent,
     SavekeyComponent,
     AuthentComponent,
-    UnityComponent
+    UnityComponent,
+    ImageComponent
   ],
   imports: [
     MatButtonModule,
