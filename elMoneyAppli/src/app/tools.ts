@@ -772,7 +772,7 @@ export function exportToHTML(src:string,coupon:any,func:Function,color="darkred"
 export function checkConfig(vm:any) {
   if(vm.config==null || !vm.config.ready){
     if(vm.router!=null)
-      vm.router.navigate(["support"],{queryParams:{message:"Problème grave de connexion"}});
+      vm.router.navigate(["support"],{queryParams:{message:"Problème de connexion"}});
     else {
       $$("Tentative de retour à la page principale");
       window.location.reload();

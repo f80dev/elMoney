@@ -5,7 +5,7 @@
               [ngStyle]="{'min-height':'150px','max-width':max_w,width:_w,'margin':'1%','margin-bottom':'5px',padding:'7px','color':'white'}"
               *ngFor="let nft of nfts | filter: ['search',filter]">
 
-      <mat-card-header *ngIf="!nft.fullscreen || force_text" style="height: 35px">
+      <mat-card-header style="height: 35px">
         <img *ngIf="with_icon" mat-card-avatar [src]="nft.icon"
              class="image-icon"
              style="margin:0;">
@@ -40,19 +40,12 @@
 
         <app-image [src]="nft.visual" maxwidth="250px"
                    [border]="!is_transparent(nft.properties)"
-             *ngIf="nft.visual?.length>0 && !nft.fullscreen && nft.open==''"
+             *ngIf="nft.visual?.length>0 && nft.open==''"
              style="cursor: pointer;display: inline-block;cursor: pointer;"
                    (click)="show_fullscreen(nft)"></app-image>
 
 
-        <app-image [src]="nft.visual" maxwidth="250px"
-                   [border]="!is_transparent(nft.properties)"
-             *ngIf="nft.visual?.length>0 && nft.fullscreen && nft.open==''"
-             style="object-fit: cover;width:100%;display: inline-block;cursor: pointer;"
-                   (click)="show_fullscreen(nft)"></app-image>
-
-
-        <div *ngIf="!nft.fullscreen || force_text"
+        <div
              style="width:90%;margin:5%;line-height: 95%;font-size: small;text-align: center;">
           {{nft.description}}<br>
 
@@ -200,7 +193,7 @@
           <app-image [src]="nft.visual"
                      [border]="!is_transparent(nft.properties)"
                      maxwidth="100%"
-                     style="margin:2%;cursor: pointer;display: inline-block;cursor: pointer;width:96%;"></app-image>
+                     style="margin:2%;cursor: pointer;display: inline-block;cursor: pointer;"></app-image>
         </div>
         <div class="flip-card-back">
           <div class="tag">

@@ -2873,6 +2873,7 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
   margin: 10px !important;
   min-width: 200px !important;
   background-color: #221913;
+  color: white !important;
 }
 .square-button {
   margin: 5px !important;
