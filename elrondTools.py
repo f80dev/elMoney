@@ -750,7 +750,10 @@ class ElrondNet:
                     fullscreen=("!!" in desc)
                     desc=desc.replace("!!","%%")
                     if "%%" in desc:
-                        visual = "https://ipfs.io/ipfs/" + desc.split("%%")[1]
+                        if len(desc.split("%%")[1])==46:
+                            visual = "https://ipfs.io/ipfs/" + desc.split("%%")[1]
+                        else:
+                            visual=desc.split("%%")[1]
                         desc=desc.split("%%")[0]
                 except:
                     log(tokens[index:index+title_len]+" n'est pas une chaine de caractères")

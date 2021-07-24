@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {PromptComponent} from "../prompt/prompt.component";
-import {rotate, selectFile} from "../tools";
+import {rotate, selectFile, showMessage} from "../tools";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ApiService} from "../api.service";
@@ -23,9 +23,11 @@ export class ImageSelectorComponent implements OnInit {
   imageBase64:string=null;
   croppedImage: any = null;
   originalFile: string;
+  inputSearch: string="";
+  query: string="";
 
   constructor(
-    public dialog:MatDialog,
+    public dialog2:MatDialog,
     public snackBar:MatSnackBar,
     public api:ApiService,
     public dialogRef: MatDialogRef<ImageSelectorComponent>,
@@ -84,29 +86,7 @@ export class ImageSelectorComponent implements OnInit {
 
 
   addUrl() {
-    this.dialog.open(PromptComponent, {
-      width: '250px', data: {title: "Un mot clé ou directement une adresse internet de votre image", question: ""}
-    }).afterClosed().subscribe((result) => {
-      if (result) {
-        if(result.startsWith("http")){
-          this.data.result=result;
-        } else {
-          // this.api.gettokenforimagesearchengine().subscribe((token:any)=>{
-          //   this.api.searchImage(result,10,token.access_token).subscribe((r:any)=>{
-          //     if(r==null || r.length==0)
-          //       this.snackBar.open("Désolé nous n'avons pas trouvé d'images pour le mot "+result,"",{duration:2000});
-          //     else{
-          //       if(r.length>10)r=r.slice(0,9);
-          //       this.pictures=r;
-          //       this.imageBase64=null;
-          //     }
-          //
-          //   });
-          // });
-        }
-
-      }
-    });
+    this.inputSearch="coller l'adresse de votre image";
   }
 
   imageCropped(event: ImageCroppedEvent) {
@@ -126,12 +106,37 @@ export class ImageSelectorComponent implements OnInit {
   }
 
   selPicture(tile: any) {
-    // this.api.convert(tile).subscribe((res:any)=>{
-    //   this.imageBase64="data:image/jpg;base64,"+res.result;
-    // });
   }
 
   ngOnInit(): void {
+
   }
 
+  addFromBank() {
+    this.inputSearch="Quelques mots pour rechercher le visuel";
+  }
+
+  selImage(picture: any) {
+    this.data.result=picture.src;
+    this.dialogRef.close({img:picture.src,original:picture.src,file:""});
+  }
+
+
+  handle=0;
+  search($event: any) {
+
+    clearTimeout(this.handle);
+    this.handle=setTimeout(()=>{this.search({keyCode:13})},700);
+
+    if($event.keyCode==13){
+
+        if(this.query.length==0){
+          this.pictures=[];
+        } else {
+          this.api._get("image_search","q="+encodeURIComponent(this.query)).subscribe((r:any)=>{
+          this.pictures=r;
+        });
+        }
+    }
+  }
 }

@@ -25,6 +25,7 @@ from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME
     MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, \
     MAIN_NAME, MAIN_DECIMALS, NETWORKS, ESDT_CONTRACT, LIMIT_GAS, SECRET_KEY, ESDT_PRICE, IPFS_NODE_HOST,IPFS_NODE_PORT
 from elrondTools import ElrondNet
+from giphy_search import Giphy
 from ipfs import IPFS
 
 
@@ -401,12 +402,19 @@ def state_nft(token_id:str,state:str,data:dict=None):
     return jsonify(tx),200
 
 
+@app.route('/api/image_search/',methods=["GET"])
+def image_search():
+    q=request.args.get("q")
+    giphy=Giphy()
+    rc=giphy.search(q)
+    return jsonify(rc),200
 
 
 #http://localhost:6660/api/test/
 @app.route('/api/test/',methods=["GET"])
 def test():
-    rc=bc.check_contract(NETWORKS[bc.network_name]["nft"])
+    giphy=Giphy()
+    rc=giphy.search("dog")
     return jsonify(rc),200
 
 

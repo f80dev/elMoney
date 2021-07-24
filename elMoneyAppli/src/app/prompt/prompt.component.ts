@@ -34,7 +34,7 @@ export class PromptComponent implements OnInit {
   _max: number;
 
   constructor(
-    public dialogRef: MatDialogRef<PromptComponent>,
+    public dialogRef_prompt: MatDialogRef<PromptComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData)
   {
     if(data.hasOwnProperty("type"))this._type=data.type;
@@ -51,7 +51,7 @@ export class PromptComponent implements OnInit {
   }
 
   onNoClick(): void {
-    this.dialogRef.close(null);
+    this.dialogRef_prompt.close(null);
   }
 
   selectEmoji(event){
@@ -62,11 +62,11 @@ export class PromptComponent implements OnInit {
 
   onEnter(evt:any) {
     if(evt.keyCode==13)
-      this.dialogRef.close(this.data.result);
+      this.dialogRef_prompt.close(this.data.result);
   }
 
   select_option(value: any) {
-    this.dialogRef.close(value);
+    this.dialogRef_prompt.close(value);
   }
 
   ngOnInit(): void {

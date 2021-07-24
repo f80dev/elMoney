@@ -28,7 +28,10 @@ export class IpfsService {
           if(func)func(result.cid);
         });
       } else {
-        this.api._post("upload_file/","",content,60,{
+        if(content.startsWith('http')){
+          func(content)
+        } else {
+          this.api._post("upload_file/","",content,60,{
           "Content-Type":"multipart/form-data",
           "Accept": "application/json"
         }).subscribe((result:any)=>{
@@ -37,8 +40,8 @@ export class IpfsService {
           if(func)func(result.cid);
         },(err)=>{
           showError(vm,err);
-          debugger;
         })
+        }
       }
     }
   }

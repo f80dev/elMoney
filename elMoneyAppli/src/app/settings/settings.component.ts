@@ -4,7 +4,7 @@ import {ConfigService} from "../config.service";
 import {Location} from "@angular/common";
 import {UserService} from "../user.service";
 import {MatDialog} from "@angular/material/dialog";
-import {showError, showMessage} from "../tools";
+import {$$, showError, showMessage} from "../tools";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ApiService} from "../api.service";
 import {ImageSelectorComponent} from "../image-selector/image-selector.component";
@@ -57,13 +57,16 @@ export class SettingsComponent implements OnInit {
 
 
   change_visual(field:string) {
+    debugger
+    $$("Modification du visuel")
     this.dialog.open(ImageSelectorComponent, {position:
         {left: '5vw', top: '5vh'},
-      maxWidth: 400, maxHeight: 700, width: '90vw', height: 'auto', data:
+        width: '90vw', height: 'fit-container', data:
         {
           title:'Votre visuel',
-          result: this.user.visual,
+          result: "",
           checkCode: true,
+          bank:true,
           width: 200,
           height: 200,
           emoji: false,

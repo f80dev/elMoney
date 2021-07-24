@@ -19,7 +19,8 @@ import {autoRotate, cropToSquare, resizeBase64Img} from "../tools";
 export class ImageComponent implements OnChanges,OnInit {
   @Input("src") img:string;
   @Input("maxwidth") maxwidth="150px";
-  @Output('click') onclick: EventEmitter<any>=new EventEmitter();
+  @Input("maxheight") maxheight="250px";
+
   @Input('border') border=true;
   @ViewChild('imgObject') imgObject: ElementRef<HTMLImageElement>;
 

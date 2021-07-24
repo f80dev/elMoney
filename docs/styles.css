@@ -2939,7 +2939,7 @@ mat-hint {
   color: #9d8a71 !important;
 }
 input {
-  color: lightgray;
+  color: lightgray !important;
 }
 mat-dialog-container {
   background-color: #3d3d3d !important;

@@ -277,7 +277,7 @@ export class ImporterComponent implements OnInit {
   }
 
 
-  add_visual(func=null,title="",width=200,height=200,square=true,can_be_null:boolean=true) {
+  add_visual(func=null,title="",width=200,height=200,square=true,can_be_null:boolean=true,bank=true) {
     this.dialog.open(ImageSelectorComponent, {position:{left: '10vw', top: '10vh'},
       maxWidth: 900, maxHeight: 900, width: '80vw', height: 'auto', data:
         {
@@ -290,7 +290,8 @@ export class ImporterComponent implements OnInit {
           emoji: false,
           internet: false,
           ratio: 1,
-          quality:0.7
+          quality:0.7,
+          bank:bank
         }
     }).afterClosed().subscribe((result) => {
       if (result) {
