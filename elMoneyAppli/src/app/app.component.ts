@@ -9,7 +9,6 @@ import {MatSidenav} from "@angular/material/sidenav";
 import {Location} from "@angular/common";
 import {fromEvent, Observable,Subscription} from "rxjs";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {DialogData, PromptComponent} from "./prompt/prompt.component";
 import {MatDialog} from "@angular/material/dialog";
 
 @Component({
@@ -65,30 +64,30 @@ export class AppComponent implements OnInit,OnDestroy {
 
 
   //démarre la connexion
-  start_connect(addr,profil,pem_key){
-    let miner = this.routes.snapshot.queryParamMap.get("miner");
-    let q = this.routes.snapshot.queryParamMap.get("q");
-    let store = this.routes.snapshot.queryParamMap.get("store");
-    let filter = this.routes.snapshot.queryParamMap.get("filter");
-
-    this.user.init(addr,
-      (r)=> {
-        if (profil){this.router.navigate(["private"],{queryParams:{profil:profil}});return;}
-        if (filter){this.router.navigate(["store"],{queryParams:{id:filter}});return;}
-        if (addr)  {this.router.navigate(["nfts-perso"]);return;};
-        if (miner) {this.router.navigate(["miner"],{queryParams:{miner:miner}});return;}
-        if (store) {this.router.navigate(["store"],{queryParams:{store:store}});return;}
-        if(this._location.path().indexOf("/admin")==-1 && localStorage.getItem("last_screen") && !miner){this.router.navigate([localStorage.getItem("last_screen")]);return;}
-        if(this.config.hasESDT() && !q && !filter){this.router.navigate(["main"]);return;}
-        //this.router.navigate(["store"],{queryParams:{q:q,filter:filter}});
-      },
-      (err) => {
-        $$("Evaluation de la balance impossible, on propose un changement de contrat");
-        showMessage(this, "Le compte est corrompu, changement de compte proposé");
-        this.router.navigate(["settings"]);
-      }
-    );
-  }
+  // start_connect(addr,profil){
+  //   let miner = this.routes.snapshot.queryParamMap.get("miner");
+  //   let q = this.routes.snapshot.queryParamMap.get("q");
+  //   let store = this.routes.snapshot.queryParamMap.get("store");
+  //   let filter = this.routes.snapshot.queryParamMap.get("filter");
+  //
+  //   this.user.init(addr,
+  //     (r)=> {
+  //       if (profil){this.router.navigate(["private"],{queryParams:{profil:profil}});return;}
+  //       if (filter){this.router.navigate(["store"],{queryParams:{id:filter}});return;}
+  //       if (addr)  {this.router.navigate(["nfts-perso"]);return;};
+  //       if (miner) {this.router.navigate(["miner"],{queryParams:{miner:miner}});return;}
+  //       if (store) {this.router.navigate(["store"],{queryParams:{store:store}});return;}
+  //       if(this._location.path().indexOf("/admin")==-1 && localStorage.getItem("last_screen") && !miner){this.router.navigate([localStorage.getItem("last_screen")]);return;}
+  //       if(this.config.hasESDT() && !q && !filter){this.router.navigate(["main"]);return;}
+  //       //this.router.navigate(["store"],{queryParams:{q:q,filter:filter}});
+  //     },
+  //     (err) => {
+  //       $$("Evaluation de la balance impossible, on propose un changement de contrat");
+  //       showMessage(this, "Le compte est corrompu, changement de compte proposé");
+  //       this.router.navigate(["settings"]);
+  //     }
+  //   );
+  // }
 
   init_event_for_network_status() {
     this.subscriptions.push(this.onlineEvent.subscribe(e => {

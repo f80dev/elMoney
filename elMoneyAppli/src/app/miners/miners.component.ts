@@ -33,8 +33,15 @@ export class MinersComponent implements OnInit {
     if(!this.user.isDealer()){
       showMessage(this,"Vous devez renseigner la section distributeur pour approuver des mineurs");
       this.router.navigate(["settings"],{queryParams:{section:2}});
-    } else
-      this.refresh();
+    } else{
+      this.user.check_pem(()=>{
+        this.refresh();
+      },this,null,()=>{
+        this.router.navigate(["settings"],{queryParams:{section:2}});
+      })
+
+    }
+
   }
 
   refresh(){

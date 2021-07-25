@@ -190,9 +190,8 @@
       <div *ngIf="nft.visual?.length>0 && nft.premium" class="tableau">
         <div class="flip-card-inner">
           <div class="flip-card-front mat-elevation-z8">
-            <app-image [src]="nft.visual"
+            <app-image [src]="nft.visual" width="90%"
                        [border]="!is_transparent(nft.properties)"
-                       maxwidth="100%"
                        style="margin:2%;cursor: pointer;display: inline-block;cursor: pointer;"></app-image>
           </div>
           <div class="flip-card-back">

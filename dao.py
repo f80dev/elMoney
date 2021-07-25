@@ -92,7 +92,9 @@ class DAO:
         return self.db["users"].replace_one(filter={"email": email}, replacement=body, upsert=True)
 
     def get_user(self, email):
-        rc=self.db["users"].find_one(filter={"email": email})
+        field="email"
+        if not "@" in email and email.startswith("erd"):field="addr"
+        rc=self.db["users"].find_one(filter={field: email})
         return rc
 
 

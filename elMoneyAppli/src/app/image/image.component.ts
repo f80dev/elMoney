@@ -18,6 +18,7 @@ import {autoRotate, cropToSquare, resizeBase64Img} from "../tools";
 })
 export class ImageComponent implements OnChanges,OnInit {
   @Input("src") img:string;
+  @Input("width") width="auto";
   @Input("maxwidth") maxwidth="150px";
   @Input("maxheight") maxheight="250px";
 

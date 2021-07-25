@@ -37,6 +37,7 @@ export class MainComponent implements OnInit {
               public user:UserService,
               public api:ApiService,
               public config:ConfigService) {
+
     this.user.check_email(()=>{
       subscribe_socket(this,"refresh_account",($event)=>{
       if($event.param.comment){
@@ -71,7 +72,6 @@ export class MainComponent implements OnInit {
         })
       }
     }
-
 
     if(this.api.identifier && this.user.moneys[this.user.selected_money]){
       this._max=this.user.moneys[this.user.selected_money].solde;

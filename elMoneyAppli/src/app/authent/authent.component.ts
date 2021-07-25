@@ -73,6 +73,7 @@ export class AuthentComponent implements OnInit {
           this.message = "";
           this.user.pem = r.pem;
           if(this.savePrivateKey)localStorage.setItem('pem',r.pem);
+          this.user.init(r.addr);
           this.quit(r);
         });
       } else {

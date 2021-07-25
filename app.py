@@ -16,7 +16,7 @@ from erdpy.contracts import SmartContract
 
 from flask import Response, request, jsonify, send_file, make_response
 
-from Tools import log, send_mail, open_html_file, now, send, dictlist_to_csv, returnError
+from Tools import log, send_mail, open_html_file, now, send, dictlist_to_csv, returnError, extract
 from apiTools import create_app
 
 from dao import DAO
@@ -102,7 +102,7 @@ def analyse_pem():
         body=str(base64.b64decode(body),"utf-8")
         pubkey="erd"+body.split("-----")[1].split("erd")[1]
 
-    return jsonify({"address":pubkey,"pem":body}),200
+    return jsonify({"address":pubkey,"pem":body,"addr":pubkey}),200
 
 
 
@@ -165,26 +165,13 @@ def transfer(idx:str,dest:str,amount:str,unity:str):
 
     log("Demande de transfert vers "+_dest.address.bech32()+" de "+amount+" "+unity)
 
-    #Préparation du _from
-    if "BEGIN PRIVATE KEY" in str(request.data,"utf-8"):
-        pem_file="./PEM/temp.pem"
-        pem_body=json.loads(str(request.data, encoding="utf-8"))
-        #TODO: a modifier car probleme en multi-user
-        with open(pem_file, "w") as file:
-            #TODO insérer ici le decryptage de la clé par le serveur
-            file.write(pem_body["pem"])
-            file.close()
-        _from=Account(pem_file=pem_file)
-    else:
-        infos = json.loads(str(request.data, encoding="utf-8"))
-        if infos["pem"]:
-            _from = Account(pem_file="./PEM/"+infos["pem"])
-        else:
-            _from = Account(address=infos["public"])
-            _from.private_key_seed=infos["private"]
+    pem_file=get_pem_file(request.data)
+    _from = Account(pem_file=pem_file)
 
     log("Appel du smartcontract")
     rc=bc.transferESDT(idx,_from,_dest.address.bech32(),int(amount)*(10**18))
+
+    os.remove(pem_file)
 
     if not "error" in rc:
         log("Transfert effectué " + str(rc) + " programmation du rafraichissement des comptes")
@@ -208,6 +195,9 @@ def get_pem_file(data):
     if type(data)==dict and not "pem" in data:
         rc="./PEM/"+NETWORKS[bc.network_name]["bank"]+".pem"
     else:
+        if type(data)==bytes:
+            data=str(data,"utf8").replace("\\n","\n")
+
         if len(data)==0:
             log("Fichier PEM invalide")
             return None
@@ -792,12 +782,21 @@ def add_miner(data:dict=None):
     if data is None:data = json.loads(str(request.data, encoding="utf-8"))
     pem_file = get_pem_file(data["pem"])
 
+    data["address"]=dao.get_user(data["address"])["addr"]
     _miner = Account(address=data["address"])
-    _profil=bc.get_account(data["address"])
-    if not "pseudo" in _profil or len(_profil["pseudo"])==0:
+    _profil_miner=bc.get_account(data["address"])
+
+    if not "pseudo" in _profil_miner or len(_profil_miner["pseudo"])==0:
         return jsonify({"error":"Le créateur doit au moins avoir un pseudo"}),500
 
-    #ipfs_token=IPFS(IPFS_NODE_HOST,IPFS_NODE_PORT).add(str({"pseudo":_profil["pseudo"],"visual":_profil["visual"]}))
+    _dealer=bc.get_account(extract(data["pem"],"PRIVATE KEY for ","----"))
+
+    if "email" in _profil_miner:
+        send_mail(open_html_file("informe_ref",{
+            "dest":_profil_miner["pseudo"],
+            "from":_dealer["shop_name"]
+        }),_profil_miner["email"],subject="Vous venez d'être référencé")
+
 
     tx=bc.add_miner(NETWORKS[bc.network_name]["nft"],
                     pem_file,["0x" + _miner.address.hex()]
@@ -1002,6 +1001,7 @@ def new_account():
 
     rc = dict({
         "address": _a.address.bech32(),
+        "addr": _a.address.bech32(),
         "keys": {"public": _a.address.bech32(), "private": private},
         "pem": pem,
         "default_money":NETWORKS[bc.network_name]["identifier"],

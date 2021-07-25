@@ -42,9 +42,7 @@ export class SettingsComponent implements OnInit {
 
 
   ngOnInit(): void {
-    debugger
     this.user.check_email((r)=>{
-
       this.open_section=Number(this.routes.snapshot.queryParamMap.get("section"));
     },this.router)
   }
@@ -134,7 +132,7 @@ export class SettingsComponent implements OnInit {
         this.message="";
         showMessage(this,"Informations enregistrées");
       });
-    });
+    },this);
   }
 
   delete_account(){
