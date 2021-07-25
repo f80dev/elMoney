@@ -37,7 +37,7 @@
       <button mat-raised-button
               mat-button class="app-button"
               title="Demander votre référencement à ce distributeur"
-              *ngIf="selected_dealer?.email?.length>0"
+              *ngIf="selected_dealer?.email?.length>0 && user.isCreator()"
               (click)="ask_reference(selected_dealer)">
         <div class="bloc-bouton">Demander un<br>référencement</div>
       </button>

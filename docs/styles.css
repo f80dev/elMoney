@@ -2836,15 +2836,10 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
   color: white;
   padding: 0px;
 }
-.sidemenu {
-  background-color: #27272b;
-  color: white;
-  margin: 0px !important;
-  padding: 0px !important;
-  z-index: 10 !important;
-  display: inline-block;
-  font-weight: lighter;
-  font-size: small;
+.app-separator {
+  margin: 20%;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 .container {
   width: 100vw;
@@ -3128,6 +3123,21 @@ mat-expansion-panel-header {
   color: lightgray;
   margin: 0px;
   padding: 0px;
+}
+.sidemenu {
+  background-color: #27272b;
+  color: white;
+  line-height: 80%;
+  border: none;
+  margin: 0px !important;
+  padding: 0px !important;
+  z-index: 10 !important;
+  display: inline-block;
+  height: 100%;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  overflow: hidden;
 }
 .image-icon {
   width: 27px !important;

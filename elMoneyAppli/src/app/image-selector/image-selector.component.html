@@ -20,8 +20,10 @@
 
     <button mat-flat-button mat-button
             id="cmdFile" class="app-button"
-            style="width:65px;">
-      <label for="file">&nbsp;<mat-icon style="margin-top: 3px;">camera</mat-icon>&nbsp;Photos</label>
+            style="width:60px;">
+      <label for="file" style="padding-top:5px;margin: 0px;background: none;">&nbsp;
+        <div class="bloc-bouton" style="margin-top: 5px;background: none;">Vos<br>Photos</div>
+      </label>
       <input type="file" id="file" style="opacity: 0;"
              (change)="onSelectFile($event)"
              accept="image/*" />
@@ -33,6 +35,14 @@
         <mat-label>Rechercher</mat-label>
         <input matInput [placeholder]="inputSearch" type="text"  [(ngModel)]="query" (keypress)="search($event)" autofocus>
       </mat-form-field>
+      &nbsp;
+<!--      Gestion du type d'image recherché-->
+      <mat-form-field appearance="fill" style="width:100px;color:white;margin-right: 10px;">
+      <mat-label>Type</mat-label>
+      <mat-select [(ngModel)]="selected_type" style="color: white;" (ngModelChange)="search({keyCode:13})">
+        <mat-option *ngFor="let t of types" [value]="t.value">{{t.label}}</mat-option>
+      </mat-select>
+    </mat-form-field>
     </div>
 
   </div>
@@ -40,7 +50,7 @@
   <div style="display: inline-block;flex-wrap: wrap;" *ngIf="pictures.length>0">
     <img *ngFor="let picture of pictures"
          (click)="selImage(picture)"
-         style="display: inline-block;width:75px;"
+         style="display: inline-block;max-width:75px;max-height:100px;margin:2px;"
          [src]="picture.preview">
   </div>
 

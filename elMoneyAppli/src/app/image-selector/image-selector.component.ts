@@ -19,6 +19,8 @@ export class ImageSelectorComponent implements OnInit {
   imagesearchengine_token="";
   ratio=1;
   original:any={};
+  types=[{label:"Sticker",value:"sticker"},{label:"Animés",value:"gif"},{label:"Photos",value:"pictures"},{label:"Emoji",value:"emoji"}];
+  selected_type=this.types[0].value;
 
   imageBase64:string=null;
   croppedImage: any = null;
@@ -123,20 +125,20 @@ export class ImageSelectorComponent implements OnInit {
 
 
   handle=0;
+
   search($event: any) {
 
-    clearTimeout(this.handle);
-    this.handle=setTimeout(()=>{this.search({keyCode:13})},700);
-
     if($event.keyCode==13){
-
         if(this.query.length==0){
           this.pictures=[];
         } else {
-          this.api._get("image_search","q="+encodeURIComponent(this.query)).subscribe((r:any)=>{
+          this.api._get("image_search","q="+encodeURIComponent(this.query)+"&type="+this.selected_type).subscribe((r:any)=>{
           this.pictures=r;
         });
         }
+    } else {
+      clearTimeout(this.handle);
+      this.handle=setTimeout(()=>{this.search({keyCode:13})},700);
     }
   }
 }

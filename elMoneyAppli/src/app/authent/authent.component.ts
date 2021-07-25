@@ -55,7 +55,7 @@ export class AuthentComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    this.authent_method="email";
   }
 
   quit(result:any){
@@ -76,8 +76,9 @@ export class AuthentComponent implements OnInit {
           this.quit(r);
         });
       } else {
-
-        this.user.pem = r.pem;
+        let mess="Bonjour";
+        if(r.hasOwnProperty("pseudo"))mess=mess+" "+r.pseudo;
+        showMessage(this,mess);
         this.quit(r);
       }
     },(err)=>{

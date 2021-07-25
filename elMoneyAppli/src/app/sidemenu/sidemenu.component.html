@@ -1,5 +1,6 @@
 
-<mat-nav-list class="sidemenu">
+<mat-nav-list>
+  <br>
   <div *ngIf="user?.addr" id="account_zone" style="width: 80%;text-align: center;margin-left:10%;">
     <br>
     <table><tr style="width: 100%;">
@@ -17,70 +18,50 @@
         </button>
       </td>
     </tr></table>
-    <hr style="margin:10%;">
   </div>
+  <br><br>
 
 
-    <a title="Wallet"
-       *ngIf="config.hasESDT()"
-       routerLink="main"
-       mat-list-item
-       id="cmdSearch">
-      <mat-icon>local_grocery_store</mat-icon>&nbsp;
-      Mon wallet
-    </a>
+  <a title="Wallet"
+     *ngIf="config.hasESDT()"
+     routerLink="main"
+     mat-list-item
+     id="cmdSearch">
+    <mat-icon>local_grocery_store</mat-icon>&nbsp;
+    Mon wallet
+  </a>
 
 
-    <a title="Voir mes NFTs"
-       routerLink="nfts-perso"
-       [queryParams]="{only_perso:false}"
-       mat-list-item
-       id="cmdPerso">
-      <mat-icon>person</mat-icon>&nbsp;
-      Mes NFTs
-    </a>
+  <a title="Voir mes NFTs"
+     routerLink="nfts-perso"
+     [queryParams]="{only_perso:false}"
+     mat-list-item
+     id="cmdPerso">
+    <mat-icon>person</mat-icon>&nbsp;
+    Mes NFTs
+  </a>
 
-    <br>
-    <br>
-    <a title="Tokenizer des items"
-       routerLink="importer"
-       mat-list-item
-       id="cmdTokenizer">
-      <mat-icon>category</mat-icon>&nbsp;
-      Créer vos NFTs
-    </a>
+  <hr class="app-separator">
 
-    <a title="Store des tokens"
-       routerLink="store"
-       [queryParams]="{only_perso:false}"
-       mat-list-item
-       id="cmdStore">
-      <mat-icon>shopping_cart</mat-icon>&nbsp;
-      Acheter des NFTs
-    </a>
+  <a title="Tokenizer des items"
+     routerLink="importer"
+     mat-list-item
+     id="cmdTokenizer">
+    <mat-icon>category</mat-icon>&nbsp;
+    Créer vos NFTs
+  </a>
 
-
-    <a title="Permet de vérifier si un wallet est propriétaire de vos tokens fabriqués"
-       routerLink="validate"
-       [queryParams]="{only_perso:false}"
-       mat-list-item
-       id="cmdValidate">
-      <mat-icon>checkmark</mat-icon>&nbsp;
-      Vérifier la propriété
-    </a>
+  <a title="Store des tokens"
+     routerLink="store"
+     [queryParams]="{only_perso:false}"
+     mat-list-item
+     id="cmdStore">
+    <mat-icon>shopping_cart</mat-icon>&nbsp;
+    Acheter des NFTs
+  </a>
 
 
-    <a title="Ajouter un mineur à votre compte distributeur"
-       routerLink="miners"
-       mat-list-item
-       *ngIf="user.isDealer()"
-       id="cmdAddMiner">
-      <mat-icon>add_circle</mat-icon>&nbsp;
-      Référencer des créateurs
-    </a>
 
-
-     <br><br>
 
   <div *ngIf="config.hasESDT()">
     <a title="Fabriquer votre monnaie"
@@ -101,19 +82,34 @@
 
   </div>
 
-
-
-
-
-  <div style="width:100%;text-align: center;margin:10px;">____</div>
+  <hr class="app-separator">
 
   <a title="Accéder à vos contacts"
-       routerLink="contacts"
-       mat-list-item
-       id="cmdAddPerson">
-      <mat-icon>person_add</mat-icon>&nbsp;
-      Gérer les contacts
-    </a>
+     routerLink="contacts"
+     mat-list-item
+     id="cmdAddPerson">
+    <mat-icon>person_add</mat-icon>&nbsp;
+    Gérer les contacts
+  </a>
+
+  <a title="Ajouter un mineur à votre compte distributeur"
+     routerLink="miners"
+     mat-list-item
+     *ngIf="user.isDealer()"
+     id="cmdAddMiner">
+    <mat-icon>add_circle</mat-icon>&nbsp;
+    Référencer des créateurs
+  </a>
+
+  <a title="Permet de vérifier si un wallet est propriétaire de vos tokens fabriqués"
+     routerLink="validate"
+     [queryParams]="{only_perso:false}"
+     mat-list-item
+     id="cmdValidate">
+    <mat-icon>checkmark</mat-icon>&nbsp;
+    Vérifier la propriété
+  </a>
+
 
   <a title="Modifier vos préférences"
      routerLink="settings"
@@ -142,8 +138,7 @@
     Se déconnecter
   </a>
 
-  <br>
-  <br>
+  <hr class="app-separator">
 
   <a title="Aide" routerLink="faqs"
      mat-list-item

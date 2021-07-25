@@ -212,37 +212,40 @@ export class NftsComponent implements OnChanges {
 
 
   add_dealer(nft: any) {
-    this.dialog.open(SelDealerComponent, {
+    this.user.check_pem(()=>{
+      this.dialog.open(SelDealerComponent, {
 
-      position:
-        {left: '5vw', top: '5vh'},
-      maxWidth: 500, width: '90vw', height: 'auto',
-      data:{
-        title: "Se faire distribuer",
-        result:this.user.addr
-      }
-    }).afterClosed().subscribe((result) => {
-      if (result!={} && result.length>0) {
-        let obj:any={
-          dealers:result,
-          pem:this.user.pem
-        };
-        nft.message="Ajout du distributeur en cours";
+        position:
+          {left: '5vw', top: '5vh'},
+        maxWidth: 500, width: '90vw', height: 'auto',
+        data:{
+          title: "Se faire distribuer",
+          result:this.user.addr
+        }
+      }).afterClosed().subscribe((result) => {
+        if (result!={} && result.length>0) {
+          let obj:any={
+            dealers:result,
+            pem:this.user.pem
+          };
+          nft.message="Ajout du distributeur en cours";
 
-        this.api._post("add_dealer/"+nft.token_id+"/","",obj).subscribe((r:any)=>{
-          nft.message="";
-          if(r.status!="fail"){
-            showMessage(this,"Distributeur ajouté");
-            this.onrefresh.emit();
-          } else {
-            showMessage(this,r.scResults[0].returnMessage);
-          }
-        },(err)=>{
-          nft.message="";
-          showError(this,err);
-        });
-      }
+          this.api._post("add_dealer/"+nft.token_id+"/","",obj).subscribe((r:any)=>{
+            nft.message="";
+            if(r.status!="fail"){
+              showMessage(this,"Distributeur ajouté");
+              this.onrefresh.emit();
+            } else {
+              showMessage(this,r.scResults[0].returnMessage);
+            }
+          },(err)=>{
+            nft.message="";
+            showError(this,err);
+          });
+        }
+      });
     });
+
   }
 
   can_sell(properties: number):boolean {

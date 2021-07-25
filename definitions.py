@@ -26,6 +26,7 @@ TOTAL_DEFAULT_UNITY=1000000
 CREDIT_FOR_NEWACCOUNT=100
 
 GIPHY_API_KEY="EL1SNvjG7dJNOC4r8Dwz7XKPf5I2uG5f"
+UNSPLASH_API_KEY="jULgaq6gGPDmyKi24nJO1Ta5SgdVpT38PjGBiu4snu4"
 
 ESDT_CONTRACT="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
 ESDT_PRICE=5e16
@@ -40,7 +41,7 @@ IPFS_NODE_PORT=5001
 
 NETWORKS={
     "testnet":{
-        "identifier":"",
+        "identifier":"TFC-e369ac",
         "new_account":float(2*1e18),
         "bank":"bob",
         "unity":"tEgld",
@@ -55,7 +56,7 @@ NETWORKS={
         "new_account":float(1*1e18),
         "bank":"bank",
         "unity":"xEgld",
-        "identifier":"TFC-35b1d0",
+        "identifier":"TFC-e369ac",
         "faucet":"https://r3d4.fr/elrond/devnet/index.php",
         "proxy":"https://devnet-gateway.elrond.com",
         "explorer":"https://devnet-explorer.elrond.com",

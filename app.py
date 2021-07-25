@@ -6,14 +6,13 @@ import os
 import ssl
 import sys
 
-import requests
 from AesEverywhere import aes256
 from apscheduler.schedulers.background import BackgroundScheduler
 
 import yaml
 from erdpy.accounts import Account
 from erdpy.contracts import SmartContract
-from erdpy.wallet import pem
+
 
 from flask import Response, request, jsonify, send_file, make_response
 
@@ -25,7 +24,7 @@ from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME
     MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, \
     MAIN_NAME, MAIN_DECIMALS, NETWORKS, ESDT_CONTRACT, LIMIT_GAS, SECRET_KEY, ESDT_PRICE, IPFS_NODE_HOST,IPFS_NODE_PORT
 from elrondTools import ElrondNet
-from giphy_search import Giphy
+from giphy_search import ImageSearchEngine
 from ipfs import IPFS
 
 
@@ -209,6 +208,10 @@ def get_pem_file(data):
     if type(data)==dict and not "pem" in data:
         rc="./PEM/"+NETWORKS[bc.network_name]["bank"]+".pem"
     else:
+        if len(data)==0:
+            log("Fichier PEM invalide")
+            return None
+
         if not type(data)==str and type(data["pem"]) == dict and "pem" in data["pem"]:data["pem"]=data["pem"]["pem"]
         rc="./PEM/temp"+str(now()*1000)+".pem"
         log("Fabrication d'un fichier PEM pour la signature et enregistrement sur " + rc)
@@ -221,7 +224,9 @@ def get_pem_file(data):
         if not "BEGIN PRIVATE KEY" in content:
             content=str(base64.b64decode(content),"utf8")
 
-        with open(rc, "w") as file:file.write(content)
+        with open(rc, "w") as file:
+            file.write(content)
+
     return rc
 
 
@@ -404,9 +409,7 @@ def state_nft(token_id:str,state:str,data:dict=None):
 
 @app.route('/api/image_search/',methods=["GET"])
 def image_search():
-    q=request.args.get("q")
-    giphy=Giphy()
-    rc=giphy.search(q)
+    rc=ImageSearchEngine().search(request.args.get("q"),request.args.get("type"))
     return jsonify(rc),200
 
 
@@ -719,6 +722,7 @@ def new_dealer(data:dict=None):
 def add_dealer(token_id:str,data:dict=None):
     if data is None:
         data = json.loads(str(request.data, encoding="utf-8"))
+
     pem_file = get_pem_file(data["pem"])
 
     for dealer in data["dealers"]:
