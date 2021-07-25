@@ -96,21 +96,23 @@ export class NftsPersoComponent implements OnInit {
   }
 
   transfer(nft:any){
-    this.dialog.open(NewContactComponent, {
-      position: {left: '10vw', top: '5vh'},
-      maxWidth: 450,
-      width: '80vw',height: 'fit-content',
-      data:{}
-    }).afterClosed().subscribe((result:any) => {
-      if(result){
-        nft.message="En cours de transfert";
-        let body={pem:this.user.pem,message:"",title:nft.uri,from:this.config.server.explorer+"/account/"+this.user.addr};
-        this.api._post("transfer_nft/"+nft.token_id+"/"+result.email+"/","",body).subscribe(()=>{
-          nft.message="";
-          this.refresh();
-        });
-      }
-    });
+    this.user.check_pem(()=>{
+      this.dialog.open(NewContactComponent, {
+        position: {left: '10vw', top: '5vh'},
+        maxWidth: 450,
+        width: '80vw',height: 'fit-content',
+        data:{}
+      }).afterClosed().subscribe((result:any) => {
+        if(result){
+          nft.message="En cours de transfert";
+          let body={pem:this.user.pem,message:"",title:nft.uri,from:this.config.server.explorer+"/account/"+this.user.addr};
+          this.api._post("transfer_nft/"+nft.token_id+"/"+result.email+"/","",body).subscribe(()=>{
+            nft.message="";
+            this.refresh();
+          });
+        }
+      });
+    })
   }
 
   open_store() {

@@ -16,7 +16,7 @@ from erdpy.contracts import SmartContract
 
 from flask import Response, request, jsonify, send_file, make_response
 
-from Tools import log, send_mail, open_html_file, now, send, dictlist_to_csv
+from Tools import log, send_mail, open_html_file, now, send, dictlist_to_csv, returnError
 from apiTools import create_app
 
 from dao import DAO
@@ -442,9 +442,10 @@ def sendtokenbyemail(dests:str):
 def transfer_nft(token_id,dest):
     data = json.loads(str(request.data, encoding="utf-8"))
     pem_file=get_pem_file(data["pem"])
+    if pem_file is None:
+        return returnError("pem file incorrect")
 
     _dest = convert_email_to_addr(dest,open_html_file("transfer_nft", {
-        "title": data["title"],
         "from":data["from"],
         "url_appli": DOMAIN_APPLI + "/?user=#addr#",
         "message":data["message"]
@@ -559,7 +560,7 @@ def mint(count:str,data:dict=None):
     if not money.startswith("EGLD"):
         #Dans ce cas on sequestre le montant ESDT pour le cadeau
         transac=bc.transferESDT(money,Account(pem_file=pem_file),bc.contract,pay_count*gift*1e16)
-        if "error" in transac:return "Probleme technique",500
+        if "error" in transac:return returnError()
         value=fee
     else:
         money=""
@@ -581,7 +582,7 @@ def mint(count:str,data:dict=None):
 
     if not result is None:
         if result["status"] == "fail" or not "smartContractResults" in result:
-            return "Erreur de création du token",500
+            return returnError("Erreur de création du token")
         else:
             if True:
                 return_string=result["smartContractResults"][0]["data"]
@@ -602,12 +603,12 @@ def mint(count:str,data:dict=None):
                     send(socketio, "refresh_balance",owner.address.bech32())
                     os.remove(pem_file)
                 else:
-                    return result["smartContractResults"][0]["returnMessage"],500
+                    return returnError(result["smartContractResults"][0]["returnMessage"])
 
             return jsonify(result), 200
     else:
         os.remove(pem_file)
-        return "Probleme technique",500
+        return returnError()
 
 
 

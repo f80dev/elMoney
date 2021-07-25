@@ -10,6 +10,7 @@ export class HourglassComponent implements OnInit {
 
   @Input("diameter") diameter=18;
   @Input("message") message="";
+  @Input("anim") src="";
   @Input("canCancel") canCancel=false;
   @Input("maxwidth") maxwidth="100vw";
   @Input("faq") faq="";

@@ -153,7 +153,7 @@ export class UserService {
   init(addr:string=null,func=null,func_error=null) {
     addr=addr || this.addr;
     this.addr=addr;
-    localStorage.setItem("addr",addr);
+    if(addr!="null")localStorage.setItem("addr",addr);
 
     if(this.config.hasESDT()){
       if(this.selected_money.length==0)this.selected_money=this.api.identifier;
@@ -222,8 +222,8 @@ export class UserService {
 
 
   check_email(func,func_abort=null,title="Authentification requise"){
-    if(!this.addr)this.addr=localStorage.getItem("addr");
-    if(this.addr && this.addr.length>0){
+    if(!this.addr || this.addr=="null")this.addr=localStorage.getItem("addr");
+    if(this.addr && this.addr.length>20){
       this.init(this.addr,()=>{
         if(func)func();
       });
@@ -235,7 +235,7 @@ export class UserService {
       }).afterClosed().subscribe((result:any) => {
         if(result){
           this.email=result.email;
-          this.init(result.address,()=>{
+          this.init(result.addr,()=>{
             // $$("Enregistrement de "+this.email+" sur le device");
             // localStorage.setItem("email",this.email);
             this.refresh_balance(func);

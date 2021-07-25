@@ -17,7 +17,7 @@ export class UnityComponent implements OnChanges {
    showValue: number;
 
   constructor(public config:ConfigService) {
-    if(this.value>99 && this.decimals>2)this.decimals=2;
+
   }
 
   refresh(){
@@ -30,8 +30,6 @@ export class UnityComponent implements OnChanges {
       this.showValue=this.value;
       this.unity=this.config.egold_unity;
     }
-
-
   }
 
   switch_fiat() {
@@ -48,6 +46,8 @@ export class UnityComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if(this.value>10 && this.decimals>2)this.decimals=2;
+    if(this.value>200 && this.decimals>1)this.decimals=1;
     this.refresh();
   }
 }

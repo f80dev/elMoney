@@ -7,6 +7,7 @@ from email.mime.text import MIMEText
 from io import StringIO
 
 import pandas as pd
+from flask import jsonify
 
 from definitions import SMTP_SERVER, USERNAME, PASSWORD, DOMAIN_APPLI, SIGNATURE, APPNAME
 
@@ -192,3 +193,7 @@ def dictlist_to_csv(lst):
     output = StringIO()
     df.to_csv(output)
     return output.getvalue()
+
+
+def returnError(msg:str="Problème technique"):
+    return jsonify({"error":500,"message":msg}),500

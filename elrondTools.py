@@ -543,6 +543,9 @@ class ElrondNet:
         :return:
         """
 
+        if addr is None or len(addr)<20:
+            return {"error": 500, "message": "address incorrect"}
+
         if not addr.startswith("erd"):
             addr=Account(address=addr).address.bech32()
 
@@ -572,10 +575,9 @@ class ElrondNet:
 
         if len(seed_phrase)==0:
             if name is None:
-                if email is None:
-                    name = "User" + str(datetime.now().timestamp() * 1000).split(".")[0]
-                else:
-                    name=email.split("@")[0].split(".")[0]
+                name = "User" + str(datetime.now().timestamp() * 1000).split(".")[0]
+                # if not email is None:
+                #     name=email.split("@")[0].split(".")[0]
 
             AccountsRepository("./PEM").generate_account(name)
             for f in os.listdir("./PEM"):
