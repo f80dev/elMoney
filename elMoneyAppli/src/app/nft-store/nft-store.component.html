@@ -12,7 +12,7 @@
   <!--  </mat-button-toggle-group>-->
 
   <table id="seller_zone" style="margin-left: 1%;width:98%;vertical-align: text-top;"><tr>
-    <td style="width: min-content;padding:5px;text-align: left;" *ngIf="selected_dealer?.shop_visual?.length>0">
+    <td style="width: 70px;padding:5px;text-align: left;" *ngIf="selected_dealer?.shop_visual?.length>0">
       <img [src]="selected_dealer?.shop_visual" style="width:60px;">
     </td>
 
@@ -103,7 +103,7 @@
             *ngIf="message?.length==0"
             [user]="user"
             [filter]="filter+selected_tag"
-            [seller]="selected_dealer.address"
+            [seller]="selected_dealer?.address"
             [height]="selected_mode.height"
             [width]="selected_mode.width"
             [fontsize]="selected_mode.fontsize"
