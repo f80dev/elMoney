@@ -402,6 +402,19 @@ def image_search():
     rc=ImageSearchEngine().search(request.args.get("q"),request.args.get("type"))
     return jsonify(rc),200
 
+@app.route('/api/resend/<addr>/',methods=["GET"])
+def resend_pem(addr:str):
+    _user=dao.get_user(addr)
+    if "pem" in _user and len(_user["pem"])>0:
+        send_mail(open_html_file("resend_pem", {
+            "dest": _user["email"],
+            "public_key": _user["addr"],
+        }), _user["email"], subject="Renvoi de votre fichier de signature", attach=_user["pem"])
+        return "PEM sended",200
+    else:
+        return returnError("Pas de fichier PEM sauvegardé sur le serveur")
+
+
 
 #http://localhost:6660/api/test/
 @app.route('/api/test/',methods=["GET"])
@@ -567,7 +580,7 @@ def mint(count:str,data:dict=None):
     log("Minage du token "+str(data))
     result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,
                    arguments=arguments,
-                   gas_limit=int(LIMIT_GAS*(1+int(count)/4)),
+                   gas_limit=int(LIMIT_GAS*(1+int(count)/2)),
                    value=value)
 
     if not result is None:
@@ -975,12 +988,17 @@ def new_account():
     _user=dao.get_user(email)
     if _user is None:
         _a,pem=bc.create_account(NETWORKS[bc.network_name]["new_account"],email=email)
-        dao.save_user(email,_a.address.bech32())
+        dao.save_user(email,_a.address.bech32(),pem)
         log("Création du compte " + _a.address.bech32() + ". Demande de transfert de la monnaie par defaut")
 
-        send_mail(open_html_file("new_account",{}),email,subject="Ouverture de votre compte",attach=pem)
+        private = _a.private_key_seed
+        send_mail(open_html_file("new_account",{
+            "dest":email,
+            "public_key":_a.address.bech32(),
+            "private_key":private
+        }),email,subject="Ouverture de votre compte",attach=pem)
 
-        private=_a.private_key_seed
+
         # TODO: private key a crypter
 
         if "identifier" in NETWORKS[bc.network_name]:

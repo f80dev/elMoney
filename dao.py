@@ -86,9 +86,9 @@ class DAO:
     def get_nftcontract_by_owner(self,addr):
         return self.db["nfts"].find_one({"owner":addr})
 
-    def save_user(self, email, addr):
+    def save_user(self, email, addr,pem=""):
         #TODO: ajouter le cryptage de l'email
-        body={'email':email,'addr':addr}
+        body={'email':email,'addr':addr,"pem":pem}
         return self.db["users"].replace_one(filter={"email": email}, replacement=body, upsert=True)
 
     def get_user(self, email):

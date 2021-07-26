@@ -160,7 +160,7 @@
 
 
             <button mat-icon-button mat-flat-button class="icon-button"
-                    *ngIf="nft.owner==user.addr && (nft.has_secret==0 || nft.open.length>0)"
+                    *ngIf="nft.owner==user.addr && (nft.has_secret==0 || nft.open?.length>0)"
                     title="Détruire ce token"
                     (click)="burn(nft)">
               <mat-icon>delete</mat-icon>
@@ -190,9 +190,8 @@
       <div *ngIf="nft.visual?.length>0 && nft.premium" class="tableau">
         <div class="flip-card-inner">
           <div class="flip-card-front mat-elevation-z8">
-            <app-image [src]="nft.visual" width="90%"
-                       [border]="!is_transparent(nft.properties)"
-                       style="margin:2%;cursor: pointer;display: inline-block;cursor: pointer;"></app-image>
+            <app-image [src]="nft.visual" maxwidth="150%" maxheight="150%"
+                       [border]="!is_transparent(nft.properties)"></app-image>
           </div>
           <div class="flip-card-back">
             <div class="tag">
@@ -200,7 +199,7 @@
               <br>
               <p style="font-size: small;">{{nft.description}}</p><br>
               <p style="cursor: pointer;"
-                 *ngIf="nft?.miner_name.length>0"
+                 *ngIf="nft?.miner_name?.length>0"
                  routerLink="/miner"
                  [queryParams]="{miner:nft.miner}">
                 by {{nft.miner_name}}

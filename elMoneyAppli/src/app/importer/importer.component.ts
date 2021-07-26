@@ -19,7 +19,7 @@ import {MatAutocomplete, MatAutocompleteSelectedEvent} from "@angular/material/a
 import {MatChipInputEvent} from "@angular/material/chips";
 import {map, startWith} from "rxjs/operators";
 import {IpfsService} from "../ipfs.service";
-import {DatePipe, formatDate, Location} from "@angular/common";
+import {DatePipe, Location} from "@angular/common";
 
 export interface SellerProperties {
   address: string;
@@ -472,6 +472,26 @@ export class ImporterComponent implements OnInit {
   }
 
 
+  quick_propriete(token){
+    this.ask_for_text("Description du bien","Décrivez précisément le bien à attribuer",(desc)=>{
+      this.add_visual((visual)=>{
+        this.ask_for_text("Titre du bien","Indiquer le nom du bien",(title)=>{
+          this.ask_for_text("Désigner le nouveau propriétaire","Indiquer les nom, prénoms du destinataire",(names)=>{
+            this.ask_for_text("Renforcer l'identification","Ajouter un identifiant tel qu'un numéro de passeport, de carte d'identité, de sécurité sociale",(identifiant)=>{
+              this.visual=visual;
+              this.self_destruction=false;
+              this.price=0;
+              this.owner_can_sell=false;
+              this.owner_can_transfer=false;
+              this.desc=desc+" "+title+" est la propriété de "+names+" identifié par "+identifiant;
+              this.title=title;
+              this.tokenizer(token.fee);
+            });
+          });
+        });
+      },"",300,300,false,true,false);
+    },"Un visuel va pouvoir être ajouté","memo")
+  }
 
   quick_secret(token,lib_secret="Saisissez votre secret, mot de passe ..."){
     this.ask_for_text("Contenu embarqué",lib_secret,(secret)=>{
@@ -481,16 +501,19 @@ export class ImporterComponent implements OnInit {
           if(title)
             this.ask_for_text("Description","Ecrivez une breve description",(description)=>{
               if(description){
-                this.ask_options([
-                  {label:"<div class='bloc-bouton'>Le NFT s'autodétruit<br>après ouverture</div>",value:true,width:'200px'},
-                  {label:"<div class='bloc-bouton'>Le NFT peut être ouvert<br>plusieurs fois</div>",value:false,width:'200px'}
-                ],(value)=>{
-                  this.self_destruction=value;
-                  this.desc=description;
-                  if(token.tags)this.desc=this.desc+" "+token.tags;
-                  this.title=title;
-                  this.ask_for_price("Quel prix pour votre secret",null,token.fee);
-                });
+                this.add_visual((visual)=>{
+                  if(visual)this.visual=visual.img;
+                  this.ask_options([
+                    {label:"<div class='bloc-bouton'>Le NFT s'autodétruit<br>après ouverture</div>",value:true,width:'200px'},
+                    {label:"<div class='bloc-bouton'>Le NFT peut être ouvert<br>plusieurs fois</div>",value:false,width:'200px'}
+                  ],(value)=>{
+                    this.self_destruction=value;
+                    this.desc=description;
+                    if(token.tags)this.desc=this.desc+" "+token.tags;
+                    this.title=title;
+                    this.ask_for_price("Quel prix pour votre secret",null,token.fee);
+                  });
+                },"Ajouter un visuel si vous le souhaitez")
               }
             },"","memo")
         });
@@ -674,6 +697,7 @@ export class ImporterComponent implements OnInit {
     if(token.index=="life_events")this.quick_lifeevents(token);
     if(token.index=="tickets")this.quick_tickets('Téléverser le visuel de votre invitation',token);
     if(token.index=="loterie")this.quick_loterie(token);
+    if(token.index=="propriete")this.quick_propriete(token);
   }
 
 

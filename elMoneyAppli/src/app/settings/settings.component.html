@@ -131,6 +131,32 @@
 
     </mat-expansion-panel>
 
+
+    <!--    Securité -->
+    <mat-expansion-panel class="app-panel" [expanded]="open_section==3">
+      <mat-expansion-panel-header>Sécurité</mat-expansion-panel-header>
+
+      <button mat-raised-button mat-button
+              class="app-button"
+              color="alert"
+              [disabled]="!this.user.email"
+              (click)="delete_account()">
+        Supprimer le compte
+      </button>
+
+      <button mat-raised-button mat-button
+              class="app-button"
+              (click)="raz_pem_ondevice()">
+        Effacer votre clé
+      </button>
+
+      <br>
+       <app-savekey style="display: inline-block;"></app-savekey>
+
+    </mat-expansion-panel>
+
+
+
   </mat-accordion>
 
 
@@ -161,17 +187,11 @@
 
     <br>
 
-    <button mat-raised-button mat-button
-          class="app-button"
-          color="alert"
-          [disabled]="!this.user.email"
-          (click)="delete_account()">
-    Supprimer le compte
-  </button>
+
 
   </div>
   <br>
-  <app-savekey style="display: inline-block;"></app-savekey>
+
   <br>
 
 </div>

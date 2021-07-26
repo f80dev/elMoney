@@ -104,6 +104,21 @@ content:
     transac: 0.00015
     production: true
 
+  - index: propriete
+    title: Attestation<br>de propriété
+    icon: copyright
+    nft_icon: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/copyright_a9-fe0f.png
+    description: ""
+    tuto: "
+          Grâce à TokenForge vous pouvez établir une attestation de propriété et l'enregistrer dans la blockchain.<br>
+          Elle devient ainsi infalsifiable
+    "
+    fee: 0.002
+    tags: "#propriete #titre"
+    transac: 0.00015
+    production: true
+
+
   - index: music
     title: Vendre de<br>la musique
     icon: audiotrack

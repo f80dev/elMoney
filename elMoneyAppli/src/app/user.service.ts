@@ -258,7 +258,7 @@ export class UserService {
 
 
   check_pem(func,vm=null,title=null,func_abort=null) {
-    title=title || "Charger votre clé pour cette opération";
+    title=title || "Cette opération doit être signée";
     if(this.pem && this.pem.length>0){
       if(func)func();
     } else {

@@ -57,7 +57,6 @@ export class SettingsComponent implements OnInit {
 
 
   change_visual(field:string) {
-    debugger
     $$("Modification du visuel")
     this.dialog.open(ImageSelectorComponent, {position:
         {left: '5vw', top: '5vh'},
@@ -147,5 +146,11 @@ export class SettingsComponent implements OnInit {
       },this,"Signer pour supprimer votre compte");
     }
 
+  }
+
+  raz_pem_ondevice() {
+    this.user.pem=null;
+    localStorage.removeItem("pem");
+    showMessage(this,"Votre signature n'est plus stocké sur ce device");
   }
 }
