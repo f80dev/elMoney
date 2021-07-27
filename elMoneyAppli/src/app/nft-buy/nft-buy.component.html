@@ -10,7 +10,7 @@
   <app-nfts [with_icon]="false"
             *ngIf="message?.length==0"
             [with_actions]="false"
-            [force_text]="true"
+            [force_text]="true" [art]="false"
             [user]="user" [nfts]="[nft]"></app-nfts>
 
   <br>
@@ -19,6 +19,12 @@
     Distribué par {{seller?.shop_name}}<br>
     Réalisé par <a [href]="miner?.website" target="_blank">{{miner?.pseudo}}</a><br>
   </p>
+
+  <p *ngIf="seller?.shop_name=='Vente directe' && nft.price>0">
+    <br>
+    <small>
+    Attention ! il est conseillé de n'achetez des NFTs via la vente directe qu'a des créateurs dont vous avez confiance
+  </small></p>
 
 </div>
 <div class="bottom-bar" *ngIf="message?.length==0">

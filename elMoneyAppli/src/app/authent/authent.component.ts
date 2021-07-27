@@ -34,7 +34,7 @@ export class AuthentComponent implements OnInit {
     {label:"Test4",value:"test4.pem"}
   ]
   test_profil: any;
-  authent_method: string="email";
+  authent_method="email";
   showSaveKey: boolean=false;
   savePrivateKey=false;
 
@@ -55,7 +55,7 @@ export class AuthentComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.authent_method="email";
+
   }
 
   quit(result:any){

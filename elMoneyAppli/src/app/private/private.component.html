@@ -8,7 +8,7 @@
 
     <div *ngIf="!user.pem">
 
-      <mat-button-toggle-group [(ngModel)]="private_method" aria-label="Methode de connexion" appearance="legacy" >
+      <mat-button-toggle-group [(ngModel)]="private_method" appearance="legacy" >
         <mat-button-toggle value="file"><div class="bloc-bouton">Fichier de<br>signature</div></mat-button-toggle>
         <mat-button-toggle value="input"><div class="bloc-bouton">Clé<br>privée</div></mat-button-toggle>
         <mat-button-toggle value="walletconnect"><div class="bloc-bouton">Wallet<br>Connect</div></mat-button-toggle>
@@ -46,6 +46,8 @@
           <mat-label>Coller votre clé privée</mat-label>
           <input matInput type="text" maxlength="200" [(ngModel)]="private_key" [ngModelOptions]="{standalone: true}" (change)="keyOnChange()">
         </mat-form-field>
+
+        <small>La connection est immédiate dés que la clé est conforme</small>
       </div>
 
       <div *ngIf="private_method=='walletconnect'" class="method_zone">

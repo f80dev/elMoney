@@ -286,7 +286,7 @@ export class UserService {
     }
   }
 
-  logout(title="Veuillez indiquer votre clé",func=null,height="fit-contain",reload=true) {
+  logout(title="Veuillez indiquer votre clé",func_deconnect=null,func_cancel=null,height="fit-contain",reload=true) {
     this.dialog.open(PromptComponent,{width: '350px',height:height,data:
         {
           title: "Confirmez la deconnexion ?",
@@ -297,9 +297,9 @@ export class UserService {
     }).afterClosed().subscribe((result:any) => {
       if(result){
         this.reset(reload);
-        if(func)func();
+        if(func_deconnect)func_deconnect();
       } else {
-        if(func)func();
+        if(func_cancel)func_cancel();
       }
     });
   }

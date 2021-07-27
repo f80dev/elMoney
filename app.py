@@ -405,23 +405,21 @@ def image_search():
 @app.route('/api/resend/<addr>/',methods=["GET"])
 def resend_pem(addr:str):
     _user=dao.get_user(addr)
-    if "pem" in _user and len(_user["pem"])>0:
+    if _user and "pem" in _user and len(_user["pem"])>0:
         send_mail(open_html_file("resend_pem", {
             "dest": _user["email"],
             "public_key": _user["addr"],
         }), _user["email"], subject="Renvoi de votre fichier de signature", attach=_user["pem"])
-        return "PEM sended",200
+        return "fichier de signature envoyé sur "+_user["email"],200
     else:
-        return returnError("Pas de fichier PEM sauvegardé sur le serveur")
+        return returnError("Pas de fichier de signature sauvegardé sur le serveur")
 
 
 
 #http://localhost:6660/api/test/
 @app.route('/api/test/',methods=["GET"])
 def test():
-    giphy=Giphy()
-    rc=giphy.search("dog")
-    return jsonify(rc),200
+    pass
 
 
 

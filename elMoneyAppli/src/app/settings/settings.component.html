@@ -85,7 +85,9 @@
 
       <div *ngIf="user.shop_visual" style="display: inline-block;text-align: center;width: 100%">
         <h4>Visuel de votre marketplace</h4>
-        <app-image maxwidth="150" [src]="user.shop_visual" (click)="change_visual('shop_visual')"></app-image>
+        <app-image [cover]="false" maxwidth="150" [src]="user.shop_visual"
+                   [border]="false"
+                   (click)="change_visual('shop_visual')"></app-image>
       </div>
 
       <mat-form-field appearance="fill" class="app-field">

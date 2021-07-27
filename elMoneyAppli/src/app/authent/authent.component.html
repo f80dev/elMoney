@@ -7,9 +7,7 @@
 
 
   <div *ngIf="message==''">
-  <mat-button-toggle-group [(ngModel)]="authent_method"
-                           appearance="legacy"
-                           aria-label="Methode de connexion">
+  <mat-button-toggle-group [(ngModel)]="authent_method" appearance="legacy">
     <mat-button-toggle value="email">Email</mat-button-toggle>
     <mat-button-toggle value="qrcode">Adresse</mat-button-toggle>
     <mat-button-toggle value="cle"><div class="bloc-bouton">Clés<br>privées</div></mat-button-toggle>

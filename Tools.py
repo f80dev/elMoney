@@ -196,4 +196,4 @@ def dictlist_to_csv(lst):
 
 
 def returnError(msg:str="Problème technique"):
-    return jsonify({"error":500,"message":msg}),500
+    return msg,500

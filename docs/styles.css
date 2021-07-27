@@ -2832,6 +2832,7 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
 .mainform {
   text-align: center;
   min-height: 100vh;
+  padding-top: 10px;
   background-color: #686868;
   color: white;
   padding: 0px;

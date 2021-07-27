@@ -115,12 +115,14 @@ export class PrivateComponent implements OnInit {
    this.user.logout("Se déconnecter",()=>{
      this.dialogRef.close();
      this.router.navigate(["store"]);
-    },"fit-contain",false);
+    },null,"fit-contain",false);
   }
 
   resend() {
     this.api._get("resend/"+this.user.addr+"/","").subscribe(()=>{
       showMessage(this,"Consulter votre messagerie pour récupérer le fichier de signature");
+    },(err)=>{
+      showError(this,err);
     })
   }
 }
