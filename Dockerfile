@@ -53,6 +53,7 @@ RUN pip3 -v install aes-everywhere
 RUN pip3 -v install flask-excel
 RUN pip3 -v install pandas
 RUN pip3 -v install ipfsapi
+RUN pip3 -v install requests-cache
 
 
 WORKDIR /

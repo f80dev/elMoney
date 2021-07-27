@@ -14,6 +14,7 @@ from erdpy.contracts import SmartContract
 from erdpy.environments import TestnetEnvironment
 from erdpy.transactions import Transaction
 from erdpy.wallet import derive_keys
+from requests_cache import CachedSession
 
 from Tools import log, base_alphabet_to_10, str_to_hex, hex_to_str, nbr_to_hex, translate
 from definitions import LIMIT_GAS, ESDT_CONTRACT, NETWORKS, ESDT_PRICE, IPFS_NODE_PORT, IPFS_NODE_HOST
@@ -42,6 +43,8 @@ class ElrondNet:
     chain_id=None
     network_name="devnet"
     ipfs=IPFS(IPFS_NODE_HOST,IPFS_NODE_PORT)
+    cached_sess = CachedSession()
+
 
 
     def __init__(self,network_name="devnet"):
@@ -549,7 +552,7 @@ class ElrondNet:
         if not addr.startswith("erd"):
             addr=Account(address=addr).address.bech32()
 
-        rc = requests.get(self._proxy.url + "/address/" + addr + "/keys")
+        rc = self.cached_sess.get(self._proxy.url + "/address/" + addr + "/keys")
         if rc.status_code == 200:
             obj=dict()
             rc = dict(json.loads(rc.text)["data"]["pairs"])
@@ -829,7 +832,7 @@ class ElrondNet:
             "data":data
         }
 
-        r=rq.post(self._proxy.url+"/transaction/cost",data=body)
+        r=requests.post(self._proxy.url+"/transaction/cost",data=body)
         rc=json.loads(r.text)
         return rc
 

@@ -39,7 +39,7 @@
       <div *ngIf="user.visual" style="display: inline-block;text-align: center;width: 100%">
         <h4>Visuel de votre profil</h4>
 
-        <app-image (click)="change_visual('visual')" [src]="user.visual" [border]="false"></app-image>
+        <app-image [cover]="false" (click)="change_visual('visual')" [src]="user.visual" [border]="false"></app-image>
 
       </div>
       <br>

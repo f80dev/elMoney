@@ -57,13 +57,13 @@
   </tr></table>
 
 
-  <div *ngIf="nfts?.length>2">
+  <div *ngIf="cache?.length>2">
     <mat-form-field appearance="fill"
                     style="max-width:150px;margin-right: 10px;" cdkFocusInitial>
       <mat-label>Chercher un token</mat-label>
       <input matInput matNativeControl
              (keyup)="onQuery($event)"
-             placeholder="Un ou plusieurs mots du titre ou des #htag" [(ngModel)]="filter">
+             placeholder="Un ou plusieurs mots du titre" [(ngModel)]="filter">
       <mat-icon *ngIf="filter?.length>0"
                 matSuffix style="cursor: pointer"
                 (click)="clearQuery()">cancel</mat-icon>
@@ -102,7 +102,6 @@
             [art]="art"
             *ngIf="message?.length==0"
             [user]="user"
-            [filter]="filter+selected_tag"
             [seller]="selected_dealer?.address"
             [height]="selected_mode.height"
             [width]="selected_mode.width"

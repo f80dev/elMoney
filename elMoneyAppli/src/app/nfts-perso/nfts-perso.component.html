@@ -42,7 +42,7 @@
     <mat-tab label="Vos NFTs fabriqués" style="height: fit-content">
       <app-tuto label="L'ensemble des NFTs que vous avez fabriqués sont listés ici. Vous pouvez ajouter des distributeurs, les retirer de la vente, en faire la promotion"></app-tuto>
       <br>
-      <mat-form-field appearance="fill" style="width:200px;color:white;" *ngIf="nfts[2]?.length>2">
+      <mat-form-field appearance="fill" style="width:200px;color:white;">
         <mat-label>Filtrer</mat-label>
         <mat-select [(value)]="filter">
           <mat-option *ngFor="let f of filters" [value]="f.filter" (onSelectionChange)="refresh()">{{f.label}}</mat-option>

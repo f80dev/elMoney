@@ -38,6 +38,7 @@ export class NftStoreComponent implements OnInit {
 
   tags=[""];
   selected_tag: any="";
+  cache: any[]=[];
 
 
   constructor(public api: ApiService,
@@ -111,20 +112,25 @@ export class NftStoreComponent implements OnInit {
   }
 
 
+  apply_filter(nfts) : any[] {
+    return group_tokens(nfts,this.config.tags,(item)=> {
+      if (!this.filter_id || this.filter_id == item.token_id) {
+        if (item.state == 0 && item.properties >= 4 && item.owner != this.user.addr) {
+          if (this.filter.length == 0 || item.search.toLowerCase().indexOf(this.filter.toLowerCase()) > -1)
+            return true;
+        }
+        return false;
+      }
+    });
+  }
 
 
   refresh(withMessage = true) {
     if (withMessage) this.message = "Chargement des tokens ...";
     this.api._get("nfts/"+this.selected_dealer.address+"/").subscribe((r: any) => {
       this.message = "";
-      this.nfts=group_tokens(r,this.config.tags,(item)=>{
-        if (!this.filter_id || this.filter_id == item.token_id) {
-          if (item.state == 0 && item.properties >= 4 && item.owner != this.user.addr) {
-              return true;
-          }
-        return false;
-        }
-      });
+      this.cache=r;
+      this.nfts=this.apply_filter(r);
       this.tags=extract_tags(this.nfts);
     });
   }
@@ -132,9 +138,7 @@ export class NftStoreComponent implements OnInit {
 
   clearQuery() {
     this.filter='';
-    if(this.nfts.length>100) {
-      this.refresh(false);
-    }
+    this.nfts=this.apply_filter(this.cache);
   }
 
 
@@ -143,12 +147,10 @@ export class NftStoreComponent implements OnInit {
 
 
   onQuery($event: KeyboardEvent) {
-    if(this.nfts.length>100){
       clearTimeout(this.handle);
       this.handle=setTimeout(()=>{
-        this.refresh(false);
+        this.nfts=this.apply_filter(this.cache);
       },1000);
-    }
   }
 
 
