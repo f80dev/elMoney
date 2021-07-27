@@ -1,7 +1,7 @@
 <div class="mainform">
   <br>
   <h2 *ngIf="message?.length==0">Confirmer l'achat ?</h2>
-  <app-unity [value]="nft.price" fontsize="3em" fontsize_unity="large"></app-unity>
+  <app-unity [value]="nft.price" [unity]="nft.unity" fontsize="3em" fontsize_unity="large"></app-unity>
   <br><br>
 
 
@@ -30,8 +30,7 @@
 </div>
 <div class="bottom-bar" *ngIf="message?.length==0">
     <button mat-raised-button mat-button
-            class="app-button"
-                (click)="cancel()">
+            class="app-button" (click)="cancel()">
           Annuler
     </button>
   &nbsp;

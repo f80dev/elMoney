@@ -93,7 +93,7 @@
                   (click)="buy(nft)">
             <mat-icon>shopping_cart</mat-icon>&nbsp;
             <small *ngIf="nft.price==0">Gratuit</small>
-            <span *ngIf="nft.price>0" ><app-unity [value]="nft.price" [decimals]="2"></app-unity></span>
+            <span *ngIf="nft.price>0" ><app-unity [unity]="nft.unity" [value]="nft.price" [decimals]="2"></app-unity></span>
           </button>
 
 
@@ -204,7 +204,9 @@
                  [queryParams]="{miner:nft.miner}">
                 by {{nft.miner_name}}
               </p>
-              <p *ngIf="nft?.price>0">{{nft.price | number:'1.0-3'}} {{nft.unity}}</p>
+              <p *ngIf="nft?.price>0">
+                <app-unity [unity]="nft.unity" [value]="nft.price"></app-unity>
+              </p>
 
 
 

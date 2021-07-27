@@ -261,7 +261,7 @@ class ElrondNet:
         data="ESDTTransfer@"+str_to_hex(idx,False)+"@"+amount_in_hex
 
         try:
-            tr=self.send_transaction(user_from,Account(user_to),user_from,"0",data)
+            tr=self.send_transaction(user_from,Account(user_to),user_from,"0",data,500000)
             infos=self._proxy.get_account_balance(user_from.address)
 
             return {

@@ -98,8 +98,8 @@ class DAO:
         return rc
 
 
-    def del_user(self, email):
-        rc=self.db["users"].delete_one(filter={"email": email})
+    def del_user(self, addr):
+        rc=self.db["users"].delete_one(filter={"addr": addr})
         return rc
 
 

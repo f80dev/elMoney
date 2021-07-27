@@ -305,7 +305,7 @@ export class UserService {
   }
 
   remove_account() {
-    return this.api._delete("del_user/"+this.email+"/");
+    return this.api._delete("users/"+this.addr+"/");
   }
 
   isCreator() {

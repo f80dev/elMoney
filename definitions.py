@@ -18,9 +18,9 @@ NFT_BYTECODE_PATH="./static/deploy-nft.json"
 #on alimente les nouveaux comptes en eGold pour leur permettre des transferts
 
 #Description de la monnaie par defaut
-MAIN_UNITY="TFC"
+MAIN_UNITY="TFE"
 MAIN_DECIMALS=18
-MAIN_NAME="TokenForgeCoin"
+MAIN_NAME="TokenForgeEuroCoin"
 MAIN_URL="https://tf.f80.fr/assets/cmk.html"
 TOTAL_DEFAULT_UNITY=1000000
 CREDIT_FOR_NEWACCOUNT=100
@@ -56,12 +56,12 @@ NETWORKS={
         "new_account":float(1*1e18),
         "bank":"bank",
         "unity":"xEgld",
-        "identifier":"TFC-e369ac",
+        "identifier":"TFE-8fc2c8",
         "faucet":"https://r3d4.fr/elrond/devnet/index.php",
         "proxy":"https://devnet-gateway.elrond.com",
         "explorer":"https://devnet-explorer.elrond.com",
         "wallet":"https://devnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqzhyulddkjzsumfr7uvm9f86wje7a4w5wd8sskdkct8"
+        "nft":"erd1qqqqqqqqqqqqqpgqut3kwpurlddz946a4wkvsyqmw2uw2y5dd8ssmtdnce"
     },
 
 

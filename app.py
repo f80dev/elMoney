@@ -906,10 +906,13 @@ def server_config():
 
 
 
-@app.route('/api/del_user/<email>/',methods=["DELETE"])
-def del_user(email:str):
-    rows=dao.del_user(email)
-    return jsonify({"message":"account remove"})
+@app.route('/api/users/<addr>/',methods=["DELETE"])
+def del_user(addr:str):
+    rows=dao.del_user(addr)
+    if rows.deleted_count==1:
+        return jsonify({"message":"account remove"})
+    else:
+        return returnError("Ce compte n'est pas associé à un mail")
 
 
 

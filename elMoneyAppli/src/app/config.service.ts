@@ -59,13 +59,18 @@ export class ConfigService {
     return Promise.resolve((await this.http.get(jsonFile).toPromise()));
   }
 
-  get_price(func){
-    this.api._get("https://data.elrond.com/market/quotes/egld/price","",60,"").subscribe((result:any)=>{
+  get_price(unity,func){
+    if(unity=="eGld"){
+      this.api._get("https://data.elrond.com/market/quotes/egld/price","",60,"").subscribe((result:any)=>{
       if(result.length>0){
-        this.egold_price=result[result.length-1].value;
+        func(result[result.length-1].value);
       }
-      func();
     });
+    } else {
+      //TODO a adapter sur la base d'un tableau de correspondance entre la monnaie
+      func(1);
+    }
+
   }
 
 

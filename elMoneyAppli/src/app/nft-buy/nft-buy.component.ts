@@ -34,9 +34,7 @@ export class NftBuyComponent implements OnInit {
   ngOnInit(): void {
     this.nft=JSON.parse(this.routes.snapshot.queryParamMap.get("nft"));
     this.seller=JSON.parse(this.routes.snapshot.queryParamMap.get("seller"));
-    this.api._get("users/"+this.nft.miner+"/","").subscribe((data:any)=>{
-      this.miner=data;
-    });
+    this.api._get("users/"+this.nft.miner+"/","").subscribe((data:any)=>{this.miner=data;});
     if(this.nft.price==0 && this.user.pem)this.buy();
   }
 
@@ -44,10 +42,10 @@ export class NftBuyComponent implements OnInit {
 
   buy() {
     let identifier=this.nft.identifier;
-      if(identifier=="")identifier="EGLD";
+    if(identifier=="")identifier="EGLD";
 
-      if(this.nft.price>0){
-
+    if(this.nft.price>0){
+      if(this.nft.unity=="eGld"){
         if (!this.user.moneys.hasOwnProperty(identifier) || this.nft.price > Number(this.user.moneys[identifier].balance)/ 1e18 ) {
 
           showMessage(this, "Votre solde est insuffisant (prix + frais de transaction)", 5000, () => {
@@ -59,18 +57,19 @@ export class NftBuyComponent implements OnInit {
           return false;
         }
       }
+    }
 
-      this.message = "Achat en cours";
-      let price = this.nft.price;
-      this.api._post("buy_nft/" + this.nft.token_id + "/" + price + "/" + this.seller.address, "", {pem:this.user.pem,identifier:this.nft.identifier}).subscribe((r: any) => {
-        this.message = "";
-        showMessage(this, "Achat du token pour " + (this.nft.price + r.cost) + " "+this.nft.unity);
-        this.user.refresh_balance(() => {});
-        this.router.navigate(['nfts-perso'],{queryParams:{index:0}})
-      }, () => {
-        this.message = "";
-        showMessage(this, "Achat annulé");
-      });
+    this.message = "Achat en cours";
+    let price = this.nft.price;
+    this.api._post("buy_nft/" + this.nft.token_id + "/" + price + "/" + this.seller.address, "", {pem:this.user.pem,identifier:this.nft.identifier}).subscribe((r: any) => {
+      this.message = "";
+      showMessage(this, "Achat du token pour " + (this.nft.price + r.cost) + " "+this.nft.unity);
+      this.user.refresh_balance(() => {});
+      this.router.navigate(['nfts-perso'],{queryParams:{index:0}})
+    }, () => {
+      this.message = "";
+      showMessage(this, "Achat annulé");
+    });
 
 
 
