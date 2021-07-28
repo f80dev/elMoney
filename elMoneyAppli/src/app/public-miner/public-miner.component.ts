@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {ApiService} from "../api.service";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {UserService} from "../user.service";
-import {group_tokens} from "../tools";
+import {group_tokens, showMessage} from "../tools";
 import {ConfigService} from "../config.service";
 
 @Component({
@@ -13,9 +13,11 @@ import {ConfigService} from "../config.service";
 export class PublicMinerComponent implements OnInit {
   miner: any;
   nfts: any;
+  message: string="";
 
   constructor(
     public api:ApiService,
+    public router:Router,
     public config:ConfigService,
     public routes:ActivatedRoute,
     public user:UserService
@@ -38,5 +40,19 @@ export class PublicMinerComponent implements OnInit {
 
   open_website(miner: any) {
     open(miner.website,"Createur web site");
+  }
+
+  ref_miner() {
+    this.user.check_pem(()=>{
+      this.message="Référencement en cours";
+      this.api._post("add_miner/","",{address:this.miner.addr,pem:this.user.pem}).subscribe(()=>{
+        showMessage(this,"Mineur ajoute");
+        this.message="";
+        this.router.navigate(["miners"]);
+      },(err)=>{
+        showMessage(this,"Ce créateur n'est pas conforme");
+        this.message="";
+      })
+    },this);
   }
 }

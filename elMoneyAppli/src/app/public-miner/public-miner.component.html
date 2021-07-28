@@ -1,4 +1,6 @@
 <div class="mainform" style="text-align: center;padding: 10px;">
+  <app-hourglass [message]="message"></app-hourglass>
+
   <table style="width: 100%;"><tr style="width: 100%;">
     <td style="width: 120px;">
       <app-image [cover]="false" maxwidth="100px" [src]="miner?.visual" [border]="false"></app-image>
@@ -12,34 +14,46 @@
       <br>
       {{miner?.description}}
     </td>
-    <td style="width:62px;text-align: right">
-      <qrcode
-        [width]="60"
-        ngxClipboard
-        [cdkCopyToClipboard]="miner?.addr"
-        style="display: inline-block;"
-        [elementType]="'svg'"
-        [errorCorrectionLevel]="'M'"
-        [qrdata]="miner?.addr">
-      </qrcode>
+    <td *ngIf="user.isDealer()" style="width:80px;text-align: right">
+      <button mat-raised-button
+              (click)="ref_miner()"
+              title="Référencer ce créateur dans votre boutique"
+              mat-button class="app-button">
+        Le référencer
+      </button>
     </td>
   </tr></table>
 
-  <br>
+  <div *ngIf="message.length==0">
+    <br>
 
-  <div style="font-size: x-large;color:lightcoral;line-height: normal;" *ngIf="miner?.pseudo=='' || miner?.description==''">
-    Ce créateur donne très peu d'information sur lui.<br>
-    Afin d'éviter la contre-façon, il n'est pas prudent d'acquérir des NFTs payant sans un minimum d'informations sur leur créateur.
+    <div style="font-size: x-large;color:lightcoral;line-height: normal;" *ngIf="miner?.pseudo=='' || miner?.description==''">
+      Ce créateur donne très peu d'information sur lui.<br>
+      Afin d'éviter la contre-façon, il n'est pas prudent d'acquérir des NFTs payant sans un minimum d'informations sur leur créateur.
+    </div>
+    _____
+    <br><br>
+
+    <h3>Ses créations</h3>
+    <app-nfts [user]="user" [with_icon]="false"
+              (buy)="refresh()" seller="0x0"
+              [art]="false"
+              [with_actions]="false"
+              (refresh)="refresh()"
+              [nfts]="nfts" maxwidth="100px" width="90%" height="auto"></app-nfts>
+    <br><br>
+    _____
+    <br><br>
+    Son adresse dans la blochaine<br><br>
+    <qrcode
+      [width]="150"
+      ngxClipboard
+      [cdkCopyToClipboard]="miner?.addr"
+      style="display: inline-block;"
+      [elementType]="'svg'"
+      [errorCorrectionLevel]="'M'"
+      [qrdata]="miner?.addr">
+    </qrcode>
   </div>
-  _____
-  <br><br>
 
-  <h3>Ses créations</h3>
-  <app-nfts [user]="user" [with_icon]="false"
-            (buy)="refresh()" seller="0x0"
-            [art]="false"
-            [with_actions]="false"
-            (refresh)="refresh()"
-            [nfts]="nfts" maxwidth="100px" width="90%" height="auto"></app-nfts>
-  <br><br>
 </div>
