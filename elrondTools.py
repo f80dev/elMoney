@@ -2,7 +2,7 @@ import base64
 import json
 import logging
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from time import sleep
 
@@ -43,7 +43,7 @@ class ElrondNet:
     chain_id=None
     network_name="devnet"
     ipfs=IPFS(IPFS_NODE_HOST,IPFS_NODE_PORT)
-    cached_sess = CachedSession()
+    cached_sess = CachedSession(expire_after=timedelta(hours=1))
 
 
 
@@ -523,10 +523,16 @@ class ElrondNet:
 
 
     def update_account(self,pem_file,values:dict):
-        if "addr" in values:del values["addr"]
-        if "pem" in values:del values["pem"]
+        if "pem" in values: del values["pem"]
+        log("Enregistrement de l'utilisateur " + str(values))
+
+        if "addr" in values:
+            self.cached_sess.cache.delete_url(self._proxy.url + "/address/" + values["addr"] + "/keys")
+            del values["addr"]
+
         data = "SaveKeyValue"
         required_gas=250000+50000
+
         for k in values.keys():
             key=str_to_hex(k,False)
             value=str_to_hex(values[k],False)
@@ -535,6 +541,7 @@ class ElrondNet:
                 required_gas=required_gas+10000*(len(value)+len(key))
 
         _sender=Account(pem_file=pem_file)
+
         return self.send_transaction(_sender,_sender,_sender,0,data)
 
 
@@ -546,6 +553,7 @@ class ElrondNet:
         :return:
         """
 
+        log("Récupération de l'utilisateur "+addr)
         if addr is None or len(addr)<20:
             return {"error": 500, "message": "address incorrect"}
 
@@ -559,6 +567,7 @@ class ElrondNet:
             for k in rc.keys():
                 obj[hex_to_str(k)]=hex_to_str(rc[k])
             obj["addr"]=addr
+            log("Récupération terminée "+str(obj))
             rc=obj
         else:
             rc = {"error": rc.status_code, "message": rc.text}

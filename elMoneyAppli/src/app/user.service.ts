@@ -157,14 +157,14 @@ export class UserService {
       localStorage.setItem("addr",addr);
     }
 
-
     if(this.config.hasESDT()){
       if(this.selected_money.length==0)this.selected_money=this.api.identifier;
       this.refresh_balance(func,func_error);
     }
 
-    $$("Chargement de l'utilisateur");
+    $$("Chargement de l'utilisateur "+this.addr);
     this.api._get("users/"+this.addr).subscribe((body:any)=>{
+      $$("Récupération de ",body);
       this.contacts=body.contacts || [];
       this.pseudo=body.pseudo || "";
       this.visual=body.visual || "/assets/img/anonymous.jpg";

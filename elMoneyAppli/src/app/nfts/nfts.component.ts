@@ -67,8 +67,9 @@ export class NftsComponent implements OnChanges {
   share(nft){
     this.router.navigate(["promo"],{queryParams:{
         url:environment.domain_appli+"/?filter="+nft.token_id,
-        message:"Acheter ce token",
-        title:nft.uri
+        message:nft.description,
+        title:nft.title,
+        premium:nft.premium
       }});
   }
 
@@ -162,6 +163,9 @@ export class NftsComponent implements OnChanges {
             showMessage(this, "Votre token n'existe plus");
             this.onrefresh.emit();
             this.user.refresh_balance();
+          },(err)=>{
+            showError(this,err);
+            nft.message="";
           });
         },this);
       }

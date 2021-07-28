@@ -17,6 +17,7 @@ export class PromoComponent implements OnInit {
   message:string;
   title:string;
   email: string;
+  body:string;
 
   constructor(public api: ApiService,
               public routes: ActivatedRoute,
@@ -25,13 +26,15 @@ export class PromoComponent implements OnInit {
               public user: UserService,
               public ngNavigatorShareService:NgNavigatorShareService,
               public _clipboardService:ClipboardService) {
+
   }
 
 
   ngOnInit(): void {
-    this.url=this.routes.snapshot.queryParamMap.get("url");
+    this.url=this.routes.snapshot.queryParamMap.get("url")+"&premium="+this.routes.snapshot.queryParamMap.get("premium");
     this.title=this.routes.snapshot.queryParamMap.get("title");
     this.message=this.routes.snapshot.queryParamMap.get("message");
+    this.body="Découvrez mon NFT '"+this.title+"' sur "+this.url+" "+this.message;
   }
 
   informe_clipboard() {
@@ -55,20 +58,13 @@ export class PromoComponent implements OnInit {
   }
 
 
-  onkeypress($event: KeyboardEvent) {
-    if($event.code=="\n"){
-      this.share_by_email();
-    }
-  }
 
-  share_by_email() {
-    let body={
-      title:this.title,
-      message:this.message,
-      url:this.url
-    }
-    this.api._post("sendtokenbyemail/"+this.email+"/","",body).subscribe(()=>{
-      showMessage(this,"Annonce envoyée");
-    })
+
+  copy_message() {
+    let param="";
+    if(this.user.email && this.user.email.length>0)param="&cc="+this.user.email;
+    let url="mailto:?subject=Acquérir un NFT&body="+this.body+param;
+
+    window.open(url.replace(" ","%20"));
   }
 }

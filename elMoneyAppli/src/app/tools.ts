@@ -1036,6 +1036,7 @@ export function extract_tags(tokens:any[]) {
   return tags;
 }
 
+
 export function group_tokens(tokens:any[],tags:any,func_validate:Function=null):any {
   let nfts = [];
   for (let item of tokens) {
@@ -1047,7 +1048,6 @@ export function group_tokens(tokens:any[],tags:any,func_validate:Function=null):
       if(tags.hasOwnProperty(tag.replace("#",""))){
         item.icon=tags[tag.replace("#","")];
       }
-
     }
 
     let same_item = null;

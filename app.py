@@ -232,7 +232,6 @@ def evalprice(sender,data="",value=0):
 @app.route('/api/users/',methods=["POST"])
 def post_user(data:dict=None):
     data = json.loads(str(request.data, encoding="utf-8"))
-    #dao.save_user(data["addr"], data)
 
     pem_file = get_pem_file(data)
     if data["visual"].startswith("data:"):
@@ -271,10 +270,7 @@ def get_user(addr:str):
 
 @app.route('/api/burn/<token_id>/',methods=["POST"])
 def burn(token_id,data:dict=None):
-    if data is None:
-        data = json.loads(str(request.data, encoding="utf-8"))
-
-    pem_file=get_pem_file(data)
+    pem_file=get_pem_file(request.data)
     rc=bc.burn(NETWORKS[bc.network_name]["nft"],pem_file,token_id)
     os.remove(pem_file)
 

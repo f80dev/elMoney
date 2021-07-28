@@ -90,6 +90,12 @@ export class NftStoreComponent implements OnInit {
       this.filter_id = Number(this.routes.snapshot.queryParamMap.get("id"));
     }
 
+    if (this.routes.snapshot.queryParamMap.has("premium")) {
+      this.art = (this.routes.snapshot.queryParamMap.get("premium")=="true");
+    }
+
+
+
     if (this.routes.snapshot.queryParamMap.has("ids")) {
       this.filter_ids = this.routes.snapshot.queryParamMap.get("ids").split(",");
     }
@@ -143,9 +149,6 @@ export class NftStoreComponent implements OnInit {
 
 
 
-
-
-
   onQuery($event: KeyboardEvent) {
       clearTimeout(this.handle);
       this.handle=setTimeout(()=>{
@@ -169,7 +172,9 @@ export class NftStoreComponent implements OnInit {
           seller:JSON.stringify(this.selected_dealer),
         }
       });
-    });
+    },()=>{
+      showMessage(this,"Achat annulé")
+    },"L'achat requiert une authentification préalable");
 
   }
 }

@@ -2906,6 +2906,7 @@ h1 {
 .wrap-list {
   display: flex;
   flex-wrap: wrap;
+  align-content: flex-start;
   justify-content: center;
 }
 body {
