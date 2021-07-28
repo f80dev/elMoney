@@ -1,30 +1,34 @@
 <div class="mainform" style="text-align: center;padding: 10px;">
   <app-hourglass [message]="message"></app-hourglass>
 
-  <table style="width: 100%;"><tr style="width: 100%;">
+  <table style="width: 100%;" ><tr style="width: 100%;">
     <td style="width: 120px;">
-      <app-image [cover]="false" maxwidth="100px" [src]="miner?.visual" [border]="false"></app-image>
+      <app-image [cover]="false"
+                 maxwidth="100px" maxheight="75px"
+                 [src]="miner?.visual"
+                 [border]="false">
+      </app-image>
     </td>
-    <td style="width:max-content;vertical-align: text-top;text-align: left;padding: 5px;">
-      <span style="font-size: xx-large;">{{miner?.pseudo}}</span>
+    <td style="width:max-content;vertical-align: text-top;text-align: left;padding: 5px;font-weight: lighter;">
+      <span style="font-size: 3em;">{{miner?.pseudo}}</span>
       &nbsp;<mat-icon *ngIf="miner?.website?.length>0"
                       (click)="open_website(miner)"
                       style="cursor: pointer;"
                       title="Voir son site web">language</mat-icon>
       <br>
-      {{miner?.description}}
+      <p style="margin-top: 5px;">{{miner?.description}}</p>
     </td>
-    <td *ngIf="user.isDealer()" style="width:80px;text-align: right">
+    <td *ngIf="user.isDealer() && message?.length==0" style="width:80px;text-align: right">
       <button mat-raised-button
               (click)="ref_miner()"
               title="Référencer ce créateur dans votre boutique"
               mat-button class="app-button">
-        Le référencer
+        <div class="bloc-bouton">Le référencer dans<br>votre boutique</div>
       </button>
     </td>
   </tr></table>
 
-  <div *ngIf="message.length==0">
+  <div>
     <br>
 
     <div style="font-size: x-large;color:lightcoral;line-height: normal;" *ngIf="miner?.pseudo=='' || miner?.description==''">

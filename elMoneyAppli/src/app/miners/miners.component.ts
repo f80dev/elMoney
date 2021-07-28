@@ -96,9 +96,9 @@ export class MinersComponent implements OnInit {
 
 
   remove(miner: any) {
-    this.dialog.open(PromptComponent,{width: '250px',data:
+    this.dialog.open(PromptComponent,{width: 'fit-content',data:
         {
-          title: "Supprimer ce créateur ?",
+          title: "Déréférencer "+miner.pseudo+" de votre boutique ?",
           onlyConfirm:true,
           lbl_ok:"Continuer",
           lbl_cancel:"Annuler"
