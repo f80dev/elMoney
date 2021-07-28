@@ -2879,11 +2879,13 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
   color: white;
 }
 h2 {
-  color: white;
+  color: #e38f01;
   background-color: transparent;
+  font-size: small;
 }
 h1 {
-  color: white;
+  color: #e38f01;
+  font-size: medium;
   background-color: transparent;
 }
 .div-center {
@@ -2908,6 +2910,15 @@ h1 {
   flex-wrap: wrap;
   align-content: flex-start;
   justify-content: center;
+}
+.faq-content {
+  padding-left: 5px;
+  font-size: small;
+  background-color: #323232;
+  color: white;
+}
+.faq-title {
+  color: #e38f01;
 }
 body {
   background-color: #3d3d3d !important;
@@ -3046,11 +3057,6 @@ mat-button-toggle {
   text-align: left;
   font-size: small;
   vertical-align: center;
-}
-.faq-content {
-  padding-left: 5px;
-  font-size: small;
-  background-color: #323232;
 }
 .bloc-bouton {
   margin: 0px;

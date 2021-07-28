@@ -1,8 +1,24 @@
 <div class="mainform">
 
+  <br>
   <app-hourglass [message]="message" anim="/assets/gears.gif"></app-hourglass>
 
-  <app-tuto label="Si besoin, télécharger votre clé privée et conserver là en lieu sûr pour effecture les transferts et la création de nouvelle monnaie"></app-tuto>
+  <br>
+  <div *ngIf="message.length==0" [cdkCopyToClipboard]="user.addr" ngxClipboard style="cursor: pointer">
+  <small>Votre adresse publique</small>:<br>
+    <qrcode
+      [width]="150"
+      (click)="informe_clipboard()"
+      style="display: inline-block;"
+      [elementType]="'svg'"
+      [errorCorrectionLevel]="'M'"
+      [qrdata]="user.addr">
+    </qrcode><br>
+    <small>{{user.addr}}</small>
+  </div>
+
+  <app-tuto label="Votre adresse publique peut être flashé pour recevoir des fonds, vérifier que vous êtes le propriétaire d'un NFT, être déclaré comme distributeur ... et pleins d'autres choses encore"></app-tuto>
+
 
   <br>
 
@@ -23,8 +39,8 @@
 
       <button mat-raised-button mat-button
               class="app-button"
-              (click)="router.navigate(['miner'],{queryParams:{addr:user.addr}})">
-        <div class="bloc-bouton">Page publique<br>de créateur</div>
+              (click)="router.navigate(['miner'],{queryParams:{miner:user.addr}})">
+        <div class="bloc-bouton">Votre profil<br>de créateur</div>
       </button>
 
       <br>
@@ -175,6 +191,7 @@
 
       <br>
       <app-savekey style="display: inline-block;"></app-savekey>
+      <app-tuto label="Si besoin, télécharger votre clé privée et conserver là en lieu sûr pour effecture les transferts et la création de nouvelle monnaie"></app-tuto>
 
     </mat-expansion-panel>
 
@@ -185,21 +202,6 @@
   <div *ngIf="message?.length==0">
     <br><br>
 
-    <small>Votre adresse publique</small>:<br>
-    <qrcode
-      [width]="150"
-      ngxClipboard
-      [cdkCopyToClipboard]="user.addr"
-      (click)="informe_clipboard()"
-      style="display: inline-block;"
-      [elementType]="'svg'"
-      [errorCorrectionLevel]="'M'"
-      [qrdata]="user.addr">
-    </qrcode>
-
-    <br>
-    <app-tuto label="Votre adresse publique peut être flashé pour recevoir des fonds, vérifier que vous êtes le propriétaire d'un NFT, être déclaré comme distributeur ... et pleins d'autres choses encore"></app-tuto>
-    <br>
     <br>
     <a routerLink="/transactions">Voir mes transactions</a>
 

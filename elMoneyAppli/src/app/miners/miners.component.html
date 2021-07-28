@@ -9,10 +9,10 @@
     <h2>Liste des créateurs approuvés</h2>
     <div *ngFor="let miner of miners" style="display: inline-block;margin:5px;min_height:150px;" [title]="miner.description">
       {{miner?.pseudo}}&nbsp;<mat-icon style="font-size: small;cursor: pointer;" (click)="remove(miner)">cancel</mat-icon><br>
-      <a [href]="config.server.explorer+'/accounts/'+miner.addr" target="_blank">
-        <app-image [border]="false" [src]="miner?.visual" maxwidth="100px"></app-image>
-      </a>
-
+        <app-image [border]="false" [src]="miner?.visual" maxwidth="100px" (click)="open_creator(miner)"></app-image>
+<!--      <a [href]="config.server.explorer+'/accounts/'+miner.addr" target="_blank">-->
+<!--        -->
+<!--      </a>-->
     </div>
   </div>
 

@@ -109,13 +109,17 @@ export class MinersComponent implements OnInit {
           address:miner.addr,
           pem:this.user.pem
         };
-        this.message="Suppression en cours";
+        this.message="Déréférencement en cours ...";
         this.api._post("del_miner/","",obj).subscribe(()=>{
-          showMessage(this,"Créateur supprimé");
+          showMessage(this,miner.pseudo+" n'est plus référencé(e) dans votre boutique");
           this.message="";
           this.refresh();
         })
       }
     });
+  }
+
+  open_creator(miner: any) {
+    this.router.navigate(["miners"],{queryParams:{miner:miner.addr}});
   }
 }

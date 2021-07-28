@@ -6,8 +6,8 @@
                        name="faq"
                        style="width:96%;margin:3%;border:none;text-align: left;background-color: #323232">
 
-    <mat-expansion-panel-header collapsedHeight="60px" expandedHeight="60px" style="color:#ff14a1;">
-      <span *ngIf="!faq.visible">
+    <mat-expansion-panel-header collapsedHeight="60px" expandedHeight="60px">
+      <span *ngIf="!faq.visible" class="faq-title">
         {{faq.title}}
       </span>
       <span *ngIf="faq.visible">

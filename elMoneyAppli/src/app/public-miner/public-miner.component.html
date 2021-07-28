@@ -18,7 +18,7 @@
       <br>
       <p style="margin-top: 5px;">{{miner?.description}}</p>
     </td>
-    <td *ngIf="user.isDealer() && message?.length==0" style="width:80px;text-align: right">
+    <td *ngIf="user.isDealer() && user.addr!=miner.addr && message?.length==0" style="width:80px;text-align: right">
       <button mat-raised-button
               (click)="ref_miner()"
               title="Référencer ce créateur dans votre boutique"
