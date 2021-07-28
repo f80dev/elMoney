@@ -130,6 +130,19 @@
         <div class="bloc-bouton" *ngIf="user.dealer?.state==0">Partager l'url<br>de la boutique</div>
       </button>
 
+      <br><br>
+      <qrcode
+        [width]="150"
+        ngxClipboard
+        [cdkCopyToClipboard]="user.shop_website"
+        style="display: inline-block;"
+        [elementType]="'svg'"
+        [errorCorrectionLevel]="'M'"
+        [qrdata]="user.shop_website">
+      </qrcode>
+      <br>
+      <app-tuto label="Flasher pour accèder directement à la boutique"></app-tuto>
+
 
     </mat-expansion-panel>
 
@@ -153,10 +166,9 @@
       </button>
 
       <br>
-       <app-savekey style="display: inline-block;"></app-savekey>
+      <app-savekey style="display: inline-block;"></app-savekey>
 
     </mat-expansion-panel>
-
 
 
   </mat-accordion>
