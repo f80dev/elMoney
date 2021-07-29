@@ -1,26 +1,13 @@
 <div class="mainform">
 
-  <br>
+
   <app-hourglass [message]="message" anim="/assets/gears.gif"></app-hourglass>
 
-  <br>
-  <div *ngIf="message.length==0" [cdkCopyToClipboard]="user.addr" ngxClipboard style="cursor: pointer">
-  <small>Votre adresse publique</small>:<br>
-    <qrcode
-      [width]="150"
-      (click)="informe_clipboard()"
-      style="display: inline-block;"
-      [elementType]="'svg'"
-      [errorCorrectionLevel]="'M'"
-      [qrdata]="user.addr">
-    </qrcode><br>
-    <small>{{user.addr}}</small>
-  </div>
-
-  <app-tuto label="Votre adresse publique peut être flashé pour recevoir des fonds, vérifier que vous êtes le propriétaire d'un NFT, être déclaré comme distributeur ... et pleins d'autres choses encore"></app-tuto>
 
 
-  <br>
+
+
+
 
   <!--  <button mat-raised-button mat-button-->
   <!--          class="app-button"-->
@@ -81,11 +68,29 @@
       </mat-form-field>
 
       <br>
+
       <button mat-raised-button mat-button
               class="app-button"
               (click)="update_user()">
         Enregistrer
       </button>
+
+      <br>
+      <div *ngIf="message.length==0" [cdkCopyToClipboard]="user.addr" ngxClipboard style="cursor: pointer">
+        <br>
+        <small>Votre adresse publique</small>:<br>
+        <qrcode
+          [width]="150"
+          (click)="informe_clipboard()"
+          style="display: inline-block;"
+          [elementType]="'svg'"
+          [errorCorrectionLevel]="'M'"
+          [qrdata]="user.addr">
+        </qrcode><br>
+        <small>{{user.addr}}</small>
+        <app-tuto label="Votre adresse publique peut être flashé pour recevoir des fonds, vérifier que vous êtes le propriétaire d'un NFT, être déclaré comme distributeur ... et pleins d'autres choses encore"></app-tuto>
+      </div>
+
 
     </mat-expansion-panel>
 

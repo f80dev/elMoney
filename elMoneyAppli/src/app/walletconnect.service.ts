@@ -1,6 +1,5 @@
 import {Injectable, OnInit} from '@angular/core';
 import WalletConnect from "@walletconnect/browser";
-import WalletConnectQRCodeModal from "@walletconnect/qrcode-modal";
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +10,9 @@ export class WalletconnectService implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+
     this.connector = new WalletConnect({
-      bridge: "https://bridge.walletconnect.org" // Required
+      bridge: "https://bridge.walletconnect.org",
     });
 
     if (!this.connector.connected) {
@@ -21,20 +21,16 @@ export class WalletconnectService implements OnInit {
       this.connector.createSession().then(() => {
         // get uri for QR Code modal
         const uri = this.connector.uri;
-        // display QR Code modal
-        WalletConnectQRCodeModal.open(uri, () => {
-          console.log("QR Code Modal closed");
-        });
       });
     }
 
     this.connector.on("connect", (error, payload) => {
+      debugger
       if (error) {
         throw error;
       }
 
-      // Close QR Code Modal
-      WalletConnectQRCodeModal.close();
+
 
       // Get provided accounts and chainId
       const {accounts, chainId} = payload.params[0];

@@ -44,7 +44,7 @@ export class SettingsComponent implements OnInit {
   ngOnInit(): void {
     this.user.check_email((r)=>{
       this.open_section=Number(this.routes.snapshot.queryParamMap.get("section"));
-    },this.router)
+    },this.router,null,"settings?section=1")
   }
 
 
@@ -120,6 +120,8 @@ export class SettingsComponent implements OnInit {
         this._clipboardService.copyFromContent(this.user.shop_website);
       });
   }
+
+
 
   update_user() {
     this.user.check_pem(()=>{

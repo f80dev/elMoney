@@ -27,7 +27,7 @@ export class SidemenuComponent implements OnInit {
 
   logout() {
     this.user.logout("Se déconnecter",()=>{
-      this.router.navigate(["store"])
-    });
+
+    },null,"fit-contain",true);
   }
 }

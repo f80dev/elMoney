@@ -2,13 +2,14 @@ import {Component, EventEmitter, Inject, Input, OnInit, Output, Sanitizer} from 
 import {showError, showMessage, openFAQ, $$, extract_addr} from "../tools";
 import {ConfigService} from "../config.service";
 import {Location} from "@angular/common";
-import {ActivatedRoute, Router} from "@angular/router";
+import {Router} from "@angular/router";
 import {UserService} from "../user.service";
 import {ApiService} from "../api.service";
-import {DialogData, PromptComponent} from "../prompt/prompt.component";
+import { PromptComponent} from "../prompt/prompt.component";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {DomSanitizer} from "@angular/platform-browser";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {WalletconnectService} from "../walletconnect.service";
 
 
 @Component({
@@ -30,6 +31,7 @@ export class PrivateComponent implements OnInit {
               public dialogRef: MatDialogRef<PrivateComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
               public api:ApiService,
+              public walletconnect:WalletconnectService,
               public dialog:MatDialog,
               public toast:MatSnackBar,
               public router: Router,

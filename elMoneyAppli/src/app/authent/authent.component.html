@@ -10,11 +10,11 @@
   <div *ngIf="message==''">
   <mat-button-toggle-group [(ngModel)]="authent_method" appearance="legacy">
     <mat-button-toggle value="email">Email</mat-button-toggle>
-    <mat-button-toggle value="qrcode">Adresse</mat-button-toggle>
+<!--    <mat-button-toggle value="qrcode">Adresse</mat-button-toggle>-->
+    <mat-button-toggle value="elrond" (click)="open_elrond_authent()">Elrond</mat-button-toggle>
     <mat-button-toggle value="cle"><div class="bloc-bouton">Clés<br>privées</div></mat-button-toggle>
     <mat-button-toggle value="profil"><div class="bloc-bouton">profils<br>tests</div></mat-button-toggle>
   </mat-button-toggle-group>
-
 
 
   <div *ngIf="authent_method=='email'" class="method_zone">
@@ -34,7 +34,6 @@
       </button>
     </div>
   </div>
-
 
   <div *ngIf="authent_method=='qrcode'" class="method_zone">
     <br>
@@ -98,7 +97,6 @@
       si vous êtes le seul à utiliser cet appareil et l'accès à celui-ci est protéger (code, mot de passe)
     </p>
   </div>
-
 
 
 </div>

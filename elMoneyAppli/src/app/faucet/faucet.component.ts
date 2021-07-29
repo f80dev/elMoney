@@ -14,7 +14,7 @@ import {ConfigService} from "../config.service";
 export class FaucetComponent implements OnInit {
   message: string="";
 
-   constructor(public api:ApiService,
+  constructor(public api:ApiService,
               public user:UserService,
               public config:ConfigService,
               public toast:MatSnackBar,
@@ -22,14 +22,17 @@ export class FaucetComponent implements OnInit {
               public router:Router) { }
 
   ngOnInit(): void {
-     checkConfig(this);
-     this.user.refresh_balance();
-     if(this.routes.snapshot.queryParamMap.get("auto")=="reload"){
-       this.reload_account();
-     }
+    checkConfig(this);
+    this.user.check_email(()=>{
+      this.user.refresh_balance();
+      if(this.routes.snapshot.queryParamMap.get("auto")=="reload"){
+        this.reload_account();
+      }
+    },null,null,"faucet");
+
   }
 
-   reload_account() {
+  reload_account() {
     if(this.config.server.proxy && this.config.server.proxy=="https://api.elrond.com"){
       showMessage(this,"Votre adresse est dans le presse papier, vous pouvez l'utiliser pour le prestataire de paiement");
       setTimeout(()=>{

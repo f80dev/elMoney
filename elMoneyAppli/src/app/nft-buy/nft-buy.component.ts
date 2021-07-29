@@ -26,7 +26,11 @@ export class NftBuyComponent implements OnInit {
     public toast:MatSnackBar,
     public routes:ActivatedRoute
   ) {
-    this.user.check_pem(null,this,"L'achat nécessite une signature",()=>{this.router.navigate(["store"])});
+    this.user.check_pem(()=>{
+      if(this.nft.price==0){
+        this.buy();
+      }
+    },this,"L'achat nécessite une signature",()=>{this.router.navigate(["store"])});
   }
 
 

@@ -7,7 +7,9 @@ import {DomSanitizer} from "@angular/platform-browser";
 import {UserService} from "../user.service";
 import {Location} from "@angular/common";
 import {$$, showError, showMessage} from "../tools";
-import {WalletconnectService} from "../walletconnect.service";
+import {Router} from "@angular/router";
+import {environment} from "../../environments/environment";
+
 
 @Component({
   selector: 'app-authent',
@@ -43,8 +45,8 @@ export class AuthentComponent implements OnInit {
               @Inject(MAT_DIALOG_DATA) public data: any,
               public api:ApiService,
               public dialog:MatDialog,
+              public router:Router,
               public toast:MatSnackBar,
-              public walletconnect:WalletconnectService,
               public sanitizer:DomSanitizer,
               public user:UserService,
               public _location:Location) {
@@ -130,5 +132,12 @@ export class AuthentComponent implements OnInit {
     },()=>{
       showMessage(this,"Problème de reconnaissance");
     })
+  }
+
+  open_elrond_authent() {
+    debugger
+    if(!this.data.redirect)this.data.redirect="store";
+    let url=this.config.server.wallet_domain+"hook/login?callbackUrl="+environment.domain_appli+"/"+this.data.redirect+"/"
+    window.location.href=url;
   }
 }

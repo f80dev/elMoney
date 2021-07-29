@@ -886,7 +886,8 @@ def server_config():
         "bank_gas":bc._proxy.get_account_balance(bc.bank.address),
         "explorer":bc._proxy.url.replace("-gateway","-explorer"),
         "contract_explorer": bc._proxy.url.replace("-api", "-explorer")+"/address/"+NETWORKS[bc.network_name]["nft"],
-        "wallet": bc._proxy.url.replace("-gateway", "-wallet")+"/unlock/pem"
+        "wallet": bc._proxy.url.replace("-gateway", "-wallet")+"/unlock/pem",
+        "wallet_domain": bc._proxy.url.replace("-gateway","-wallet") +"/"
     }
 
     bank_balance=bc.getMoneys(bc.bank)

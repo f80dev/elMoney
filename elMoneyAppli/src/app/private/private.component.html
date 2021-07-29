@@ -52,7 +52,15 @@
 
       <div *ngIf="private_method=='walletconnect'" class="method_zone">
         <img src="https://gblobscdn.gitbook.com/spaces%2F-LJJeCjcLrr53DcT1Ml7%2Favatar.png?alt=media" style="width:60px">
-        <p>En construction</p>
+
+        <qrcode
+          [width]="150"
+          style="display: inline-block;"
+          [elementType]="'svg'"
+          [errorCorrectionLevel]="'M'"
+          [qrdata]="walletconnect.connector.uri">
+        </qrcode><br>
+
       </div>
 
     </div>

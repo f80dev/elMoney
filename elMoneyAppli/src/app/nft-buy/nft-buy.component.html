@@ -9,7 +9,6 @@
   <app-hourglass [message]="message"></app-hourglass>
 
   <app-nfts [with_icon]="false"
-            *ngIf="message?.length==0"
             [with_actions]="false"
             [force_text]="true" [art]="false"
             [user]="user" [nfts]="[nft]"></app-nfts>
@@ -28,6 +27,9 @@
   </small></p>
 
 </div>
+
+
+
 <div class="bottom-bar" *ngIf="message?.length==0">
     <button mat-raised-button mat-button
             class="app-button" (click)="cancel()">

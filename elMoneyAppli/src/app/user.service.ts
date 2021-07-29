@@ -8,6 +8,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {PromptComponent} from "./prompt/prompt.component";
 import {PrivateComponent} from "./private/private.component";
 import {AuthentComponent} from "./authent/authent.component";
+import {Location} from "@angular/common";
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +36,7 @@ export class UserService {
   constructor(public api:ApiService,
               public socket:Socket,
               public dialog:MatDialog,
+              public _location:Location,
               public config:ConfigService) {
     subscribe_socket(this,"refresh_account",()=>{this.refresh_balance();})
     if(localStorage.getItem("contacts"))this.contacts=JSON.parse(localStorage.getItem("contacts"));
@@ -201,7 +203,7 @@ export class UserService {
     localStorage.removeItem("last_amount");
     localStorage.removeItem("last_screen");
     if(reload){
-      window.location.href=environment.domain_appli;
+      this._location.go("/");
       window.location.reload();
     }
   }
@@ -225,7 +227,8 @@ export class UserService {
   }
 
 
-  check_email(func,func_abort=null,title="Authentification requise"){
+  check_email(func,func_abort=null,title=null,redirect=null){
+    title=title || "Authentification requise";
     if(!this.addr || this.addr=="null")this.addr=localStorage.getItem("addr");
     if(this.addr && this.addr.length>20){
       if(func)func();
@@ -233,6 +236,7 @@ export class UserService {
       this.dialog.open(AuthentComponent,{width: '350px',height:"500px",data:
           {
             title: title,
+            redirect:redirect
           }
       }).afterClosed().subscribe((result:any) => {
         if(result){

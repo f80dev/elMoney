@@ -47,14 +47,14 @@ export class AppComponent implements OnInit,OnDestroy {
       $$("Recherche du contrat à utiliser pour le device");
       this.api.init_identifier(this.routes.snapshot.queryParamMap.get("contract"))
 
-      let profil = this.routes.snapshot.queryParamMap.get("profil");
-      // if (!addr) {
-      //   this.user.logout("Premier lancement",()=>{
-      //     this.router.navigate(["store"]);
-      //   },"400px");
-      // } else {
-      //   this.start_connect(addr,profil,pem_key);
-      // }
+      let address = this.routes.snapshot.queryParamMap.get("address");
+      if(address){
+        let params:any=JSON.parse(this.routes.snapshot.queryParamMap.get("params"));
+        this.user.init(address,()=>{
+
+        });
+      }
+
     },()=>{
       this.message="";
       $$("!Probléme d'initialisation de la configuration");
