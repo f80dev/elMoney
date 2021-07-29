@@ -49,7 +49,7 @@ export class MainComponent implements OnInit {
       }
       this.refresh();
     });
-    },this.router)
+    },this.router,null,"main")
 
 
   }

@@ -51,7 +51,7 @@ export class NftsPersoComponent implements OnInit {
       this.filter = this.filters[0].option;
       this.refresh();
       localStorage.setItem("last_screen","nfts-perso");
-    },this.router);
+    },this.router,null,"nfts-perso");
   }
 
   reroutage(){

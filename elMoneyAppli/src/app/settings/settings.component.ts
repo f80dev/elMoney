@@ -44,6 +44,7 @@ export class SettingsComponent implements OnInit {
   ngOnInit(): void {
     this.user.check_email((r)=>{
       this.open_section=Number(this.routes.snapshot.queryParamMap.get("section"));
+      if(!this.open_section)this.open_section=1;
     },this.router,null,"settings?section=1")
   }
 

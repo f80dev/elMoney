@@ -128,7 +128,7 @@ def refund(dest:str):
 def convert_email_to_addr(dest:str,html_email:str):
     addr_dest = None
     if "@" in dest:
-        _u = dao.find_contact(dest)
+        _u = dao.get_user(dest)
         if not _u is None: addr_dest = _u["addr"]
     else:
         addr_dest = dest
@@ -936,7 +936,7 @@ def del_contacts(idx:str):
 
 @app.route('/api/find_contact/<email>/')
 def find_contact(email:str):
-    contact=dao.find_contact(email)
+    contact=dao.get_user(email)
     return jsonify(contact),201
 
 
@@ -947,7 +947,7 @@ def add_contact(owner:str):
     contact=json.loads(data)
     log("Ajout d'un contact avec les informations "+data)
 
-    if dao.find_contact(contact["email"]) is None:
+    if dao.get_user(contact["email"]) is None:
         dao.add_contact(contact["email"],contact["email"].split("@")[0])
         return "contact ajouté",201
     else:

@@ -68,10 +68,6 @@ class DAO:
         return True
 
 
-    def find_contact(self, email):
-        return self.db["contacts"].find_one({"email":email})
-
-
     def del_contract(self, idx, proxy):
         rc=self.db["moneys"].remove({"idx":idx,"proxy": proxy})
         pass
