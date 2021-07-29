@@ -18,10 +18,14 @@ class IPFS:
         self.client=Client(addr,port)
         log("Adresse du client IPFS: " + addr)
 
+
+
     def add_file(self, file):
         cid=self.client.add(file)
         log("Enregistrement du fichier "+cid["Hash"]+" sur IPFS")
         return cid["Hash"]
+
+
 
     def add(self,body:str):
         if type(body)==str:
@@ -38,7 +42,6 @@ class IPFS:
             cid=cid["Hash"]
 
             os.remove(filename)
-
 
         log("Enregistrement du fichier https://ipfs.io/ipfs/" + cid + " sur IPFS")
         return cid

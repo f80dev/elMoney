@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {$$, showError, showMessage} from "./tools";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient, HttpEventType, HttpHeaders} from "@angular/common/http";
 import {ApiService} from "./api.service";
 
 @Injectable({
@@ -22,25 +22,33 @@ export class IpfsService {
     if(!content || content.length==0){
       func();
     } else {
+      debugger
       if(typeof(content)=="object"){
-        this.api._post_file("upload_file",content).subscribe((result:any)=>{
-          showMessage(vm,"Upload");
-          if(func)func(result.cid);
+        this.api._post_file("upload_file",content,true)
+          .subscribe((event:any)=>{
+            if (event.type == HttpEventType.UploadProgress){
+              vm.uploadProgress = Math.round(100 * (event.loaded / event.total));
+            }
+            if (event.type === HttpEventType.Response) {
+              showMessage(vm,"Upload");
+              vm.uploadProgress=null;
+              if(func)func(event.cid);
+            }
         });
       } else {
         if(content.startsWith('http')){
           func(content)
         } else {
           this.api._post("upload_file/","",content,60,{
-          "Content-Type":"multipart/form-data",
-          "Accept": "application/json"
-        }).subscribe((result:any)=>{
-          $$("Enregistrement de https://ipfs.io/ipfs/"+result.cid);
-          showMessage(vm,"Upload");
-          if(func)func(result.cid);
-        },(err)=>{
-          showError(vm,err);
-        })
+            "Content-Type":"multipart/form-data",
+            "Accept": "application/json"
+          }).subscribe((result:any)=>{
+            if (result.type === HttpEventType.Response){
+              $$("Enregistrement de https://ipfs.io/ipfs/"+result.cid);
+              showMessage(vm,"Upload");
+              if(func)func(result.cid);
+            }
+          },(err)=>{showError(vm,err);});
         }
       }
     }

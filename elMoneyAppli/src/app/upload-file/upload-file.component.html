@@ -2,6 +2,8 @@
 <br>
 <app-hourglass [message]="message"></app-hourglass>
 <br>
+
+<br>
 <input #csvInput [hidden]="true"
        type="file" onclick="this.value=null"
        (change)="import($event)"

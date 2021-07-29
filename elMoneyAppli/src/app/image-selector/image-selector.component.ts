@@ -114,10 +114,6 @@ export class ImageSelectorComponent implements OnInit {
 
   }
 
-  addFromBank() {
-    this.inputSearch="Quelques mots pour rechercher le visuel";
-  }
-
   selImage(picture: any) {
     this.data.result=picture.src;
     this.dialogRef.close({img:picture.src,original:picture.src,file:""});

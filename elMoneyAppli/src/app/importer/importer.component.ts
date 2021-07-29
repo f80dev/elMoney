@@ -139,6 +139,7 @@ export class ImporterComponent implements OnInit {
   //Gestion des tags
   solde_user: number;
   extensions: string="*";
+  uploadProgress: number;
 
 
   add(event: MatChipInputEvent): void {
@@ -193,7 +194,6 @@ export class ImporterComponent implements OnInit {
       if(func_error)func_error();
       return;
     }
-
 
     let properties:number=0b00000000;
     if(this.owner_can_transfer)properties=properties+0b00000001;
@@ -408,8 +408,7 @@ export class ImporterComponent implements OnInit {
       onlyConfirm: false,
       lbl_ok: "Ok",
       lbl_cancel: "Annuler",
-      placeholder: placeholder,
-      result: "",
+      result: placeholder,
       subtitle:subtitle
     }
     if(_type=="number" && _default=="")_default=0;
@@ -493,7 +492,7 @@ export class ImporterComponent implements OnInit {
     },"Un visuel va pouvoir être ajouté","memo")
   }
 
-  quick_secret(token,lib_secret="Saisissez votre secret, mot de passe ..."){
+  quick_secret(token,lib_secret="Saisissez votre secret, mot de passe ...",_default=""){
     this.ask_for_text("Contenu embarqué",lib_secret,(secret)=>{
       if(secret){
         this.secret=secret;
@@ -518,7 +517,7 @@ export class ImporterComponent implements OnInit {
             },"","memo")
         });
       }
-    });
+    },"ce lien ne sera visible qu'au propriétaire du NFT","url",0,"",_default);
   }
 
 
@@ -690,7 +689,7 @@ export class ImporterComponent implements OnInit {
     if(token.index=="photo")this.quick_photo(token,"Télécharger votre photo",null,null,false);
     if(token.index=="pow")this.quick_pow(token,300,300);
     if(token.index=="music")this.show_fileupload(3,'Téléverser le fichier musical',token,"audio/*");
-    if(token.index=="film")this.quick_secret(token,'coller le lien secret (fourni par youtube) du film');
+    if(token.index=="film")this.quick_secret(token,'Indiquer le lien internet de votre film');
     if(token.index=="file")this.show_fileupload(1,'Téléverser le fichier à embarquer dans votre token',token);
     if(token.index=="secret")this.quick_secret(token);
     if(token.index=="game")this.quick_game(token);
@@ -724,5 +723,7 @@ export class ImporterComponent implements OnInit {
   }
 
 
+  cancelUpload() {
 
+  }
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {$$, api, showError} from './tools';
 import {timeout} from 'rxjs/operators';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams, HttpRequest} from '@angular/common/http';
 import {environment} from '../environments/environment';
 
 @Injectable({
@@ -37,14 +37,25 @@ export class ApiService {
     return this.http.get(url, this.getHttpOptions()).pipe(timeout(_timeoutInSec * 1000));
   }
 
-  _post_file(url,file){
+
+
+  _post_file(url,file,bProgress=false,_timeoutInSec=120){
     let formData = new FormData();
     formData.append("file", file,file.name);
+
     url = api(url, "", true, '');
-    //let headers = this.getHttpOptions();
-    //headers.headers.append('Content-Type','multipart/form-data');
-    return this.http.post(url, formData);
+
+    let params =new HttpParams();
+    const options={
+        reportProgress:true,
+        params:params
+    }
+    const request=new HttpRequest("POST",url,formData,options);
+
+    return this.http.request(request);
   }
+
+
 
   _post(url, params= '', body, _timeoutInSec= 60,header_options={}){
     url = api(url, params, true, '');
@@ -52,6 +63,7 @@ export class ApiService {
     for(let key of Object.keys(header_options)){
       header.headers.append(key,header_options[key]);
     }
+
     return this.http.post(url, body, header).pipe(timeout(_timeoutInSec * 1000));
   }
 

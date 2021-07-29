@@ -80,6 +80,7 @@ import {WalletconnectService} from "./walletconnect.service";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import { UnityComponent } from './unity/unity.component';
 import { ImageComponent } from './image/image.component';
+import {MatProgressBar, MatProgressBarModule} from "@angular/material/progress-bar";
 
 
 const config: SocketIoConfig = {
@@ -149,6 +150,7 @@ const config: SocketIoConfig = {
     MatCheckboxModule,
     WebcamModule,
     MatProgressSpinnerModule,
+    MatProgressBarModule,
     AppRoutingModule,
     MatInputModule,
     BrowserAnimationsModule,

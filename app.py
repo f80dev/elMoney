@@ -693,7 +693,10 @@ def upload_file():
     if len(request.files)>0:
         cid=client.add_file(request.files.get("file"))
     else:
-        cid=client.add(str(request.data,"utf8"))
+        try:
+            cid=client.add(str(request.data,"utf8"))
+        except:
+            cid=client.add(base64.b64encode(request.data))
 
     return jsonify({"cid":cid})
 
@@ -929,7 +932,6 @@ def get_contacts(addr:str):
 def del_contacts(idx:str):
     dao.del_contract(idx,bc._proxy.url)
     return jsonify({"message":"monnaie dé"})
-
 
 
 

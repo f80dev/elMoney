@@ -26,7 +26,17 @@
 
   <app-hourglass [message]="message"></app-hourglass><br><br>
   <img src="./assets/gears.gif" style="width: 150px;display: inline;" *ngIf="message.length>0">
-  <br>
+  <br><br>
+
+
+  <!--  progression de l'upload-->
+   <mat-progress-bar class="progress-bar"
+                     style="width: 60%;margin-left: 20%;"
+                     mode="determinate"
+                    [value]="uploadProgress" *ngIf="uploadProgress">
+  </mat-progress-bar>
+
+
 
   <mat-tab-group animationDuration="1000ms" *ngIf="message?.length==0" mat-align-tabs="center">
 

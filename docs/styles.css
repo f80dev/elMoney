@@ -2851,12 +2851,23 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
   position: fixed;
   z-index: 0 !important;
 }
-.app-button {
+.app-button, .fake-button {
   margin: 4px !important;
   min-width: 100px !important;
   background-color: #221913;
   padding: 2px;
   color: lightgray;
+}
+.fake-button {
+  background-color: #221913 !important;
+  width: 120px;
+  height: 25px;
+  text-align: center;
+  display: inline-block;
+  cursor: pointer;
+  line-height: 90%;
+  font-size: small;
+  padding: 7px;
 }
 .small-button {
   margin: 4px !important;
@@ -3066,6 +3077,7 @@ mat-button-toggle {
   font-size: small;
   font-weight: 500;
   line-height: 96%;
+  cursor: pointer;
 }
 .app-mat-panel-title {
   text-align: center;
