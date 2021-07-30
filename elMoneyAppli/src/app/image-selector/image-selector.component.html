@@ -21,11 +21,10 @@
                  (change)="onSelectFile($event)"
                  accept="image/*" />
         </div>
-
       </td>
-      <td style="width: 20px;">ou</td>
+
       <td style="text-align: left;">
-        <mat-form-field appearance="fill" class="app-field" style="max-width: 250px;font-size: small">
+        <mat-form-field appearance="fill" class="app-field" style="width:50%;max-width: 250px;font-size: small">
           <mat-label>Rechercher des images / photos</mat-label>
           <input matInput [placeholder]="inputSearch" type="text"  [(ngModel)]="query" (keypress)="search($event)" autofocus>
         </mat-form-field>

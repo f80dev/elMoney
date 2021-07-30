@@ -25,7 +25,6 @@ export class NftsComponent implements OnChanges {
   @Input("with_icon") with_icon:boolean=true;
   @Input("with_actions") with_actions:boolean=true;
   @Input("force_text") force_text:boolean=false;      //Force l'affichage de la description même si l'image en fullscreen
-  @Input("width") _w:string="350px";
   @Input("maxwidth") max_w:string="500px";
   @Input("height") _h:string="auto"
   @Input("preview") preview=false;

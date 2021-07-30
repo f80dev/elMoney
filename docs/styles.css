@@ -2860,7 +2860,7 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
 }
 .fake-button {
   background-color: #221913 !important;
-  width: 120px;
+  width: 80px;
   height: 25px;
   text-align: center;
   display: inline-block;

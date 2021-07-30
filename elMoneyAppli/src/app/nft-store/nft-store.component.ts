@@ -25,7 +25,6 @@ export class NftStoreComponent implements OnInit {
   dealers:any[]=[];
   art:boolean=false;
 
-
   handle:any;
   options:any[]=[
     {label:"Standard",style:{width:"250px",height:"fit-content",fontsize:"medium",with_icon:true}},

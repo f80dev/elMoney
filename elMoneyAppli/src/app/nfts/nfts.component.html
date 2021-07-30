@@ -3,7 +3,7 @@
   <div *ngIf="!art" class="wrap-list">
     <mat-card class="app-card mat-elevation-z16"
               [title]="nft.title"
-              [ngStyle]="{'min-height':'150px','max-width':max_w,width:_w,'margin':'1%','margin-bottom':'5px',padding:'7px','color':'white'}"
+              [ngStyle]="{'min-height':'150px','max-width':max_w,width:'90%','margin':'1%','margin-bottom':'5px',padding:'7px','color':'white'}"
               *ngFor="let nft of nfts | filter: ['search',filter]">
 
       <mat-card-header style="height: 35px">
