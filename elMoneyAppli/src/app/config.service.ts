@@ -19,6 +19,22 @@ export class ConfigService {
   ready=false;
   dealers:any[]=[];
   domain_server;
+  profils: any=[
+    {label:"Alice",value:"alice.pem"},
+    {label:"Eve",value:"eve.pem"},
+    {label:"Dan",value:"dan.pem"},
+    {label:"Grace",value:"grace.pem"},
+    {label:"Franck",value:"franck.pem"},
+    {label:"Ivan",value:"ivan.pem"},
+    {label:"Mallory",value:"mallory.pem"},
+    {label:"Judy",value:"judy.pem"},
+    {label:"Thomas",value:"thomas.pem"},
+    {label:"Herve",value:"herve.pem"},
+    {label:"Test1",value:"test1.pem"},
+    {label:"Test2",value:"test2.pem"},
+    {label:"Test3",value:"test3.pem"},
+    {label:"Test4",value:"test4.pem"}
+  ]
 
   query_cache: any[]; //Conserve le contenu de la dernière requete
   unity: string ="";

@@ -26,11 +26,7 @@ export class NftBuyComponent implements OnInit {
     public toast:MatSnackBar,
     public routes:ActivatedRoute
   ) {
-    this.user.check_pem(()=>{
-      if(this.nft.price==0){
-        this.buy();
-      }
-    },this,"L'achat nécessite une signature",()=>{this.router.navigate(["store"])});
+
   }
 
 
@@ -39,12 +35,15 @@ export class NftBuyComponent implements OnInit {
     this.nft=JSON.parse(this.routes.snapshot.queryParamMap.get("nft"));
     this.seller=JSON.parse(this.routes.snapshot.queryParamMap.get("seller"));
     this.api._get("users/"+this.nft.miner+"/","").subscribe((data:any)=>{this.miner=data;});
-    if(this.nft.price==0 && this.user.pem)this.buy();
+    this.user.check_pem(()=>{
+      if(this.nft.price==0) this.buy();
+    },this,"L'achat nécessite une signature",()=>{this.router.navigate(["store"])});
   }
 
 
 
   buy() {
+
     let identifier=this.nft.identifier;
     if(identifier=="")identifier="EGLD";
 
@@ -69,7 +68,7 @@ export class NftBuyComponent implements OnInit {
       this.message = "";
       showMessage(this, "Achat du token pour " + (this.nft.price + r.cost) + " "+this.nft.unity);
       this.user.refresh_balance(() => {});
-      this.router.navigate(['nfts-perso'],{queryParams:{index:0}})
+      this.router.navigate(['nfts-perso'],{queryParams:{index:0},replaceUrl:true})
     }, () => {
       this.message = "";
       showMessage(this, "Achat annulé");
@@ -81,5 +80,9 @@ export class NftBuyComponent implements OnInit {
 
   cancel() {
     this._location.back();
+  }
+
+  build() {
+
   }
 }

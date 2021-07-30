@@ -7,7 +7,7 @@
 
 <div class="mainform">
 
-  <app-tuto [if]="art">Cliquer sur les NFT pour en savoir plus et les acheter si vous le souhaitez</app-tuto>
+  <app-tuto [if]="art">Cliquez sur les NFT pour en savoir plus et les acheter si vous le souhaitez</app-tuto>
 
   <!--  <mat-button-toggle-group #group="market_place">-->
   <!--    <mat-button-toggle *ngFor="let seller of sellers" [(ngModel)]="modelName" [checked]="modelName"></mat-button-toggle>-->
@@ -59,9 +59,9 @@
   </tr></table>
 
 
-  <div *ngIf="cache?.length>2 && !filter_id">
+  <div *ngIf="cache?.length>2 && !filter_id" style="margin: 1px;">
     <mat-form-field appearance="fill"
-                    style="max-width:150px;margin-right: 10px;" cdkFocusInitial>
+                    style="max-width:200px;width:60%;margin-right: 5px;" cdkFocusInitial>
       <mat-label>Chercher un token</mat-label>
       <input matInput matNativeControl
              (keyup)="onQuery($event)"
@@ -80,15 +80,14 @@
     </mat-form-field>
 
 
-    <mat-form-field appearance="fill" style="width:100px;color:white;">
-      <mat-label>Affichage</mat-label>
-      <mat-select [(value)]="selected_mode" style="color: white;">
-        <mat-option *ngFor="let option of options" [value]="option.style">{{option.label}}</mat-option>
-      </mat-select>
-    </mat-form-field>
+<!--    <mat-form-field appearance="fill" style="width:100px;color:white;">-->
+<!--      <mat-label>Affichage</mat-label>-->
+<!--      <mat-select [(value)]="selected_mode" style="color: white;">-->
+<!--        <mat-option *ngFor="let option of options" [value]="option.style">{{option.label}}</mat-option>-->
+<!--      </mat-select>-->
+<!--    </mat-form-field>-->
   </div>
 
-  <br>
   <app-tuto [if]="nfts?.length>0"
             label="Ici, vous pouvez acheter des NFTs vendu directement par les propriétaires. Si vous ne disposez pas de fonds suffisants, il est possible de recharger votre compte"></app-tuto>
 

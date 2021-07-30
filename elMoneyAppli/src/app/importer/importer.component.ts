@@ -277,11 +277,12 @@ export class ImporterComponent implements OnInit {
   }
 
 
-  add_visual(func=null,title="",width=200,height=200,square=true,can_be_null:boolean=true,bank=true) {
+  add_visual(func=null,title="",width=200,height=200,square=true,can_be_null:boolean=true,bank=true,subtitle="") {
     this.dialog.open(ImageSelectorComponent, {position:{left: '10vw', top: '10vh'},
       maxWidth: 900, maxHeight: 900, width: '80vw', height: 'auto', data:
         {
           title:title,
+          subtitle:subtitle,
           result: this.visual,
           checkCode: true,
           square:square,
@@ -382,7 +383,7 @@ export class ImporterComponent implements OnInit {
           title: "Prix de vente ?",
           question: question,
           result:0,
-          subtitle:"Montant en EGold",
+          subtitle:"Montant en "+this.selected_money.label,
           min:0,max:10,
           type:"number",
           onlyConfirm:false,
@@ -450,7 +451,7 @@ export class ImporterComponent implements OnInit {
 
 
 
-  quick_photo(token:any,title="",w=400,h=400,square=true) {
+  quick_photo(token:any,title="",subtitle="",w=400,h=400,square=true) {
     this.add_visual((result:any)=>{
       this.visual=result.img;
       this.picture=result.file;
@@ -466,8 +467,8 @@ export class ImporterComponent implements OnInit {
             this.ask_for_price("Quel prix pour votre photo",null,token.fee);
           },"Exemple: Tirage argentique numérisé, objectif 24/36");
         } else this.show_zone_upload=false;
-      },"Exemple: La route");
-    },title,w,h,square)
+      },"Un titre doit être court (3 ou 4 mots) et percutant");
+    },title,w,h,square,false,false,subtitle);
   }
 
 
@@ -686,7 +687,7 @@ export class ImporterComponent implements OnInit {
 
 
   open_wizard(token:any){
-    if(token.index=="photo")this.quick_photo(token,"Télécharger votre photo",null,null,false);
+    if(token.index=="photo")this.quick_photo(token,"Sélectionner la photo","Calibrer l'aperçu présenter sur le NFT pour inciter à la vente",null,null,false);
     if(token.index=="pow")this.quick_pow(token,300,300);
     if(token.index=="music")this.show_fileupload(3,'Téléverser le fichier musical',token,"audio/*");
     if(token.index=="film")this.quick_secret(token,'Indiquer le lien internet de votre film');

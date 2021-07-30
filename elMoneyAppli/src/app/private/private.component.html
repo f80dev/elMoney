@@ -10,11 +10,11 @@
 
       <mat-button-toggle-group [(ngModel)]="private_method" appearance="legacy" >
         <mat-button-toggle value="file"><div class="bloc-bouton">Fichier de<br>signature</div></mat-button-toggle>
-        <mat-button-toggle value="input"><div class="bloc-bouton">Clé<br>privée</div></mat-button-toggle>
+<!--        <mat-button-toggle value="input"><div class="bloc-bouton">Clé<br>privée</div></mat-button-toggle>-->
         <mat-button-toggle value="walletconnect"><div class="bloc-bouton">Wallet<br>Connect</div></mat-button-toggle>
       </mat-button-toggle-group>
 
-      <br><br><br>
+      <br><br>
       <div *ngIf="private_method=='file'" class="method_zone">
         <input #csvInput hidden="true"
                type="file" onclick="this.value=null"
@@ -27,10 +27,9 @@
                 (click)="csvInput.click()">
           <div class="bloc-bouton">Fichier de<br>signature</div>
         </button>
+        <p style="font-size: x-small;line-height:90%;font-weight: lighter;margin: 10px;">Votre fichier de signature vous a été envoyé sur votre mail à votre première connexion</p>
 
-
-        <p style="font-size: x-small;line-height:90%;font-weight: lighter;margin: 20px;">Votre fichier de signature vous a été envoyé sur votre mail à votre première connexion</p>
-
+        <br>
         <button mat-raised-button
                 mat-button class="app-button"
                 (click)="resend()">
@@ -58,7 +57,7 @@
           style="display: inline-block;"
           [elementType]="'svg'"
           [errorCorrectionLevel]="'M'"
-          [qrdata]="walletconnect.connector.uri">
+          [qrdata]="walletconnect?.connector?.uri">
         </qrcode><br>
 
       </div>

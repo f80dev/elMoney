@@ -1,11 +1,12 @@
 {
   "name": "el-money-appli",
-  "version": "0.0.282",
+  "version": "0.0.285",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "npm version patch && ng build --configuration=build --output-hashing none --baseHref=https://tf.f80.fr",
     "prod": "npm version patch && ng build --configuration=production --prod --output-hashing=none --baseHref=https://tokenforge.f80.fr",
+    "skynet": "npm version patch && ng build --configuration=production --prod --aot --output-hashing=none --baseHref=https://siasky.net/AACKW6mtOhfqwHPMLtM0ApVQyHN7RWp1URFT7DspAPL4EA",
     "dev": "ng build --configuration=dev --output-hashing=none --baseHref=https://tf.f80.fr",
     "web": "live-server --open=./src/assets/store.html?seller=erd1spyavw0956vq68xj8y4tenjpq2wd5a9p2c6j8gsz7ztyrnpxrruqzu66jx",
     "trad": "ng extract-i18n",

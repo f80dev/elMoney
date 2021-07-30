@@ -22,7 +22,6 @@ export class IpfsService {
     if(!content || content.length==0){
       func();
     } else {
-      debugger
       if(typeof(content)=="object"){
         this.api._post_file("upload_file",content,true)
           .subscribe((event:any)=>{
@@ -43,11 +42,9 @@ export class IpfsService {
             "Content-Type":"multipart/form-data",
             "Accept": "application/json"
           }).subscribe((result:any)=>{
-            if (result.type === HttpEventType.Response){
               $$("Enregistrement de https://ipfs.io/ipfs/"+result.cid);
               showMessage(vm,"Upload");
               if(func)func(result.cid);
-            }
           },(err)=>{showError(vm,err);});
         }
       }

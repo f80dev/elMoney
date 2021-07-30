@@ -1,11 +1,14 @@
 """
 Interface avec la base de données
 """
+import base64
 from datetime import datetime
 import pymongo
+from AesEverywhere import aes256
+from AesEverywhere.aes256 import encrypt
 
 from Tools import log
-from definitions import DB_SERVERS
+from definitions import DB_SERVERS, SECRET_KEY
 
 
 class DAO:
@@ -84,8 +87,9 @@ class DAO:
 
     def save_user(self, email, addr,pem=""):
         #TODO: ajouter le cryptage de l'email
+        pem=str(base64.b64encode(aes256.encrypt(pem,SECRET_KEY)),"utf8")
         body={'email':email,'addr':addr,"pem":pem}
-        return self.db["users"].replace_one(filter={"email": email}, replacement=body, upsert=True)
+        return self.db["users"].replace_one(filter={"email": email}, replacement=body, upsert=True),pem
 
     def get_user(self, email):
         field="email"

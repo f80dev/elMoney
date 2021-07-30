@@ -39,4 +39,16 @@ export class AdminComponent implements OnInit {
       this.user.reset();
     });
   }
+
+  reload_test_accounts() {
+     this.message="Chargement";
+    let body={amount:10,accounts:[]};
+    for(let p of this.config.profils){
+      body.accounts.push(p.value);
+    }
+    this.api._post("reload_accounts","",body).subscribe(()=>{
+      showMessage(this,'Comptes rechargés');
+      this.message="";
+    });
+  }
 }

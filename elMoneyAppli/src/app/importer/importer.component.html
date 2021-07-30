@@ -24,25 +24,29 @@
     </app-tuto>
   </div>
 
-  <app-hourglass [message]="message"></app-hourglass><br><br>
-  <img src="./assets/gears.gif" style="width: 150px;display: inline;" *ngIf="message.length>0">
-  <br><br>
-
+  <app-hourglass [message]="message" anim="./assets/gears.gif"></app-hourglass>
 
   <!--  progression de l'upload-->
-   <mat-progress-bar class="progress-bar"
-                     style="width: 60%;margin-left: 20%;"
-                     mode="determinate"
+  <mat-progress-bar class="progress-bar"
+                    style="width: 60%;margin-left: 20%;"
+                    mode="determinate"
                     [value]="uploadProgress" *ngIf="uploadProgress">
   </mat-progress-bar>
-
 
 
   <mat-tab-group animationDuration="1000ms" *ngIf="message?.length==0" mat-align-tabs="center">
 
     <mat-tab label="NFT express">
 
-      <br>
+      <mat-form-field *ngIf="!show_zone_upload" appearance="fill" style="max-width:100px;margin-top: 10px;">
+        <mat-label>Monnaie</mat-label>
+        <mat-select [(ngModel)]="selected_money" name="money" (ngModelChange)="update_user_solde()">
+          <mat-option *ngFor="let money of moneys" [value]="money">
+            {{money?.label}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
       <app-upload-file *ngIf="show_zone_upload"
                        [send_file]="true"
                        [maxsize]="config.values.max_file_size"
@@ -52,7 +56,7 @@
         {{prompt}}
       </app-upload-file>
 
-      <div *ngIf="!show_zone_upload" style="width: 100%;text-align: center;">
+      <div *ngIf="!show_zone_upload" style="width: 100%;text-align: center;padding:0;margin:0;">
 
         <br>
         Créer vos NFTs en quelques clics en fonction de vos besoins
@@ -196,8 +200,8 @@
 
               <div *ngIf="visual?.length>0"  style="text-align: right;width:50%;">
                 <app-image [border]="false"
-                     [src]="visual"
-                     maxwidth="150px">
+                           [src]="visual"
+                           maxwidth="150px">
                 </app-image>
               </div>
               <br>

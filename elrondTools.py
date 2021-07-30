@@ -522,7 +522,7 @@ class ElrondNet:
         return rc
 
 
-    def update_account(self,pem_file,values:dict):
+    def update_account(self,_sender,values:dict):
         if "pem" in values: del values["pem"]
         log("Enregistrement de l'utilisateur " + str(values))
 
@@ -539,8 +539,6 @@ class ElrondNet:
             if len(value)>0:
                 data=data+"@"+key+"@"+value
                 required_gas=required_gas+10000*(len(value)+len(key))
-
-        _sender=Account(pem_file=pem_file)
 
         return self.send_transaction(_sender,_sender,_sender,0,data)
 
@@ -624,12 +622,6 @@ class ElrondNet:
 
     def execute(self,_contract,_user,function,arguments=[],value:int=None,gas_limit=LIMIT_GAS,timeout=60,gas_price_factor=1,tokenName=""):
         if type(_contract) == str: _contract = SmartContract(_contract)
-        if type(_user)==str:
-            if ".pem" in _user:
-                _user=Account(pem_file=_user)
-            else:
-                _user=Account(address=_user)
-
         _user.sync_nonce(self._proxy)
         if not value is None:value=int(value)
         try:
@@ -872,10 +864,10 @@ class ElrondNet:
 
 
 
-    def nft_buy(self, contract, pem_file, token_id,price,seller,identifier):
+    def nft_buy(self, contract, _user, token_id,price,seller,identifier):
         value=int(1e7*price)*1e11
         tr = self.execute(
-               contract,pem_file,
+               contract,_user,
                function="buy",
                arguments=[token_id,seller],
                value=value,
@@ -1017,6 +1009,11 @@ class ElrondNet:
                           arguments=[hex(state)],
                           )
         return tx
+
+    def get_instant_access(self, _user:Account,delayInSec=60):
+        private_key=_user.private_key_seed
+        # TODO ajouter la durée limite et le cryptage
+        return private_key
 
 
 

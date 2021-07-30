@@ -5,8 +5,8 @@
   <br><br>
 
 
-  <img src="./assets/gears.gif" style="width: 150px;display: inline;" *ngIf="message.length>0"><br>
-  <app-hourglass [message]="message"></app-hourglass>
+
+  <app-hourglass [message]="message" anim="./assets/gears.gif"></app-hourglass>
 
   <app-nfts [with_icon]="false"
             [with_actions]="false"
@@ -43,4 +43,6 @@
                 (click)="buy()">
           Acheter
     </button>
+
+
 </div>

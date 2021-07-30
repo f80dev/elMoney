@@ -50,10 +50,14 @@ export class AppComponent implements OnInit,OnDestroy {
       let address = this.routes.snapshot.queryParamMap.get("address");
       if(address){
         let params:any=JSON.parse(this.routes.snapshot.queryParamMap.get("params"));
-        this.user.init(address,()=>{
-
-        });
+        this.user.init(address,()=>{});
       }
+
+      let instant_access = this.routes.snapshot.queryParamMap.get("instant_access");
+      if(instant_access){
+        this.user.pem=instant_access;
+      }
+
 
     },()=>{
       this.message="";

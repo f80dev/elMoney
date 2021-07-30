@@ -7,6 +7,7 @@ import ssl
 import sys
 
 from AesEverywhere import aes256
+from AesEverywhere.aes256 import decrypt
 from apscheduler.schedulers.background import BackgroundScheduler
 
 import yaml
@@ -165,13 +166,11 @@ def transfer(idx:str,dest:str,amount:str,unity:str):
 
     log("Demande de transfert vers "+_dest.address.bech32()+" de "+amount+" "+unity)
 
-    pem_file=get_pem_file(request.data)
+    pem_file=get_elrond_user(request.data)
     _from = Account(pem_file=pem_file)
 
     log("Appel du smartcontract")
     rc=bc.transferESDT(idx,_from,_dest.address.bech32(),int(amount)*(10**18))
-
-    os.remove(pem_file)
 
     if not "error" in rc:
         log("Transfert effectué " + str(rc) + " programmation du rafraichissement des comptes")
@@ -185,8 +184,8 @@ def transfer(idx:str,dest:str,amount:str,unity:str):
 
 
 
-
-def get_pem_file(data):
+from erdpy.wallet import pem
+def get_elrond_user(data):
     """
     Fabrique ou recupere un pemfile
     :param data:
@@ -195,27 +194,27 @@ def get_pem_file(data):
     if type(data)==dict and not "pem" in data:
         rc="./PEM/"+NETWORKS[bc.network_name]["bank"]+".pem"
     else:
+        filename = "./PEM/temp" + str(now() * 1000) + ".pem"
+        log("Fabrication d'un fichier PEM pour la signature et enregistrement sur " + filename)
+
         if type(data)==bytes:
-            data=str(data,"utf8").replace("\\n","\n")
-
-        if len(data)==0:
-            log("Fichier PEM invalide")
-            return None
-
-        if not type(data)==str and type(data["pem"]) == dict and "pem" in data["pem"]:data["pem"]=data["pem"]["pem"]
-        rc="./PEM/temp"+str(now()*1000)+".pem"
-        log("Fabrication d'un fichier PEM pour la signature et enregistrement sur " + rc)
-
-        if type(data)==str:
-            content=data
+            content=aes256.decrypt(data,SECRET_KEY)
         else:
-            content=data["pem"]
+            if not type(data)==str and type(data["pem"]) == dict and "pem" in data["pem"]:data["pem"]=data["pem"]["pem"]
 
-        if not "BEGIN PRIVATE KEY" in content:
-            content=str(base64.b64decode(content),"utf8")
+            if type(data)==str:
+                content=data
+            else:
+                content=data["pem"]
 
-        with open(rc, "w") as file:
+            if not "BEGIN PRIVATE KEY" in content:
+                content=str(aes256.decrypt(base64.b64decode(content),SECRET_KEY),"utf8")
+
+        with open(filename, "w") as file:
             file.write(content)
+
+        rc = Account(pem_file=filename)
+        os.remove(filename)
 
     return rc
 
@@ -233,7 +232,7 @@ def evalprice(sender,data="",value=0):
 def post_user(data:dict=None):
     data = json.loads(str(request.data, encoding="utf-8"))
 
-    pem_file = get_pem_file(data)
+    pem_file = get_elrond_user(data)
     if data["visual"].startswith("data:"):
         data["visual"]=client.add(data["visual"])
 
@@ -242,9 +241,8 @@ def post_user(data:dict=None):
 
     try:
         bc.update_account(pem_file,data)
-        os.remove(pem_file)
+
     except:
-        os.remove(pem_file)
         return jsonify({"error": "Probleme technique"}),500
 
     return jsonify({"reponse": "ok"})
@@ -270,9 +268,8 @@ def get_user(addr:str):
 
 @app.route('/api/burn/<token_id>/',methods=["POST"])
 def burn(token_id,data:dict=None):
-    pem_file=get_pem_file(request.data)
-    rc=bc.burn(NETWORKS[bc.network_name]["nft"],pem_file,token_id)
-    os.remove(pem_file)
+    rc=bc.burn(NETWORKS[bc.network_name]["nft"],get_elrond_user(request.data),token_id)
+
 
     send(socketio,"refresh_nft",rc["sender"])
     send(socketio,"nft_store")
@@ -329,8 +326,7 @@ def update_price(token_id:str,data:dict=None):
     if data is None:
         data = json.loads(str(request.data, encoding="utf-8"))
 
-    pem_file = get_pem_file(data)
-    rc = bc.set_price(NETWORKS[bc.network_name]["nft"], pem_file, token_id,float(data["price"])*100)
+    rc = bc.set_price(NETWORKS[bc.network_name]["nft"], get_elrond_user(data), token_id, float(data["price"]) * 100)
     send(socketio,"nft_store")
     return jsonify(rc),200
 
@@ -342,8 +338,8 @@ def open_nft(token_id:str,data:dict=None):
     if data is None:
         data = json.loads(str(request.data, encoding="utf-8"))
 
-    pem_file = get_pem_file(data)
-    addr=Account(pem_file=pem_file).address.bech32()
+    _user=get_elrond_user(data)
+    addr=_user.address.bech32()
 
     if len(SECRET_KEY)>0:
         response=data["response"]
@@ -351,8 +347,8 @@ def open_nft(token_id:str,data:dict=None):
     else:
         response=data["response"].encode().hex()
 
-    tx = bc.nft_open(NETWORKS[bc.network_name]["nft"], pem_file, token_id,response)
-    os.remove(pem_file)
+    tx = bc.nft_open(NETWORKS[bc.network_name]["nft"], _user, token_id,response)
+
 
     if "smartContractResults" in tx:
         if tx["status"]=="fail" or "returnMessage" in tx["smartContractResults"][0]>0:
@@ -385,9 +381,7 @@ def state_nft(token_id:str,state:str,data:dict=None):
     if data is None:
         data = json.loads(str(request.data, encoding="utf-8"))
 
-    pem_file = get_pem_file(data)
-    tx = bc.set_state(NETWORKS[bc.network_name]["nft"], pem_file, token_id,state)
-    os.remove(pem_file)
+    tx = bc.set_state(NETWORKS[bc.network_name]["nft"], get_elrond_user(data), token_id,state)
 
     send(socketio,"refresh_nft")
     return jsonify(tx),200
@@ -398,15 +392,20 @@ def image_search():
     rc=ImageSearchEngine().search(request.args.get("q"),request.args.get("type"))
     return jsonify(rc),200
 
+
+
 @app.route('/api/resend/<addr>/',methods=["GET"])
 def resend_pem(addr:str):
     _user=dao.get_user(addr)
     if _user and "pem" in _user and len(_user["pem"])>0:
+        instant_access =app.config["DOMAIN_APPLI"]  + "/?instant_access=" + _user["pem"]+"&address="+_user["addr"]
         send_mail(open_html_file("resend_pem", {
             "dest": _user["email"],
+            "delay":60,
             "public_key": _user["addr"],
+            "instant_access":instant_access
         }), _user["email"], subject="Renvoi de votre fichier de signature", attach=_user["pem"])
-        return "fichier de signature envoyé sur "+_user["email"],200
+        return "fichier de signature transmis",200
     else:
         return returnError("Pas de fichier de signature sauvegardé sur le serveur")
 
@@ -438,9 +437,7 @@ def sendtokenbyemail(dests:str):
 @app.route('/api/transfer_nft/<token_id>/<dest>/',methods=["POST"])
 def transfer_nft(token_id,dest):
     data = json.loads(str(request.data, encoding="utf-8"))
-    pem_file=get_pem_file(data["pem"])
-    if pem_file is None:
-        return returnError("pem file incorrect")
+
 
     _dest = convert_email_to_addr(dest,open_html_file("transfer_nft", {
         "from":data["from"],
@@ -449,8 +446,7 @@ def transfer_nft(token_id,dest):
     })
                                   )
 
-    rc=bc.nft_transfer(NETWORKS[bc.network_name]["nft"],pem_file,token_id,_dest)
-    os.remove(pem_file)
+    rc=bc.nft_transfer(NETWORKS[bc.network_name]["nft"], get_elrond_user(data["pem"]), token_id, _dest)
     if not rc is None:
         send(socketio,"refresh_nft")
         send(socketio,"refresh_balance",rc["sender"])
@@ -464,8 +460,6 @@ def buy_nft(token_id,price,seller:str,data:dict=None):
     if data is None:
         data = json.loads(str(request.data, encoding="utf-8"))
 
-    pem_file=get_pem_file(data)
-
     if seller == "0x0":
         seller = "0x0000000000000000000000000000000000000000000000000000000000000000"
     else:
@@ -475,17 +469,17 @@ def buy_nft(token_id,price,seller:str,data:dict=None):
     if type(price)==str and "," in price:price=price.replace(",",".")
     tokenName=data["identifier"]
 
+    _user=get_elrond_user(data)
     if tokenName!="EGLD":
         #On déclenche le transfert au smartcontract
-        bc.transferESDT(tokenName,
-                        Account(pem_file=pem_file),
+        bc.transferESDT(tokenName, _user,
                         SmartContract(bc.contract).address.hex(),
-                        float(price)*1e18
+                        float(price) * 1e18
                         )
         price=0
 
-    rc=bc.nft_buy(NETWORKS[bc.network_name]["nft"],pem_file,token_id,float(price),seller,tokenName)
-    os.remove(pem_file)
+    rc=bc.nft_buy(NETWORKS[bc.network_name]["nft"],_user,token_id,float(price),seller,tokenName)
+
     if not rc is None:
         send(socketio,"refresh_nft")
         send(socketio,"refresh_balance",rc["sender"])
@@ -533,8 +527,7 @@ def mint(count:str,data:dict=None):
         res_visual = "%%" + data["visual"]
         if data["fullscreen"]:res_visual=res_visual.replace("%%","!!")
 
-    pem_file=get_pem_file(data)
-    owner = Account(pem_file=pem_file)
+    owner = get_elrond_user(data)
 
     #nft_contract_owner=Account(pem_file="./PEM/"+NETWORKS[bc.network_name]["bank"]+".pem")
 
@@ -598,13 +591,13 @@ def mint(count:str,data:dict=None):
 
                     send(socketio, "refresh_nft")
                     send(socketio, "refresh_balance",owner.address.bech32())
-                    os.remove(pem_file)
+
                 else:
                     return returnError(result["smartContractResults"][0]["returnMessage"])
 
             return jsonify(result), 200
     else:
-        os.remove(pem_file)
+
         return returnError()
 
 
@@ -702,18 +695,29 @@ def upload_file():
 
 
 
+@app.route('/api/reload_accounts/',methods=["POST"])
+def reload_accounts():
+    data = json.loads(str(request.data, encoding="utf-8"))
+    for acc in data["accounts"]:
+        bc.transferESDT(idx=NETWORKS[bc.network_name]["identifier"],
+                            user_from=bc.bank,
+                            user_to=Account(pem_file="./PEM/"+acc).address.bech32(),
+                            amount=data["amount"] * (10 ** 18)
+                            )
+    return jsonify({"message":"reloaded"})
+
+
+
+
 
 @app.route('/api/new_dealer/',methods=["POST"])
 def new_dealer(data:dict=None):
     if data is None:
         data = json.loads(str(request.data, encoding="utf-8"))
 
-    pem_file = get_pem_file(data["pem"])
-
-    tx=bc.execute(NETWORKS[bc.network_name]["nft"],pem_file,
-                 function="new_dealer",arguments=[],
-                 )
-    os.remove(pem_file)
+    tx=bc.execute(NETWORKS[bc.network_name]["nft"], get_elrond_user(data["pem"]),
+                  function="new_dealer", arguments=[],
+                  )
 
     return jsonify(tx), 200
 
@@ -724,14 +728,10 @@ def add_dealer(token_id:str,data:dict=None):
     if data is None:
         data = json.loads(str(request.data, encoding="utf-8"))
 
-    pem_file = get_pem_file(data["pem"])
-
     for dealer in data["dealers"]:
         _dealer = Account(address=dealer["address"])
         arguments = [int(token_id), "0x" + _dealer.address.hex()]
-        tx = bc.add_dealer(NETWORKS[bc.network_name]["nft"], pem_file, arguments)
-
-    os.remove(pem_file)
+        tx = bc.add_dealer(NETWORKS[bc.network_name]["nft"], get_elrond_user(data["pem"]), arguments)
 
     return jsonify(tx), 200
 
@@ -778,9 +778,8 @@ def ask_ref(addr_from:str,addr_to:str):
 @app.route('/api/dealer_state/<state>/',methods=["POST"])
 def dealer_state(state:str,data:dict=None):
     if data is None: data = json.loads(str(request.data, encoding="utf-8"))
-    pem_file = get_pem_file(data["pem"])
-    tx=bc.dealer_state(pem_file,int(state))
-    os.remove(pem_file)
+    tx=bc.dealer_state(get_elrond_user(data["pem"]), int(state))
+
     if not tx is None and tx["status"]=="success":
         return jsonify({"message":"ok"}), 200
     else:
@@ -790,7 +789,7 @@ def dealer_state(state:str,data:dict=None):
 @app.route('/api/add_miner/',methods=["POST"])
 def add_miner(data:dict=None):
     if data is None:data = json.loads(str(request.data, encoding="utf-8"))
-    pem_file = get_pem_file(data["pem"])
+
 
     data["address"]=dao.get_user(data["address"])["addr"]
     _miner = Account(address=data["address"])
@@ -809,9 +808,8 @@ def add_miner(data:dict=None):
 
 
     tx=bc.add_miner(NETWORKS[bc.network_name]["nft"],
-                    pem_file,["0x" + _miner.address.hex()]
+                    get_elrond_user(data["pem"]), ["0x" + _miner.address.hex()]
                     )
-    os.remove(pem_file)
 
     return jsonify(tx), 200
 
@@ -821,12 +819,9 @@ def add_miner(data:dict=None):
 def del_miner(data:dict=None):
     if data is None:
         data = json.loads(str(request.data, encoding="utf-8"))
-    pem_file = get_pem_file(data["pem"])
 
     _miner = Account(address=data["address"])
-    tx=bc.execute(NETWORKS[bc.network_name]["nft"],pem_file,"del_miner",["0x" + _miner.address.hex()])
-
-    os.remove(pem_file)
+    tx=bc.execute(NETWORKS[bc.network_name]["nft"],get_elrond_user(data["pem"]),"del_miner",["0x" + _miner.address.hex()])
 
     return jsonify(tx), 200
 
@@ -846,9 +841,7 @@ def deploy(name:str,unity:str,nbdec:str,amount:str,data:dict=None):
     if data["public"] and not dao.get_money_by_name(unity,bc._proxy.url) is None:
         return jsonify({"message": "Cette monnaie 'public' existe déjà"}), 500
 
-    pem_file=get_pem_file(data)
-
-    owner=Account(pem_file=pem_file)
+    owner=get_elrond_user(data)
     log("Compte propriétaire de la monnaie créé. Lancement du déploiement de "+unity)
     result=bc.deploy(owner,name,unity.upper(),int(amount),int(nbdec))
 
@@ -988,14 +981,14 @@ def new_account():
     _user=dao.get_user(email)
     if _user is None:
         _a,pem=bc.create_account(NETWORKS[bc.network_name]["new_account"],email=email)
-        dao.save_user(email,_a.address.bech32(),pem)
+        n_row,pem=dao.save_user(email,_a.address.bech32(),pem)
         log("Création du compte " + _a.address.bech32() + ". Demande de transfert de la monnaie par defaut")
 
         private = _a.private_key_seed
         send_mail(open_html_file("new_account",{
             "dest":email,
             "public_key":_a.address.bech32(),
-            "private_key":private
+            "pem":_a.private_key_seed
         }),email,subject="Ouverture de votre compte",attach=pem)
 
 

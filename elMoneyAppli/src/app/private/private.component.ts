@@ -38,7 +38,6 @@ export class PrivateComponent implements OnInit {
               public sanitizer:DomSanitizer,
               public user:UserService,
               public _location:Location) {
-
   }
 
   ngOnInit(): void {
@@ -123,8 +122,8 @@ export class PrivateComponent implements OnInit {
   resend() {
     this.api._get("resend/"+this.user.addr+"/","").subscribe(()=>{
       showMessage(this,"Consulter votre messagerie pour récupérer le fichier de signature");
-    },(err)=>{
-      showError(this,err);
-    })
+    },()=>{
+      showMessage(this,"Compte inconnu");
+    });
   }
 }

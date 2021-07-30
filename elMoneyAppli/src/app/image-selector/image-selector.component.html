@@ -1,45 +1,46 @@
-<h2 mat-dialog-title>{{data.title}}</h2>
-
+<div mat-dialog-title>{{data.title}}</div><br>
+<div class="mat-dialog-subtitle">{{data.subtitle}}</div>
 <mat-dialog-content style="overflow: hidden;">
 
-  <div style="width: 100%;text-align: center;margin-bottom: 5px;">
-    <button mat-flat-button mat-button
-            *ngIf="data.internet"
-            class="app-button"
-            (click)="addUrl()">
-      Internet
-    </button>
+
+  <div style="display: inline-block;vertical-align: text-top;height:fit-content;text-align:center; width:100%;">
+
+    <div>
+      <button mat-flat-button mat-button
+              *ngIf="data.internet"
+              class="app-button"
+              (click)="addUrl()">
+        Internet
+      </button>
+    </div>
+
+    <div style="display: inline-flex;">
+      <div class="fake-button">
+        <label for="file">&nbsp;
+          Importer<br>vos photos
+        </label>
+        <input type="file" id="file" style="opacity: 0;"
+               (change)="onSelectFile($event)"
+               accept="image/*" />
+      </div>
+    </div>
 
 
-    <table style="width: 100%;vertical-align: middle;"><tr>
-      <td style="text-align: right;">
-        <div class="fake-button">
-          <label for="file">&nbsp;
-            Vos fichiers<br>de photos
-          </label>
-          <input type="file" id="file" style="opacity: 0;"
-                 (change)="onSelectFile($event)"
-                 accept="image/*" />
-        </div>
-      </td>
-
-      <td style="text-align: left;">
-        <mat-form-field appearance="fill" class="app-field" style="width:50%;max-width: 250px;font-size: small">
-          <mat-label>Rechercher des images / photos</mat-label>
-          <input matInput [placeholder]="inputSearch" type="text"  [(ngModel)]="query" (keypress)="search($event)" autofocus>
-        </mat-form-field>
-        &nbsp;
-        <!--      Gestion du type d'image recherché-->
-        <mat-form-field appearance="fill" style="width:100px;color:white;margin-right: 10px;">
-          <mat-label>Type</mat-label>
-          <mat-select [(ngModel)]="selected_type" style="color: white;" (ngModelChange)="search({keyCode:13})">
-            <mat-option *ngFor="let t of types" [value]="t.value">{{t.label}}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </td>
-
-    </tr></table>
-
+    <div style="display: inline-block;">
+      <br>
+      <mat-form-field appearance="fill" class="app-field" style="width:50%;max-width: 250px;font-size: small;margin:0px;">
+        <mat-label>Rechercher des images / photos</mat-label>
+        <input matInput [placeholder]="inputSearch" type="text"  [(ngModel)]="query" (keypress)="search($event)" autofocus>
+      </mat-form-field>
+      &nbsp;
+      <!--      Gestion du type d'image recherché-->
+      <mat-form-field appearance="fill" style="width:100px;color:white;margin-right: 10px;">
+        <mat-label>Type</mat-label>
+        <mat-select [(ngModel)]="selected_type" style="color: white;" (ngModelChange)="search({keyCode:13})">
+          <mat-option *ngFor="let t of types" [value]="t.value">{{t.label}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
 
 
 
@@ -47,7 +48,7 @@
 
 
 
-  <div style="display: inline-block;flex-wrap: wrap;" *ngIf="pictures.length>0">
+  <div style="display: inline-block;flex-wrap: wrap;max-height:300px;overflow: scroll;" *ngIf="pictures.length>0">
     <img *ngFor="let picture of pictures"
          (click)="selImage(picture)"
          style="display: inline-block;max-width:75px;max-height:100px;margin:2px;"

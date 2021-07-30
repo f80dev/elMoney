@@ -2965,7 +2965,15 @@ mat-dialog-container {
   color: white;
 }
 mat-dialog-title {
-  color: white !important;
+  color: #e38f01 !important;
+  font-size: large;
+  margin: 0px;
+}
+.mat-dialog-subtitle {
+  color: lightgrey;
+  line-height: 85%;
+  font-size: small;
+  margin-bottom: 15px;
 }
 mat-dialog-content {
   color: white !important;
