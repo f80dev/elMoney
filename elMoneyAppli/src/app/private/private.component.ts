@@ -58,7 +58,7 @@ export class PrivateComponent implements OnInit {
     this.message = "Signature ...";
     reader.onload = () => {
       this.message = "Changement de compte";
-      this.api._post("analyse_pem", "", btoa(reader.result.toString()), 240).subscribe((r: any) => {
+      this.api._post("analyse_pem", "", reader.result.toString(), 240).subscribe((r: any) => {
         this.quit({pem:r.pem,addr:r.address});
       });
     }
@@ -114,9 +114,8 @@ export class PrivateComponent implements OnInit {
 
   logout() {
    this.user.logout("Se déconnecter",()=>{
-     this.dialogRef.close();
-     this.router.navigate(["store"]);
-    },null,"fit-contain",false);
+
+    },null,"fit-contain",true);
   }
 
   resend() {

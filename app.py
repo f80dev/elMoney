@@ -88,21 +88,9 @@ def event_loop(contract:str,dest:str,amount:str):
 
 @app.route('/api/analyse_pem/',methods=["POST"])
 def analyse_pem():
-    body=str(request.data,"utf-8")
-    log("Analyse du fichier PEM " + body)
-
-    if body.endswith(".pem"):
-        _to=Account(pem_file="./PEM/"+body)
-        pubkey=_to.address.bech32()
-        with open(_to.pem_file, "r") as myfile:
-            body = myfile.readlines()
-        body="".join(body)
-        #body=body.replace("\n","")
-    else:
-        if "base64" in body:body=body.split("base64,")[1]
-        body=str(base64.b64decode(body),"utf-8")
-        pubkey="erd"+body.split("-----")[1].split("erd")[1]
-
+    _to=get_elrond_user(request.data)
+    pubkey=_to.address.bech32()
+    body=str(request.data,"utf8")
     return jsonify({"address":pubkey,"pem":body,"addr":pubkey}),200
 
 
@@ -198,7 +186,7 @@ def get_elrond_user(data):
         log("Fabrication d'un fichier PEM pour la signature et enregistrement sur " + filename)
 
         if type(data)==bytes:
-            content=aes256.decrypt(data,SECRET_KEY)
+            content=str(aes256.decrypt(base64.b64decode(str(data,"utf8")),SECRET_KEY),"utf8")
         else:
             if not type(data)==str and type(data["pem"]) == dict and "pem" in data["pem"]:data["pem"]=data["pem"]["pem"]
 

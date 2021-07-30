@@ -267,7 +267,7 @@ export class UserService {
     if(this.pem && this.pem.length>0){
       if(func)func();
     } else {
-      this.dialog.open(PrivateComponent,{width: '300px',height:"500px",data:
+      this.dialog.open(PrivateComponent,{width: '300px',height:"fit-content",data:
           {
             canChange:false,
             title: title,

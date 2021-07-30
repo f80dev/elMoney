@@ -31,7 +31,7 @@ export class IpfsService {
             if (event.type === HttpEventType.Response) {
               showMessage(vm,"Upload");
               vm.uploadProgress=null;
-              if(func)func(event.cid);
+              if(func)func(event.body.cid);
             }
         });
       } else {
