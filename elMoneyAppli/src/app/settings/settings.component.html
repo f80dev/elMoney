@@ -24,15 +24,6 @@
       <app-tuto label="Les informations de votre profil sont notamment utilisées pour vous présenter en tant que créateur de NFT"></app-tuto>
 
 
-      <button mat-raised-button mat-button
-              class="app-button"
-              (click)="router.navigate(['miner'],{queryParams:{miner:user.addr}})">
-        <div class="bloc-bouton">Votre profil<br>de créateur</div>
-      </button>
-
-      <br>
-
-
       <mat-form-field appearance="fill" class="app-field">
         <mat-label>Votre nom / pseudo</mat-label>
         <input matInput type="text" (focusin)="focus_idx=1" maxlength="200" [(ngModel)]="user.pseudo" [ngModelOptions]="{standalone: true}">
@@ -42,7 +33,7 @@
       <div *ngIf="user.visual" style="display: inline-block;text-align: center;width: 100%">
         <h4>Visuel de votre profil</h4>
 
-        <app-image [cover]="false" (click)="change_visual('visual')" [src]="user.visual" [border]="false"></app-image>
+        <app-image [cover]="false" (click)="change_visual('visual')"  maxwidth="150px" [src]="user.visual" [border]="false"></app-image>
 
       </div>
       <br>
@@ -68,6 +59,13 @@
       </mat-form-field>
 
       <br>
+
+      <button mat-raised-button mat-button
+              class="app-button"
+              (click)="router.navigate(['miner'],{queryParams:{miner:user.addr}})">
+        <div class="bloc-bouton">Voir votre profil<br>de créateur</div>
+      </button>
+
 
       <button mat-raised-button mat-button
               class="app-button"
@@ -106,7 +104,7 @@
 
       <div *ngIf="user.shop_visual" style="display: inline-block;text-align: center;width: 100%">
         <h4>Visuel de votre marketplace</h4>
-        <app-image [cover]="false" maxwidth="150" [src]="user.shop_visual"
+        <app-image [cover]="false" maxwidth="150px" [src]="user.shop_visual"
                    [border]="false"
                    (click)="change_visual('shop_visual')"></app-image>
       </div>

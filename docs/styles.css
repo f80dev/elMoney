@@ -2964,7 +2964,7 @@ mat-dialog-container {
   background-color: #3d3d3d !important;
   color: white;
 }
-mat-dialog-title {
+.mat-dialog-title {
   color: #e38f01 !important;
   font-size: large;
   margin: 0px;
@@ -3140,6 +3140,7 @@ mat-card-content {
 }
 mat-expansion-panel-header {
   background-color: #3d3d3d;
+  color: #e38f01 !important;
 }
 .photo {
   border: white solid 1px;

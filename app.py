@@ -972,9 +972,11 @@ def new_account():
         n_row,pem=dao.save_user(email,_a.address.bech32(),pem)
         log("Création du compte " + _a.address.bech32() + ". Demande de transfert de la monnaie par defaut")
 
+        instant_access = app.config["DOMAIN_APPLI"] + "/?instant_access=" + _user["pem"] + "&address=" + _user["addr"]
         private = _a.private_key_seed
         send_mail(open_html_file("new_account",{
             "dest":email,
+            "instant_access":instant_access,
             "public_key":_a.address.bech32(),
             "pem":_a.private_key_seed
         }),email,subject="Ouverture de votre compte",attach=pem)

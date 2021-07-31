@@ -77,6 +77,8 @@ export class MainComponent implements OnInit {
       this._max=this.user.moneys[this.user.selected_money].solde;
       if(this.hand<0)this.hand=Math.round(this._max/10);
       this.temp_max=this._max;
+    } else {
+      this.router.navigate(["moneys"]);
     }
   }
 
