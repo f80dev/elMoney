@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ApiService} from "../api.service";
+import {Router} from "@angular/router";
+import {subscribe_socket} from "../tools";
 
 @Component({
   selector: 'app-charts',
@@ -7,19 +9,31 @@ import {ApiService} from "../api.service";
   styleUrls: ['./charts.component.sass']
 })
 export class ChartsComponent implements OnInit {
-  dealers: any[]=[];
+  profils: any[]=[];
   message="";
   addrs=[];
 
   constructor(
-    public api:ApiService
-  ) { }
-
-  ngOnInit(): void {
-    this.api._get("transactions","").subscribe((r:any)=>{
-      this.addrs=Object.keys(r.charts);
-      this.dealers=r.charts;
-    })
+    public api:ApiService,
+    public router:Router
+  ) {
+     subscribe_socket(this,"refresh_account",($event)=>{
+       this.refresh();
+     });
   }
 
+  refresh(){
+    this.api._get("transactions","").subscribe((r:any)=>{
+      this.addrs=Object.keys(r.charts);
+      this.profils=r.charts;
+    });
+  }
+
+  ngOnInit(): void {
+    this.refresh();
+  }
+
+  open_creator(miner:any) {
+    this.router.navigate(["miner"],{queryParams:{miner:miner.addr}});
+  }
 }

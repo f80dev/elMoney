@@ -948,9 +948,18 @@ class ElrondNet:
         return rc
 
 
+    def getTransaction(self, hash):
+        rc=self._proxy.get_transaction(hash,with_results=True)
+        return rc
+
+
     def getTransactionsByRest(self,addr):
+        """
+        retourne l'ensemble des transactions d'un contrats (https://docs.elrond.com/sdk-and-tools/rest-api/transactions/)
+        :param addr:
+        :return:
+        """
         _c=SmartContract(address=addr)
-        #rc=rq.get(self._proxy.url+"/transactions/"+addr).json()
         rc=requests.get(self._proxy.url+"/address/"+_c.address.bech32()+"/transactions")
         if rc.status_code==200:
             rc=json.loads(rc.text)["data"]["transactions"]

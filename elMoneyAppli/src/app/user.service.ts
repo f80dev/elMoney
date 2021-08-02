@@ -175,6 +175,7 @@ export class UserService {
       this.shop_description=body.shop_description || "";
       this.shop_website=body.shop_website || "";
       this.email=body.email || "";
+      this.website=body.website || "";
       this.shop_visual=body.shop_visual || "/assets/img/shop.png";
       if(func)func(body);
     },(err)=>{

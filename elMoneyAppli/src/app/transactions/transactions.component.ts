@@ -38,7 +38,7 @@ export class TransactionsComponent implements OnInit {
     this.message="Chargement du journal des transactions";
     this.api._get("transactions/"+this.user.addr+"/").subscribe((ts:any)=>{
       this.message="";
-      this.transactions=ts;
+      this.transactions=ts.transactions;
     },()=>{showError(this);})
   }
 

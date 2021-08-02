@@ -125,13 +125,12 @@
      mat-list-item
      id="cmdRefund">
     <mat-icon>account_balance</mat-icon>&nbsp;
-    Recharger mon compte
+    <div class="bloc-menu">Recharger<br>mon compte</div>
   </a>
 
   <a title="Se deconnecter"
      *ngIf="user.addr"
      (click)="logout()"
-     style="color:white"
      mat-list-item
      id="cmdLogout">
     <mat-icon>logout</mat-icon>&nbsp;
@@ -144,7 +143,7 @@
      mat-list-item
      id="cmdCharts">
     <mat-icon>military_tech</mat-icon>
-    &nbsp;&nbsp;Les meilleurs
+    <div class="bloc-menu">Classement<br>des vendeurs</div>
   </a>
 
   <a title="Aide" routerLink="faqs"

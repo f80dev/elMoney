@@ -227,13 +227,13 @@ def post_user(data:dict=None):
     if "shop_visual" in data and data["shop_visual"].startswith("data:"):
         data["shop_visual"]=client.add(data["shop_visual"])
 
+    if not "website" in data or data["website"].length==0: data["website"] =app.config["DOMAIN_APPLI"]+"/miner?miner="+data["addr"]
     try:
         bc.update_account(pem_file,data)
-
     except:
         return jsonify({"error": "Probleme technique"}),500
 
-    return jsonify({"reponse": "ok"})
+    return jsonify({"reponse": "ok","body":data})
 
 
 
@@ -603,10 +603,10 @@ def mint(count:str,data:dict=None):
 @app.route('/api/transactions/',methods=["GET"])
 @app.route('/api/transactions/<user>/',methods=["GET"])
 def transactions(user:str=""):
-    rc={"transactions":[],"charts":{}}
+    rc={"transactions":[],"charts":[]}
+    charts=dict()
     for addr in [NETWORKS[bc.network_name]["nft"]]:
         for t in bc.getTransactionsByRest(addr):
-            # t=bc.getTransactionsByRest(t["hash"])
             try:
                 data = str(base64.b64decode(t["data"]), "utf-8")
                 t["data"]=data
@@ -624,7 +624,6 @@ def transactions(user:str=""):
 
             if len(user)==0:
                 sign=1
-                if not t["receiver"] in rc["charts"]: rc["charts"][t["receiver"]] = 0
             else:
                 if t["sender"]==user:sign=-1
                 if t["receiver"]==user:sign=+1
@@ -639,9 +638,13 @@ def transactions(user:str=""):
             if data.startswith("open"):
                 data = "Révéler le secret"
                 if "scResults" in t and len(t["scResults"])>1:sign=0
-            if data.startswith("buy"):data="Achat d'un NFT"
+
+            if data.startswith("buy"):
+                data="Achat d'un NFT"
+                t=bc.getTransaction(t["hash"])
 
             if sign!=0:
+                log("Ajout de la transaction "+data+" : " + str(t))
                 rc["transactions"].append({
                     "sender":t["sender"],
                     "receiver":t["receiver"],
@@ -651,18 +654,15 @@ def transactions(user:str=""):
                     "transaction": t["hash"],
                     "comment":comment
                 })
-                if t["data"].startswith("buy"):
-                    rc["charts"][t["receiver"]] = rc["charts"][t["receiver"]] + sign * value
 
 
-            if "scResults" in t:
-                for tt in t["scResults"]:
+            if "smartContractResults" in t:
+                for tt in t["smartContractResults"]:
                     if len(user)==0 or (tt["receiver"]==user or tt["sender"]==user):
                         if tt["receiver"]==user:sign=1
                         if tt["sender"] == user: sign=-1
-                        data2 = str(base64.b64decode(tt["data"]), "utf-8")
-                        if "@" in data2:data2=""
-
+                        if len(user)==0:sign=1
+                        data2 = tt["data"]
                         if len(data2)>0:
                             rc["transactions"].append({
                                 "receiver":tt["receiver"],
@@ -672,14 +672,15 @@ def transactions(user:str=""):
                                 "fee":0,
                                 "transaction":t["hash"]
                             })
-                            if t["data"].startswith("buy"):
-                                rc["charts"][t["receiver"]] = rc["charts"][t["receiver"]] + sign * value
+                            if data.startswith("Achat"):
+                                k=tt["receiver"]
+                                if not k in charts:charts[k]=dict({"key":k,"value":0,"profil":dict()})
+                                charts[k]["value"] = charts[k]["value"] + sign * value
 
-    for k in rc["charts"].keys():
-        if rc["charts"][k]>0:
-            _dealer=bc.get_account(k)
-            if "pseudo" in _dealer:
-                rc["charts"][k]["profil"]=_dealer
+    for profil in sorted(charts.values(),key=lambda item: item["value"],reverse=True):
+        _profil=bc.get_account(profil["key"])
+        if "pseudo" in _profil:
+            rc["charts"].append({"value":profil["value"],"profil":_profil})
 
     return jsonify(rc),200
 

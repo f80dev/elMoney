@@ -3077,6 +3077,15 @@ mat-button-toggle {
   font-size: small;
   vertical-align: center;
 }
+.bloc-menu {
+  display: inline-block;
+  text-align: left;
+  color: lightgrey !important;
+  margin-left: 3px;
+}
+.bloc-menu:hover {
+  color: white !important;
+}
 .bloc-bouton {
   margin: 0px;
   padding: 0px;
