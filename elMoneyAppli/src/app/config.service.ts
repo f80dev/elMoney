@@ -44,6 +44,7 @@ export class ConfigService {
   egold_price:number=60;
   egold_unity:string="eGld";
   fiat_unity: string="$";
+  unity_conversion: any={};
 
   constructor(private location: Location,
               private http: HttpClient,
@@ -76,13 +77,22 @@ export class ConfigService {
   }
 
   get_price(unity,func){
+    let now=new Date().getTime();
+    if(this.unity_conversion && this.unity_conversion.hasOwnProperty(unity) && now-this.unity_conversion[unity].lastdate<100000){
+      func(this.unity_conversion[unity].value);
+      return;
+    }
     if(unity=="eGld"){
-      this.api._get("https://data.elrond.com/market/quotes/egld/price","",60,"").subscribe((result:any)=>{
-      if(result.length>0){
-        func(result[result.length-1].value);
-      }
-    });
+      this.api._get("https://data.elrond.com/market/quotes/egld/price","",10,"").subscribe((result:any)=>{
+        this.unity_conversion[unity]={value:result,lastdate:new Date().getTime()};
+        if(result.length>0){
+          func(result[result.length-1].value);
+        }
+      },(err)=>{
+        func(80);
+      });
     } else {
+      this.unity_conversion[unity]={value:1,lastdate:new Date().getTime()};
       //TODO a adapter sur la base d'un tableau de correspondance entre la monnaie
       func(1);
     }

@@ -22,6 +22,7 @@ import {MinersComponent} from "./miners/miners.component";
 import {PublicMinerComponent} from "./public-miner/public-miner.component";
 import {NftBuyComponent} from "./nft-buy/nft-buy.component";
 import {NgModule} from "@angular/core";
+import {ChartsComponent} from "./charts/charts.component";
 
 const routes: Routes = [
   { path: 'admin', component: AdminComponent},
@@ -42,6 +43,7 @@ const routes: Routes = [
   { path: 'refund', component: FaucetComponent},
   { path: 'support', component: SupportComponent},
   { path: 'transactions', component:TransactionsComponent},
+  { path: 'charts', component:ChartsComponent},
   { path: 'log', component:TransactionsComponent},
   { path: 'miner', component:PublicMinerComponent},
   { path: 'main', component: MainComponent},

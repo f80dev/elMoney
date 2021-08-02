@@ -58,6 +58,7 @@ export class AuthentComponent implements OnInit {
         this.api._get("new_account/","email="+this.user.email,240).subscribe((r:any)=> {
           this.message = "";
           this.user.pem = r.pem;
+          this.user.email=r.email;
           if(this.savePrivateKey)localStorage.setItem('pem',r.pem);
           this.user.init(r.addr);
           this.quit(r);

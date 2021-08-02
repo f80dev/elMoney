@@ -5,6 +5,7 @@ import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ApiService} from "../api.service";
 import {ImageCroppedEvent} from "ngx-image-cropper";
+import {ConfigService} from "../config.service";
 
 @Component({
   selector: 'app-image-selector',
@@ -31,6 +32,7 @@ export class ImageSelectorComponent implements OnInit {
   constructor(
     public dialog2:MatDialog,
     public snackBar:MatSnackBar,
+    public config:ConfigService,
     public api:ApiService,
     public dialogRef: MatDialogRef<ImageSelectorComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {

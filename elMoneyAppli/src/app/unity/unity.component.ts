@@ -17,6 +17,7 @@ export class UnityComponent implements OnChanges {
   @Input("fontsize_unity") fontsize_unity="small";
   showValue: number;
   unity:string;
+  message: string="";
 
   constructor(public config:ConfigService) {
 
@@ -24,9 +25,11 @@ export class UnityComponent implements OnChanges {
 
   refresh(){
     if(localStorage.getItem("unity")=="fiat"){
+      this.message="conversion";
       this.config.get_price(this.unity,(convert)=>{
         this.unity=this.config.fiat_unity;
         this.showValue=this.value*convert;
+        this.message="";
       });
     } else {
       this.showValue=this.value;

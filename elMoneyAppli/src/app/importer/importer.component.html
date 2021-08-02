@@ -47,14 +47,19 @@
         </mat-select>
       </mat-form-field>
 
-      <app-upload-file *ngIf="show_zone_upload"
+      <div *ngIf="show_zone_upload">
+        <br>
+        <app-upload-file
                        [send_file]="true"
+                       style="margin: 10px"
                        [maxsize]="config.values.max_file_size"
                        [extensions]="extensions"
                        (canceled)="show_zone_upload=false"
                        (uploaded)="onupload($event)">
         {{prompt}}
       </app-upload-file>
+
+      </div>
 
       <div *ngIf="!show_zone_upload" style="width: 100%;text-align: center;padding:0;margin:0;">
 
@@ -123,7 +128,6 @@
               </tr></table>
 
               <br>
-
 
 
               <strong *ngIf="picture.length==0">ou</strong>

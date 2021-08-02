@@ -17,7 +17,10 @@
 
   <p *ngIf="message?.length==0">
     Distribué par {{seller?.shop_name}}<br>
-    Réalisé par <a [href]="miner?.website" target="_blank">{{miner?.pseudo}}</a><br>
+    Réalisé par <a [href]="miner?.website" target="_blank">
+    <span *ngIf="miner?.pseudo?.length>0">{{miner?.pseudo}}</span>
+    <span *ngIf="miner?.pseudo?.length==0">un anonyme</span>
+  </a><br>
   </p>
 
   <p *ngIf="seller?.shop_name=='Vente directe' && nft.price>0">

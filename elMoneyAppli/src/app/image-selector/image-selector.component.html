@@ -1,9 +1,9 @@
 <div class="mat-dialog-title">{{data.title}}</div>
 <div class="mat-dialog-subtitle" *ngIf="data.subtitle">{{data.subtitle}}</div>
-<mat-dialog-content style="overflow: hidden;">
+<mat-dialog-content>
 
-  <div style="display: inline-block;vertical-align: text-top;height:fit-content;text-align:center; width:100%;">
-    <div>
+  <div style="display: flex;flex-wrap:wrap; align-items: flex-start;width:100%;">
+    <div style="display: inline-flex;">
       <button mat-flat-button mat-button
               *ngIf="data.internet"
               class="app-button"
@@ -12,10 +12,10 @@
       </button>
     </div>
 
-    <div style="display: inline-flex;">
+    <div style="display: inline-flex;height:50px;">
       <div class="fake-button">
         <label for="file">&nbsp;
-          Importer<br>vos photos
+          Utilisez<br>vos photos
         </label>
         <input type="file" id="file" style="opacity: 0;"
                (change)="onSelectFile($event)"
@@ -23,25 +23,22 @@
       </div>
     </div>
 
+    <div style="display: inline-flex;height:50px;padding: 10px;font-size: large;">/</div>
 
-    <div style="display: inline-block;">
-      <br>
-      <mat-form-field appearance="fill" class="app-field" style="width:50%;max-width: 250px;font-size: small;margin:0px;">
-        <mat-label>Rechercher des images / photos</mat-label>
-        <input matInput [placeholder]="inputSearch" type="text"  [(ngModel)]="query" (keypress)="search($event)" autofocus>
+    <div style="display: inline-flex;width:250px;height:50px;">
+      <mat-form-field appearance="fill" class="app-field" style="font-size: small;width:170px;margin:0px;">
+        <mat-label>Rechercher des images</mat-label>
+        <input matInput [placeholder]="inputSearch" type="text"  [(ngModel)]="query" (keypress)="search($event)" cdkFocusInitial>
       </mat-form-field>
       &nbsp;
       <!--      Gestion du type d'image recherché-->
-      <mat-form-field appearance="fill" style="width:100px;color:white;margin-right: 10px;">
+      <mat-form-field appearance="fill" style="width:80px;color:white;font-size: small;">
         <mat-label>Type</mat-label>
         <mat-select [(ngModel)]="selected_type" style="color: white;" (ngModelChange)="search({keyCode:13})">
           <mat-option *ngFor="let t of types" [value]="t.value">{{t.label}}</mat-option>
         </mat-select>
       </mat-form-field>
     </div>
-
-
-
   </div>
 
 
@@ -65,6 +62,7 @@
          style="width:30px;display: inline-block;"
          (click)="selIcon(icon)">
   </div>
+
   <div style="width: 100%;text-align: center;">
     <div *ngIf="imageBase64"
          style="display: inline-block;width:80%;max-width: 500px;">
@@ -72,7 +70,7 @@
         [imageBase64]="imageBase64"
         [maintainAspectRatio]="true"
         [aspectRatio]="ratio"
-        [resizeToWidth]="200"
+        [resizeToWidth]="400"
         format="png"
         (imageCropped)="imageCropped($event)"
         (imageLoaded)="imageLoaded()"

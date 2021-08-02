@@ -603,12 +603,13 @@ def mint(count:str,data:dict=None):
 @app.route('/api/transactions/',methods=["GET"])
 @app.route('/api/transactions/<user>/',methods=["GET"])
 def transactions(user:str=""):
-    rc=[]
+    rc={"transactions":[],"charts":{}}
     for addr in [NETWORKS[bc.network_name]["nft"]]:
         for t in bc.getTransactionsByRest(addr):
             # t=bc.getTransactionsByRest(t["hash"])
             try:
                 data = str(base64.b64decode(t["data"]), "utf-8")
+                t["data"]=data
             except:
                 data=t["data"]
 
@@ -621,8 +622,12 @@ def transactions(user:str=""):
                 value=0
                 comment="annulée"
 
-            if t["sender"]==user:sign=-1
-            if t["receiver"]==user:sign=+1
+            if len(user)==0:
+                sign=1
+                if not t["receiver"] in rc["charts"]: rc["charts"][t["receiver"]] = 0
+            else:
+                if t["sender"]==user:sign=-1
+                if t["receiver"]==user:sign=+1
 
             if data.startswith("mint"):data="Creation d'un token"
             if data.startswith("add_dealer"):data= "Ajout d'un distributeur"
@@ -637,7 +642,7 @@ def transactions(user:str=""):
             if data.startswith("buy"):data="Achat d'un NFT"
 
             if sign!=0:
-                rc.append({
+                rc["transactions"].append({
                     "sender":t["sender"],
                     "receiver":t["receiver"],
                     "data": data,
@@ -646,6 +651,9 @@ def transactions(user:str=""):
                     "transaction": t["hash"],
                     "comment":comment
                 })
+                if t["data"].startswith("buy"):
+                    rc["charts"][t["receiver"]] = rc["charts"][t["receiver"]] + sign * value
+
 
             if "scResults" in t:
                 for tt in t["scResults"]:
@@ -656,7 +664,7 @@ def transactions(user:str=""):
                         if "@" in data2:data2=""
 
                         if len(data2)>0:
-                            rc.append({
+                            rc["transactions"].append({
                                 "receiver":tt["receiver"],
                                 "sender": tt["sender"],
                                 "data":data+": "+data2,
@@ -664,8 +672,27 @@ def transactions(user:str=""):
                                 "fee":0,
                                 "transaction":t["hash"]
                             })
+                            if t["data"].startswith("buy"):
+                                rc["charts"][t["receiver"]] = rc["charts"][t["receiver"]] + sign * value
+
+    for k in rc["charts"].keys():
+        if rc["charts"][k]>0:
+            _dealer=bc.get_account(k)
+            if "pseudo" in _dealer:
+                rc["charts"][k]["profil"]=_dealer
 
     return jsonify(rc),200
+
+
+@app.route('/api/charts/',methods=["GET"])
+def charts():
+    rc=[]
+    for dealer in bc.dealers():
+        transactions=bc.getTransactions(dealer)
+        rc.append(dealer["pseudo"])
+
+    return jsonify(rc)
+
 
 
 
@@ -972,7 +999,7 @@ def new_account():
         n_row,pem=dao.save_user(email,_a.address.bech32(),pem)
         log("Création du compte " + _a.address.bech32() + ". Demande de transfert de la monnaie par defaut")
 
-        instant_access = app.config["DOMAIN_APPLI"] + "/?instant_access=" + _user["pem"] + "&address=" + _user["addr"]
+        instant_access = app.config["DOMAIN_APPLI"] + "/?instant_access=" + pem + "&address=" + _a.address.bech32()
         private = _a.private_key_seed
         send_mail(open_html_file("new_account",{
             "dest":email,

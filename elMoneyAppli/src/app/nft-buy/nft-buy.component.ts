@@ -82,7 +82,4 @@ export class NftBuyComponent implements OnInit {
     this._location.back();
   }
 
-  build() {
-
-  }
 }

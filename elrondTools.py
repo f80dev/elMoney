@@ -947,6 +947,7 @@ class ElrondNet:
         rc=self._proxy.get_account_transactions(_user.address)
         return rc
 
+
     def getTransactionsByRest(self,addr):
         _c=SmartContract(address=addr)
         #rc=rq.get(self._proxy.url+"/transactions/"+addr).json()
@@ -973,7 +974,7 @@ class ElrondNet:
         return rc
 
 
-    def dealers(self,miner_filter:str):
+    def dealers(self,miner_filter:str="0x0"):
         if miner_filter!="0x0":
             miner_filter="0x"+Account(address=miner_filter).address.hex()
         else:

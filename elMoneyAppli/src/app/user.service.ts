@@ -249,10 +249,10 @@ export class UserService {
         } else {
           if(func_abort){
             if(typeof(func_abort)=="object") {
-            func_abort.navigate(["store"]);
-          }else{
-            func_abort();
-          }
+              func_abort.navigate(["store"]);
+            }else{
+              func_abort();
+            }
           }
         }
 
@@ -263,31 +263,34 @@ export class UserService {
 
 
   check_pem(func,vm=null,title=null,func_abort=null) {
-    title=title || "Cette opération doit être signée";
-    if(this.pem && this.pem.length>0){
-      if(func)func();
-    } else {
-      this.dialog.open(PrivateComponent,{width: '300px',height:"fit-content",data:
-          {
-            canChange:false,
-            title: title,
-          }
-      }).afterClosed().subscribe((result:any) => {
-        if(result){
-          if(this.addr && this.addr!=result.addr){
-            localStorage.removeItem("pem");
-            showMessage(vm,"cette clé ne correspond pas au compte, si vous souhaitez vraiment l'utiliser vous devez préalablement vous déconnecter");
-            if(func_abort)func_abort();
+    this.check_email(()=>{
+      title=title || "Cette opération doit être signée";
+      if(!this.pem)this.pem=localStorage.getItem("pem");
+      if(this.pem && this.pem.length>0){
+        if(func)func();
+      } else {
+        this.dialog.open(PrivateComponent,{width: '300px',height:"fit-content",data:
+            {
+              canChange:false,
+              title: title,
+            }
+        }).afterClosed().subscribe((result:any) => {
+          if(result){
+            if(this.addr && this.addr!=result.addr){
+              localStorage.removeItem("pem");
+              showMessage(vm,"cette clé ne correspond pas au compte, si vous souhaitez vraiment l'utiliser vous devez préalablement vous déconnecter");
+              if(func_abort)func_abort();
+            } else {
+              if(!this.addr)this.init(result.addr);
+              this.pem=result.pem;
+              if(func)func();
+            }
           } else {
-            if(!this.addr)this.init(result.addr);
-            this.pem=result.pem;
-            if(func)func();
+            if(func_abort)func_abort("annulation");
           }
-        } else {
-          if(func_abort)func_abort("annulation");
-        }
-      });
-    }
+        });
+      }
+    },func_abort);
   }
 
   logout(title="Veuillez indiquer votre clé",func_deconnect=null,func_cancel=null,height="fit-contain",reload=true) {

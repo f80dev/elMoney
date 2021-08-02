@@ -107,19 +107,20 @@ export class ImporterComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.user.check_pem(()=>{
-      localStorage.setItem("last_screen","importer");
-      this.api._get("moneys/"+this.user.addr).subscribe((r:any)=>{
-        for(let money of Object.values(r)){
-          if(money.hasOwnProperty("tokenIdentifier")){
-            this.moneys.push({identifier:money["tokenIdentifier"],label:money["unity"]})
+
+      this.user.check_pem(()=>{
+        localStorage.setItem("last_screen","importer");
+        this.api._get("moneys/"+this.user.addr).subscribe((r:any)=>{
+          for(let money of Object.values(r)){
+            if(money.hasOwnProperty("tokenIdentifier")){
+              this.moneys.push({identifier:money["tokenIdentifier"],label:money["unity"]})
+            }
           }
-        }
-        this.selected_money=this.moneys[0];
+          this.selected_money=this.moneys[0];
+        });
+      },this,"La création d'un NFT requiert votre clé",()=>{
+        this._location.back();
       });
-    },this,"La création d'un NFT requiert votre clé",()=>{
-      this._location.back();
-    })
 
 
 

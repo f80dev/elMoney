@@ -81,6 +81,7 @@ import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import { UnityComponent } from './unity/unity.component';
 import { ImageComponent } from './image/image.component';
 import {MatProgressBar, MatProgressBarModule} from "@angular/material/progress-bar";
+import { ChartsComponent } from './charts/charts.component';
 
 
 const config: SocketIoConfig = {
@@ -133,7 +134,8 @@ const config: SocketIoConfig = {
     SavekeyComponent,
     AuthentComponent,
     UnityComponent,
-    ImageComponent
+    ImageComponent,
+    ChartsComponent
   ],
   imports: [
     MatButtonModule,
@@ -170,6 +172,8 @@ const config: SocketIoConfig = {
     MatGridListModule,
     ImageCropperModule,
     MatChipsModule,
+    CommonModule,
+    CommonModule,
     CommonModule
   ],
   providers: [
