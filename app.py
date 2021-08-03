@@ -186,7 +186,9 @@ def get_elrond_user(data):
         log("Fabrication d'un fichier PEM pour la signature et enregistrement sur " + filename)
 
         if type(data)==bytes:
-            content=str(aes256.decrypt(base64.b64decode(str(data,"utf8")),SECRET_KEY),"utf8")
+            content=str(data,"utf8")
+            if not "BEGIN PRIVATE KEY" in content:
+                content=str(aes256.decrypt(base64.b64decode(content),SECRET_KEY),"utf8")
         else:
             if not type(data)==str and type(data["pem"]) == dict and "pem" in data["pem"]:data["pem"]=data["pem"]["pem"]
 

@@ -34,7 +34,10 @@
   </mat-progress-bar>
 
 
-  <mat-tab-group animationDuration="1000ms" *ngIf="message?.length==0" mat-align-tabs="center">
+  <mat-tab-group animationDuration="1000ms"
+                 *ngIf="message?.length==0"
+                 [selectedIndex]="selected_tab"
+                 mat-align-tabs="center">
 
     <mat-tab label="NFT express">
 
@@ -92,8 +95,6 @@
       <br>
       <app-tuto [if]="picture.length>0"
                 label="Le fichier est stocké dans le réseau IPFS de façon totalement sécurisé. Seul la clé permettant de le reconstituer est embarqué dans le NFT"></app-tuto>
-
-
 
       <div *ngIf="message.length==0" style="width:100%;">
 
@@ -223,13 +224,6 @@
                       visuel
                     </div>
                   </button>
-                </td>
-                <td>
-                  <mat-slide-toggle
-                    *ngIf="visual?.length>0"
-                    color="primary"
-                    [(ngModel)]="full_flyer">Afficher uniquement le visuel
-                  </mat-slide-toggle>
                 </td>
               </tr></table>
 

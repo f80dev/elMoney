@@ -66,7 +66,6 @@ export class ImporterComponent implements OnInit {
   redirect: number=0;
   prompt: string="";
   tokens: any[]=[]; //Liste des types de tokens
-  full_flyer: boolean=true;
   file_format: string="";
   selected_token: any;
   nfts_preview: any[]=[];
@@ -141,6 +140,7 @@ export class ImporterComponent implements OnInit {
   solde_user: number;
   extensions: string="*";
   uploadProgress: number;
+  selected_tab = 0;
 
 
   add(event: MatChipInputEvent): void {
@@ -222,7 +222,7 @@ export class ImporterComponent implements OnInit {
           tags: this.tags,
           description: this.desc,
           gift: this.gift,
-          fullscreen: this.full_flyer,
+          fullscreen: false,
           find_secret: this.find_secret,
           max_markup: this.max_price,
           min_markup: this.min_price,
@@ -395,7 +395,7 @@ export class ImporterComponent implements OnInit {
       if(price){
         this.price=price.replace(",",".");
         this.min_price=0;this.max_price=this.price*2;this.miner_ratio=0;
-        if(func)func(Number(this.price)); else this.tokenizer(fee);
+        if(func)func(Number(this.price)); else this.ask_confirm(fee);
       }
     });
   }
@@ -486,7 +486,7 @@ export class ImporterComponent implements OnInit {
               this.owner_can_transfer=false;
               this.desc=desc+" "+title+" est la propriété de "+names+" identifié par "+identifiant;
               this.title=title;
-              this.tokenizer(token.fee);
+              this.ask_confirm(token.fee);
             });
           });
         });
@@ -571,7 +571,7 @@ export class ImporterComponent implements OnInit {
                     this.gift=gift;
                     this.title=title;
                     this.desc="Ouvrir pour savoir si vous avez gagné"
-                    this.tokenizer(token.fee);
+                    this.ask_confirm(token.fee);
                   });
               },"Montant en eGold","number",20);
           },"Prix en eGold","number",20);
@@ -600,7 +600,7 @@ export class ImporterComponent implements OnInit {
                     this.ask_for_text("Combien de billets", "Indiquer le nombre de billets à fabriquer (maximum 30)", (num) => {
                       this.count = Number(num);
                       if (this.count < 31)
-                        this.tokenizer(token.fee);
+                        this.ask_confirm(token.fee);
                       else {
                         showMessage(this, "Maximum 30 billets en une seule fois");
                       }
@@ -631,7 +631,7 @@ export class ImporterComponent implements OnInit {
                 this.owner_can_sell = false;
                 this.owner_can_transfer = true;
                 this.price = 0;
-                this.tokenizer(token.fee);
+                this.ask_confirm(token.fee);
               }
             }, "Ajouter une belle photo de cet événement", 800, 800);
           },"","date");
@@ -699,6 +699,8 @@ export class ImporterComponent implements OnInit {
     if(token.index=="tickets")this.quick_tickets('Téléverser le visuel de votre invitation',token);
     if(token.index=="loterie")this.quick_loterie(token);
     if(token.index=="propriete")this.quick_propriete(token);
+
+
   }
 
 
@@ -707,6 +709,25 @@ export class ImporterComponent implements OnInit {
     this.show_preview=!this.show_preview;
   }
 
+
+  ask_confirm(fee){
+    this.dialog.open(PromptComponent,{width: 'auto',data:
+        {
+          title: "Construire immédiatement le NFT ou le modifier avant ?",
+          question: "",
+          options: {},
+          lbl_ok:"Construire",
+          lbl_cancel:"Modifier"
+        }
+    }).afterClosed().subscribe((result) => {
+      if(result=="yes"){
+        this.tokenizer(fee);
+      } else {
+        this.selected_tab=1;
+      }
+
+    });
+  }
 
   make_token() {
     if(this.tags && this.tags.length>0)
