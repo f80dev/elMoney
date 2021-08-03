@@ -54,7 +54,7 @@ export class AuthentComponent implements OnInit {
       this.api.set_identifier(r["default_money"])
       if(!r.hasOwnProperty('addr')){
         this.message="ouverture d'un nouveau compte sur le "+this.config.server.network+" elrond";
-        this.showSaveKey=true;
+        this.showSaveKey=false;
         this.api._get("new_account/","email="+this.user.email,240).subscribe((r:any)=> {
           this.message = "";
           this.user.pem = r.pem;

@@ -119,10 +119,7 @@ export class PrivateComponent implements OnInit {
   }
 
   resend() {
-    this.api._get("resend/"+this.user.addr+"/","").subscribe(()=>{
-      showMessage(this,"Consulter votre messagerie pour récupérer le fichier de signature");
-    },()=>{
-      showMessage(this,"Compte inconnu");
-    });
+    this.api._get("resend/"+this.user.addr+"/","",60,"").subscribe(()=>{});
+    showMessage(this,"Consulter votre messagerie pour récupérer le fichier de signature");
   }
 }

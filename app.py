@@ -227,7 +227,7 @@ def post_user(data:dict=None):
     if "shop_visual" in data and data["shop_visual"].startswith("data:"):
         data["shop_visual"]=client.add(data["shop_visual"])
 
-    if not "website" in data or data["website"].length==0: data["website"] =app.config["DOMAIN_APPLI"]+"/miner?miner="+data["addr"]
+    if not "website" in data or len(data["website"])==0: data["website"] =app.config["DOMAIN_APPLI"]+"/miner?miner="+data["addr"]
     try:
         bc.update_account(pem_file,data)
     except:
@@ -384,6 +384,12 @@ def image_search():
 
 @app.route('/api/resend/<addr>/',methods=["GET"])
 def resend_pem(addr:str):
+    """
+    renvoie un acces au compte de l'utilisateur
+    exemple: http://localhost:4200/api/resend/
+    :param addr:
+    :return:
+    """
     _user=dao.get_user(addr)
     if _user and "pem" in _user and len(_user["pem"])>0:
         instant_access =app.config["DOMAIN_APPLI"]  + "/?instant_access=" + _user["pem"]+"&address="+_user["addr"]
@@ -393,7 +399,7 @@ def resend_pem(addr:str):
             "public_key": _user["addr"],
             "instant_access":instant_access
         }), _user["email"], subject="Renvoi de votre fichier de signature", attach=_user["pem"])
-        return "fichier de signature transmis",200
+        return "consultez le mail de "+addr+" pour récupérer l'accès",200
     else:
         return returnError("Pas de fichier de signature sauvegardé sur le serveur")
 
