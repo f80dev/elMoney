@@ -124,7 +124,7 @@ def convert_email_to_addr(dest:str,html_email:str):
 
     if addr_dest is None:
         log("Le destinataire n'a pas encore d'adresse elrond")
-        _dest,pem_dest=bc.create_account(NETWORKS[bc.network_name]["new_account"])
+        _dest,pem_dest=bc.create_account(NETWORKS[bc.network_name]["new_account"],name=dest.split("@")[0],email=dest)
         html_email = html_email.replace("#addr#",_dest.address.bech32())
         send_mail(html_email, _to=dest, subject="Transfert",attach=pem_dest)
         dao.add_contact(email=dest,addr=_dest.address.bech32())
@@ -152,10 +152,11 @@ def transfer(idx:str,dest:str,amount:str,unity:str):
         "signature": SIGNATURE
     }))
 
+
     log("Demande de transfert vers "+_dest.address.bech32()+" de "+amount+" "+unity)
 
-    pem_file=get_elrond_user(request.data)
-    _from = Account(pem_file=pem_file)
+    _from=get_elrond_user(request.data)
+    dao.add_contact(_from.address.bech32(),_dest.address.bech32())
 
     log("Appel du smartcontract")
     rc=bc.transferESDT(idx,_from,_dest.address.bech32(),int(amount)*(10**18))
@@ -239,20 +240,37 @@ def post_user(data:dict=None):
 
 
 
-@app.route('/api/users/<addr>/',methods=["GET"])
-def get_user(addr:str):
-    if "@" in addr:
-        _user=dao.get_user(addr)
-        if _user is None:
-            return jsonify({})
-        else:
-            addr=_user["addr"]
+@app.route('/api/users/<addrs>/',methods=["GET"])
+def get_user(addrs:str):
+    """
+    Return the property of one or several users.
+    :note if there is several users, function do not return the contacts of each address
+    :param addrs:
+    :return:
+    """
 
-    data = bc.get_account(addr)
-    if data is None: return Response("User unknown", 404)
-    if "visual" in data and len(data["visual"])==46:data["visual"]="https://ipfs.io/ipfs/"+data["visual"]
-    if "shop_visual" in data and len(data["shop_visual"])==46:data["shop_visual"]="https://ipfs.io/ipfs/"+data["shop_visual"]
-    return jsonify(data),200
+    rc=[]
+    for addr in addrs.split(","):
+        _user = dao.get_user(addr)
+        if not _user is None:
+            addr=_user["addr"]
+            if "contacts" in _user:
+                contacts = _user["contacts"]
+            else:
+                contacts = []
+
+        if _user is None and "@" in addr:break
+
+        data = bc.get_account(addr)
+        data["contacts"]=contacts
+
+        if not data is None:
+            if "visual" in data and len(data["visual"])==46:data["visual"]="https://ipfs.io/ipfs/"+data["visual"]
+            if "shop_visual" in data and len(data["shop_visual"])==46:data["shop_visual"]="https://ipfs.io/ipfs/"+data["shop_visual"]
+
+        rc.append(data)
+
+    return jsonify(rc),200
 
 
 
@@ -339,7 +357,6 @@ def open_nft(token_id:str,data:dict=None):
 
     tx = bc.nft_open(NETWORKS[bc.network_name]["nft"], _user, token_id,response)
 
-
     if "smartContractResults" in tx:
         if tx["status"]=="fail" or "returnMessage" in tx["smartContractResults"][0]>0:
             rc=tx["smartContractResults"][0]["returnMessage"]
@@ -355,6 +372,9 @@ def open_nft(token_id:str,data:dict=None):
                             rc=str(bytearray.fromhex(rc),"utf8")
                     except:
                         rc=str(bytearray.fromhex(rc),"utf8")
+            # if len(rc)==46:
+            #     obj=client.get_dict(rc)
+            #     pass
     else:
         rc="Impossible d'ouvrir le token"
 
@@ -433,16 +453,17 @@ def sendtokenbyemail(dests:str):
 @app.route('/api/transfer_nft/<token_id>/<dest>/',methods=["POST"])
 def transfer_nft(token_id,dest):
     data = json.loads(str(request.data, encoding="utf-8"))
-
+    _from=get_elrond_user(data["pem"])
 
     _dest = convert_email_to_addr(dest,open_html_file("transfer_nft", {
         "from":data["from"],
         "url_appli": DOMAIN_APPLI + "/?user=#addr#",
         "message":data["message"]
-    })
-                                  )
+        })
+    )
+    dao.add_contact(_from.address.bech32(),_dest.address.bech32())
 
-    rc=bc.nft_transfer(NETWORKS[bc.network_name]["nft"], get_elrond_user(data["pem"]), token_id, _dest)
+    rc=bc.nft_transfer(NETWORKS[bc.network_name]["nft"], _from, token_id, _dest)
     if not rc is None:
         send(socketio,"refresh_nft")
         send(socketio,"refresh_balance",rc["sender"])
@@ -503,6 +524,7 @@ def mint(count:str,data:dict=None):
         data = json.loads(data)
 
     if data["gift"] is None:data["gift"]=0
+    simulate=(request.args.get("simulate")=="true")
 
     secret = data["secret"]
 
@@ -525,8 +547,6 @@ def mint(count:str,data:dict=None):
 
     owner = get_elrond_user(data)
 
-    #nft_contract_owner=Account(pem_file="./PEM/"+NETWORKS[bc.network_name]["bank"]+".pem")
-
     title=data["signature"]
     desc=data["description"]+res_visual
     price = int(float(data["price"]) * 1e4)
@@ -543,9 +563,9 @@ def mint(count:str,data:dict=None):
         pay_count=1 #Nombre de payment
 
     value=fee+pay_count*gift*1e16
-    if not money.startswith("EGLD"):
+    if not money.startswith("EGLD") and not simulate:
         #Dans ce cas on sequestre le montant ESDT pour le cadeau
-        transac=bc.transferESDT(money,Account(pem_file=pem_file),bc.contract,pay_count*gift*1e16)
+        transac=bc.transferESDT(money,owner,bc.contract,pay_count*gift*1e16)
         if "error" in transac:return returnError()
         value=fee
     else:
@@ -564,7 +584,7 @@ def mint(count:str,data:dict=None):
     result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,
                    arguments=arguments,
                    gas_limit=int(LIMIT_GAS*(1+int(count)/2)),
-                   value=value)
+                   value=value,simulate=simulate)
 
     if not result is None:
         if result["status"] == "fail" or not "smartContractResults" in result:

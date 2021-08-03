@@ -18,10 +18,11 @@ class DAO:
         self.db: pymongo.mongo_client = pymongo.MongoClient(DB_SERVERS[domain])[dbname]
 
 
-    def add_contact(self, email, addr=""):
-        _contact={"email":email,"addr":addr}
-        rc=self.db["contacts"].replace_one(filter={"email": email}, replacement=_contact, upsert=True)
-        return rc
+    def add_contact(self, owner_addr, contact_addr):
+        _user=self.get_user(owner_addr)
+        if not "contacts" in _user:_user["contacts"]=[]
+        _user["contacts"].append(contact_addr)
+        return self.save_user(_user["email"],_user["addr"],_user["pem"],_user["contacts"])
 
 
     def add_money(self,idx:str,unity:str,nbDecimals:int,owner:str,_public:bool,transferable:bool,url="",proxy=""):
@@ -85,10 +86,10 @@ class DAO:
     def get_nftcontract_by_owner(self,addr):
         return self.db["nfts"].find_one({"owner":addr})
 
-    def save_user(self, email, addr,pem=""):
+    def save_user(self, email, addr,pem="",contacts=[]):
         #TODO: ajouter le cryptage de l'email
         pem=str(base64.b64encode(aes256.encrypt(pem,SECRET_KEY)),"utf8")
-        body={'email':email,'addr':addr,"pem":pem}
+        body={'email':email,'addr':addr,"pem":pem,"contacts":contacts}
         return self.db["users"].replace_one(filter={"email": email}, replacement=body, upsert=True),pem
 
     def get_user(self, email):

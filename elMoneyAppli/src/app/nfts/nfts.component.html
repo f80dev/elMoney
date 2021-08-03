@@ -78,13 +78,13 @@
 
           <!--        Zone réservé au propriétaire du token -->
 
-          <button mat-raised-button mat-button mat-icon-button
+          <button mat-raised-button mat-button
                   color="primary"
                   title="Ouvrir le NFT pour découvrir le secret"
                   *ngIf="nft.open?.length==0 && user.addr==nft.owner && user.addr!=nft.miner && nft.has_secret==1"
-                  class="icon-button"
+                  class="app-button" style="max-width: 60px !important;"
                   (click)="give_response(nft)">
-            <mat-icon>outbox</mat-icon>
+            Ouvrir
           </button>
 
 

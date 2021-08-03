@@ -39,7 +39,6 @@ export class UserService {
               public _location:Location,
               public config:ConfigService) {
     subscribe_socket(this,"refresh_account",()=>{this.refresh_balance();})
-    if(localStorage.getItem("contacts"))this.contacts=JSON.parse(localStorage.getItem("contacts"));
   };
 
 
@@ -67,6 +66,8 @@ export class UserService {
   //   $$("Chargement de compte ok depuis le device, adresse de l'utilisateur "+this.addr);
   //   return true;
   // }
+
+
 
 
   save_user(func=null){
@@ -128,15 +129,10 @@ export class UserService {
   }
 
 
-  add_contact(email: string,pseudo=null) {
-    if(email.indexOf("@")==-1 && (!email.startsWith("erd") || !pseudo))return;
+  add_contact(email: string) {
+    this.api._post("contacts","",{email:email}).subscribe((r:any)=>{
 
-    if((!pseudo || pseudo.length==0) && email.indexOf("@")>-1)pseudo=email.split("@")[0].split(".")[0];
-    for(let c of this.contacts){
-      if(c.email==email)return false;
-    }
-    this.contacts.push({pseudo:pseudo,email:email});
-    this.save_user();
+    })
   }
 
 
@@ -167,6 +163,7 @@ export class UserService {
     $$("Chargement de l'utilisateur "+this.addr);
     this.api._get("users/"+this.addr).subscribe((body:any)=>{
       $$("Récupération de ",body);
+      body=body[0];
       this.contacts=body.contacts || [];
       this.pseudo=body.pseudo || "";
       this.visual=body.visual || "/assets/img/anonymous.jpg";

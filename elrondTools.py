@@ -615,12 +615,16 @@ class ElrondNet:
             if tx is None or tx["status"]!="success":
                 log("Le compte "+_u.address.bech32()+" n'a pas recu d'eGld pour les transactions")
 
+        if not email is None:
+            log("Enregistrement des infos le concernant")
+            self.update_account(_u,{"email":email,"pseudo":email.split("@")[0]})
+
         return _u,pem
 
 
 
 
-    def execute(self,_contract,_user,function,arguments=[],value:int=None,gas_limit=LIMIT_GAS,timeout=60,gas_price_factor=1,tokenName=""):
+    def execute(self,_contract,_user,function,arguments=[],value:int=None,gas_limit=LIMIT_GAS,timeout=60,gas_price_factor=1,tokenName="",simulate=False):
         if type(_contract) == str: _contract = SmartContract(_contract)
         _user.sync_nonce(self._proxy)
         if not value is None:value=int(value)
@@ -839,7 +843,7 @@ class ElrondNet:
 
 
 
-    def mint(self, contract, user_from,arguments,gas_limit=LIMIT_GAS,value=0,factor=1):
+    def mint(self, contract, user_from,arguments,gas_limit=LIMIT_GAS,value=0,factor=1,simulate=False):
         """
         Fabriquer un NFT
         :param contract:

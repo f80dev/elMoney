@@ -26,6 +26,10 @@ class IPFS:
         return cid["Hash"]
 
 
+    def get(self,token):
+        file=self.client.get(token)
+        return file
+
 
     def add(self,body:str):
         if type(body)==str:

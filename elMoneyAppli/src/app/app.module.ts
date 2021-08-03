@@ -83,6 +83,7 @@ import { ImageComponent } from './image/image.component';
 import {MatProgressBar, MatProgressBarModule} from "@angular/material/progress-bar";
 import { ChartsComponent } from './charts/charts.component';
 import { NftConfirmComponent } from './nft-confirm/nft-confirm.component';
+import { MinicontactsComponent } from './minicontacts/minicontacts.component';
 
 
 const config: SocketIoConfig = {
@@ -137,7 +138,8 @@ const config: SocketIoConfig = {
     UnityComponent,
     ImageComponent,
     ChartsComponent,
-    NftConfirmComponent
+    NftConfirmComponent,
+    MinicontactsComponent
   ],
   imports: [
     MatButtonModule,

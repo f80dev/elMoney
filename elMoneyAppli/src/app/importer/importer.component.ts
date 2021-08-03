@@ -107,19 +107,19 @@ export class ImporterComponent implements OnInit {
 
   ngOnInit(): void {
 
-      this.user.check_pem(()=>{
-        localStorage.setItem("last_screen","importer");
-        this.api._get("moneys/"+this.user.addr).subscribe((r:any)=>{
-          for(let money of Object.values(r)){
-            if(money.hasOwnProperty("tokenIdentifier")){
-              this.moneys.push({identifier:money["tokenIdentifier"],label:money["unity"]})
-            }
+    this.user.check_pem(()=>{
+      localStorage.setItem("last_screen","importer");
+      this.api._get("moneys/"+this.user.addr).subscribe((r:any)=>{
+        for(let money of Object.values(r)){
+          if(money.hasOwnProperty("tokenIdentifier")){
+            this.moneys.push({identifier:money["tokenIdentifier"],label:money["unity"]})
           }
-          this.selected_money=this.moneys[0];
-        });
-      },this,"La création d'un NFT requiert votre clé",()=>{
-        this._location.back();
+        }
+        this.selected_money=this.moneys[0];
       });
+    },this,"La création d'un NFT requiert votre clé",()=>{
+      this._location.back();
+    });
 
 
 
@@ -188,7 +188,7 @@ export class ImporterComponent implements OnInit {
   }
 
 
-  tokenizer(fee=0,func=null,func_error=null) {
+  tokenizer(fee=0,func=null,func_error=null,simulate=false) {
     //properties est stoké sur 8 bits : 00000<vente directe possible><le propriétaire peut vendre><le propriétaire peut offrir>
     if(this.min_price<0 || this.max_price<0 || this.price<0){
       showMessage(this,"Données incorrectes");
@@ -239,16 +239,19 @@ export class ImporterComponent implements OnInit {
         this.message = "Enregistrement dans la blockchain";
         window.scrollTo(0, 0);
         this.show_zone_upload = false;
-        this.api._post("mint/" + this.count, "", obj).subscribe((r: any) => {
-          $$("Enregistrement dans la blockchain");
-          if (r) {
-            this.message = "";
-            showMessage(this, "Fichier tokeniser pour " + r.cost + " xEgld");
-            this.user.refresh_balance(() => {
-              this.router.navigate(["nfts-perso"], {queryParams: {index: 2}});
-            });
-            if (func) func();
+        this.api._post("mint/" + this.count, "simulate="+simulate, obj).subscribe((r: any) => {
+          if(!simulate){
+            $$("Enregistrement dans la blockchain");
+            if (r) {
+              this.message = "";
+              showMessage(this, "Fichier tokeniser pour " + r.cost + " xEgld");
+              this.user.refresh_balance(() => {
+                this.router.navigate(["nfts-perso"], {queryParams: {index: 2}});
+              });
+              if (func) func();
+            }
           }
+
         }, (err) => {
           $$("!Erreur de création");
           this.message = "";

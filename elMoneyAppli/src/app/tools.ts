@@ -6,9 +6,12 @@ export const ADMIN_PASSWORD="hh4271";
 
 export function showError(vm:any,err:any=null){
   $$("!Error ",err);
-  if(vm.hasOwnProperty("message"))vm.message="";
-  if(!err.hasOwnProperty("error"))err.error="L'application ne répond pas. Veuillez vérifier l'état de votre connexion et recommencer d'ici quelques instants";
-  showMessage(vm,err.error);
+  if(vm && vm.hasOwnProperty("message"))vm.message="";
+  if(err){
+    if(!err.hasOwnProperty("error"))err.error="L'application ne répond pas. Veuillez vérifier l'état de votre connexion et recommencer d'ici quelques instants";
+    showMessage(vm,err.error);
+  }
+
 }
 
 

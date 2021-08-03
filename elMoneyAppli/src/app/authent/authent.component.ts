@@ -51,8 +51,7 @@ export class AuthentComponent implements OnInit {
   udpate_mail(){
     this.showSaveKey=false;
     this.api._get("users/"+this.user.email+"/").subscribe((r:any)=> {
-      this.api.set_identifier(r["default_money"])
-      if(!r.hasOwnProperty('addr')){
+      if(r.length==0){
         this.message="ouverture d'un nouveau compte sur le "+this.config.server.network+" elrond";
         this.showSaveKey=false;
         this.api._get("new_account/","email="+this.user.email,240).subscribe((r:any)=> {
@@ -65,9 +64,10 @@ export class AuthentComponent implements OnInit {
         });
       } else {
         let mess="Bonjour";
-        if(r.hasOwnProperty("pseudo"))mess=mess+" "+r.pseudo;
+        this.api.set_identifier(r[0]["default_money"])
+        if(r[0].hasOwnProperty("pseudo"))mess=mess+" "+r.pseudo;
         showMessage(this,mess);
-        this.quit(r);
+        this.quit(r[0]);
       }
     },(err)=>{
       showError(this);

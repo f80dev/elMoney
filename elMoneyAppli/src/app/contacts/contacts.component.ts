@@ -31,7 +31,7 @@ export class ContactsComponent implements OnInit {
 
   add_contact($event: any) {
     if($event.keyCode==13){
-      this.user.add_contact(this.email,this.pseudo);
+      this.user.add_contact(this.email);
       if(this.routes.snapshot.queryParamMap.has("onlyNew")){
         this.user.last_contact=$event.currentTarget["value"];
       }

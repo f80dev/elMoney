@@ -1,0 +1,10 @@
+<div [title]="title" i18n-title style="width: 100%;text-align: center;" *ngIf="user.contacts.length>0">
+      <div *ngFor="let fr of user.contacts"
+           [title]="fr.email"
+           [ngStyle]="{'lineHeight':'80%','margin':'2px','padding-top':'5px','padding-bottom':'5px','width':'75px','cursor':'pointer','display':'inline-block','color':fr.color}"
+           (mousedown)="select_friends(fr)">
+        <mat-icon *ngIf="!with_photo">{{fr.icon}}</mat-icon><br>
+        <img *ngIf="with_photo" [src]="fr.pictures" style="width:60px;">
+        <span style="font-size: small">{{fr.label}}</span>
+      </div>
+    </div>

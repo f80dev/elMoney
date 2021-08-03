@@ -10,13 +10,13 @@
     label="Utilisez le slider pour fixer le montant à envoyer">
   </app-tuto>
 
-  <app-tuto [if]="friends?.length>0"
+  <app-tuto [if]="user.contacts.length>0"
             i18n-label
             label="Tous vos destinataires disposant d'un pseudo sont enregistrés pour un accès plus rapide">
   </app-tuto>
 
 
-  <app-tuto [if]="friends?.length>1"
+  <app-tuto [if]="user.contacts.length>1"
             i18n-label
             label="Vous pouvez envoyer des fonds à plusieurs personnes en une seul fois en faisant une sélection multiple dans vos contacts">
   </app-tuto>
@@ -30,19 +30,8 @@
   <app-hourglass [message]="message" style="margin-top: 20px;"></app-hourglass>
 
   <div *ngIf="message?.length==0 && _max>0 && user.gas>config.values?.min_gas_to_transfer">
-    <div title="Les destinataires de vos envois" i18n-title style="width: 100%;text-align: center;">
-      <div *ngFor="let fr of friends"
-           [title]="fr.email"
-           [ngStyle]="{'lineHeight':'80%','margin':'2px','padding-top':'5px','padding-bottom':'5px','width':'75px','cursor':'pointer','display':'inline-block','color':fr.color}"
-           (mousedown)="select_friends(fr)">
-
-        <mat-icon>{{fr.icon}}</mat-icon><br>
-        <span style="font-size: small">{{fr.label}}</span>
-      </div>
-    </div>
+    <app-minicontacts></app-minicontacts>
     <br>
-
-
     <div
       style="width:100%;text-align: center;"
       *ngIf="_max>0"

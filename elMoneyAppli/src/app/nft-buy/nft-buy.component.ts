@@ -34,7 +34,7 @@ export class NftBuyComponent implements OnInit {
   ngOnInit(): void {
     this.nft=JSON.parse(this.routes.snapshot.queryParamMap.get("nft"));
     this.seller=JSON.parse(this.routes.snapshot.queryParamMap.get("seller"));
-    this.api._get("users/"+this.nft.miner+"/","").subscribe((data:any)=>{this.miner=data;});
+    this.api._get("users/"+this.nft.miner+"/","").subscribe((data:any)=>{this.miner=data[0];});
     this.user.check_pem(()=>{
       if(this.nft.price==0) this.buy();
     },this,"L'achat nécessite une signature",()=>{this.router.navigate(["store"])});
