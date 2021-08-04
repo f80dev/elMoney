@@ -32,6 +32,7 @@ export class UserService {
   shop_description: string="";
   shop_website: string="";
   dealer: any=null;
+  identity: string="";
 
   constructor(public api:ApiService,
               public socket:Socket,
@@ -79,6 +80,7 @@ export class UserService {
         pseudo:this.pseudo,
         visual:this.visual,
         website:this.website,
+        identity:this.identity,
         shop_visual:this.shop_visual,
         shop_name:this.shop_name,
         shop_description:this.shop_description,
@@ -147,7 +149,6 @@ export class UserService {
 
 
 
-
   init(addr:string=null,func=null,func_error=null) {
     addr=addr || this.addr;
     this.addr=addr;
@@ -167,6 +168,7 @@ export class UserService {
       this.contacts=body.contacts || [];
       this.pseudo=body.pseudo || "";
       this.visual=body.visual || "/assets/img/anonymous.jpg";
+      this.identity=body.identity || "";
       this.description=body.description || "";
       this.shop_name=body.shop_name || "";
       this.shop_description=body.shop_description || "";

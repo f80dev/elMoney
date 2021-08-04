@@ -224,11 +224,9 @@ def post_user(data:dict=None):
     data = json.loads(str(request.data, encoding="utf-8"))
 
     pem_file = get_elrond_user(data)
-    if data["visual"].startswith("data:"):
-        data["visual"]=client.add(data["visual"])
-
-    if "shop_visual" in data and data["shop_visual"].startswith("data:"):
-        data["shop_visual"]=client.add(data["shop_visual"])
+    if data["visual"].startswith("data:"):data["visual"]=client.add(data["visual"])
+    if data["identity"].startswith("data:"):data["identity"]=client.add(data["identity"])
+    if "shop_visual" in data and data["shop_visual"].startswith("data:"):data["shop_visual"]=client.add(data["shop_visual"])
 
     if not "website" in data or len(data["website"])==0: data["website"] =app.config["DOMAIN_APPLI"]+"/miner?miner="+data["addr"]
     try:
@@ -266,6 +264,7 @@ def get_user(addrs:str):
 
         if not data is None:
             if "visual" in data and len(data["visual"])==46:data["visual"]="https://ipfs.io/ipfs/"+data["visual"]
+            if "identity" in data and len(data["identity"]) == 46: data["identity"] = "https://ipfs.io/ipfs/" + data["identity"]
             if "shop_visual" in data and len(data["shop_visual"])==46:data["shop_visual"]="https://ipfs.io/ipfs/"+data["shop_visual"]
 
         rc.append(data)
@@ -414,7 +413,7 @@ def resend_pem(addr:str):
     """
     _user=dao.get_user(addr)
     if _user and "pem" in _user and len(_user["pem"])>0:
-        instant_access =app.config["DOMAIN_APPLI"]  + "/?instant_access=" + _user["pem"]+"&address="+_user["addr"]
+        instant_access =app.config["DOMAIN_APPLI"]  + "/?instant_access=" + str(_user["pem"],"utf8")+"&address="+_user["addr"]
         send_mail(open_html_file("resend_pem", {
             "dest": _user["email"],
             "delay":60,
@@ -1028,7 +1027,7 @@ def new_account():
         n_row,pem=dao.save_user(email,_a.address.bech32(),pem)
         log("Création du compte " + _a.address.bech32() + ". Demande de transfert de la monnaie par defaut")
 
-        instant_access = app.config["DOMAIN_APPLI"] + "/?instant_access=" + pem + "&address=" + _a.address.bech32()
+        instant_access = app.config["DOMAIN_APPLI"] + "/?instant_access=" + str(pem,"utf8") + "&address=" + _a.address.bech32()
         private = _a.private_key_seed
         send_mail(open_html_file("new_account",{
             "dest":email,

@@ -20,7 +20,7 @@
     <br><br>
 
     <div *ngIf="config.webcamsAvailable>0">
-      <app-scanner (flash)="onscan($event)" [size]="150"></app-scanner>
+      <app-scanner (flash)="onscan($event)" [size]="300"></app-scanner>
     </div>
   </div>
 
@@ -29,6 +29,13 @@
   <br><br>
   <div class="mat-elevation-z4" style="margin: 10px;padding:5px;" *ngIf="validate_nfts.length>0 && addr.length>0">
     <h3>Cet utilisateur posséde</h3>
+    <div *ngIf="photo?.length>0">
+      <app-image [src]="photo" style="max-width: 200px;"></app-image>
+      <br>
+      <small>Vérifier l'identité du propriétaire</small>
+      <br><br>
+    </div>
+
     <div *ngFor="let nft of validate_nfts" style="text-align: left;margin-left: 10px;">
       <mat-icon style="font-size: small;">checkmark</mat-icon>&nbsp;
       {{nft.title}} - {{nft.description}}

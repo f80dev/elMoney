@@ -61,7 +61,7 @@ export class SettingsComponent implements OnInit {
     $$("Modification du visuel")
     this.dialog.open(ImageSelectorComponent, {position:
         {left: '5vw', top: '5vh'},
-        width: '90vw', height: 'fit-container', data:
+      width: '90vw', height: 'fit-container', data:
         {
           title:'Votre visuel',
           result: "",
@@ -153,4 +153,26 @@ export class SettingsComponent implements OnInit {
     localStorage.removeItem("pem");
     showMessage(this,"Votre signature n'est plus stocké sur ce device");
   }
+
+  update_identity() {
+    this.dialog.open(ImageSelectorComponent, {position: {left: '5vw', top: '5vh'},
+      width: '90vw', height: 'fit-container', data:
+        {
+          title:"Identité",
+          subtitle:"Une photo d'identité ou d'un document officiel",
+          checkCode: true,
+          width: "200px",
+          height: "300px",
+          quality:0.8,
+          bank:false,
+          webcam:true
+        }
+    }).afterClosed().subscribe((result) => {
+      if (result) {
+        this.user.identity=result.img;
+      }
+    });
+  }
+
+
 }

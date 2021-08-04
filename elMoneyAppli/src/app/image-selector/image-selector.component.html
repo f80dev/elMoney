@@ -12,6 +12,16 @@
       </button>
     </div>
 
+    <div style="display: inline-flex;">
+      <button mat-flat-button mat-button
+              *ngIf="data.webcam"
+              style="height:45px"
+              class="app-button"
+              (click)="showWebcam=true">
+        Caméra
+      </button>
+    </div>
+
     <div style="display: inline-flex;height:50px;">
       <div class="fake-button">
         <label for="file">&nbsp;
@@ -25,7 +35,7 @@
 
     <div style="display: inline-flex;height:50px;padding: 10px;font-size: large;">/</div>
 
-    <div style="display: inline-flex;width:250px;height:50px;">
+    <div style="display: inline-flex;width:250px;height:50px;" *ngIf="data.bank">
       <mat-form-field appearance="fill" class="app-field" style="font-size: small;width:170px;margin:0px;">
         <mat-label>Rechercher des images</mat-label>
         <input matInput [placeholder]="inputSearch" type="text"  [(ngModel)]="query" (keypress)="search($event)" cdkFocusInitial>
@@ -41,6 +51,24 @@
     </div>
   </div>
 
+  <div *ngIf="showWebcam" style="width: 100%;text-align: center;">
+    <webcam
+    [width]="350"
+    [trigger]="triggerObservable"
+    [allowCameraSwitch]="false"
+    [imageQuality]="0.85"
+    [captureImageData]="true"
+    imageType="image/jpeg"
+    (imageCapture)="handleImage($event)">
+  </webcam><br>
+    <button mat-button mat-raised-button
+          class="app-button"
+          title="Déclenche la prise de vue"
+          (click)="takePhoto()">
+    Déclenche
+  </button>
+
+  </div>
 
 
   <div style="display: inline-block;flex-wrap: wrap;max-height:300px;overflow: scroll;" *ngIf="pictures.length>0">
@@ -89,7 +117,7 @@
   <button id="cmdTurn" mat-button mat-raised-button mat-icon-button
           class="icon-button"
           title="Permet de faire tourner la photo de 90 degrés"
-          *ngIf="data.square && data.result.startsWith('data')"
+          *ngIf="data.square && data.result?.startsWith('data')"
           (click)="rotatePhoto()">
     <mat-icon>refresh</mat-icon>
   </button>

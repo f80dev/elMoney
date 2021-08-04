@@ -86,6 +86,7 @@ import { NftConfirmComponent } from './nft-confirm/nft-confirm.component';
 import { MinicontactsComponent } from './minicontacts/minicontacts.component';
 
 
+
 const config: SocketIoConfig = {
   url: environment.domain_server,
   options: {}

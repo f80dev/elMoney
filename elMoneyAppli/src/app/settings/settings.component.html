@@ -178,6 +178,19 @@
     <mat-expansion-panel class="app-panel" [expanded]="open_section==3">
       <mat-expansion-panel-header>Sécurité</mat-expansion-panel-header>
 
+      <img *ngIf="user.identity?.length>0" [src]="user.identity"
+           title="Mettre a jour l'identité"
+           style="width: 200px;cursor: pointer;"
+           (click)="update_identity()">
+      <button mat-raised-button mat-button
+              class="app-button"
+              color="alert"
+              *ngIf="user.identity?.length==0"
+              (click)="update_identity()">
+        <div class="bloc-bouton">Ajouter une<br>identification</div>
+      </button>
+      <br><br>
+
       <button mat-raised-button mat-button
               class="app-button"
               color="alert"

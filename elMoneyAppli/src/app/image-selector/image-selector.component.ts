@@ -6,6 +6,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {ApiService} from "../api.service";
 import {ImageCroppedEvent} from "ngx-image-cropper";
 import {ConfigService} from "../config.service";
+import {Observable, Subject} from "rxjs";
 
 @Component({
   selector: 'app-image-selector',
@@ -29,6 +30,10 @@ export class ImageSelectorComponent implements OnInit {
   inputSearch: string="";
   query: string="";
 
+  trigger: Subject<void> = new Subject<void>();
+  image:any;
+
+
   constructor(
     public dialog2:MatDialog,
     public snackBar:MatSnackBar,
@@ -49,12 +54,14 @@ export class ImageSelectorComponent implements OnInit {
     if(data.direct=="photo")this.onSelectFile({});
     if(data.direct=="files")this.onSelectFile({});
 
-    if(data.result.startsWith("http")){
+    if(data.result){
+      if(data.result.startsWith("http")){
       // this.api.convert(data.result).subscribe((r:any)=>{
       //   this.imageBase64="data:image/jpg;base64,"+r.result;
       // });
+      }
+      if(data.result.startsWith("data:"))this.imageBase64=data.result;
     }
-    if(data.result.startsWith("data:"))this.imageBase64=data.result;
 
   }
 
@@ -123,9 +130,9 @@ export class ImageSelectorComponent implements OnInit {
 
 
   handle=0;
+  showWebcam: boolean=false;
 
   search($event: any) {
-
     if($event.keyCode==13){
         if(this.query.length==0){
           this.pictures=[];
@@ -138,5 +145,18 @@ export class ImageSelectorComponent implements OnInit {
       clearTimeout(this.handle);
       this.handle=setTimeout(()=>{this.search({keyCode:13})},700);
     }
+  }
+
+
+  public get triggerObservable(): Observable<void> {
+    return this.trigger.asObservable();
+  }
+
+  handleImage(event: any) {
+    this.image=event.imageData;
+  }
+
+  takePhoto() {
+    this.imageBase64=this.image;
   }
 }

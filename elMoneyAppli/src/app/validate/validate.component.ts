@@ -16,6 +16,7 @@ export class ValidateComponent implements OnInit {
   nfts: any[]=[];
   validate_nfts: any[]=[];
   message: string="";
+  photo: string="";
 
   constructor(
     public api:ApiService,
@@ -43,6 +44,12 @@ export class ValidateComponent implements OnInit {
       if(this.validate_nfts.length==0){
         showMessage(this,"Ce wallet ne posséde aucun de vos tokens")
       }
+
+      this.api._get("users/"+$event.data+"/","").subscribe((u:any)=>{
+        if(u.length>0){
+          this.photo=u[0].identity;
+        }
+      });
     }
   }
 

@@ -723,6 +723,7 @@ export class ImporterComponent implements OnInit {
           lbl_cancel:"Modifier"
         }
     }).afterClosed().subscribe((result) => {
+      debugger
       if(result=="yes"){
         this.tokenizer(fee);
       } else {
