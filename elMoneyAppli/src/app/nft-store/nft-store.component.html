@@ -18,7 +18,7 @@
       <img [src]="selected_dealer?.shop_visual" style="width:60px;">
     </td>
 
-    <td style="padding:0px;text-align: left;min-width:200px;">
+    <td style="padding:0px;text-align: left;min-width:175px;">
       <mat-select id="selOrder" [(ngModel)]="selected_dealer" (selectionChange)="refresh()"
                   style="font-size: large;font-weight: lighter;margin: 0px;width: 200px;">
         <mat-option *ngFor="let dealer of dealers" [value]="dealer">
@@ -27,26 +27,22 @@
       </mat-select>
 
       <br>
-      <small>{{selected_dealer?.shop_description}}</small>
+      <p style="font-size: small;line-height: 85%;">{{selected_dealer?.shop_description}}</p>
     </td>
 
     <td style="text-align: left;width: 30px;">
       <mat-slide-toggle *ngIf="nfts?.length>0" [(ngModel)]="art">Premium</mat-slide-toggle>
     </td>
 
-    <td style="text-align: right;width: min-content">
-
-      <button mat-raised-button
-              mat-button class="app-button"
+    <td style="text-align: right;width: fit-content;">
+      <button mat-raised-button mat-icon-button
+              mat-button class="icon-button"
               title="Demander votre référencement à ce distributeur"
               *ngIf="selected_dealer?.email?.length>0 && user.isCreator()"
               (click)="ask_reference(selected_dealer)">
-        <div class="bloc-bouton">Demander un<br>référencement</div>
+        <mat-icon>control_point</mat-icon>
       </button>
 
-    </td>
-
-    <td style="text-align: right;">
       <button mat-raised-button mat-icon-button
               mat-button class="icon-button"
               title="Changement de distributeur"

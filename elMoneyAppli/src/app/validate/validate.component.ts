@@ -16,7 +16,7 @@ export class ValidateComponent implements OnInit {
   nfts: any[]=[];
   validate_nfts: any[]=[];
   message: string="";
-  photo: string="";
+  photo: string=null;
 
   constructor(
     public api:ApiService,
@@ -48,6 +48,9 @@ export class ValidateComponent implements OnInit {
       this.api._get("users/"+$event.data+"/","").subscribe((u:any)=>{
         if(u.length>0){
           this.photo=u[0].identity;
+          if(!this.photo)this.photo="";
+        } else {
+          this.photo="";
         }
       });
     }

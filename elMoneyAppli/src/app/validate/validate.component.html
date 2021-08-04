@@ -35,8 +35,13 @@
       <small>Vérifier l'identité du propriétaire</small>
       <br><br>
     </div>
+    <div *ngIf="photo?.length==0">
+      <span style="font-size: xx-large">⚠️</span><br>
+      aucune preuve d'identification
+      <br><br>
+    </div>
 
-    <div *ngFor="let nft of validate_nfts" style="text-align: left;margin-left: 10px;">
+    <div *ngFor="let nft of validate_nfts" style="text-align: left;margin-left: 10px;line-height: 70%;margin-bottom: 5px;">
       <mat-icon style="font-size: small;">checkmark</mat-icon>&nbsp;
       {{nft.title}} - {{nft.description}}
       <br>

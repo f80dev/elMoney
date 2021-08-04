@@ -296,6 +296,7 @@ export class ImporterComponent implements OnInit {
           internet: false,
           ratio: 1,
           quality:0.7,
+          webcam:true,
           bank:bank
         }
     }).afterClosed().subscribe((result) => {
