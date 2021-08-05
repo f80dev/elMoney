@@ -153,10 +153,11 @@ export class ImageSelectorComponent implements OnInit {
   }
 
   handleImage(event: any) {
-    this.image=event.imageData;
+    this.imageBase64=event.imageData;
   }
 
   takePhoto() {
-    this.imageBase64=this.image;
+    this.trigger.next();
+
   }
 }
