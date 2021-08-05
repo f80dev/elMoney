@@ -99,7 +99,8 @@ export class NftsComponent implements OnChanges {
     if ((nft.properties & 0b10000) > 0) {
       this.dialog.open(PromptComponent, {
         data: {
-          title: 'Donner la réponse pour gagner (souvent en 1 seul mot ou un seul nombre)',
+          title:"Répondez pour gagner !",
+          subtitle: 'Donner la réponse pour gagner (souvent en 1 seul mot ou un seul nombre)',
           question:nft.description,
           onlyConfirm: false,
           lbl_ok: 'Répondre',

@@ -65,7 +65,7 @@ export class AuthentComponent implements OnInit {
       } else {
         let mess="Bonjour";
         this.api.set_identifier(r[0]["default_money"])
-        if(r[0].hasOwnProperty("pseudo"))mess=mess+" "+r.pseudo;
+        if(r[0].hasOwnProperty("pseudo"))mess=mess+" "+r[0].pseudo;
         showMessage(this,mess);
         this.quit(r[0]);
       }

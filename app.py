@@ -1059,7 +1059,7 @@ def new_account():
         "address": _a.address.bech32(),
         "addr": _a.address.bech32(),
         "keys": {"public": _a.address.bech32(), "private": private},
-        "pem": pem,
+        "pem": str(pem,"utf8"),
         "default_money":NETWORKS[bc.network_name]["identifier"],
         "default_name": NETWORKS[bc.network_name]["unity"]
     })

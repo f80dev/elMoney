@@ -69,9 +69,10 @@ export class SettingsComponent implements OnInit {
           bank:true,
           width: 200,
           height: 200,
-          emoji: false,
-          internet: false,
+          emoji: true,
+          internet: true,
           ratio: 1,
+          webcam:true,
           quality:0.7
         }
     }).afterClosed().subscribe((result) => {

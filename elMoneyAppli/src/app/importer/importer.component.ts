@@ -724,8 +724,7 @@ export class ImporterComponent implements OnInit {
           lbl_cancel:"Modifier"
         }
     }).afterClosed().subscribe((result) => {
-      debugger
-      if(result=="yes"){
+      if(result==""){
         this.tokenizer(fee);
       } else {
         this.selected_tab=1;
