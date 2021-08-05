@@ -53,14 +53,16 @@
 
   <div *ngIf="showWebcam" style="width: 100%;text-align: center;">
     <webcam
-    [width]="350"
-    [trigger]="triggerObservable"
-    [allowCameraSwitch]="false"
-    [imageQuality]="0.85"
-    [captureImageData]="true"
-    imageType="image/jpeg"
-    (imageCapture)="handleImage($event)">
+      [width]="300"
+      [trigger]="triggerObservable"
+      [allowCameraSwitch]="false"
+      [imageQuality]="0.85"
+      [captureImageData]="true"
+      imageType="image/jpeg"
+      (click)="takePhoto()"
+      (imageCapture)="handleImage($event)">
   </webcam><br>
+
     <button mat-button mat-raised-button
           class="app-button"
           title="Déclenche la prise de vue"

@@ -23,6 +23,7 @@ export class AuthentComponent implements OnInit {
   authent_method="email";
   showSaveKey: boolean=false;
   savePrivateKey=false;
+  profils=[];
 
   constructor(public config:ConfigService,
               public dialogRef: MatDialogRef<AuthentComponent>,
@@ -45,6 +46,7 @@ export class AuthentComponent implements OnInit {
   }
 
   quit(result:any){
+    if(this.savePrivateKey)localStorage.setItem('pem',result.pem);
     this.dialogRef.close(result);
   }
 
@@ -58,7 +60,6 @@ export class AuthentComponent implements OnInit {
           this.message = "";
           this.user.pem = r.pem;
           this.user.email=r.email;
-          if(this.savePrivateKey)localStorage.setItem('pem',r.pem);
           this.user.init(r.addr);
           this.quit(r);
         });
@@ -85,6 +86,7 @@ export class AuthentComponent implements OnInit {
     this.api._post("analyse_pem", "", profil, 240).subscribe((r: any) => {
       this.message="";
       $$("Changement de compte");
+      this.savePrivateKey=true;
       this.user.pem=r.pem;
       this.user.init(r.address, ()=>{this.quit(r);});
     },(err)=>{showError(this)});

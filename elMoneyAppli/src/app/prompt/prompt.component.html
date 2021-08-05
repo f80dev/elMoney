@@ -1,8 +1,8 @@
 <div class="app-prompt">
-  <h1 mat-dialog-title style="margin-bottom: 0px !important;">{{data.title}}</h1>
-  <div style="font-size: small;margin-bottom: 5px;width:100%;text-align: center;" *ngIf="data.subtitle?.length>0">{{data.subtitle}}</div>
+  <div mat-dialog-title style="margin-bottom: 0px !important;width:100%;text-align: center;">{{data.title}}</div>
+<!--  <div style="font-size: small;margin-bottom: 5px;" *ngIf="data.subtitle?.length>0">{{data.subtitle}}</div>-->
   <div mat-dialog-content>
-    <p *ngIf="data.question?.length>0 && !data.question?.startsWith('http') && !data.question?.startsWith('./')" style="font-size: medium">{{data.question}}</p>
+    <p *ngIf="data.question?.length>0 && !data.question?.startsWith('http') && !data.question?.startsWith('./')" style="font-size: medium;width:100%;text-align: center;">{{data.question}}</p>
     <div *ngIf="data.question?.length>0 && (data.question?.startsWith('http') || data.question?.startsWith('./'))">
       <iframe  scrolling="auto" frameborder="0" style="background: none;"
                [src]="data.question | safe: 'resourceUrl'" width="100%">

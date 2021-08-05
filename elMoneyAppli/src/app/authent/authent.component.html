@@ -75,7 +75,7 @@
     <mat-form-field class="app-field" style="max-width: 250px;">
       <mat-label>Profils de test</mat-label>
       <mat-select [(ngModel)]="test_profil" (ngModelChange)="change_user($event)">
-        <mat-option *ngFor="let profil of profils" [value]="profil.value">{{profil.label}}</mat-option>
+        <mat-option *ngFor="let profil of config.profils" [value]="profil.value">{{profil.label}}</mat-option>
       </mat-select>
     </mat-form-field>
     <app-tuto label="Il est possible d'utiliser des comptes pour tester cette application. En revanche plusieurs personnes pouvant utiliser les mêmes comptes, il est possible que le comportement soit parfois imprevisible"></app-tuto>

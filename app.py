@@ -188,6 +188,7 @@ def get_elrond_user(data):
 
         if type(data)==bytes:
             content=str(data,"utf8")
+            if content.endswith(".pem"):return Account(pem_file="./PEM/"+content)
             if not "BEGIN PRIVATE KEY" in content:
                 content=str(aes256.decrypt(base64.b64decode(content),SECRET_KEY),"utf8")
         else:
@@ -198,6 +199,7 @@ def get_elrond_user(data):
             else:
                 content=data["pem"]
 
+            if content.endswith(".pem"): return Account(pem_file="./PEM/" + content)
             if not "BEGIN PRIVATE KEY" in content:
                 content=str(aes256.decrypt(base64.b64decode(content),SECRET_KEY),"utf8")
 
@@ -914,10 +916,28 @@ def deploy(name:str,unity:str,nbdec:str,amount:str,data:dict=None):
 def server_config():
     log("Récupération de la configuration du server avec la bank "+bc.bank.address.bech32())
 
+    profils = [
+        {"label": "Alice", "value": "alice.pem"},
+        {"label": "Eve", "value": "eve.pem"},
+        {"label": "Dan", "value": "dan.pem"},
+        {"label": "Grace", "value": "grace.pem"},
+        {"label": "Franck", "value": "franck.pem"},
+        {"label": "Ivan", "value": "ivan.pem"},
+        {"label": "Mallory", "value": "mallory.pem"},
+        {"label": "Judy", "value": "judy.pem"},
+        {"label": "Thomas", "value": "thomas.pem"},
+        {"label": "Herve", "value": "herve.pem"},
+        {"label": "Test1", "value": "test1.pem"},
+        {"label": "Test2", "value": "test2.pem"},
+        {"label": "Test3", "value": "test3.pem"},
+        {"label": "Test4", "value": "test4.pem"}
+    ]
+
     infos = {
         "bank_addr": bc.bank.address.bech32(),
         "proxy": bc._proxy.url,
         "network":bc.network_name,
+        "profils":profils,
         "new_esdt_price":ESDT_PRICE/1e18,
         "nft_contract": NETWORKS[bc.network_name]["nft"],
         "domain_appli":DOMAIN_APPLI,

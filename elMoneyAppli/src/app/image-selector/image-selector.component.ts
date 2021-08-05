@@ -120,14 +120,12 @@ export class ImageSelectorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
   }
 
   selImage(picture: any) {
     this.data.result=picture.src;
     this.dialogRef.close({img:picture.src,original:picture.src,file:""});
   }
-
 
   handle=0;
   showWebcam: boolean=false;
@@ -152,12 +150,16 @@ export class ImageSelectorComponent implements OnInit {
     return this.trigger.asObservable();
   }
 
+
   handleImage(event: any) {
-    this.imageBase64=event.imageData;
+    this.imageBase64=event.imageAsDataUrl;
+    this.original=event.imageAsDataUrl;
+    this.originalFile=this.original;
+    this.showWebcam=false;
   }
+
 
   takePhoto() {
     this.trigger.next();
-
   }
 }

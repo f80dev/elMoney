@@ -458,10 +458,13 @@ export class ImporterComponent implements OnInit {
 
   quick_photo(token:any,title="",subtitle="",w=400,h=400,square=true) {
     this.add_visual((result:any)=>{
+      debugger
       this.visual=result.img;
       this.picture=result.file;
-      this.filename=result.file.name;
-      this.file_format=result.file.type;
+      if(result.file){
+        this.filename=result.file.name;
+        this.file_format=result.file.type;
+      }
       this.ask_for_text("Titre","Donner un titre à votre NFC",(title)=>{
         if(title && title.length>0){
           this.ask_for_text("Présentation","Rédigez une présentation rapide de votre photo pour la marketplace",(legende)=>{
