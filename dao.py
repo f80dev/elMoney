@@ -91,7 +91,10 @@ class DAO:
         if not pem.endswith(".pem"):
             pem=base64.b64encode(aes256.encrypt(pem,SECRET_KEY))
         body={'email':email,'addr':addr,"pem":pem,"contacts":contacts}
-        return self.db["users"].replace_one(filter={"email": email}, replacement=body, upsert=True),pem
+        rc = self.db["users"].replace_one(filter={"addr": addr}, replacement=body, upsert=True), pem
+        return rc[0].modified_count==1
+
+
 
     def get_user(self, email):
         field="email"

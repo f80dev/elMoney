@@ -555,8 +555,9 @@ class ElrondNet:
         if addr is None or len(addr)<20:
             return {"error": 500, "message": "address incorrect"}
 
+        _a=Account(address=addr)
         if not addr.startswith("erd"):
-            addr=Account(address=addr).address.bech32()
+            addr=_a.address.bech32()
 
         rc = self.cached_sess.get(self._proxy.url + "/address/" + addr + "/keys")
         if rc.status_code == 200:
@@ -565,6 +566,7 @@ class ElrondNet:
             for k in rc.keys():
                 obj[hex_to_str(k)]=hex_to_str(rc[k])
             obj["addr"]=addr
+            obj["hex_addr"]=_a.address.hex()
             log("Récupération terminée "+str(obj))
             rc=obj
         else:

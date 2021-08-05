@@ -150,6 +150,7 @@ export class UserService {
 
 
   init(addr:string=null,func=null,func_error=null) {
+   debugger
     addr=addr || this.addr;
     this.addr=addr;
     if(addr && addr!="null"){
@@ -165,6 +166,7 @@ export class UserService {
     this.api._get("users/"+this.addr).subscribe((body:any)=>{
       $$("Récupération de ",body);
       body=body[0];
+
       this.contacts=body.contacts || [];
       this.pseudo=body.pseudo || "";
       this.visual=body.visual || "/assets/img/anonymous.jpg";

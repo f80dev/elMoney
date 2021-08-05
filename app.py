@@ -752,12 +752,17 @@ def reload_accounts():
         _test=Account(pem_file="./PEM/"+acc)
         _user=dao.get_user(_test.address.bech32())
         if _user is None:
-            dao.save_user("",_test.address.bech32(),"./PEM/"+acc)
+            if not dao.save_user("",_test.address.bech32(),"./PEM/"+acc):
+                log("Probleme de création de "+acc)
+
+    for acc in data["accounts"]:
+        _test = Account(pem_file="./PEM/" + acc)
         bc.transferESDT(idx=NETWORKS[bc.network_name]["identifier"],
                             user_from=bc.bank,
                             user_to=_test.address.bech32(),
                             amount=data["amount"] * (5 ** 18)
                             )
+
     return jsonify({"message":"reloaded"})
 
 
@@ -842,17 +847,12 @@ def dealer_state(state:str,data:dict=None):
 
 @app.route('/api/add_miner/',methods=["POST"])
 def add_miner(data:dict=None):
-    if data is None:data = json.loads(str(request.data, encoding="utf-8"))
-
-
-    data["address"]=dao.get_user(data["address"])["addr"]
-    _miner = Account(address=data["address"])
+    data=json.loads(str(request.data, encoding="utf-8"))
+    _dealer=get_elrond_user(data)
     _profil_miner=bc.get_account(data["address"])
 
     if not "pseudo" in _profil_miner or len(_profil_miner["pseudo"])==0:
         return jsonify({"error":"Le créateur doit au moins avoir un pseudo"}),500
-
-    _dealer=bc.get_account(extract(data["pem"],"PRIVATE KEY for ","----"))
 
     if "email" in _profil_miner:
         send_mail(open_html_file("informe_ref",{
@@ -861,9 +861,7 @@ def add_miner(data:dict=None):
         }),_profil_miner["email"],subject="Vous venez d'être référencé")
 
 
-    tx=bc.add_miner(NETWORKS[bc.network_name]["nft"],
-                    get_elrond_user(data["pem"]), ["0x" + _miner.address.hex()]
-                    )
+    tx=bc.add_miner(NETWORKS[bc.network_name]["nft"],_dealer, ["0x" + _profil_miner["hex_addr"]])
 
     return jsonify(tx), 200
 

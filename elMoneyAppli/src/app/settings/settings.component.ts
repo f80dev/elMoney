@@ -11,6 +11,7 @@ import {ImageSelectorComponent} from "../image-selector/image-selector.component
 import {environment} from "../../environments/environment";
 import {NgNavigatorShareService} from "ng-navigator-share";
 import {ClipboardService} from "ngx-clipboard";
+import {PromptComponent} from "../prompt/prompt.component";
 
 @Component({
   selector: 'app-settings',
@@ -139,12 +140,24 @@ export class SettingsComponent implements OnInit {
     if(this.user.gas>0.01 && this.config.isProd()){
       showMessage(this,"Le solde du compte doit être nul pour pouvoir le supprimer");
     } else {
-      this.user.check_pem(()=>{
-        this.user.remove_account().subscribe(()=>{
-          showMessage(this,"Compte supprimé");
-          this.user.reset(true);
-        })
-      },this,"Signer pour supprimer votre compte");
+      this.dialog.open(PromptComponent,{width: 'auto',data:
+          {
+            title: "Supprimer votre compte ?",
+            question: "Cette action n'est pas annulable. L'ensemble des NFT achetés sont définitivement perdus",
+            onlyConfirme:true,
+            lbl_ok:"Ok",
+            lbl_cancel:"Annuler"
+          }
+      }).afterClosed().subscribe((result) => {
+        if(result){
+          this.user.check_pem(()=>{
+            this.user.remove_account().subscribe(()=>{
+              showMessage(this,"Compte supprimé");
+              this.user.reset(true);
+            })
+          },this,"Signer pour supprimer votre compte");
+        }
+      });
     }
 
   }

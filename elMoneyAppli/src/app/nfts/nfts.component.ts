@@ -227,7 +227,7 @@ export class NftsComponent implements OnChanges {
           result:this.user.addr
         }
       }).afterClosed().subscribe((result) => {
-        if (result!={} && result.length>0) {
+        if (result!={} && result && result.length>0) {
           let obj:any={
             dealers:result,
             pem:this.user.pem

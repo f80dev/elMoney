@@ -600,7 +600,7 @@ export class ImporterComponent implements OnInit {
               this.ask_for_text("La date","Quel jour à lieu votre événement",(dt)=> {
                 this.ask_for_text("Heure","Indiquer L'heure",(hr)=> {
                   this.desc =lieu +" - "+ this.datepipe.transform(dt,"dd/MM/yyyy") +" à "+hr;
-                  this.title = title + " - "
+                  this.title = title;
                   this.secret = "Billet: @id@";
                   if (token.tags) this.desc = this.desc + " " + token.tags;
                   this.ask_for_price("Prix unitaire du billet", (price) => {
