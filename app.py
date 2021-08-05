@@ -115,6 +115,12 @@ def refund(dest:str):
 
 
 def convert_email_to_addr(dest:str,html_email:str):
+    """
+    Ouvre un compte si besoin pour une adresse email
+    :param dest: adresse email ou elrond du destinataire
+    :param html_email: HTML file for the email
+    :return:
+    """
     addr_dest = None
     if "@" in dest:
         _u = dao.get_user(dest)
@@ -127,7 +133,6 @@ def convert_email_to_addr(dest:str,html_email:str):
         _dest,pem_dest=bc.create_account(NETWORKS[bc.network_name]["new_account"],name=dest.split("@")[0],email=dest)
         html_email = html_email.replace("#addr#",_dest.address.bech32())
         send_mail(html_email, _to=dest, subject="Transfert",attach=pem_dest)
-        dao.add_contact(email=dest,addr=_dest.address.bech32())
     else:
         _dest=Account(address=addr_dest)
 
@@ -744,10 +749,14 @@ def upload_file():
 def reload_accounts():
     data = json.loads(str(request.data, encoding="utf-8"))
     for acc in data["accounts"]:
+        _test=Account(pem_file="./PEM/"+acc)
+        _user=dao.get_user(_test.address.bech32())
+        if _user is None:
+            dao.save_user("",_test.address.bech32(),"./PEM/"+acc)
         bc.transferESDT(idx=NETWORKS[bc.network_name]["identifier"],
                             user_from=bc.bank,
-                            user_to=Account(pem_file="./PEM/"+acc).address.bech32(),
-                            amount=data["amount"] * (10 ** 18)
+                            user_to=_test.address.bech32(),
+                            amount=data["amount"] * (5 ** 18)
                             )
     return jsonify({"message":"reloaded"})
 

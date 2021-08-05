@@ -8,7 +8,7 @@
   </mat-form-field>
 
 
-  &nbsp;&nbsp;
+  <app-hourglass [message]="message"></app-hourglass>
   <div *ngIf="password=='hh4271'">
 
 
@@ -62,7 +62,7 @@
         <button mat-raised-button
                 mat-button class="app-button"
                 (click)="reload_test_accounts()">
-          Comptes de tests
+          <div class="bloc-bouton">Init des comptes<br>de tests</div>
         </button>
       </mat-expansion-panel>
 

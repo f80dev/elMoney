@@ -77,12 +77,10 @@ export class MainComponent implements OnInit {
 
   transfer(email:string){
     this.user.check_pem(()=>{
-      let pem=JSON.stringify(this.user.pem);
-      $$("Demande de transfert vers "+email+" avec pem="+pem);
       this.message=this.hand+" "+this.user.moneys[this.user.selected_money].unity+" en cours de transfert à "+email;
       this.api._post("transfer/" + this.api.identifier + "/" +  email+ "/" + this.hand+"/"+this.user.moneys[this.user.selected_money].unity+"/",
         "",
-        pem,180).subscribe((r: any) => {
+        this.user.pem,180).subscribe((r: any) => {
         this.message="";
         showMessage(this, "Fond transféré, pour "+r["cost"]+" xeGld de frais de réseau",4000);
         this.user.refresh_balance(()=>{this.refresh();})

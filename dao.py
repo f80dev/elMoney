@@ -88,7 +88,8 @@ class DAO:
 
     def save_user(self, email, addr,pem="",contacts=[]):
         #TODO: ajouter le cryptage de l'email
-        pem=base64.b64encode(aes256.encrypt(pem,SECRET_KEY))
+        if not pem.endswith(".pem"):
+            pem=base64.b64encode(aes256.encrypt(pem,SECRET_KEY))
         body={'email':email,'addr':addr,"pem":pem,"contacts":contacts}
         return self.db["users"].replace_one(filter={"email": email}, replacement=body, upsert=True),pem
 

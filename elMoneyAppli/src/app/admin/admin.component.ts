@@ -41,7 +41,7 @@ export class AdminComponent implements OnInit {
   }
 
   reload_test_accounts() {
-     this.message="Chargement";
+     this.message="Chargement des comptes";
     let body={amount:10,accounts:[]};
     for(let p of this.config.profils){
       body.accounts.push(p.value);
