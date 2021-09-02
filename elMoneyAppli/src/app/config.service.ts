@@ -77,6 +77,7 @@ export class ConfigService {
   }
 
   get_price(unity,func){
+    debugger
     let now=new Date().getTime();
     if(this.unity_conversion && this.unity_conversion.hasOwnProperty(unity) && now-this.unity_conversion[unity].lastdate<100000){
       func(this.unity_conversion[unity].value);
@@ -84,8 +85,8 @@ export class ConfigService {
     }
     if(unity=="eGld"){
       this.api._get("https://data.elrond.com/market/quotes/egld/price","",10,"").subscribe((result:any)=>{
-        this.unity_conversion[unity]={value:result,lastdate:new Date().getTime()};
         if(result.length>0){
+          this.unity_conversion[unity]={value:result[result.length-1].value,lastdate:new Date().getTime()};
           func(result[result.length-1].value);
         }
       },(err)=>{

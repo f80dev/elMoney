@@ -107,6 +107,7 @@
             <mat-icon>euro</mat-icon>
           </button>
 
+
           <button mat-icon-button mat-flat-button
                   title="En savoir plus sur le créateur de ce NFT"
                   *ngIf="nft.miner!=user.addr && !preview"
@@ -122,6 +123,7 @@
 
             <button mat-icon-button
                     class="icon-button"
+                    title="Ne plus voir le secret ou le fichier"
                     *ngIf="nft.open?.length>0"
                     (click)="nft.open=''">
               <mat-icon>visibility_off</mat-icon>

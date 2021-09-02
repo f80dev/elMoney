@@ -1,5 +1,6 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {ConfigService} from "../config.service";
+import {$$} from "../tools";
 
 @Component({
   selector: 'app-unity',
@@ -38,6 +39,7 @@ export class UnityComponent implements OnChanges {
   }
 
   switch_fiat() {
+    $$("Changement d'unité");
     let actual=localStorage.getItem("unity");
     if(!actual || actual=="fiat"){
       localStorage.setItem("unity",this.base);
@@ -45,7 +47,6 @@ export class UnityComponent implements OnChanges {
     else{
       localStorage.setItem("unity","fiat");
     }
-
     this.refresh();
   }
 

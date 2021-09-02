@@ -656,7 +656,7 @@ export class ImporterComponent implements OnInit {
 
     this.add_visual((visual)=>{
       if(!visual)showMessage(this,"Pas de visuel");
-      this.ask_for_text("Titre","Titre de votre annonce",(title)=>{
+      this.ask_for_text("Titre de votre annonce","",(title)=>{
         if(title) {
           this.ask_for_text("Description","Rédigez une courte phrase pour donner envie de l'acheter",(desc)=>{
             if(desc){
