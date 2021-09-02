@@ -117,7 +117,7 @@ export class ImporterComponent implements OnInit {
         }
         this.selected_money=this.moneys[0];
       });
-    },this,"La création d'un NFT requiert votre clé",()=>{
+    },this,"La création d'un NFT requiert votre signature",()=>{
       this._location.back();
     });
 

@@ -52,7 +52,8 @@ export class UnityComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if(this.value>10 && this.decimals>2)this.decimals=2;
-    if(this.value>200 && this.decimals>1)this.decimals=1;
+    if(this.value>100 && this.decimals>1)this.decimals=1;
+    if(this.value>10000 && this.decimals>1)this.decimals=0;
     this.unity=this.base;
     this.refresh();
   }

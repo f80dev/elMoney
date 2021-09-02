@@ -235,7 +235,7 @@ export class UserService {
     if(this.addr && this.addr.length>20){
       if(func)func();
     }else{
-      this.dialog.open(AuthentComponent,{width: '350px',height:"500px",data:
+      this.dialog.open(AuthentComponent,{width: '350px',height:"auto",data:
           {
             title: title,
             redirect:redirect

@@ -30,7 +30,7 @@
     <ng-container matColumnDef="gas">
       <th mat-header-cell style="padding:6px" title="Frais de transactions (lié à l'usage du réseau Elrond)" *matHeaderCellDef>Transaction (xEgld)</th>
       <td mat-cell *matCellDef="let element">
-        <app-unity [value]="element.fee" decimals="5"></app-unity>
+        <app-unity [value]="element.fee" [decimals]="5"></app-unity>
       </td>
     </ng-container>
 
