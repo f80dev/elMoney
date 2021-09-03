@@ -849,6 +849,7 @@ def dealer_state(state:str,data:dict=None):
 def add_miner(data:dict=None):
     data=json.loads(str(request.data, encoding="utf-8"))
     _dealer=get_elrond_user(data)
+    _profil_dealer=bc.get_account(_dealer.address.bech32())
     _profil_miner=bc.get_account(data["address"])
 
     if not "pseudo" in _profil_miner or len(_profil_miner["pseudo"])==0:
@@ -857,7 +858,7 @@ def add_miner(data:dict=None):
     if "email" in _profil_miner:
         send_mail(open_html_file("informe_ref",{
             "dest":_profil_miner["pseudo"],
-            "from":_dealer["shop_name"]
+            "from":_profil_dealer["shop_name"]
         }),_profil_miner["email"],subject="Vous venez d'être référencé")
 
 
