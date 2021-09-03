@@ -120,6 +120,6 @@ export class MinersComponent implements OnInit {
   }
 
   open_creator(miner: any) {
-    this.router.navigate(["miners"],{queryParams:{miner:miner.addr}});
+    this.router.navigate(["miner"],{queryParams:{miner:miner.addr}});
   }
 }

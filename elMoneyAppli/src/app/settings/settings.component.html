@@ -77,10 +77,12 @@
         <br>
         <small>Votre adresse publique</small>:<br>
         <qrcode
+          *ngIf="user.addr?.length>0"
           [width]="150"
           (click)="informe_clipboard()"
           style="display: inline-block;"
           [elementType]="'svg'"
+          [allowEmptyString]="false"
           [errorCorrectionLevel]="'M'"
           [qrdata]="user.addr">
         </qrcode><br>
@@ -159,11 +161,13 @@
 
       <br><br>
       <qrcode
+        *ngIf="user.shop_website?.length>0"
         [width]="150"
         ngxClipboard
         [cdkCopyToClipboard]="user.shop_website"
         style="display: inline-block;"
         [elementType]="'svg'"
+        [allowEmptyString]="false"
         [errorCorrectionLevel]="'M'"
         [qrdata]="user.shop_website">
       </qrcode>

@@ -35,14 +35,14 @@ export class CreateComponent implements OnInit {
     this.user.check_email(()=>{
       this.email_confirm=this.user.email;
       this.user.check_pem(()=>{
-       this.user.refresh_balance((r:any)=>{
-       if(r.EGLD.solde<this.config.server.new_esdt_price){
-         showMessage(this,"Vous n'avez pas assez d'eGold pour créer une nouvelle monnaie. recharger votre compte jusqu'a 5 eGold");
-         this.router.navigate(["faucet"]);
-       }
-       }
-     );
-    },"Création d'une monnaie");
+        this.user.refresh_balance((r:any)=>{
+            if(r.EGLD.solde<this.config.server.new_esdt_price){
+              showMessage(this,"Vous n'avez pas assez d'eGold pour créer une nouvelle monnaie. recharger votre compte jusqu'a 5 eGold");
+              this.router.navigate(["faucet"]);
+            }
+          }
+        );
+      },"Création d'une monnaie");
     })
 
 
@@ -73,12 +73,14 @@ export class CreateComponent implements OnInit {
     this.api._post("/deploy/"+this.name+"/"+this.unity+"/18/"+this.amount,"",obj,240).subscribe((r:any)=>{
       this.message="";
       this.api.set_identifier(r.id);
-      this.user.refresh_balance(()=>{
-        showMessage(this,"Votre monnaie est maintenant disponible");
-        this.router.navigate(["main"]);
-      },()=>{
-        showError(this);
-      });
+      setTimeout(()=>{
+        this.user.refresh_balance(()=>{
+          showMessage(this,"Votre monnaie est maintenant disponible");
+          this.router.navigate(["moneys"]);
+        },()=>{
+          showError(this);
+        });
+      },1000);
     },(err:any)=>{
       this.message="";
       $$("Erreur de fabrication de la monnaie",err);
