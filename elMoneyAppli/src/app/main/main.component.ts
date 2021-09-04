@@ -40,15 +40,18 @@ export class MainComponent implements OnInit {
 
     this.user.check_email(()=>{
       subscribe_socket(this,"refresh_account",($event)=>{
-      if($event.param.comment){
-        let unity=$event.param.comment;
-        if(unity!=this.user.moneys[this.user.selected_money].unity){
-          showMessage(this,"Vous avez reçu des "+unity);
-          this.router.navigate(["moneys"],{queryParams:{"select":unity}});
+        debugger
+        if($event.param.comment){
+          let unity=$event.param.comment;
+          if(unity!=this.user.moneys[this.user.selected_money].unity){
+            showMessage(this,"Vous avez reçu des "+unity);
+            this.router.navigate(["moneys"],{queryParams:{"select":unity}});
+          }
         }
-      }
-      this.refresh();
-    });
+        this.user.refresh_balance(()=>{
+          this.refresh();
+        });
+      });
     },this.router,null,"main")
 
 

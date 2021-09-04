@@ -993,7 +993,7 @@ def get_contacts(addr:str):
 
 
 @app.route('/api/money/<idx>/',methods=['DELETE'])
-def del_contacts(idx:str):
+def del_contracts(idx:str):
     dao.del_contract(idx,bc._proxy.url)
     return jsonify({"message":"monnaie dé"})
 

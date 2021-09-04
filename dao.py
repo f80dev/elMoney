@@ -21,8 +21,11 @@ class DAO:
     def add_contact(self, owner_addr, contact_addr):
         _user=self.get_user(owner_addr)
         if not "contacts" in _user:_user["contacts"]=[]
-        _user["contacts"].append(contact_addr)
-        return self.save_user(_user["email"],_user["addr"],_user["pem"],_user["contacts"])
+        if contact_addr not in _user["contacts"]:
+            _user["contacts"].append(contact_addr)
+            return self.save_user(_user["email"],_user["addr"],_user["pem"],_user["contacts"])
+        else:
+            return False
 
 
     def add_money(self,idx:str,unity:str,nbDecimals:int,owner:str,_public:bool,transferable:bool,url="",proxy=""):

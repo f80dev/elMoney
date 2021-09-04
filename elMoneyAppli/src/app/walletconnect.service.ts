@@ -25,7 +25,6 @@ export class WalletconnectService implements OnInit {
     }
 
     this.connector.on("connect", (error, payload) => {
-      debugger
       if (error) {
         throw error;
       }

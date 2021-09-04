@@ -18,19 +18,7 @@ export class MinicontactsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    debugger
-    this.api._get("users/"+this.user.contacts.join(",")+"/","").subscribe((r:any)=>{
-      this.user.contacts=[];
-      for(let c of r){
-        this.user.contacts.push({
-          label:c.pseudo,
-          selected:false,
-          icon:"person",
-          email:c.email,
-          color:"white"
-        })
-      }
-    });
+    this.user.load_contacts();
   }
 
   select_friends(fr: any) {

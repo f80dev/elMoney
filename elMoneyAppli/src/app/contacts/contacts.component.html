@@ -5,35 +5,34 @@
     <mat-form-field appearance="fill" class="app-field">
       <mat-label>Ajouter un mail</mat-label>
       <input matInput type="text" max="50" [(ngModel)]="email" (keypress)="add_contact($event)">
-   </mat-form-field>
-
-    &nbsp;
-       <button mat-raised-button
-          mat-button
-               *ngIf="email?.length>0"
-          class="app-button"
-          (click)="add_contact({keyCode:13})">
-    Ajouter
-  </button>
+    </mat-form-field>
+    <button mat-raised-button
+            mat-button
+            *ngIf="email?.length>0"
+            class="app-button"
+            (click)="add_contact({keyCode:13})">
+      Ajouter
+    </button>
     <br>
     <mat-form-field appearance="fill" style="max-width: 250px"
                     *ngIf="email?.startsWith('erd')"
                     class="app-field">
       <mat-label>Pseudo</mat-label>
       <input matInput type="text" max="50" [(ngModel)]="pseudo">
-   </mat-form-field>
+    </mat-form-field>
 
   </div>
-<table style="width: 90vw;">
-  <tr *ngFor="let contact of user.contacts">
-    <td>{{contact.pseudo}}</td>
-    <td>
-      {{contact.email.substr(0,30)}}
-      <span *ngIf="contact.email?.length>30">...</span>
-    </td>
-    <td style="font-size: small">
-      <mat-icon (click)="del_contact(contact.email)">cancel</mat-icon>
-    </td>
-  </tr>
-</table>
+  <table style="width: 80%;margin:10%;text-align: left;">
+    <tr *ngFor="let contact of user.contacts">
+      <td style="width: 20px"><mat-icon>person</mat-icon></td>
+      <td>{{contact.label}}</td>
+      <td>
+        {{contact.email?.substr(0,30)}}
+        <span *ngIf="contact.email?.length>30">...</span>
+      </td>
+      <td style="font-size: small">
+        <mat-icon (click)="del_contact(contact.email)" style="cursor: pointer">cancel</mat-icon>
+      </td>
+    </tr>
+  </table>
 </div>

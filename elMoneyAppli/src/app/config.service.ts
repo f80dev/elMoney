@@ -77,7 +77,6 @@ export class ConfigService {
   }
 
   get_price(unity,func){
-    debugger
     let now=new Date().getTime();
     if(this.unity_conversion && this.unity_conversion.hasOwnProperty(unity) && now-this.unity_conversion[unity].lastdate<100000){
       func(this.unity_conversion[unity].value);

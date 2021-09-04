@@ -76,7 +76,7 @@ export class CreateComponent implements OnInit {
       setTimeout(()=>{
         this.user.refresh_balance(()=>{
           showMessage(this,"Votre monnaie est maintenant disponible");
-          this.router.navigate(["moneys"]);
+          setTimeout(()=>{this.router.navigate(["moneys"])},1000);
         },()=>{
           showError(this);
         });

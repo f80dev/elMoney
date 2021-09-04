@@ -458,7 +458,6 @@ export class ImporterComponent implements OnInit {
 
   quick_photo(token:any,title="",subtitle="",w=400,h=400,square=true) {
     this.add_visual((result:any)=>{
-      debugger
       this.visual=result.img;
       this.picture=result.file;
       if(result.file){

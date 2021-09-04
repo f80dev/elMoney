@@ -14,7 +14,7 @@ import {Location} from "@angular/common";
   providedIn: 'root'
 })
 export class UserService {
-  contacts:any[]=[];
+  public contacts:any[]=[];
   email:string="";
   addr:string="";
   pem:string="";
@@ -39,7 +39,7 @@ export class UserService {
               public dialog:MatDialog,
               public _location:Location,
               public config:ConfigService) {
-    subscribe_socket(this,"refresh_account",()=>{this.refresh_balance();})
+    //subscribe_socket(this,"refresh_account",()=>{this.refresh_balance();})
   };
 
 
@@ -139,18 +139,19 @@ export class UserService {
 
 
 
-  del_contact(email: any) {
-    for(let c of this.contacts){
-      if(c.email==email)
-        this.contacts.splice(this.contacts.indexOf(c),1);
+  del_contact(email: any,func=null) {
+    if(this.contacts && this.contacts.length>0){
+      for(let c of this.contacts){
+        if(c.email==email)
+          this.contacts.splice(this.contacts.indexOf(c),1);
+      }
+      this.save_user(func);
     }
-    this.save_user();
   }
 
 
 
   init(addr:string=null,func=null,func_error=null) {
-   debugger
     addr=addr || this.addr;
     this.addr=addr;
     if(addr && addr!="null"){
@@ -166,7 +167,6 @@ export class UserService {
     this.api._get("users/"+this.addr).subscribe((body:any)=>{
       $$("Récupération de ",body);
       body=body[0];
-
       this.contacts=body.contacts || [];
       this.pseudo=body.pseudo || "";
       this.visual=body.visual || "/assets/img/anonymous.jpg";
@@ -233,7 +233,9 @@ export class UserService {
     title=title || "Authentification requise";
     if(!this.addr || this.addr=="null")this.addr=localStorage.getItem("addr");
     if(this.addr && this.addr.length>20){
-      if(func)func();
+      this.init(this.addr,()=>{
+        if(func)func();
+      });
     }else{
       this.dialog.open(AuthentComponent,{width: '350px',height:"auto",data:
           {
@@ -319,5 +321,23 @@ export class UserService {
 
   isCreator() {
     return (this.pseudo.length>0 && this.email.length>0);
+  }
+
+  load_contacts(func=null) {
+    if(this.contacts && this.contacts.length>0 && !this.contacts[0].label){
+      this.api._get("users/"+this.contacts.join(",")+"/","").subscribe((r:any)=>{
+        this.contacts=[];
+        for(let c of r){
+          this.contacts.push({
+            label:c.pseudo,
+            selected:false,
+            icon:"person",
+            email:c.email,
+            color:"white"
+          })
+        }
+        if(func)func();
+      });
+    }
   }
 }

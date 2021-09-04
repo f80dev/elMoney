@@ -21,11 +21,13 @@ export class ContactsComponent implements OnInit {
               public router:Router,
               public routes:ActivatedRoute,
               public _location:Location) {
-    this.user.check_email(null,this.router);
+
   }
 
   ngOnInit(): void {
-
+    this.user.check_pem(()=>{
+      this.user.load_contacts();
+      },this.router);
   }
 
 
@@ -39,6 +41,13 @@ export class ContactsComponent implements OnInit {
   }
 
   del_contact(email: any) {
-    this.user.del_contact(email);
+    var rc=[];
+    for(let contact of this.contacts){
+      rc.push(contact.addr);
+    }
+    this.user.contacts=rc;
+    this.user.del_contact(email,()=>{
+      this.user.load_contacts();
+    });
   }
 }
