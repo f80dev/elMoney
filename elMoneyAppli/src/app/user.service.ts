@@ -15,6 +15,7 @@ import {Location} from "@angular/common";
 })
 export class UserService {
   public contacts:any[]=[];
+  contacts_addr:string="";
   email:string="";
   addr:string="";
   pem:string="";
@@ -75,7 +76,7 @@ export class UserService {
     if(this.pem){
       let body={
         addr:this.addr,
-        contacts:this.contacts,
+        contacts:this.contacts_addr,
         description:this.description,
         pseudo:this.pseudo,
         visual:this.visual,
@@ -131,9 +132,9 @@ export class UserService {
   }
 
 
-  add_contact(email: string) {
-    this.api._post("contacts","",{email:email}).subscribe((r:any)=>{
-
+  add_contact(email:string,func:Function) {
+    this.api._post("contacts/"+this.addr+"/","",{email:email,pem:this.pem}).subscribe((r:any)=>{
+      func();
     })
   }
 
@@ -167,7 +168,7 @@ export class UserService {
     this.api._get("users/"+this.addr).subscribe((body:any)=>{
       $$("Récupération de ",body);
       body=body[0];
-      this.contacts=body.contacts || [];
+      this.contacts_addr=body.contacts || [];
       this.pseudo=body.pseudo || "";
       this.visual=body.visual || "/assets/img/anonymous.jpg";
       this.identity=body.identity || "";
@@ -324,12 +325,13 @@ export class UserService {
   }
 
   load_contacts(func=null) {
-    if(this.contacts && this.contacts.length>0 && !this.contacts[0].label){
-      this.api._get("users/"+this.contacts.join(",")+"/","").subscribe((r:any)=>{
+    if(this.contacts_addr.length>0){
+      this.api._get("users/"+this.contacts_addr+"/","").subscribe((r:any)=>{
         this.contacts=[];
         for(let c of r){
           this.contacts.push({
             label:c.pseudo,
+            addr:c.addr,
             selected:false,
             icon:"person",
             email:c.email,

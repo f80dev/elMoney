@@ -94,7 +94,9 @@
                   (click)="buy(nft)">
             <mat-icon>shopping_cart</mat-icon>&nbsp;
             <small *ngIf="nft.price==0">Gratuit</small>
-            <span *ngIf="nft.price>0" ><app-unity [unity]="nft.unity" [value]="nft.price" [decimals]="2"></app-unity></span>
+            <span *ngIf="nft.price>0" >
+              <app-unity [unity]="nft.unity" [value]="nft.price" [decimals]="2" [noswap]="true"></app-unity>
+            </span>
           </button>
 
 
@@ -221,7 +223,7 @@
                       (click)="buy(nft)">
                 <mat-icon>shopping_cart</mat-icon>&nbsp;
                 <small *ngIf="nft.price==0">Gratuit</small>
-                <app-unity *ngIf="nft.price>0" [value]="nft.price" [unity]="nft.unity"></app-unity>
+                <app-unity *ngIf="nft.price>0" [value]="nft.price" [unity]="nft.unity" [noswap]="true"></app-unity>
               </button>
             </div>
 

@@ -526,6 +526,9 @@ class ElrondNet:
         if "pem" in values: del values["pem"]
         log("Enregistrement de l'utilisateur " + str(values))
 
+        if "contacts" in values and type(values["contacts"])==str:
+            values["contacts"]=",".join(list(set(values["contacts"].split(","))))
+
         if "addr" in values:
             self.cached_sess.cache.delete_url(self._proxy.url + "/address/" + values["addr"] + "/keys")
             del values["addr"]
@@ -536,7 +539,7 @@ class ElrondNet:
         for k in values.keys():
             key=str_to_hex(k,False)
             value=str_to_hex(values[k],False)
-            if len(value)>0:
+            if len(value)>0 or key=="contacts":
                 data=data+"@"+key+"@"+value
                 required_gas=required_gas+10000*(len(value)+len(key))
 

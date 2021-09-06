@@ -11,6 +11,7 @@ export class UnityComponent implements OnChanges {
 
   @Input("value") value:number;
   @Input("showUnity") showUnity=true;
+  @Input("noswap") noswap=false;
   @Input("unity") base: string = "eGld";
   @Input("decimals") decimals=3;
 
@@ -25,7 +26,7 @@ export class UnityComponent implements OnChanges {
   }
 
   refresh(){
-    if(localStorage.getItem("unity")=="fiat"){
+    if(localStorage.getItem("unity")=="fiat" && this.base.toLowerCase()=="egld"){
       this.message="conversion";
       this.config.get_price(this.unity,(convert)=>{
         this.unity=this.config.fiat_unity;
@@ -39,6 +40,7 @@ export class UnityComponent implements OnChanges {
   }
 
   switch_fiat() {
+    if(this.base.toLowerCase()!="egld" || this.noswap)return;
     $$("Changement d'unité");
     let actual=localStorage.getItem("unity");
     if(!actual || actual=="fiat"){

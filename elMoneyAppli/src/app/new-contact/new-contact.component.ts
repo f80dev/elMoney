@@ -28,8 +28,9 @@ export class NewContactComponent implements OnInit {
       if(this.user.addr==this.email){
         this.dialogRef.close({"error":"Impossible de s'envoyer des fonds à soit même"});
       }
-      this.user.add_contact(this.email);
-      this.dialogRef.close({email: this.email, pseudo: this.pseudo});
+      this.user.add_contact(this.email,()=>{
+        this.dialogRef.close({email: this.email, pseudo: this.pseudo});
+      });
     } else {
       this.dialogRef.close();
     }

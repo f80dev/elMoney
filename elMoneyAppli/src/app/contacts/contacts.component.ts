@@ -14,6 +14,7 @@ export class ContactsComponent implements OnInit {
   contacts: any;
   email: any="";
   pseudo: any="";
+  message="";
 
   constructor(public api:ApiService,
               public user:UserService,
@@ -33,21 +34,23 @@ export class ContactsComponent implements OnInit {
 
   add_contact($event: any) {
     if($event.keyCode==13){
-      this.user.add_contact(this.email);
-      if(this.routes.snapshot.queryParamMap.has("onlyNew")){
+      this.message="Ajout du contact";
+      this.user.add_contact(this.email,()=>{
+        this.message="";
+        if(this.routes.snapshot.queryParamMap.has("onlyNew")){
         this.user.last_contact=$event.currentTarget["value"];
       }
+      });
+
     }
   }
 
-  del_contact(email: any) {
-    var rc=[];
-    for(let contact of this.contacts){
-      rc.push(contact.addr);
-    }
-    this.user.contacts=rc;
-    this.user.del_contact(email,()=>{
+  del_contact(contact: any) {
+    this.message="Suppression du contact";
+    this.user.contacts_addr=this.user.contacts_addr.split(",").filter(x=>x!=contact.addr).join(",");
+    this.user.save_user(()=>{
       this.user.load_contacts();
+      this.message="";
     });
   }
 }

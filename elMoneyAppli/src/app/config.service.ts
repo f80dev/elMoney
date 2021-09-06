@@ -82,7 +82,7 @@ export class ConfigService {
       func(this.unity_conversion[unity].value);
       return;
     }
-    if(unity=="eGld"){
+    if(unity.toLowerCase()=="egld"){
       this.api._get("https://data.elrond.com/market/quotes/egld/price","",10,"").subscribe((result:any)=>{
         if(result.length>0){
           this.unity_conversion[unity]={value:result[result.length-1].value,lastdate:new Date().getTime()};

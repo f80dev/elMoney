@@ -227,7 +227,7 @@ def evalprice(sender,data="",value=0):
 
 
 @app.route('/api/users/',methods=["POST"])
-def post_user(data:dict=None):
+def save_user(data:dict=None):
     data = json.loads(str(request.data, encoding="utf-8"))
 
     pem_file = get_elrond_user(data)
@@ -256,18 +256,18 @@ def get_user(addrs:str):
 
     rc=[]
     for addr in addrs.split(","):
-        _user = dao.get_user(addr)
-        if not _user is None:
-            addr=_user["addr"]
-            if "contacts" in _user:
-                contacts = _user["contacts"]
-            else:
-                contacts = []
-
-        if _user is None and "@" in addr:break
+        # _user = dao.get_user(addr)
+        # if not _user is None:
+        #     addr=_user["addr"]
+        #     if "contacts" in _user:
+        #         contacts = _user["contacts"]
+        #     else:
+        #         contacts = []
+        #
+        # if _user is None and "@" in addr:break
 
         data = bc.get_account(addr)
-        data["contacts"]=contacts
+        # data["contacts"]=contacts
 
         if not data is None:
             if "visual" in data and len(data["visual"])==46:data["visual"]="https://ipfs.io/ipfs/"+data["visual"]
@@ -981,7 +981,7 @@ def del_user(addr:str):
 
 
 
-@app.route('/api/contacts/<addr>/')
+@app.route('/api/contacts/<addr>/',methods=["GET"])
 def get_contacts(addr:str):
     rows=dao.get_friends(addr)
     rc = []
@@ -1009,15 +1009,15 @@ def find_contact(email:str):
 
 @app.route('/api/contacts/<owner>/',methods=["POST"])
 def add_contact(owner:str):
-    data=str(request.data,"utf-8")
-    contact=json.loads(data)
-    log("Ajout d'un contact avec les informations "+data)
+    _data=json.loads(str(request.data,"utf-8"))
+    _contact=dao.get_user(_data["email"])
+    if _contact is None:
+        _contact=bc.create_account(email=_contact["email"])
 
-    if dao.get_user(contact["email"]) is None:
-        dao.add_contact(contact["email"],contact["email"].split("@")[0])
-        return "contact ajouté",201
-    else:
-        return "contact existant",201
+    _owner = bc.get_account(owner)
+    _owner["contacts"]=_owner["contacts"]+","+_contact["addr"]
+    bc.update_account(get_elrond_user(_data),_owner)
+    return jsonify(_owner)
 
 
 
