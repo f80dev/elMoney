@@ -1024,7 +1024,6 @@ def add_contact(owner:str):
 
 
 
-
 #test http://localhost:5555/api/balance/erd1qqqqqqqqqqqqqpgqqvtq3xx0pgnehaynt6flzp8hyc0ckahf9e3se00ejh/erd1jgffp69cxeqqzvrv3u96da6lqwx5d6d6e7j9uau3dv84e34vwq4q3gzjxl/
 @app.route('/api/balance/<addr>/')
 def getbalance(addr:str):

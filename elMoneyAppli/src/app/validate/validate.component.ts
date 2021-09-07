@@ -26,11 +26,21 @@ export class ValidateComponent implements OnInit {
     public config:ConfigService,
   ) { }
 
+  refresh(){
+
+  }
+
   ngOnInit(): void {
-    this.message="Chargement de vos billets";
+    this.message="Chargement de vos NFT";
     this.api._get("nfts/0x0/0x0/" + this.user.addr + "/").subscribe((r: any) => {
       this.message="";
       this.nfts=r;
+      if(this.nfts.length==0){
+        showMessage(this,"Vous n'avez aucun NFT susceptible d'être vérifié. Commencez par en créer");
+        setTimeout(()=>{
+          this.router.navigate(["importer"]);
+        },1500);
+      }
     });
   }
 
@@ -64,6 +74,7 @@ export class ValidateComponent implements OnInit {
       this.message="Destruction du NFT";
       this.api._post("burn/" + nft.token_id + "/", "", this.user.pem).subscribe((r: any) => {
         showMessage(this, "NFT détruit");
+        this.nfts.splice(this.nfts.indexOf(nft),1);
         this.message="";
       },(err)=>{
         showError(this,err);

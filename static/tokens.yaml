@@ -191,10 +191,17 @@ content:
     description: Générer et vendez des billets d'accès à un evénement de tout type
     fee: 0.002
     tuto: "
-          Grâce à TokenForge vous pouvez fabriquer des billets pour vos événements, concerts, spectacles <br>
-          Il vous suffit d'un visuel et de préciser le lieu et la date de votre événement pour fabriquer vos billets.<br><br>
+          Grâce à TokenForge vous pouvez fabriquer des billets d'entrée pour vos événements, concerts, spectacles <br><br>
+          Pour cela, Il suffit<br>
+          <ul>
+            <li>d'un visuel pour le billet,</li>
+            <li>d'indiquer le lieu, la date et l'heure,</li>
+            <li>de fixer un prix du billet,</li>
+            <li>de déterminer le nombre de billet à créer,</li>
+          </ul><br>
 
-          Un menu de TokenForge vous permet de contrôler les billets en scannant simplement le QRCode du propriétaire
+          <p>Une option de TokenForge vous permet de contrôler les billets en 'scannant' simplement le QRCode du propriétaire. Cela permet
+          de voir l'ensemble des NFTs (billet) qu'il posséde ainsi que la photo / document qu'il a enregistré pour renforcer la sécurité</p>
           "
     transac: 0.00015
     tags: "#billets #spectacle"

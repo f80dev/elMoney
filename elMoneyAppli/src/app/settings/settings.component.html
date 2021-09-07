@@ -186,6 +186,10 @@
       <mat-expansion-panel-header>Sécurité</mat-expansion-panel-header>
 
       <div style="font-size: small;" *ngIf="user.identity?.length>0">Sécurisation de l'identité</div>
+
+      <app-tuto label="Si le NFT est un billet d'entrée il est possible qu'une vérification supplémentaire d'identité soit nécéssaire. Téléverser ici un document permettant de vous identifier clairement : passeport, photo d'identité, carte d'identité">
+      </app-tuto>
+
       <img *ngIf="user.identity?.length>0" [src]="user.identity"
            title="Mettre a jour l'identité"
            style="width: 200px;cursor: pointer;"

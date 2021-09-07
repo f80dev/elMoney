@@ -531,32 +531,33 @@ export class ImporterComponent implements OnInit {
 
   quick_game(token){
     this.ask_for_text("La question","Quel est la question du jeu",(question)=>{
-      if(question){
-        this.desc=question;
-        if(!this.desc.endsWith("?"))this.desc=this.desc+" ?";
-        this.ask_for_text("Quelle est la réponse","Entrer la réponse (si possible en 1 seul mot) extactement comme le joueur doit la saisir",(secret)=> {
-          if(secret)
-            this.secret=secret.toLowerCase().trim();
-          this.ask_for_text("Titre","Rédiger un titre pour votre jeu",(title)=>{
-            if(title){
-              this.ask_for_text("Récompense","De combien est la récompense",(gift)=>{
-                this.gift=Number(gift);
-                this.ask_options([
-                  {label:"<div class='bloc-bouton'>Le NFT s'autodétruit<br>après ouverture</div>",value:true,width:'200px'},
-                  {label:"<div class='bloc-bouton'>Le NFT peut être ouvert<br>plusieurs fois</div>",value:false,width:'200px'}
-                ],(value)=>{
-                  this.self_destruction=value;
-                  this.title=title;
-                  this.find_secret=true;
+      if(!question)this.cancel_wizard();
+      this.desc=question;
+      if(!this.desc.endsWith("?"))this.desc=this.desc+" ?";
+      this.ask_for_text("Quelle est la réponse","Entrer la réponse (si possible en 1 seul mot) extactement comme le joueur doit la saisir",(secret)=> {
+        if(secret)this.secret=secret.toLowerCase().trim();
+        if(secret.indexOf(" ")>-1){
+          this.cancel_wizard("Votre secret ne doit contenir qu'un seul mot (ou un seul nombre) afin de limiter les problèmes de syntaxe pour les partacipants donnant la réponse");
+        }
+        this.ask_for_text("Titre","Rédiger un titre pour votre jeu",(title)=>{
+          if(title){
+            this.ask_for_text("Récompense","De combien est la récompense",(gift)=>{
+              this.gift=Number(gift);
+              this.ask_options([
+                {label:"<div class='bloc-bouton'>Le NFT s'autodétruit<br>après ouverture</div>",value:true,width:'200px'},
+                {label:"<div class='bloc-bouton'>Le NFT peut être ouvert<br>plusieurs fois</div>",value:false,width:'200px'}
+              ],(value)=>{
+                this.self_destruction=value;
+                this.title=title;
+                this.find_secret=true;
 
-                  if(token.tags)this.desc=this.desc+" "+token.tags;
-                  this.ask_for_price("Combien coute la participation",null,token.fee);
-                });
+                if(token.tags)this.desc=this.desc+" "+token.tags;
+                this.ask_for_price("Combien coute la participation",null,token.fee);
               });
-            }
-          },"Exemple: Calcul mental")
-        },"Exemple: 168");
-      }
+            });
+          }
+        },"Exemple: Calcul mental")
+      },"Exemple: 168");
     },"Exemple: Combien font 12 x 14 ?");
   }
 
@@ -567,19 +568,19 @@ export class ImporterComponent implements OnInit {
         this.filename=visual.file.name;
         this.ask_for_text("Titre de l'événement","",(title)=> {
           this.ask_for_text("Nombre de billet","",(num_billets)=> {
-            if(num_billets)
-              this.ask_for_text("Montant du billet gagnant","",(gift)=> {
-                if(gift)
-                  this.ask_for_price("Prix unitaire du billet",(price)=>{
-                    this.count=num_billets;
-                    this.self_destruction=true;
-                    this.opt_gift=true;
-                    this.gift=gift;
-                    this.title=title;
-                    this.desc="Ouvrir pour savoir si vous avez gagné"
-                    this.ask_confirm(token.fee);
-                  });
-              },"Montant en eGold","number",20);
+            if(!num_billets)this.cancel_wizard();
+            this.ask_for_text("Montant du billet gagnant","",(gift)=> {
+              if(!gift)this.cancel_wizard();
+              this.ask_for_price("Prix unitaire du billet",(price)=>{
+                this.count=num_billets;
+                this.self_destruction=true;
+                this.opt_gift=true;
+                this.gift=gift;
+                this.title=title;
+                this.desc="Ouvrir pour savoir si vous avez gagné"
+                this.ask_confirm(token.fee);
+              });
+            },"Montant en eGold","number",20);
           },"Prix en eGold","number",20);
         },"Exemple: la grande loterie");
       }
@@ -705,8 +706,11 @@ export class ImporterComponent implements OnInit {
     if(token.index=="tickets")this.quick_tickets('Téléverser le visuel de votre invitation',token);
     if(token.index=="loterie")this.quick_loterie(token);
     if(token.index=="propriete")this.quick_propriete(token);
+  }
 
-
+  cancel_wizard(message=""){
+    showMessage(this,message);
+    setTimeout(()=>{this._location.back();},1000);
   }
 
 
