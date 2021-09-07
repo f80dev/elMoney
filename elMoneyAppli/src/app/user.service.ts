@@ -91,7 +91,7 @@ export class UserService {
       };
 
       this.api._post("users/","",body).subscribe((id:any)=>{
-        $$("Enregistrement de l'utilisateur");
+        $$("Enregistrement de l'utilisateur ",body);
         if(func)func();
       });
     }else {

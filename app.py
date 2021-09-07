@@ -1015,7 +1015,10 @@ def add_contact(owner:str):
         _contact=bc.create_account(email=_contact["email"])
 
     _owner = bc.get_account(owner)
-    _owner["contacts"]=_owner["contacts"]+","+_contact["addr"]
+    if not "contacts" in _owner:
+        _owner["contacts"]=_contact["addr"]
+    else:
+        _owner["contacts"]=_owner["contacts"]+","+_contact["addr"]
     bc.update_account(get_elrond_user(_data),_owner)
     return jsonify(_owner)
 

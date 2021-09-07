@@ -26,7 +26,8 @@
 
       <mat-form-field appearance="fill" class="app-field">
         <mat-label>Votre nom / pseudo</mat-label>
-        <input matInput type="text" (focusin)="focus_idx=1" maxlength="200" [(ngModel)]="user.pseudo" [ngModelOptions]="{standalone: true}">
+        <input matInput type="text" (focusin)="focus_idx=1" maxlength="200" [(ngModel)]="user.pseudo"
+               [ngModelOptions]="{standalone: true}" (keypress)="mustSave=true">
         <mat-hint *ngIf="focus_idx==1">Votre pseudo pourrat être associé à vos NFTs si vous le souhaitez</mat-hint>
       </mat-form-field>
 
@@ -39,21 +40,24 @@
 
       <mat-form-field appearance="fill" class="app-field">
         <mat-label>Mail de contact (jamais communiqué)</mat-label>
-        <input matInput type="email" (focusin)="focus_idx=8" maxlength="200" [(ngModel)]="user.email" [ngModelOptions]="{standalone: true}">
+        <input matInput type="email" (focusin)="focus_idx=8" maxlength="200" [(ngModel)]="user.email"
+               [ngModelOptions]="{standalone: true}"  (keypress)="mustSave=true">
         <mat-hint *ngIf="focus_idx==8">Permet de mettre en relation le distributeur et le créateur pour le référencement</mat-hint>
       </mat-form-field>
       <br>
 
       <mat-form-field appearance="fill" class="app-field">
         <mat-label>Votre parcours</mat-label>
-        <textarea matInput matInput type="text" (focusin)="focus_idx=2" maxlength="400" [(ngModel)]="user.description" [ngModelOptions]="{standalone: true}"></textarea>
+        <textarea matInput matInput type="text" (focusin)="focus_idx=2"
+                  maxlength="400" [(ngModel)]="user.description"
+                  [ngModelOptions]="{standalone: true}"  (keypress)="mustSave=true"></textarea>
         <mat-hint *ngIf="focus_idx==2">Décrivez brievement votre parcours, ce texte est surtout utiliser pour profil de créateur</mat-hint>
       </mat-form-field>
       <br>
 
       <mat-form-field appearance="fill" class="app-field">
         <mat-label>L'adresse de votre site</mat-label>
-        <input matInput type="url" (focusin)="focus_idx=3" maxlength="200" [(ngModel)]="user.website" [ngModelOptions]="{standalone: true}">
+        <input matInput type="url" (focusin)="focus_idx=3" maxlength="200" [(ngModel)]="user.website" [ngModelOptions]="{standalone: true}" (keypress)="mustSave=true">
         <mat-hint *ngIf="focus_idx==3">En tant que créateur de NFT vous disposez peut être d'un site</mat-hint>
       </mat-form-field>
 
@@ -68,6 +72,7 @@
 
       <button mat-raised-button mat-button
               class="app-button"
+              [disabled]="!mustSave"
               (click)="update_user()">
         Enregistrer
       </button>
@@ -75,22 +80,20 @@
       <br>
       <div *ngIf="message.length==0" [cdkCopyToClipboard]="user.addr" ngxClipboard style="cursor: pointer">
         <br>
-        <small>Votre adresse publique</small>:<br>
+        <small>Votre adresse</small><br>
         <qrcode
           *ngIf="user.addr?.length>0"
-          [width]="150"
+          [width]="75"
           (click)="informe_clipboard()"
           style="display: inline-block;"
           [elementType]="'svg'"
           [allowEmptyString]="false"
+          [title]="user.addr"
           [errorCorrectionLevel]="'M'"
           [qrdata]="user.addr">
         </qrcode><br>
-        <small>{{user.addr}}</small>
         <app-tuto label="Votre adresse publique peut être flashé pour recevoir des fonds, vérifier que vous êtes le propriétaire d'un NFT, être déclaré comme distributeur ... et pleins d'autres choses encore"></app-tuto>
       </div>
-
-
     </mat-expansion-panel>
 
     <mat-expansion-panel class="app-panel" style="text-align: center;max-width: 500px" [expanded]="open_section==2">
@@ -99,7 +102,7 @@
                 label="Vous pouvez vendre des NFTs fabriquer par d'autres. Pour cela, vous devez au minimum donner un nom à votre 'boutique' et en faire une breve description"></app-tuto>
       <mat-form-field appearance="fill" class="app-field">
         <mat-label>Nom de votre marketplace</mat-label>
-        <input matInput type="url" (focusin)="focus_idx=4" maxlength="200" [(ngModel)]="user.shop_name" [ngModelOptions]="{standalone: true}">
+        <input matInput type="url" (focusin)="focus_idx=4" maxlength="200" [(ngModel)]="user.shop_name" [ngModelOptions]="{standalone: true}" (keypress)="mustSave=true">
         <mat-hint *ngIf="focus_idx==4">Pour devenir distributeur vous devez avoir un nom de boutique</mat-hint>
       </mat-form-field>
       <br>
@@ -213,6 +216,14 @@
       <br>
       <app-savekey style="display: inline-block;"></app-savekey>
       <app-tuto label="Si besoin, télécharger votre clé privée et conserver là en lieu sûr pour effecture les transferts et la création de nouvelle monnaie"></app-tuto>
+
+      <button mat-raised-button mat-button
+              class="app-button"
+              [disabled]="!mustSave"
+              (click)="update_user()">
+        Enregistrer
+      </button>
+
 
     </mat-expansion-panel>
 

@@ -18,7 +18,7 @@ import {PromptComponent} from "../prompt/prompt.component";
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.sass']
 })
-export class SettingsComponent implements OnInit {
+export class SettingsComponent implements OnInit,OnDestroy {
 
   contrat="";
   focus_idx: number;
@@ -27,6 +27,7 @@ export class SettingsComponent implements OnInit {
   filename: string="";
   open_section=1;
   domain_appli=environment.domain_appli;
+  mustSave: boolean=false;
 
   constructor(public router:Router,
               public user:UserService,
@@ -59,6 +60,7 @@ export class SettingsComponent implements OnInit {
 
 
   change_visual(field:string) {
+    this.mustSave=true;
     $$("Modification du visuel")
     this.dialog.open(ImageSelectorComponent, {position:
         {left: '5vw', top: '5vh'},
@@ -130,6 +132,7 @@ export class SettingsComponent implements OnInit {
     this.user.check_pem(()=>{
       this.message="Enregistrement en cours ...";
       this.user.save_user(()=>{
+        this.mustSave=false;
         this.message="";
         showMessage(this,"Informations enregistrées");
       });
@@ -183,10 +186,18 @@ export class SettingsComponent implements OnInit {
         }
     }).afterClosed().subscribe((result) => {
       if (result) {
+        $$("Update identity");
         this.user.identity=result.img;
+        this.mustSave=true;
       }
     });
   }
 
+  ngOnDestroy(): void {
+    if(this.mustSave)
+      this.update_user();
+  }
+
 
 }
+
