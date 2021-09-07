@@ -84,8 +84,8 @@ export class NftsComponent implements OnChanges {
       nft.message = message;
       this.api._post("state_nft/" + nft.token_id + "/" + new_state, "", {pem:this.user.pem}).subscribe((r: any) => {
         nft.message = "";
-        let mes="Votre token n'est plus en vente";
-        if(new_state==0)mes="Votre token est en vente"
+        let mes="Votre NFT n'est plus en vente";
+        if(new_state==0)mes="Votre NFT est en vente"
         if(r)showMessage(this, mes+". Frais de service " + (r.cost) + " xEgld");
         this.onrefresh.emit();
       });
@@ -157,7 +157,7 @@ export class NftsComponent implements OnChanges {
           nft.message = "En cours de destruction";
           this.api._post("burn/" + nft.token_id + "/", "", this.user.pem).subscribe((r: any) => {
             nft.message = "";
-            showMessage(this, "Votre token n'existe plus");
+            showMessage(this, "Votre NFT n'existe plus");
             this.onrefresh.emit();
           },(err)=>{
             showError(this,err);

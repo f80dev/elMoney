@@ -41,11 +41,19 @@
       <br><br>
     </div>
 
-    <div *ngFor="let nft of validate_nfts" style="text-align: left;margin-left: 10px;line-height: 70%;margin-bottom: 5px;">
-      <mat-icon style="font-size: small;">checkmark</mat-icon>&nbsp;
-      {{nft.title}} - {{nft.description}}
-      <br>
-    </div>
+    <table style="width: 100%;">
+      <tr *ngFor="let nft of validate_nfts" style="text-align: left;margin-left: 10px;line-height: 70%;margin-bottom: 5px;">
+        <td><mat-icon style="font-size: small;">checkmark</mat-icon>&nbsp;</td>
+        <td>{{nft.title}} - {{nft.description}}</td>
+        <td style="width: 20px">
+          <button mat-icon-button mat-raised-button class="icon-button"
+                  (click)="burn(nft)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </tr>
+    </table>
+
     <br>
   </div>
 
