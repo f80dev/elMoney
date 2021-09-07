@@ -65,13 +65,15 @@ content:
     nft_icon: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/279/artist-palette_1f3a8.png
     description: Poser une question et récompenser celui qui trouve la réponse
     tuto: "
-      Un petit jeu amusant, Poser une question et faite gagner celui qui trouve la réponse
-      <br><br><br>La procédure est la suivante :<br>
+      Un petit jeu amusant, Poser une question et récompenser celui qui trouve la réponse.
+      <br><br><br> Pour créer ce NFT, la procédure est la suivante :<br>
 
            <ul>
-             <li>Rédiger votre question,</li><br>
-             <li>Donner un titre pour présenter le jeu</li><br>
-             <li>Donner le montant de la récompense</li><br>
+             <li>Rédiger votre question puis la réponse en un seul mot ou un seul nombre,</li>
+             <li>Donner un titre au jeu</li>
+             <li>Indiquer le montant de la récompense (montant qui doit être inférieur à votre solde)</li>
+             <li>Indiquer le prix du NFT qui correspond donc au montant de la participation au jeu</li>
+             <li>Indiquer si le NFT s'autodétruit ou pas après la participation du joueur</li>
            </ul>
 
            <br>

@@ -118,11 +118,12 @@ export class NftStoreComponent implements OnInit {
 
 
   apply_filter(nfts) : any[] {
-    return group_tokens(nfts,this.config.tags,(item)=> {
+    return group_tokens(nfts,this.selected_tag,(item)=> {
       if (!this.filter_id || this.filter_id == item.token_id) {
         if (item.state == 0 && item.properties >= 4 && item.owner != this.user.addr) {
-          if (this.filter.length == 0 || item.search.toLowerCase().indexOf(this.filter.toLowerCase()) > -1)
+          if ((item.tags.lenght==0 || item.tags.indexOf(this.selected_tag)>-1) && (this.filter.length == 0 || item.search.toLowerCase().indexOf(this.filter.toLowerCase())) > -1){
             return true;
+          }
         }
         return false;
       }
@@ -136,7 +137,7 @@ export class NftStoreComponent implements OnInit {
       this.message = "";
       this.cache=r;
       this.nfts=this.apply_filter(r);
-      this.tags=extract_tags(this.nfts);
+      if(this.selected_tag.length==0)this.tags=extract_tags(this.nfts);
     });
   }
 

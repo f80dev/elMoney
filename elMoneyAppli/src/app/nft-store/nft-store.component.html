@@ -70,7 +70,7 @@
 
     <mat-form-field appearance="fill" style="width:100px;color:white;margin-right: 10px;">
       <mat-label>Tags</mat-label>
-      <mat-select [(value)]="selected_tag" style="color: white;">
+      <mat-select [(value)]="selected_tag" style="color: white;" (selectionChange)="refresh(false)">
         <mat-option *ngFor="let tag of tags" [value]="tag">#{{tag}}</mat-option>
       </mat-select>
     </mat-form-field>

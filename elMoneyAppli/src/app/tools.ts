@@ -1043,8 +1043,9 @@ export function group_tokens(tokens:any[],tags:any,func_validate:Function=null):
   let nfts = [];
   for (let item of tokens) {
     item.message = "";
-    item.search = item.title + " " + item.price + " " + item.description + " " + item.tags;
+    item.search = item.title + " " + item.price + " " + item.description;
     item.open = "";
+    //Affectation de l'icon du token en fonction du tag
     for(let tag of item.tags.split(" ")){
       item.icon="/assets/icons/gift.png";
       if(tags.hasOwnProperty(tag.replace("#",""))){

@@ -51,6 +51,9 @@ export class NftsPersoComponent implements OnInit {
       this.filter = this.filters[0].option;
       this.refresh();
       localStorage.setItem("last_screen","nfts-perso");
+
+      setTimeout(()=>{this.reroutage();},2500);
+
     },this.router,null,"nfts-perso");
   }
 
@@ -61,14 +64,14 @@ export class NftsPersoComponent implements OnInit {
 
     if(total==0){
       showMessage(this,"Vous n'avez aucun NFT, je vous redirige vers les boutiques")
-      this.router.navigate(["store"]);
+      //this.router.navigate(["store"]);
     }
   }
 
 
-  refresh() {
-    this.user.refresh_balance();
-    for(let identifier of [0,1,2]){
+  refresh(identifiers=[0,1,2]) {
+    $$("Refresh de la liste des NFTs possédés/achetés");
+    for(let identifier of identifiers){
       let filters=["0x0","0x0","0x0"];
       filters[identifier]=this.user.addr;
       this.message = "Chargement des tokens ...";
@@ -86,13 +89,8 @@ export class NftsPersoComponent implements OnInit {
           }
           return false;
         });
-
-        if(identifier==2)setTimeout(()=>{this.reroutage();},500);
-
-
       });
     }
-
   }
 
   transfer(nft:any){

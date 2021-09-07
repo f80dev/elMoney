@@ -87,9 +87,7 @@ export class NftsComponent implements OnChanges {
         let mes="Votre token n'est plus en vente";
         if(new_state==0)mes="Votre token est en vente"
         if(r)showMessage(this, mes+". Frais de service " + (r.cost) + " xEgld");
-        this.user.refresh_balance(() => {
-          this.onrefresh.emit();
-        });
+        this.onrefresh.emit();
       });
     },this);
   }
@@ -123,7 +121,6 @@ export class NftsComponent implements OnChanges {
         nft.message = "";
         nft.open = r.response;
         if(nft.open.length==46)nft.open="https://ipfs.io/ipfs/"+nft.open;
-        this.user.refresh_balance(() => {});
 
         //Indique que le message est programmé pour s'autodétruire
         if((nft.properties & 0b1000) > 0){
@@ -162,7 +159,6 @@ export class NftsComponent implements OnChanges {
             nft.message = "";
             showMessage(this, "Votre token n'existe plus");
             this.onrefresh.emit();
-            this.user.refresh_balance();
           },(err)=>{
             showError(this,err);
             nft.message="";
