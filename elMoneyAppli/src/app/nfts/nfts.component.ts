@@ -214,7 +214,6 @@ export class NftsComponent implements OnChanges {
   add_dealer(nft: any) {
     this.user.check_pem(()=>{
       this.dialog.open(SelDealerComponent, {
-
         position:
           {left: '5vw', top: '5vh'},
         maxWidth: 500, width: '90vw', height: 'auto',

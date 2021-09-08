@@ -162,6 +162,7 @@ export class UserService {
     if(this.config.hasESDT()){
       if(this.selected_money.length==0)this.selected_money=this.api.identifier;
       this.refresh_balance(func,func_error);
+      return;
     }
 
     $$("Chargement de l'utilisateur "+this.addr);
@@ -235,7 +236,7 @@ export class UserService {
     if(!this.addr || this.addr=="null")this.addr=localStorage.getItem("addr");
     if(this.addr && this.addr.length>20){
       this.init(this.addr,()=>{
-        if(func)func();
+        if(func){func();return;}
       });
     }else{
       this.dialog.open(AuthentComponent,{width: '350px',height:"auto",data:
@@ -249,7 +250,7 @@ export class UserService {
           this.init(result.addr,()=>{
             // $$("Enregistrement de "+this.email+" sur le device");
             // localStorage.setItem("email",this.email);
-            this.refresh_balance(func);
+            //this.refresh_balance(func);
           });
         } else {
           if(func_abort){
