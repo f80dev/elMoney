@@ -28,6 +28,7 @@ export class SettingsComponent implements OnInit,OnDestroy {
   open_section=1;
   domain_appli=environment.domain_appli;
   mustSave: boolean=false;
+  qrcode_w=100;
 
   constructor(public router:Router,
               public user:UserService,
@@ -54,6 +55,7 @@ export class SettingsComponent implements OnInit,OnDestroy {
 
   informe_clipboard() {
     showMessage(this,"Adresse est dans le presse papier");
+    this.qrcode_w=200;
   }
 
 

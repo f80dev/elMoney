@@ -118,7 +118,7 @@ content:
     fee: 0.002
     tags: "#propriete #titre"
     transac: 0.00015
-    production: true
+    production: false
 
 
   - index: music
@@ -216,11 +216,17 @@ content:
     description: Enregistrez vos plus beaux souvenir de façon définitive et inaltérable dans la blockchaine
     fee: 0.004
     tuto: "
-          <h2>Tout ce qui est écrit dans la blockchain l'est pour l'éternité !</h2>
-          Enregistrer photo de votre souvenir, donner lui un titre, racontez le brievement.<br>
-          Celui-ci est immédiatement enregistré dans la blockchaine.<br>
-
-          Vous pouvez le conserver ou l'offrir quand vous le souhaitez.<br>
+          <h2>Tout ce qui est écrit dans la blockchain, l'est pour l'éternité !</h2>
+          Enregistrer vos meilleurs souvenir dans la blockchaine. Pour ça :
+           <ul>
+            <li>donnez lui un titre,</li>
+            <li>racontez le,</li>
+           </ul>
+           <br>
+          <p>
+          Celui-ci est immédiatement gravé dans la blockchain
+          Vous ne pouvez pas le vendre mais le conserver ou l'offrir quand vous le souhaitez.
+          </p>
           "
     transac: 0.00030
     tags: "#evenement #souvenir"
@@ -228,6 +234,28 @@ content:
     production: true
 
 
+  - index: contract
+    title: Contrat
+    icon: work
+    nft_icon: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/scroll_1f4dc.png
+    description: Rédiger un contrat et envoyer un exemplaire à l'autre signataire
+    fee: 0.003
+    tuto: "
+          <p>
+          TokenForge peut créer un NFT contenant un contrat co-signé et possédé par les contractants
+          Pour ce faire,</p>
+          <ul>
+            <li>téléverser le contrat</li>
+            <li>donner un titre au deal</li>
+            <li>rédiger une introduction</li>
+            <li>indiquer l'adresse du cosignataire</li>
+          </ul><br>
+          A la validation, le NFT créé contient le contrat et une copie est expédiée à l'adresse mail du co-signataire
+          "
+    transac: 0.0002
+    help:
+    production: true
+    tags: "#contrat #business"
 
 
   - index: loterie

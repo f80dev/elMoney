@@ -235,8 +235,8 @@ def save_user(data:dict=None):
     data = json.loads(str(request.data, encoding="utf-8"))
 
     pem_file = get_elrond_user(data)
-    if data["visual"].startswith("data:"):data["visual"]=client.add(data["visual"])
-    if data["identity"].startswith("data:"):data["identity"]=client.add(data["identity"])
+    if "visual" in data and data["visual"].startswith("data:"):data["visual"]=client.add(data["visual"])
+    if "identity" in data and data["identity"].startswith("data:"):data["identity"]=client.add(data["identity"])
     if "shop_visual" in data and data["shop_visual"].startswith("data:"):data["shop_visual"]=client.add(data["shop_visual"])
 
     if not "website" in data or len(data["website"])==0: data["website"] =app.config["DOMAIN_APPLI"]+"/miner?miner="+data["addr"]
@@ -600,26 +600,25 @@ def mint(count:str,data:dict=None):
         if result["status"] == "fail" or not "smartContractResults" in result:
             return returnError("Erreur de création du token")
         else:
-            if True:
-                return_string=result["smartContractResults"][0]["data"]
-                if len(return_string.split("@"))>2:
-                    last_new_id=int(return_string.split("@")[2],16)
-                    tokenids=range(last_new_id-int(count),last_new_id)
+            return_string=result["smartContractResults"][0]["data"]
+            if len(return_string.split("@"))>2:
+                last_new_id=int(return_string.split("@")[2],16)
+                tokenids=range(last_new_id-int(count),last_new_id)
 
-                    #TODO: a optimiser pour pouvoir passer plusieurs distributeurs à plusieurs billet
-                    if "dealers" in data and len(data["dealers"])>0:
-                        for dealer in data["dealers"]:
-                            i=0
-                            for tokenid in tokenids:
-                                _dealer=Account(address=dealer["address"])
-                                tx=bc.add_dealer(NETWORKS[bc.network_name]["nft"],pem_file,[tokenid,"0x"+_dealer.address.hex()])
-                                i=i+1
+                #TODO: a optimiser pour pouvoir passer plusieurs distributeurs à plusieurs billet
+                if "dealers" in data and len(data["dealers"])>0:
+                    for dealer in data["dealers"]:
+                        i=0
+                        for tokenid in tokenids:
+                            _dealer=Account(address=dealer["address"])
+                            tx=bc.add_dealer(NETWORKS[bc.network_name]["nft"],data["pem"],[tokenid,"0x"+_dealer.address.hex()])
+                            i=i+1
 
-                    send(socketio, "refresh_nft")
-                    send(socketio, "refresh_balance",owner.address.bech32())
-
-                else:
-                    return returnError(result["smartContractResults"][0]["returnMessage"])
+                send(socketio, "refresh_nft")
+                send(socketio, "refresh_balance",owner.address.bech32())
+                result["ids"]=list(tokenids)
+            else:
+                return returnError(result["smartContractResults"][0]["returnMessage"])
 
             return jsonify(result), 200
     else:

@@ -83,7 +83,7 @@
         <small>Votre adresse</small><br>
         <qrcode
           *ngIf="user.addr?.length>0"
-          [width]="75"
+          [width]="qrcode_w"
           (click)="informe_clipboard()"
           style="display: inline-block;"
           [elementType]="'svg'"
@@ -222,8 +222,10 @@
       <app-savekey style="display: inline-block;"></app-savekey>
       <app-tuto label="Si besoin, télécharger votre clé privée et conserver là en lieu sûr pour effecture les transferts et la création de nouvelle monnaie"></app-tuto>
 
+      <br>
       <button mat-raised-button mat-button
               class="app-button"
+              color="primary"
               [disabled]="!mustSave"
               (click)="update_user()">
         Enregistrer

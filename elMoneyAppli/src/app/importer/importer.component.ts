@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {$$, autoRotate, cropToSquare, resizeBase64Img, showMessage} from "../tools";
+import {$$, autoRotate, cropToSquare, resizeBase64Img, showError, showMessage} from "../tools";
 import {ApiService} from "../api.service";
 import {UserService} from "../user.service";
 import {ImageSelectorComponent} from "../image-selector/image-selector.component";
@@ -248,7 +248,7 @@ export class ImporterComponent implements OnInit {
               this.user.refresh_balance(() => {
                 this.router.navigate(["nfts-perso"], {queryParams: {index: 2}});
               });
-              if (func) func();
+              if (func) func(r);
             }
           }
 
@@ -500,6 +500,8 @@ export class ImporterComponent implements OnInit {
     },"Un visuel va pouvoir être ajouté","memo")
   }
 
+
+
   quick_secret(token,lib_secret="Saisissez votre secret, mot de passe ...",_default=""){
     this.ask_for_text("Contenu embarqué",lib_secret,(secret)=>{
       if(secret){
@@ -584,7 +586,7 @@ export class ImporterComponent implements OnInit {
           },"Prix en eGold","number",20);
         },"Exemple: la grande loterie");
       }
-    },"Visuel de vos billets");
+    },"Visuel de vos billets de participation");
   }
 
 
@@ -672,6 +674,40 @@ export class ImporterComponent implements OnInit {
 
   }
 
+  quick_contract($event: any,token:any,title="Ajouter un visuel",subtitle="Exemple: Manuel de fonctionnement de la TB-303",desc="Exemple: Ce manuel de fonctionnement couvre l'utilisation courante du synthétiseur") {
+    this.picture=$event.file;
+    this.filename=$event.filename;
+    this.extensions="*";
+
+    this.ask_for_text("Titre du deal","",(title)=>{
+      if(title) {
+        this.ask_for_text("Description","Rédiger une courte introduction à la rédaction du contrat",(desc)=>{
+          if(!desc)desc="";
+          this.ask_for_text("Le cosignataire","Indiquer l'adresse mail du co-signataire",(email)=>{
+            this.desc=desc+token.tags;
+            this.title=title;
+            this.owner_can_transfer=true;
+            this.owner_can_sell=false;
+            this.price=0;
+            this.count=2;
+            this.min_price=0;
+            this.max_price=0;
+
+            this.tokenizer(token.fee,(r)=>{
+              let body={pem:this.user.pem,message:"",title:this.title,from:this.config.server.explorer+"/account/"+this.user.addr};
+              this.message="Expédition au contractant";
+              debugger
+              this.api._post("transfer_nft/"+r.ids[0]+"/"+email+"/","",body).subscribe(()=>{
+                this.message="";
+                return;
+              },(err)=>{showError(this,err)});
+            });
+          });
+        },"","memo")
+      }
+    },subtitle);
+  }
+
 
   show_fileupload(redirect: number,prompt:string,token:any,extension="*") {
     this.show_zone_upload=true;
@@ -685,6 +721,7 @@ export class ImporterComponent implements OnInit {
   onupload($event: any) {
     if(this.redirect==3)this.quick_file($event,this.tokens[4],"Ajouter la pochette du titre","Exemple: Karma Police","Exemple: Radiohead");
     if(this.redirect==1)this.quick_file($event,this.tokens[3]);
+    if(this.redirect==2)this.quick_contract($event,this.tokens[5]);
   }
 
 
@@ -700,6 +737,7 @@ export class ImporterComponent implements OnInit {
     if(token.index=="music")this.show_fileupload(3,'Téléverser le fichier musical',token,"audio/*");
     if(token.index=="film")this.quick_secret(token,'Indiquer le lien internet de votre film');
     if(token.index=="file")this.show_fileupload(1,'Téléverser le fichier à embarquer dans votre token',token);
+    if(token.index=="contract")this.show_fileupload(2,'Téléverser le contrat signé',token);
     if(token.index=="secret")this.quick_secret(token);
     if(token.index=="game")this.quick_game(token);
     if(token.index=="life_events")this.quick_lifeevents(token);
