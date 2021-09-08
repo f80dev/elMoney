@@ -101,28 +101,28 @@
       <app-tuto [if]="open_section==2"
                 label="Vous pouvez vendre des NFTs fabriquer par d'autres. Pour cela, vous devez au minimum donner un nom à votre 'boutique' et en faire une breve description"></app-tuto>
       <mat-form-field appearance="fill" class="app-field">
-        <mat-label>Nom de votre marketplace</mat-label>
+        <mat-label>Nom de votre place de marché</mat-label>
         <input matInput type="url" (focusin)="focus_idx=4" maxlength="200" [(ngModel)]="user.shop_name" [ngModelOptions]="{standalone: true}" (keypress)="mustSave=true">
         <mat-hint *ngIf="focus_idx==4">Pour devenir distributeur vous devez avoir un nom de boutique</mat-hint>
       </mat-form-field>
       <br>
 
       <div *ngIf="user.shop_visual" style="display: inline-block;text-align: center;width: 100%">
-        <h4>Visuel de votre marketplace</h4>
+        <h4>Visuel de votre place de marché</h4>
         <app-image [cover]="false" maxwidth="150px" [src]="user.shop_visual"
                    [border]="false"
                    (click)="change_visual('shop_visual')"></app-image>
       </div>
 
       <mat-form-field appearance="fill" class="app-field">
-        <mat-label>Description de votre marketplace</mat-label>
+        <mat-label>Description de votre place de marché</mat-label>
         <textarea matInput matInput type="text" (focusin)="focus_idx=5" maxlength="400" [(ngModel)]="user.shop_description" [ngModelOptions]="{standalone: true}"></textarea>
         <mat-hint *ngIf="focus_idx==5">La description permet à vos clients de savoir quel type de NFT vous distribuez</mat-hint>
       </mat-form-field>
       <br>
 
       <mat-form-field appearance="fill" class="app-field">
-        <mat-label>L'adresse internet de votre marketplace</mat-label>
+        <mat-label>L'adresse internet de votre place de marché</mat-label>
         <input matInput type="url" (focusin)="focus_idx=6" maxlength="200" [(ngModel)]="user.shop_website" [ngModelOptions]="{standalone: true}">
         <mat-hint *ngIf="focus_idx==6">Votre market place peut être accessible en dehors de TokenForge</mat-hint>
       </mat-form-field>
@@ -194,6 +194,7 @@
            title="Mettre a jour l'identité"
            style="width: 200px;cursor: pointer;"
            (click)="update_identity()">
+
       <button mat-raised-button mat-button
               class="app-button"
               color="alert"

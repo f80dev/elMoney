@@ -4,6 +4,7 @@ import {Location} from "@angular/common";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {UserService} from "../user.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {showError} from "../tools";
 
 @Component({
   selector: 'app-contacts',
@@ -40,7 +41,7 @@ export class ContactsComponent implements OnInit {
         if(this.routes.snapshot.queryParamMap.has("onlyNew")){
         this.user.last_contact=$event.currentTarget["value"];
       }
-      });
+      },(err)=>{showError(this,err)});
 
     }
   }

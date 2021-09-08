@@ -523,6 +523,12 @@ class ElrondNet:
 
 
     def update_account(self,_sender,values:dict):
+        """
+        Ajoute l'objet values à l'adresse _sender
+        :param _sender:
+        :param values:
+        :return:
+        """
         if "pem" in values: del values["pem"]
         log("Enregistrement de l'utilisateur " + str(values))
 
@@ -534,7 +540,7 @@ class ElrondNet:
             del values["addr"]
 
         data = "SaveKeyValue"
-        required_gas=250000+50000
+        required_gas=250000+50000 #TODO à évaluer correctement
 
         for k in values.keys():
             key=str_to_hex(k,False)
@@ -577,7 +583,7 @@ class ElrondNet:
         return rc
 
 
-    def create_account(self,fund="",name=None,email=None,seed_phrase=""):
+    def create_account(self,fund=0,name=None,email=None,seed_phrase=""):
         """
 
         :param fund:

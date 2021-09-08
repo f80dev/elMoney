@@ -35,8 +35,7 @@
       Ce créateur donne très peu d'information sur lui.<br>
       Afin d'éviter la contre-façon, il n'est pas prudent d'acquérir des NFTs payant sans un minimum d'informations sur leur créateur.
     </div>
-    _____
-    <br><br>
+  <br>
 
     <h3>Ses créations</h3>
     <app-nfts [user]="user" [with_icon]="false"
@@ -47,17 +46,20 @@
               [nfts]="nfts" maxwidth="100px" width="90%" height="auto"></app-nfts>
     <br><br>
     _____
-    <br><br>
-    Son adresse dans la blochaine<br><br>
-    <qrcode
-      [width]="150"
-      ngxClipboard
-      [cdkCopyToClipboard]="miner?.addr"
-      style="display: inline-block;"
-      [elementType]="'svg'"
-      [errorCorrectionLevel]="'M'"
-      [qrdata]="miner?.addr">
-    </qrcode>
+    <div *ngIf="miner && miner.addr">
+      <br><br>
+      Son adresse dans la blochaine<br><br>
+      <qrcode
+        [width]="150"
+        ngxClipboard
+        [cdkCopyToClipboard]="miner?.addr"
+        style="display: inline-block;"
+        [elementType]="'svg'"
+        [errorCorrectionLevel]="'M'"
+        [qrdata]="miner?.addr">
+      </qrcode>
+    </div>
+
   </div>
 
 </div>

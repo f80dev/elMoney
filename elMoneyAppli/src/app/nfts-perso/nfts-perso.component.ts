@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {UserService} from "../user.service";
 import {ApiService} from "../api.service";
-import {$$, group_tokens, showMessage, subscribe_socket} from "../tools";
+import {$$, group_tokens, showError, showMessage, subscribe_socket} from "../tools";
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormControl} from "@angular/forms";
 import {Socket, SocketIoModule} from "ngx-socket-io";
@@ -98,7 +98,6 @@ export class NftsPersoComponent implements OnInit {
       this.dialog.open(NewContactComponent, {
         position: {left: '10vw', top: '5vh'},
         maxWidth: 450,
-        width: '80vw',height: 'fit-content',
         data:{}
       }).afterClosed().subscribe((result:any) => {
         if(result){
@@ -107,7 +106,7 @@ export class NftsPersoComponent implements OnInit {
           this.api._post("transfer_nft/"+nft.token_id+"/"+result.email+"/","",body).subscribe(()=>{
             nft.message="";
             this.refresh();
-          });
+          },(err)=>{showError(this,err)});
         }
       });
     })

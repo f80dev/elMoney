@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {UserService} from "../user.service";
-import {$$, showMessage} from "../tools";
+import {$$, showError, showMessage} from "../tools";
 import {ConfigService} from "../config.service";
 
 @Component({
@@ -13,6 +13,7 @@ export class NewContactComponent implements OnInit {
   email: any = "";
   pseudo: any = "";
   showScanner: boolean = true;
+  message: string="";
 
   constructor(
     public user: UserService,
@@ -28,9 +29,13 @@ export class NewContactComponent implements OnInit {
       if(this.user.addr==this.email){
         this.dialogRef.close({"error":"Impossible de s'envoyer des fonds à soit même"});
       }
+      debugger
+      this.message="En cours de traitement";
       this.user.add_contact(this.email,()=>{
+        this.message="";
         this.dialogRef.close({email: this.email, pseudo: this.pseudo});
-      });
+      },(err)=>{showError(this,err);});
+
     } else {
       this.dialogRef.close();
     }

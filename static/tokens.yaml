@@ -174,10 +174,10 @@ content:
     tuto: "
           TokenForge vous permet de vendre des secrets (code d'accès, mot de passe, adresse). <br><br>
 
-          Le principe est que le secret n'est visible que par l'acheteur après achat.<br>
+          Le secret est une chaine de caractère qui n'est visible que par l'acheteur du NFT<br>
 
           Comme pour les autres NFTs vous pouvez donner un titre et une description à votre NFT,<br>indépedemment du secret
-          qu'il embarque.
+          qu'il embarque sa présentation sur la place de marché.
 
           "
     transac: 0.00015

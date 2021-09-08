@@ -23,9 +23,9 @@ class DAO:
         if not "contacts" in _user:_user["contacts"]=[]
         if contact_addr not in _user["contacts"]:
             _user["contacts"].append(contact_addr)
-            return self.save_user(_user["email"],_user["addr"],_user["pem"],_user["contacts"])
-        else:
-            return False
+            self.db["users"].update_one(filter={"addr": _user["addr"]},update={"$set":{"contacts":_user["contacts"]}})
+
+        return _user
 
 
     def add_money(self,idx:str,unity:str,nbDecimals:int,owner:str,_public:bool,transferable:bool,url="",proxy=""):
@@ -88,6 +88,7 @@ class DAO:
 
     def get_nftcontract_by_owner(self,addr):
         return self.db["nfts"].find_one({"owner":addr})
+
 
     def save_user(self, email, addr,pem="",contacts=[]):
         #TODO: ajouter le cryptage de l'email

@@ -132,10 +132,10 @@ export class UserService {
   }
 
 
-  add_contact(email:string,func:Function) {
+  add_contact(email:string,func:Function=null,func_error) {
     this.api._post("contacts/"+this.addr+"/","",{email:email,pem:this.pem}).subscribe((r:any)=>{
-      func();
-    })
+      if(func)func();
+    },func_error);
   }
 
 
@@ -272,7 +272,7 @@ export class UserService {
       title=title || "Cette opération doit être signée";
       if(!this.pem)this.pem=localStorage.getItem("pem");
       if(this.pem && this.pem.length>0){
-        if(func)func();
+        if(func){func();return;}
       } else {
         this.dialog.open(PrivateComponent,{width: '300px',height:"fit-content",data:
             {

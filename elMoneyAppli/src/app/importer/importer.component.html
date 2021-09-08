@@ -33,6 +33,9 @@
                     [value]="uploadProgress" *ngIf="uploadProgress">
   </mat-progress-bar>
 
+  <br>
+  <h3>Créer vos NFTs en quelques clics en fonction de vos besoins</h3>
+  <br>
 
   <mat-tab-group animationDuration="1000ms"
                  *ngIf="message?.length==0"
@@ -67,8 +70,6 @@
       <div *ngIf="!show_zone_upload" style="width: 100%;text-align: center;padding:0;margin:0;">
 
         <br>
-        Créer vos NFTs en quelques clics en fonction de vos besoins
-        <br><br>
 
         <div *ngFor="let token of tokens"
              style="display: inline-block;text-align: center;">
@@ -190,14 +191,14 @@
           <mat-step >
             <app-tuto *ngIf="idx_tab==1" label="Après fabrication, les NFTs sont présentés sur une place de marché ou ils peuvent être achetés par les autres utilisateurs de TOKENFORGE"></app-tuto>
             <form>
-              <ng-template matStepLabel>Présentation sur la marketplace</ng-template>
+              <ng-template matStepLabel>Présentation sur la place de marché</ng-template>
 
               <mat-form-field appearance="fill" class="app-field">
                 <mat-label>Intitulé du NFT</mat-label>
                 <input matInput type="text" maxlength="200"
                        id="txtTitle"
                        [(ngModel)]="title" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=2">
-                <mat-hint *ngIf="focus_idx==2">Une accroche choc et courte pour la marketplace</mat-hint>
+                <mat-hint *ngIf="focus_idx==2">Une accroche choc et courte pour la place de marché</mat-hint>
                 <mat-icon *ngIf="title?.length>0" matSuffix style="cursor: pointer" (click)="title=''">cancel</mat-icon>
               </mat-form-field>
 
@@ -453,7 +454,7 @@
               <div *ngIf="show_preview" style="width: 100%;text-align: center;">
                 <app-nfts [nfts]="nfts_preview" [user]="user"
                           height="fit-content"></app-nfts><br>
-                <small>Visualisation de votre NFT dans la marketplace</small>
+                <small>Visualisation de votre NFT dans la place de marché</small>
               </div>
 
               <br>

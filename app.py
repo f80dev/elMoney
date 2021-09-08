@@ -225,9 +225,13 @@ def evalprice(sender,data="",value=0):
     return jsonify(rc)
 
 
-
 @app.route('/api/users/',methods=["POST"])
 def save_user(data:dict=None):
+    """
+    Enregistrement de l'utilisateur
+    :param data:
+    :return:
+    """
     data = json.loads(str(request.data, encoding="utf-8"))
 
     pem_file = get_elrond_user(data)
@@ -256,18 +260,18 @@ def get_user(addrs:str):
 
     rc=[]
     for addr in addrs.split(","):
-        # _user = dao.get_user(addr)
-        # if not _user is None:
-        #     addr=_user["addr"]
-        #     if "contacts" in _user:
-        #         contacts = _user["contacts"]
-        #     else:
-        #         contacts = []
-        #
-        # if _user is None and "@" in addr:break
+        _user = dao.get_user(addr)
+        if not _user is None:
+            addr=_user["addr"]
+            if "contacts" in _user:
+                contacts = _user["contacts"]
+            else:
+                contacts = []
+
+        if _user is None and "@" in addr:break
 
         data = bc.get_account(addr)
-        # data["contacts"]=contacts
+        data["contacts"]=contacts
 
         if not data is None:
             if "visual" in data and len(data["visual"])==46:data["visual"]="https://ipfs.io/ipfs/"+data["visual"]
@@ -1012,15 +1016,15 @@ def add_contact(owner:str):
     _data=json.loads(str(request.data,"utf-8"))
     _contact=dao.get_user(_data["email"])
     if _contact is None:
-        _contact=bc.create_account(email=_contact["email"])
+        _contact,pem=bc.create_account(fund=NETWORKS[bc.network_name]["new_account"],email=_data["email"])
+        dao.save_user(_data["email"],_contact.address.bech32(),pem)
 
-    _owner = bc.get_account(owner)
-    if not "contacts" in _owner:
-        _owner["contacts"]=_contact["addr"]
-    else:
-        _owner["contacts"]=_owner["contacts"]+","+_contact["addr"]
-    bc.update_account(get_elrond_user(_data),_owner)
-    return jsonify(_owner)
+    _owner=dao.add_contact(owner,_contact["addr"])
+
+    #on fait le choix de ne pas enregistrer les contacts dans la blockchain
+    #bc.update_account(get_elrond_user(_data),{"contacts":_owner["contacts"]})
+
+    return jsonify(_owner["contacts"])
 
 
 

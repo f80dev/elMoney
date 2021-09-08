@@ -1,5 +1,6 @@
 <mat-dialog-content>
   <h3>Destinataire</h3>
+  <app-hourglass [message]="message"></app-hourglass>
   <mat-form-field appearance="fill" class="app-field">
     <mat-label>Mail ou adresse Elrond du destinataire</mat-label>
     <input matInput type="text" max="50" [(ngModel)]="email"
