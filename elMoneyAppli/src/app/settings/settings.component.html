@@ -73,6 +73,7 @@
       <button mat-raised-button mat-button
               class="app-button"
               [disabled]="!mustSave"
+              color="primary"
               (click)="update_user()">
         Enregistrer
       </button>
@@ -201,6 +202,13 @@
               *ngIf="user.identity?.length==0"
               (click)="update_identity()">
         <div class="bloc-bouton">Ajouter une<br>identification</div>
+      </button>
+
+      <button mat-raised-button mat-button
+              class="app-button"
+              *ngIf="user.identity?.length>0"
+              (click)="clear_identity()">
+        <div class="bloc-bouton">Effacer votre<br>identification</div>
       </button>
       <br><br>
 

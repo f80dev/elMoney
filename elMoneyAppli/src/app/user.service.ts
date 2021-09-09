@@ -40,7 +40,7 @@ export class UserService {
               public dialog:MatDialog,
               public _location:Location,
               public config:ConfigService) {
-    //subscribe_socket(this,"refresh_account",()=>{this.refresh_balance();})
+
   };
 
 
@@ -134,7 +134,8 @@ export class UserService {
 
   add_contact(email:string,func:Function=null,func_error) {
     this.api._post("contacts/"+this.addr+"/","",{email:email,pem:this.pem}).subscribe((r:any)=>{
-      if(func)func();
+      this.contacts_addr=r;
+      if(func)func(r);
     },func_error);
   }
 
@@ -159,12 +160,6 @@ export class UserService {
       localStorage.setItem("addr",addr);
     }
 
-    if(this.config.hasESDT()){
-      if(this.selected_money.length==0)this.selected_money=this.api.identifier;
-      this.refresh_balance(func,func_error);
-      return;
-    }
-
     $$("Chargement de l'utilisateur "+this.addr);
     this.api._get("users/"+this.addr).subscribe((body:any)=>{
       $$("Récupération de ",body);
@@ -180,6 +175,10 @@ export class UserService {
       this.email=body.email || "";
       this.website=body.website || "";
       this.shop_visual=body.shop_visual || "/assets/img/shop.png";
+
+      if(this.selected_money.length==0)this.selected_money=this.api.identifier;
+      this.refresh_balance(func,func_error);
+
       if(func)func(body);
     },(err)=>{
       if(err.status==404) {
@@ -331,7 +330,7 @@ export class UserService {
         this.contacts=[];
         for(let c of r){
           this.contacts.push({
-            label:c.pseudo,
+            pseudo:c.pseudo,
             addr:c.addr,
             selected:false,
             icon:"person",
@@ -339,7 +338,7 @@ export class UserService {
             color:"white"
           })
         }
-        if(func)func();
+        if(func)func(this.contacts);
       });
     }
   }

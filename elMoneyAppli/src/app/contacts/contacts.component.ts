@@ -12,7 +12,7 @@ import {showError} from "../tools";
   styleUrls: ['./contacts.component.sass']
 })
 export class ContactsComponent implements OnInit {
-  contacts: any;
+
   email: any="";
   pseudo: any="";
   message="";
@@ -29,18 +29,23 @@ export class ContactsComponent implements OnInit {
   ngOnInit(): void {
     this.user.check_pem(()=>{
       this.user.load_contacts();
-      },this.router);
+    },this.router);
   }
 
 
   add_contact($event: any) {
     if($event.keyCode==13){
       this.message="Ajout du contact";
-      this.user.add_contact(this.email,()=>{
-        this.message="";
+      debugger
+      this.user.add_contact(this.email,(r:any)=>{
+        this.user.load_contacts(()=>{
+          this.message="";
+          this.email="";
+        });
+
         if(this.routes.snapshot.queryParamMap.has("onlyNew")){
-        this.user.last_contact=$event.currentTarget["value"];
-      }
+          this.user.last_contact=$event.currentTarget["value"];
+        }
       },(err)=>{showError(this,err)});
 
     }

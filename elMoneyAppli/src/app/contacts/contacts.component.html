@@ -26,7 +26,7 @@
   <table style="width: 80%;margin:10%;text-align: left;">
     <tr *ngFor="let contact of user.contacts">
       <td style="width: 20px"><mat-icon>person</mat-icon></td>
-      <td>{{contact.label}}</td>
+      <td [title]="contact.addr">{{contact.pseudo}}</td>
       <td>
         {{contact.email?.substr(0,30)}}
         <span *ngIf="contact.email?.length>30">...</span>

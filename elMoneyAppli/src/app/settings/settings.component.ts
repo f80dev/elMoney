@@ -45,7 +45,7 @@ export class SettingsComponent implements OnInit,OnDestroy {
 
 
   ngOnInit(): void {
-    this.user.check_email((r)=>{
+    this.user.check_pem(()=>{
       this.open_section=Number(this.routes.snapshot.queryParamMap.get("section"));
       if(!this.open_section)this.open_section=1;
     },this.router,null,"settings?section=1")
@@ -118,7 +118,7 @@ export class SettingsComponent implements OnInit,OnDestroy {
     this.ngNavigatorShareService.share({
       title: this.user.shop_name,
       text: this.user.shop_description || "Le spécialiste deu NFT",
-      url: this.user.shop_website
+      url: this.user.shop_website || ""
     })
       .then( (response) => {console.log(response);},()=>{
         this._clipboardService.copyFromContent(this.user.shop_website);
@@ -131,14 +131,12 @@ export class SettingsComponent implements OnInit,OnDestroy {
 
 
   update_user() {
-    this.user.check_pem(()=>{
       this.message="Enregistrement en cours ...";
       this.user.save_user(()=>{
         this.mustSave=false;
         this.message="";
         showMessage(this,"Informations enregistrées");
       });
-    },this);
   }
 
   delete_account(){
@@ -201,5 +199,9 @@ export class SettingsComponent implements OnInit,OnDestroy {
   }
 
 
+  clear_identity() {
+    this.user.identity="";
+    this.mustSave=true;
+  }
 }
 

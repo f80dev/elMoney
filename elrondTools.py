@@ -1029,6 +1029,12 @@ class ElrondNet:
 
 
     def dealer_state(self,pem_file, state):
+        """
+        Permet de désactiver une boutique
+        :param pem_file:
+        :param state:
+        :return:
+        """
         tx = self.execute(self.contract, pem_file,
                           function="dealer_state",
                           arguments=[hex(state)],

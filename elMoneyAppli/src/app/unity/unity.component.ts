@@ -27,7 +27,7 @@ export class UnityComponent implements OnChanges {
 
   refresh(){
     if(localStorage.getItem("unity")=="fiat" && this.base.toLowerCase()=="egld"){
-      this.message="conversion";
+      this.message="> $";
       this.config.get_price(this.unity,(convert)=>{
         this.unity=this.config.fiat_unity;
         this.showValue=this.value*convert;
