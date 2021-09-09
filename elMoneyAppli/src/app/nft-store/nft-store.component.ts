@@ -60,7 +60,7 @@ export class NftStoreComponent implements OnInit {
   change_dealer(){
     this.dialog.open(SelDealerComponent, {
       position: {left: '2vw', top: '5vh'},
-      width: '96vw', height: 'auto',maxWidth:'500px',
+      width: '96vw', height: '400px',maxWidth:'500px',
       data:{
         title:"Selectionner un distributeur",
         dealers:this.dealers,
@@ -68,8 +68,8 @@ export class NftStoreComponent implements OnInit {
         no_dealer_message:"Aucun distributeur disponible"
       }
     }).afterClosed().subscribe((result:any) => {
-      if (result && Object.keys(result).length > 0) {
-        this.selected_dealer=result;
+      if (result.length>0) {
+        this.selected_dealer=result[0];
         this.refresh(false);
       }
     });

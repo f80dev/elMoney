@@ -40,7 +40,6 @@ export class MainComponent implements OnInit {
 
     this.user.check_email(()=>{
       subscribe_socket(this,"refresh_account",($event)=>{
-        debugger
         if($event.param.comment){
           let unity=$event.param.comment;
           if(unity!=this.user.moneys[this.user.selected_money].unity){

@@ -5,6 +5,9 @@
            (mousedown)="select_friends(fr)">
         <mat-icon *ngIf="!with_photo">{{fr.icon}}</mat-icon><br>
         <img *ngIf="with_photo" [src]="fr.pictures" style="width:60px;">
-        <span style="font-size: small">{{fr.label}}</span>
+        <div style="font-size: x-small;max-width: 50px;display: inline-block;overflow: hidden;"
+             [title]="fr.pseudo">
+          {{fr.pseudo}}
+        </div>
       </div>
     </div>

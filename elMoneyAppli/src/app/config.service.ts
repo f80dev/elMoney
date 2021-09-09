@@ -76,20 +76,20 @@ export class ConfigService {
     return Promise.resolve((await this.http.get(jsonFile).toPromise()));
   }
 
-  get_price(unity,func){
+  get_price(unity="egld",func=null){
     let now=new Date().getTime();
     if(this.unity_conversion && this.unity_conversion.hasOwnProperty(unity) && now-this.unity_conversion[unity].lastdate<100000){
-      func(this.unity_conversion[unity].value);
+      if(func)func(this.unity_conversion[unity].value);
       return;
     }
     if(unity.toLowerCase()=="egld"){
       this.api._get("https://data.elrond.com/market/quotes/egld/price","",10,"").subscribe((result:any)=>{
         if(result.length>0){
           this.unity_conversion[unity]={value:result[result.length-1].value,lastdate:new Date().getTime()};
-          func(result[result.length-1].value);
+          if(func)func(result[result.length-1].value);
         }
       },(err)=>{
-        func(80);
+        if(func)func(80);
       });
     } else {
       this.unity_conversion[unity]={value:1,lastdate:new Date().getTime()};
@@ -139,6 +139,7 @@ export class ConfigService {
         $$("Chargement des infos serveur ok",is)
 
         this.refresh_dealers();
+        this.get_price();
         if(func!=null)func(this.values);
       })
     },()=>{

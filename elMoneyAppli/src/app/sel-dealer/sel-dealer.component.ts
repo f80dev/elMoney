@@ -30,7 +30,9 @@ export class SelDealerComponent implements OnInit {
     public api:ApiService,
     public toast:MatSnackBar,
     public config:ConfigService,
-    @Inject(MAT_DIALOG_DATA) public data: DealerData) { }
+    @Inject(MAT_DIALOG_DATA) public data: DealerData) {
+  }
+
 
   ngOnInit(): void {
     if(this.data.dealers && this.data.dealers.length>0){
@@ -57,7 +59,6 @@ export class SelDealerComponent implements OnInit {
   }
 
   return_dealers() {
-    this.eval_selected_dealer();
     this.dialogRef.close(this.sel_dealers);
   }
 }

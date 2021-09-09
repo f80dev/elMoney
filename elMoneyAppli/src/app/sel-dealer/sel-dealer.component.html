@@ -1,10 +1,11 @@
 <mat-dialog-content style="padding: 8px !important;">
   <h3>{{data.title}}</h3>
 
-    <mat-selection-list [multiple]="!data.direct_sel" #sel_dealer>
+    <mat-selection-list [multiple]="!data.direct_sel"
+                        [(ngModel)]="sel_dealers" (click)="return_dealers()">
       <mat-list-option *ngFor="let dealer of dealers" [value]="dealer">
-          <img matListAvatar [src]="dealer.shop_visual" style="width:50px;">
-          <div mat-line>{{dealer.shop_name}}</div>
+          <img matListAvatar *ngIf="dealer.shop_visual?.length>0" [src]="dealer.shop_visual" style="width:50px;">
+          <div mat-line style="color:white;">{{dealer.shop_name}}</div>
           <div mat-line style="font-size: small;color:lightgrey">{{dealer.shop_description}}</div>
       </mat-list-option>
     </mat-selection-list>

@@ -30,7 +30,7 @@
   <app-hourglass [message]="message" style="margin-top: 20px;"></app-hourglass>
 
   <div *ngIf="message?.length==0 && _max>0 && user.gas>config.values?.min_gas_to_transfer">
-    <app-minicontacts></app-minicontacts>
+    <app-minicontacts (select)="transfer($event.addr)"></app-minicontacts>
     <br>
     <div
       style="width:100%;text-align: center;"
