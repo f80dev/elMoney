@@ -20,6 +20,9 @@
     </tr>
   </table>
 
-  <img [src]="src" *ngIf="src.length>0" style="width: 150px">
+  <div *ngIf="src.length>0">
+    <img [src]="src" style="width: 150px">
+  </div>
+
 </div>
 

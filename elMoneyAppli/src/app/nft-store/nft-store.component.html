@@ -31,7 +31,7 @@
     </td>
 
     <td style="text-align: left;width: 30px;">
-      <mat-slide-toggle *ngIf="nfts?.length>0" [(ngModel)]="art">Mode gallerie</mat-slide-toggle>
+      <mat-slide-toggle *ngIf="nfts?.length>0" [(ngModel)]="art" style="line-height: 90%;font-size: small;">Mode<br>gallerie</mat-slide-toggle>
     </td>
 
     <td style="text-align: right;width: fit-content;">
@@ -100,9 +100,8 @@
             *ngIf="message?.length==0"
             [user]="user"
             [seller]="selected_dealer?.address"
-            [height]="selected_mode.height"
-            width="90%"
-            maxwidth="350px"
+            [width]="selected_mode.width"
+            [maxwidth]="selected_mode.maxwidth"
             [fontsize]="selected_mode.fontsize"
             [with_icon]="selected_mode.with_icon"
             (buy)="on_buy($event)"

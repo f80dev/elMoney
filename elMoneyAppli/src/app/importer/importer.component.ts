@@ -786,7 +786,7 @@ export class ImporterComponent implements OnInit {
   }
 
   inc_price(inc: number) {
-    this.price=this.price+0.5;
+    this.price=this.price+0.1;
   }
 
   update_user_solde() {

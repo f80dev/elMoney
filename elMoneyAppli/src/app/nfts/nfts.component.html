@@ -1,8 +1,8 @@
-<div *ngIf="nfts?.length>0" style="margin: 0px;padding:0;width:99%;text-align: center;" >
+<div [@burn]="burnState" *ngIf="nfts?.length>0">
 
   <div *ngIf="!art" class="wrap-list">
     <mat-card class="app-card mat-elevation-z16"
-              [title]="nft.title"
+              [title]="nft.title+' '+nft.description"
               [ngStyle]="{'min-height':'150px','max-width':max_w,width:'90%','margin':'1%','margin-bottom':'5px',padding:'7px','color':'white'}"
               *ngFor="let nft of nfts | filter: ['search',filter]">
 
@@ -10,8 +10,9 @@
         <img *ngIf="with_icon" mat-card-avatar
              [src]="nft.icon"
              class="image-icon"
-             style="margin:0;border-radius: 0%;">
-        <mat-card-title [ngStyle]="{'font-size':fontsize}">
+             style="margin:0;border-radius: 0%;margin-left: 2px;">
+
+        <mat-card-title [ngStyle]="{'font-size':fontsize,'margin-top':'3px','margin-left':'-2px','font-weight':'lighter'}">
           <span style="font-size: medium" *ngIf="nft?.count && nft?.count>1">({{nft.count}}) &nbsp;</span>
           {{nft.title}}
           <div *ngIf="nft.price>0 && nft.state==0 && (nft.owner==user.addr || nft.isDealer)"

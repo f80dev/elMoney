@@ -10,6 +10,7 @@ import {ConfigService} from "../config.service";
 import {MatDialog} from "@angular/material/dialog";
 import {environment} from "../../environments/environment";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {animate, state, style, transition, trigger} from "@angular/animations";
 
 @Component({
   selector: 'app-nfts-perso',

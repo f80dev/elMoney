@@ -27,8 +27,8 @@ export class NftStoreComponent implements OnInit {
 
   handle:any;
   options:any[]=[
-    {label:"Standard",style:{width:"250px",height:"fit-content",fontsize:"medium",with_icon:true}},
-    {label:"Condensé",style:{width:"auto",height:"fit-content",fontsize:"small",with_icon:false}},
+    {label:"Standard",style:{width:"90%",height:"fit-content",fontsize:"1.2em",with_icon:true,maxwidth:'250px'}},
+    {label:"Mobile",style:{width:"90%",height:"fit-content",fontsize:"small",with_icon:false,maxwidth:'500px'}},
     {label:"Large",style:{width:"350px",height:"300px",fontsize:"large",with_icon:true}}
   ]
 

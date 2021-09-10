@@ -261,12 +261,10 @@ def get_user(addrs:str):
     rc=[]
     for addr in addrs.split(","):
         _user = dao.get_user(addr)
+        contacts = []
         if not _user is None:
             addr=_user["addr"]
-            if "contacts" in _user:
-                contacts = _user["contacts"]
-            else:
-                contacts = []
+            if "contacts" in _user:contacts = _user["contacts"]
 
         if _user is None and "@" in addr:break
 

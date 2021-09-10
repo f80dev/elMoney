@@ -9,11 +9,19 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {PromptComponent} from "../prompt/prompt.component";
 import {MatDialog} from "@angular/material/dialog";
 import {SelDealerComponent} from "../sel-dealer/sel-dealer.component";
+import {animate, state, style, transition, trigger} from "@angular/animations";
 
 @Component({
   selector: 'app-nfts',
   templateUrl: './nfts.component.html',
-  styleUrls: ['./nfts.component.sass']
+  styleUrls: ['./nfts.component.sass'],
+  animations:[
+    trigger('burn',[
+      state('normal',style({opacity:1,margin: '0px',padding:0,width:'99%','text-align': 'center'})),
+      state('burned',style({opacity:0,margin: '0px',padding:0,width:'99%','text-align': 'center'})),
+      transition("normal => burned",[animate('2s')])
+    ])
+  ]
 })
 export class NftsComponent implements OnChanges {
 
@@ -21,7 +29,7 @@ export class NftsComponent implements OnChanges {
   @Input("art") art:boolean=true;
   @Input("filter") filter:string="*";
   @Input("nfts") nfts:any;
-  @Input("fontsize") fontsize:string="normal";
+  @Input("fontsize") fontsize:string="large";
   @Input("with_icon") with_icon:boolean=true;
   @Input("with_actions") with_actions:boolean=true;
   @Input("force_text") force_text:boolean=false;      //Force l'affichage de la description même si l'image en fullscreen
@@ -142,7 +150,7 @@ export class NftsComponent implements OnChanges {
   }
 
 
-
+  burnState="normal";
   burn(nft: any) {
     this.dialog.open(PromptComponent, {
       data: {
@@ -155,10 +163,11 @@ export class NftsComponent implements OnChanges {
       if (result=="yes") {
         this.user.check_pem(()=>{
           nft.message = "En cours de destruction";
+          this.burnState="burn";
           this.api._post("burn/" + nft.token_id + "/", "", this.user.pem).subscribe((r: any) => {
             nft.message = "";
             showMessage(this, "Votre NFT n'existe plus");
-            this.onrefresh.emit();
+            this.onrefresh.emit("burn");
           },(err)=>{
             showError(this,err);
             nft.message="";
