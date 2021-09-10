@@ -106,10 +106,12 @@ export class SettingsComponent implements OnInit,OnDestroy {
   }
 
   openclose_store() {
-    let state=Math.abs(this.user.dealer.state-1);
-    this.api._post("dealer_state/"+state+"/","",{pem:this.user.pem}).subscribe(()=>{
-      showMessage(this,"Statut modifié");
-      this.config.refresh_dealers();
+    this.update_user(()=>{
+      let state=Math.abs(this.user.dealer.state-1);
+      this.api._post("dealer_state/"+state+"/","",{pem:this.user.pem}).subscribe(()=>{
+        showMessage(this,"Statut modifié");
+        this.config.refresh_dealers();
+      });
     });
   }
 
@@ -130,13 +132,19 @@ export class SettingsComponent implements OnInit,OnDestroy {
 
 
 
-  update_user() {
+  update_user(func=null) {
+    if(!this.mustSave){
+      if(func)func();
+    }else{
       this.message="Enregistrement en cours ...";
       this.user.save_user(()=>{
         this.mustSave=false;
         this.message="";
         showMessage(this,"Informations enregistrées");
+        if(func)func();
       });
+    }
+
   }
 
   delete_account(){

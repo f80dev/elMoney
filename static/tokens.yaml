@@ -12,7 +12,7 @@ content:
   - index: photo
     title: Vendre<br>une photo
     icon: camera
-    nft_icon: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/279/framed-picture_1f5bc-fe0f.png
+    nft_icon: "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/camera_1f4f7.png"
     description: Vendre une photo qui ne sera visible que pour le propriétaire
     tuto: "
       TokenForge vous permet de vendre une photo, une image<br>
@@ -37,7 +37,7 @@ content:
   - index: pow
     title: Tokeniser<br>une oeuvre
     icon: person
-    nft_icon: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/279/artist-palette_1f3a8.png
+    nft_icon: "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/279/artist-palette_1f3a8.png"
     description: Envoyer une photo et attachez y votre identité (email, passeport) en tant qu'auteur
     tuto: "
       Tokenizer un oeuvre revient à attacher une identité à cette oeuvre.<br>
@@ -87,7 +87,7 @@ content:
   - index: file
     title: Vendre<br>un fichier
     icon: description
-    nft_icon: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/279/memo_1f4dd.png
+    nft_icon: "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/279/memo_1f4dd.png"
     description: ""
     tuto: "
           Grâce à TokenForge vous pouvez vendre n'importe quel fichier très simplement.
@@ -109,7 +109,7 @@ content:
   - index: propriete
     title: Attestation<br>de propriété
     icon: copyright
-    nft_icon: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/copyright_a9-fe0f.png
+    nft_icon: "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/copyright_a9-fe0f.png"
     description: ""
     tuto: "
           Grâce à TokenForge vous pouvez établir une attestation de propriété et l'enregistrer dans la blockchain.<br>
@@ -124,7 +124,7 @@ content:
   - index: music
     title: Vendre de<br>la musique
     icon: audiotrack
-    nft_icon: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/279/musical-note_1f3b5.png
+    nft_icon: "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/279/musical-note_1f3b5.png"
     description: Vendre un fichier musical
     tuto: "
               TokenForge permet de vendre des fichier musicaux.<br><br>
@@ -149,7 +149,7 @@ content:
   - index: film
     title: Vendre<br>un film
     icon: movie
-    nft_icon: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/google/274/film-frames_1f39e-fe0f.png
+    nft_icon: "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/google/274/film-frames_1f39e-fe0f.png"
     description: Vendre un film via le lien d'une plateforme vidéo
     tuto: "
       TokenForge permet de vendre des contenus audiovisuel (films, vidéos, musiques).<br>
@@ -167,7 +167,7 @@ content:
   - index: secret
     title: Vendre<br>un secret
     icon: lock
-    nft_icon: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/279/key_1f511.png
+    nft_icon: "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/279/key_1f511.png"
     description: Vendre un mot de passe, un numéro de license, un code secret de coffre, un code promo
     fee: 0.001
     tags: "#secret"
@@ -187,7 +187,7 @@ content:
   - index: tickets
     title: Billeterie
     icon: label
-    nft_icon: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/281/admission-tickets_1f39f-fe0f.png
+    nft_icon: "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/twitter/281/admission-tickets_1f39f-fe0f.png"
     description: Générer et vendez des billets d'accès à un evénement de tout type
     fee: 0.002
     tuto: "
@@ -212,7 +212,7 @@ content:
   - index: life_events
     title: Graver des<br>souvenirs
     icon: favorite
-    nft_icon: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/279/red-heart_2764-fe0f.png
+    nft_icon: "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/279/red-heart_2764-fe0f.png"
     description: Enregistrez vos plus beaux souvenir de façon définitive et inaltérable dans la blockchaine
     fee: 0.004
     tuto: "
@@ -237,7 +237,7 @@ content:
   - index: contract
     title: Contrat
     icon: work
-    nft_icon: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/scroll_1f4dc.png
+    nft_icon: "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/scroll_1f4dc.png"
     description: Rédiger un contrat et envoyer un exemplaire à l'autre signataire
     fee: 0.003
     tuto: "

@@ -176,7 +176,16 @@
         [qrdata]="user.shop_website">
       </qrcode>
       <br>
+      <button mat-raised-button mat-button
+              class="app-button"
+              color="primary"
+              [disabled]="!mustSave"
+              (click)="update_user()">
+        Enregistrer
+      </button>
+      <br>
       <app-tuto label="Flasher pour accèder directement à la boutique"></app-tuto>
+
 
 
     </mat-expansion-panel>

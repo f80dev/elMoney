@@ -13,7 +13,8 @@ export class ConfigService {
   visibleTuto: Boolean | boolean=false;
   user: any;
   values: any;
-  config:any;
+  config: any;
+  tags:any={};
   webcamsAvailable: any;
   width_screen: number;
   ready=false;
@@ -40,7 +41,6 @@ export class ConfigService {
   unity: string ="";
   server: any={bank:""};
   device: { isDesktop: any; isMobile: any };
-  tags: any={};
   egold_price:number=60;
   egold_unity:string="eGld";
   fiat_unity: string="$";
@@ -60,16 +60,15 @@ export class ConfigService {
 
 
   init_tags(){
-    if(this.tags=={}){
-      this.api.getyaml("tokens").subscribe((r:any)=>{
+    this.api.getyaml("tokens").subscribe((r:any)=>{
       for(let token of r.content) {
         for (let tag of token.tags.split(" ")) {
-          if (!this.config.tags.hasOwnProperty(tag.replace("#", "")))
-            this.config.tags[tag.replace("#", "")] = token.nft_icon;
+          if (!this.tags.hasOwnProperty(tag.replace("#", "")))
+            this.tags[tag.replace("#", "")] = token.nft_icon;
         }
       }
     });
-    }
+
   }
 
   public async getJson(jsonFile:string): Promise<any> {

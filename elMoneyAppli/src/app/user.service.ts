@@ -156,9 +156,7 @@ export class UserService {
   init(addr:string=null,func=null,func_error=null) {
     addr=addr || this.addr;
     this.addr=addr;
-    if(addr && addr!="null"){
-      localStorage.setItem("addr",addr);
-    }
+    if(addr && addr!="null")localStorage.setItem("addr",addr);
 
     $$("Chargement de l'utilisateur "+this.addr);
     this.api._get("users/"+this.addr).subscribe((body:any)=>{
@@ -177,7 +175,7 @@ export class UserService {
       this.shop_visual=body.shop_visual || "/assets/img/shop.png";
 
       if(this.selected_money.length==0)this.selected_money=this.api.identifier;
-      this.refresh_balance(func,func_error);
+      //this.refresh_balance(func,func_error);
 
       if(func)func(body);
     },(err)=>{
@@ -235,7 +233,8 @@ export class UserService {
     if(!this.addr || this.addr=="null")this.addr=localStorage.getItem("addr");
     if(this.addr && this.addr.length>20){
       this.init(this.addr,()=>{
-        if(func){func();return;}
+        this.refresh_balance(func);
+        return;
       });
     }else{
       this.dialog.open(AuthentComponent,{width: '350px',height:"auto",data:
@@ -249,7 +248,7 @@ export class UserService {
           this.init(result.addr,()=>{
             // $$("Enregistrement de "+this.email+" sur le device");
             // localStorage.setItem("email",this.email);
-            //this.refresh_balance(func);
+            this.refresh_balance(func);return;
           });
         } else {
           if(func_abort){

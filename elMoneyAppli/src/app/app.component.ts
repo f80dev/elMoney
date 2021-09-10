@@ -40,7 +40,6 @@ export class AppComponent implements OnInit,OnDestroy {
 
     this.appVersion=environment.appVersion;
     this.message="Connexion";
-
     this.config.init(()=> {
       this.config.init_tags();
       this.message = "";

@@ -3193,8 +3193,8 @@ mat-expansion-panel-header {
   overflow: hidden;
 }
 .image-icon {
-  width: 27px !important;
-  height: 27px !important;
+  width: 30px !important;
+  height: 30px !important;
 }
 .mat-form-field-type-mat-select .mat-form-field-label, .mat-select-value {
   color: white;

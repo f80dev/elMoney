@@ -60,7 +60,7 @@ export class NftStoreComponent implements OnInit {
   change_dealer(){
     this.dialog.open(SelDealerComponent, {
       position: {left: '2vw', top: '5vh'},
-      width: '96vw', height: '400px',maxWidth:'500px',
+      width: '96vw', height: '460px',maxWidth:'500px',
       data:{
         title:"Selectionner un distributeur",
         dealers:this.dealers,
@@ -106,7 +106,15 @@ export class NftStoreComponent implements OnInit {
         if(!store || store==dealer.address)this.dealers.push(dealer);
       }
 
-      if(!store || this.dealers.length==0)this.dealers.splice(0,0,{shop_name:'Vente directe',address:"0x0"});
+
+      if(!store || this.dealers.length==0)
+        this.dealers.splice(0,0,{
+          shop_name:'Vente directe',
+          address:"0x0",
+          shop_description:"Ventes directes des créateurs sans intermédiaires",
+          shop_visual:"https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/convenience-store_1f3ea.png"
+        });
+
       this.selected_dealer=this.dealers[0];
 
       this.refresh();
@@ -118,7 +126,7 @@ export class NftStoreComponent implements OnInit {
 
 
   apply_filter(nfts) : any[] {
-    return group_tokens(nfts,this.selected_tag,(item)=> {
+    return group_tokens(nfts,this.config.tags,(item)=> {
       if (!this.filter_id || this.filter_id == item.token_id) {
         if (item.state == 0 && item.properties >= 4 && item.owner != this.user.addr) {
           if ((item.tags.lenght==0 || item.tags.indexOf(this.selected_tag)>-1) && (this.filter.length == 0 || item.search.toLowerCase().indexOf(this.filter.toLowerCase())) > -1){

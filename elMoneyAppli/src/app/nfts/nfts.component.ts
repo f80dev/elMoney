@@ -218,7 +218,7 @@ export class NftsComponent implements OnChanges {
           {left: '5vw', top: '5vh'},
         maxWidth: 500, width: '90vw', height: 'auto',
         data:{
-          title: "Se faire distribuer",
+          title: "Choisissez un distributeur pour votre NFT",
           result:this.user.addr
         }
       }).afterClosed().subscribe((result) => {

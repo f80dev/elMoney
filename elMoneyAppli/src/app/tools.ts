@@ -1038,18 +1038,21 @@ export function extract_tags(tokens:any[]) {
   return tags;
 }
 
-
+//Regroupement des tokens et affectation de l'icon en fonction du tag
 export function group_tokens(tokens:any[],tags:any,func_validate:Function=null):any {
   let nfts = [];
   for (let item of tokens) {
     item.message = "";
     item.search = item.title + " " + item.price + " " + item.description;
     item.open = "";
+
     //Affectation de l'icon du token en fonction du tag
+    item.icon="/assets/icons/gift.png";
     for(let tag of item.tags.split(" ")){
-      item.icon="/assets/icons/gift.png";
-      if(tags.hasOwnProperty(tag.replace("#",""))){
-        item.icon=tags[tag.replace("#","")];
+      let key=tag.replace("#","");
+      if(tags.hasOwnProperty(key)){
+        item.icon=tags[key];
+        break;
       }
     }
 

@@ -20,6 +20,14 @@ editor:
   link_author: "https://www.linkedin.com/in/hhoareau/"
   website: "https://f80.fr"
 
+tags:
+  default: "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/wrapped-gift_1f381.png"
+  photo: "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/camera_1f4f7.png"
+  souvenir: "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/google/298/birthday-cake_1f382.png"
+  jeu: "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/game-die_1f3b2.png"
+  contrat: "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/scroll_1f4dc.png"
+  secret: "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/old-key_1f5dd-fe0f.png"
+  fichier: "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/file-folder_1f4c1.png"
 
 support:
   email: ""

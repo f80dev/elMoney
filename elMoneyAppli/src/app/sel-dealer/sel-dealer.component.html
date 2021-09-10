@@ -1,7 +1,7 @@
 <mat-dialog-content style="padding: 8px !important;">
   <h3>{{data.title}}</h3>
-
-    <mat-selection-list [multiple]="!data.direct_sel"
+  <div style="height: 300px;overflow: scroll;width:94%;margin-left: 3%;">
+    <mat-selection-list [multiple]="false"
                         [(ngModel)]="sel_dealers" (click)="return_dealers()">
       <mat-list-option *ngFor="let dealer of dealers" [value]="dealer">
           <img matListAvatar *ngIf="dealer.shop_visual?.length>0" [src]="dealer.shop_visual" style="width:50px;">
@@ -9,6 +9,7 @@
           <div mat-line style="font-size: small;color:lightgrey">{{dealer.shop_description}}</div>
       </mat-list-option>
     </mat-selection-list>
+  </div>
 
 
 <!--    <table style="width: 100%;vertical-align: top;" *ngIf="dealer.address!='0x0'">-->
@@ -27,8 +28,6 @@
 <!--          </button>-->
 
 <!--  -->
-
-
 
   <div *ngIf="dealers?.length==0">
     {{data.no_dealer_message}}
