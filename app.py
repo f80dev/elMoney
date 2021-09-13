@@ -775,9 +775,10 @@ def new_dealer(data:dict=None):
     if data is None:
         data = json.loads(str(request.data, encoding="utf-8"))
 
-    tx=bc.execute(NETWORKS[bc.network_name]["nft"], get_elrond_user(data["pem"]),
-                  function="new_dealer", arguments=[],
-                  )
+    _user=get_elrond_user(data["pem"])
+    tx=bc.execute(NETWORKS[bc.network_name]["nft"], _user,function="new_dealer", arguments=[])
+
+    tx = bc.add_miner(NETWORKS[bc.network_name]["nft"], _user, ["0x" + _user.address.hex()])
 
     return jsonify(tx), 200
 

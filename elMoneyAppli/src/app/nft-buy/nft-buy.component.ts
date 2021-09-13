@@ -66,7 +66,7 @@ export class NftBuyComponent implements OnInit {
     let price = this.nft.price;
     this.api._post("buy_nft/" + this.nft.token_id + "/" + price + "/" + this.seller.address, "", {pem:this.user.pem,identifier:this.nft.identifier}).subscribe((r: any) => {
       this.message = "";
-      showMessage(this, "Achat du token pour " + (this.nft.price + r.cost) + " "+this.nft.unity);
+      showMessage(this, "Achat du NFT pour " + (this.nft.price + r.cost) + " "+this.nft.unity);
       this.user.refresh_balance(() => {});
       this.router.navigate(['nfts-perso'],{queryParams:{index:0},replaceUrl:true})
     }, () => {

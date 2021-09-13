@@ -60,8 +60,10 @@ export class NftsPersoComponent implements OnInit {
 
   reroutage(){
     let total=0;
-    for(let i of [0,1,2])
-      total=total+this.nfts[i].length;
+    for(let i of [0,1,2]){
+      if(this.nfts[i])
+        total=total+this.nfts[i].length;
+    }
 
     if(total==0){
       showMessage(this,"Vous n'avez aucun NFT, je vous redirige vers les boutiques")

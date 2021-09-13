@@ -234,7 +234,7 @@ export class ImporterComponent implements OnInit {
           money: this.selected_money.identifier
         };
 
-        $$("Création du token ", obj);
+        $$("Création du NFT ", obj);
 
         this.message = "Enregistrement dans la blockchain";
         window.scrollTo(0, 0);

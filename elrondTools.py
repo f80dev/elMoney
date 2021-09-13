@@ -685,7 +685,6 @@ class ElrondNet:
 
 
 
-
     def get_tokens(self,seller_filter,owner_filter,miner_filter):
         rc = list()
 
@@ -807,6 +806,7 @@ class ElrondNet:
 
                 premium=(len(visual)>0 and len(desc)>10 and len(title)>5)
 
+
                 obj=dict({"token_id": id,
                           "title": title,
                           "tags":" ".join(tags),
@@ -820,12 +820,14 @@ class ElrondNet:
                           "miner":miner,
                           "owner":owner_addr,
                           "visual":visual,
+                          "is_selled":state>0 and miner!=owner_addr,
                           "unity":unity,
                           "premium":premium,
                           "identifier":identifier,
                           "fullscreen":fullscreen,
                           "properties":properties
                           })
+
 
                 obj["message"]=""
 

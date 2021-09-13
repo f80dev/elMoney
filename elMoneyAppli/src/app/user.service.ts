@@ -228,15 +228,23 @@ export class UserService {
   }
 
 
-  check_email(func,func_abort=null,title=null,redirect=null){
+  //Vérification que l'utilisateur est authentifié
+  check_email(func,func_abort=null,title=null,redirect=null,force_init=false){
     title=title || "Authentification requise";
     if(!this.addr || this.addr=="null")this.addr=localStorage.getItem("addr");
     if(this.addr && this.addr.length>20){
-      this.init(this.addr,()=>{
+      if(force_init){
+        this.init(this.addr,()=>{
+          this.refresh_balance(func);
+          return;
+        });
+      } else {
         this.refresh_balance(func);
         return;
-      });
-    }else{
+      }
+    }
+
+    else{
       this.dialog.open(AuthentComponent,{width: '350px',height:"auto",data:
           {
             title: title,
