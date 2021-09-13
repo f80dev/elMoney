@@ -10,7 +10,7 @@
   <app-hourglass [message]="message"></app-hourglass>
 
   <div *ngIf="user.gas<config.values?.min_gas_to_create">
-    Vous n'avez probablement plus assez de gas pour fabriquer une monnaie.<br>
+    Vous n'avez probablement plus assez d'eGold pour fabriquer une monnaie.<br>
     <span style="cursor: pointer;color:deeppink;" (click)="router.navigate(['settings'])">Recharger votre compte</span>
   </div>
 

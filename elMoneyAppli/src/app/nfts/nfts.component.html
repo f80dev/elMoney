@@ -1,9 +1,10 @@
 <div [@burn]="burnState" *ngIf="nfts?.length>0">
 
+<!--  Version gallerie d'art-->
   <div *ngIf="!art" class="wrap-list">
     <mat-card class="app-card mat-elevation-z16"
               [title]="nft.title+' '+nft.description"
-              [ngStyle]="{'min-height':'150px','max-width':max_w,width:'90%','margin':'1%','margin-bottom':'5px',padding:'7px','color':'white'}"
+              [ngStyle]="{'min-height':'150px','max-width':max_w,width:'90%','margin-bottom':'5px',padding:'7px','color':'white'}"
               *ngFor="let nft of nfts | filter: ['search',filter]">
 
       <mat-card-header style="height: 35px">
@@ -41,7 +42,7 @@
         </div>
 
 
-        <app-image [src]="nft.visual" maxwidth="200px" maxheight="200px"
+        <app-image [src]="nft.visual" maxwidth="200px" maxheight="200px" width="200px" height="200px"
                    [border]="!is_transparent(nft.properties)"
                    *ngIf="nft.visual?.length>0 && nft.open==''"
                    style="cursor: pointer;display: inline-block;cursor: pointer;"
