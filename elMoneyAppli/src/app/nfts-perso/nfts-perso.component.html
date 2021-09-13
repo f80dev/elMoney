@@ -9,7 +9,7 @@
                 [filter]="{state:0,isDealer:true}"
                 [with_icon]="false" [art]="false"
                 height="fit-content"
-                (refresh)="refresh([0])">
+                (refresh)="refresh([0],$event)">
       </app-nfts>
       <button mat-raised-button mat-button class="app-button"
               title="Affiche une version minimale de votre boutique de vente de vos billets"

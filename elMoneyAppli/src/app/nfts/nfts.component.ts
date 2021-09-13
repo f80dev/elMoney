@@ -138,9 +138,11 @@ export class NftsComponent implements OnChanges {
             nft.message="Notez ce message, il s'auto-détruira dans "+nft.delay+" secondes";
             if(nft.delay==0){
               clearInterval(nft.timer);
-              this.onrefresh.emit();
+              this.onrefresh.emit("open");
             }
           },1000);
+        } else {
+          this.onrefresh.emit("open");
         }
 
       },(err)=>{

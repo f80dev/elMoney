@@ -72,7 +72,7 @@ export class NftsPersoComponent implements OnInit {
   }
 
 
-  refresh(identifiers=[0,1,2]) {
+  refresh(identifiers=[0,1,2],evt:any=null) {
     $$("Refresh de la liste des NFTs possédés/achetés");
     for(let identifier of identifiers){
       let filters=["0x0","0x0","0x0"];
@@ -94,6 +94,8 @@ export class NftsPersoComponent implements OnInit {
         });
       });
     }
+
+    this.user.refresh_balance();
   }
 
   transfer(nft:any){
