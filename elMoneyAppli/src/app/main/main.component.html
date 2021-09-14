@@ -30,7 +30,7 @@
   <app-hourglass [message]="message" style="margin-top: 20px;"></app-hourglass>
 
   <div *ngIf="message?.length==0 && _max>0 && user.gas>config.values?.min_gas_to_transfer">
-    <app-minicontacts (select)="transfer($event.addr)"></app-minicontacts>
+    <app-minicontacts (select)="transfer($event)"></app-minicontacts>
     <br>
     <div
       style="width:100%;text-align: center;"
@@ -38,7 +38,7 @@
       i18n-title
       title="Augmenté la valeur à transférer en utilisant ces boutons suivant le montant que vous souhaitez atteindre">
 
-      <div *ngIf="hand==0">Envoyer des {{user.moneys[user.selected_money].unity}}</div>
+      <div *ngIf="hand==0" [title]="user.moneys[user.selected_money].title">Envoyer des {{user.moneys[user.selected_money].unity}}</div>
 
       <div style="width: 100%;text-align: center;">
 
@@ -115,6 +115,7 @@
   <br><br>
   <mat-progress-spinner diameter="20px"
                         *ngIf="hourglass"></mat-progress-spinner>
+
   <app-account [money]="user.moneys[user.selected_money]"
                title="La somme disponible dans votre wallet (de la monnaie sélectionnée)"
                fontsize="4em"

@@ -15,7 +15,7 @@ import {Location} from "@angular/common";
 })
 export class UserService {
   public contacts:any[]=[];
-  contacts_addr:string="";
+  contacts_addr:string[]=[""];
   email:string="";
   addr:string="";
   pem:string="";
@@ -34,6 +34,7 @@ export class UserService {
   shop_website: string="";
   dealer: any=null;
   identity: string="";
+  accept_all_dealers: boolean=true;
 
   constructor(public api:ApiService,
               public socket:Socket,
@@ -82,6 +83,7 @@ export class UserService {
         visual:this.visual,
         website:this.website,
         identity:this.identity,
+        accept_all_dealers:this.accept_all_dealers,
         shop_visual:this.shop_visual,
         shop_name:this.shop_name,
         shop_description:this.shop_description,
@@ -167,6 +169,7 @@ export class UserService {
       this.visual=body.visual || "/assets/img/anonymous.jpg";
       this.identity=body.identity || "";
       this.description=body.description || "";
+      this.accept_all_dealers=(body.accept_all_dealers==1)
       this.shop_name=body.shop_name || "";
       this.shop_description=body.shop_description || "";
       this.shop_website=body.shop_website || "";
@@ -276,6 +279,11 @@ export class UserService {
 
   check_pem(func,vm=null,title=null,func_abort=null) {
     this.check_email(()=>{
+      if(vm && vm.user && vm.user.gas==0){
+        showMessage(vm,"Vous devez acheter quelques eGolds pour effectuer des transactions sur le réseau");
+        func();
+        return;
+      }
       title=title || "Cette opération doit être signée";
       if(!this.pem)this.pem=localStorage.getItem("pem");
       if(this.pem && this.pem.length>0){

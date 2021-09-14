@@ -236,6 +236,11 @@ def save_user(data:dict=None):
 
     pem_file = get_elrond_user(data)
     if "visual" in data and data["visual"].startswith("data:"):data["visual"]=client.add(data["visual"])
+    if "accept_all_dealers" in data and data["accept_all_dealers"]:
+        data["accept_all_dealers"]=1
+    else:
+        data["accept_all_dealers"]=0
+
     if "identity" in data and data["identity"].startswith("data:"):data["identity"]=client.add(data["identity"])
     if "shop_visual" in data and data["shop_visual"].startswith("data:"):data["shop_visual"]=client.add(data["shop_visual"])
 
@@ -1014,10 +1019,14 @@ def add_contact(owner:str):
     _data=json.loads(str(request.data,"utf-8"))
     _contact=dao.get_user(_data["email"])
     if _contact is None:
-        _contact,pem=bc.create_account(fund=NETWORKS[bc.network_name]["new_account"],email=_data["email"])
-        dao.save_user(_data["email"],_contact.address.bech32(),pem)
+        if "@" in _data["email"]:
+            _contact,pem=bc.create_account(fund=NETWORKS[bc.network_name]["new_account"],email=_data["email"])
+            dao.save_user(_data["email"],_contact.address.bech32(),pem)
+        else:
+            return returnError("Contact inconnu")
 
-    _owner=dao.add_contact(owner,_contact["addr"])
+    if not _contact is None:
+        _owner=dao.add_contact(owner,_contact["addr"])
 
     #on fait le choix de ne pas enregistrer les contacts dans la blockchain
     #bc.update_account(get_elrond_user(_data),{"contacts":_owner["contacts"]})

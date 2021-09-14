@@ -106,11 +106,16 @@ export class SettingsComponent implements OnInit,OnDestroy {
   }
 
   openclose_store() {
-
     this.update_user(()=>{
       let state=Math.abs(this.user.dealer.state-1);
+      if(state==0)
+        this.message="Ouverture de la boutique";
+      else
+        this.message="Fermeture de la boutique";
+
       this.api._post("dealer_state/"+state+"/","",{pem:this.user.pem}).subscribe(()=>{
         showMessage(this,"Statut modifié");
+        this.message="";
         this.config.refresh_dealers();
       });
     });
@@ -156,7 +161,7 @@ export class SettingsComponent implements OnInit,OnDestroy {
           {
             title: "Supprimer votre compte ?",
             question: "Cette action n'est pas annulable. L'ensemble des NFT achetés sont définitivement perdus",
-            onlyConfirme:true,
+            onlyConfirm:true,
             lbl_ok:"Ok",
             lbl_cancel:"Annuler"
           }

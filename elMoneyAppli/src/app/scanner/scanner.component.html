@@ -1,4 +1,6 @@
-<webcam
+<div *ngIf="config.webcamsAvailable">
+  <webcam
+    style="border: lightgrey solid 2px"
   [height]="size"
   [width]="size"
   [trigger]="triggerObservable"
@@ -7,5 +9,8 @@
   [captureImageData]="true"
   imageType="image/jpeg"
   (imageCapture)="handleImage($event)">
-</webcam>
+</webcam><br>
+  <span>{{caption}}</span>
+
+</div>
 

@@ -2,9 +2,9 @@
   <app-hourglass [message]="message"></app-hourglass>
   <app-tuto label="Accèder à la liste de vos contacts, ajoutez en ou supprimez en simplement ici"></app-tuto>
   <h2>Gérer vos contacts</h2>
-  <div>
+
     <mat-form-field appearance="fill" class="app-field">
-      <mat-label>Ajouter un mail</mat-label>
+      <mat-label>Ajouter un mail ou une adresse elrond</mat-label>
       <input matInput type="text" max="50" [(ngModel)]="email" (keypress)="add_contact($event)">
     </mat-form-field>
     <button mat-raised-button
@@ -14,15 +14,18 @@
             (click)="add_contact({keyCode:13})">
       Ajouter
     </button>
-    <br>
-    <mat-form-field appearance="fill" style="max-width: 250px"
-                    *ngIf="email?.startsWith('erd')"
-                    class="app-field">
-      <mat-label>Pseudo</mat-label>
-      <input matInput type="text" max="50" [(ngModel)]="pseudo">
-    </mat-form-field>
 
-  </div>
+    <app-scanner [size]="220"
+                 (flash)="onflash_event($event)">
+    </app-scanner>
+
+<!--    <mat-form-field appearance="fill" style="max-width: 250px"-->
+<!--                    *ngIf="email?.startsWith('erd')"-->
+<!--                    class="app-field">-->
+<!--      <mat-label>Pseudo</mat-label>-->
+<!--      <input matInput type="text" max="50" [(ngModel)]="pseudo">-->
+<!--    </mat-form-field>-->
+
   <table style="width: 80%;margin:10%;text-align: left;">
     <tr *ngFor="let contact of user.contacts">
       <td style="width: 20px"><mat-icon>person</mat-icon></td>

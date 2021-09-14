@@ -171,13 +171,13 @@ export function now(){
 
 
 export function initAvailableCameras(func){
-  WebcamUtil.getAvailableVideoInputs()
-    .then((mediaDevices: MediaDeviceInfo[]) => {
-      if(mediaDevices==null)
-        func(0)
-      else
-        func(mediaDevices.length);
-    });
+  WebcamUtil.getAvailableVideoInputs().then((mediaDevices: MediaDeviceInfo[]) => {
+    let rc=0;
+    for(let device of mediaDevices){
+      if(device.deviceId && device.deviceId.length>0)rc=rc+1;
+    }
+    func(rc);
+  });
 }
 
 

@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {Observable, Subject} from "rxjs";
 import jsQR from "jsqr";
+import {ConfigService} from "../config.service";
 
 @Component({
   selector: 'app-scanner',
@@ -11,13 +12,16 @@ export class ScannerComponent implements OnInit,OnDestroy {
 
   @Input("size") size=300;
   @Input("filter") filter="";
+  @Input("caption") caption="Pointez vers le QRCode d'une adresse";
   @Output('flash') onflash: EventEmitter<any>=new EventEmitter();
 
   private trigger: Subject<void> = new Subject<void>();
   private nextWebcam: Subject<boolean|string> = new Subject<boolean|string>();
   handle:any;
 
-  constructor() { }
+  constructor(public config:ConfigService) {
+
+  }
 
   ngOnInit() {
     this.handle=setInterval(()=>{

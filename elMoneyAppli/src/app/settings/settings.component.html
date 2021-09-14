@@ -78,7 +78,13 @@
         Enregistrer
       </button>
 
-      <br>
+      <br><br>
+
+      <mat-slide-toggle [(ngModel)]="user.accept_all_dealers">
+        Accepter tous les distributeurs
+      </mat-slide-toggle>
+            <br>
+
       <div *ngIf="message.length==0" [cdkCopyToClipboard]="user.addr" ngxClipboard style="cursor: pointer">
         <br>
         <small>Votre adresse</small><br>
@@ -162,7 +168,6 @@
         <div class="bloc-bouton" *ngIf="user.dealer?.state==0">Voir vos<br>créateur</div>
       </button>
 
-
       <br><br>
       <qrcode
         *ngIf="user.shop_website?.length>0"
@@ -224,7 +229,7 @@
       <button mat-raised-button mat-button
               class="app-button"
               color="alert"
-              [disabled]="!this.user.addr || user.pem.endsWith('.pem')"
+              [disabled]="!this.user?.addr || user?.pem?.endsWith('.pem')"
               (click)="delete_account()">
         Supprimer le compte
       </button>

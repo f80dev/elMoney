@@ -28,7 +28,6 @@
 
 
   <div style="width: 100%;text-align: center" *ngIf="showScanner">
-    <small>Pointez le QRCode de l'adresse à ajouter</small><br>
     <app-scanner [size]="300"
                  autofocus
                  (click)="showScanner=false"

@@ -8,6 +8,7 @@ import {Socket} from "ngx-socket-io";
 import {UserService} from "../user.service";
 import {MatDialog} from "@angular/material/dialog";
 import {NewContactComponent} from "../new-contact/new-contact.component";
+import {PromptComponent} from "../prompt/prompt.component";
 
 @Component({
   selector: 'app-main',
@@ -77,89 +78,102 @@ export class MainComponent implements OnInit {
 
 
 
-  transfer(email:string){
+  transfer(dest:any){
+    var unity=this.user.moneys[this.user.selected_money].unity;
     this.user.check_pem(()=>{
-      this.message=this.hand+" "+this.user.moneys[this.user.selected_money].unity+" en cours de transfert à "+email;
-      this.api._post("transfer/" + this.api.identifier + "/" +  email+ "/" + this.hand+"/"+this.user.moneys[this.user.selected_money].unity+"/",
-        "",
-        this.user.pem,180).subscribe((r: any) => {
-        this.message="";
-        showMessage(this, "Fond transféré, pour "+r["cost"]+" xeGld de frais de réseau",4000);
-        this.user.refresh_balance(()=>{this.refresh();})
-        this.user.moneys[this.user.selected_money].solde=this.user.moneys[this.user.selected_money].solde-this.hand;
-        this.hand=0;
-        this.refresh();
-      },(err)=>{
-        this.message="";
-        showMessage(this,"Problème technique, transfert non effectué");
+      this.dialog.open(PromptComponent, {
+        data: {
+          title: 'Confirmation',
+          question: 'Vous souhaitez envoyer '+this.hand+" "+unity+" à "+dest.pseudo+" ("+dest.email+") ?",
+          onlyConfirm: true,
+          lbl_ok: 'Oui',
+          lbl_cancel: 'Non'
+        }}).afterClosed().subscribe((result:any) => {
+        if (result=="yes") {
+          this.message = this.hand + " " + this.user.moneys[this.user.selected_money].unity + " en cours de transfert à " + dest.email;
+          this.api._post("transfer/" + this.api.identifier + "/" + dest.addr + "/" + this.hand + "/" + unity + "/",
+            "",
+            this.user.pem, 180).subscribe((r: any) => {
+            this.message = "";
+            showMessage(this, "Fond transféré, pour " + r["cost"] + " xeGld de frais de réseau", 4000);
+            this.user.refresh_balance(() => {
+              this.refresh();
+            })
+            this.user.moneys[this.user.selected_money].solde = this.user.moneys[this.user.selected_money].solde - this.hand;
+            this.hand = 0;
+            this.refresh();
+          }, (err) => {
+            this.message = "";
+            showMessage(this, "Problème technique, transfert non effectué");
+          });
+        }
       });
     })
-
   }
 
 
-  add_contact(){
-    let height='fit-content';
-    this.dialog.open(NewContactComponent, {
-      position: {left: '10vw', top: '5vh'},
-      maxWidth: 450,
-      width: '80vw',height: height,
-      data:{}
-    }).afterClosed().subscribe((result:any) => {
-      if(result){
-        this.transfer(result.email);
-        this.refresh();
-      }
-    });
-  }
-
-  send_to() {
-    if(this.hand==0)return;
-    for(let f of this.friends){
-      if(f.color!="transparent")
-        this.transfer(f.email);
+    add_contact(){
+      let height='fit-content';
+      this.dialog.open(NewContactComponent, {
+        position: {left: '10vw', top: '5vh'},
+        maxWidth: 450,
+        width: '80vw',height: height,
+        data:{}
+      }).afterClosed().subscribe((result:any) => {
+        if(result){
+          this.transfer(result.email);
+          this.refresh();
+        }
+      });
     }
-  }
 
-
-
-  update_account() {
-    this.n_profils=0;
-    for(let f of this.friends){
-      if(f.selected){
-        this.n_profils=this.n_profils+1;
-        this.last_pseudo=f.label;
+    send_to() {
+      if(this.hand==0)return;
+      for(let f of this.friends){
+        if(f.color!="transparent")
+          this.transfer(f.email);
       }
     }
 
-    if(this.n_profils==0){
-      this._max=this.user.moneys[this.user.selected_money].solde;
-    } else {
-      this._max=this.user.moneys[this.user.selected_money].solde/this.n_profils;
-      if(this.hand>this._max){
-        this.hand=this._max;
+
+
+    update_account() {
+      this.n_profils=0;
+      for(let f of this.friends){
+        if(f.selected){
+          this.n_profils=this.n_profils+1;
+          this.last_pseudo=f.label;
+        }
+      }
+
+      if(this.n_profils==0){
+        this._max=this.user.moneys[this.user.selected_money].solde;
+      } else {
+        this._max=this.user.moneys[this.user.selected_money].solde/this.n_profils;
+        if(this.hand>this._max){
+          this.hand=this._max;
+        }
       }
     }
-  }
 
 
 
-  select_friends(fr: any) {
-    if(fr.color=="white"){
-      fr.color="deeppink";
-      fr.selected=true;
+    select_friends(fr: any) {
+      if(fr.color=="white"){
+        fr.color="deeppink";
+        fr.selected=true;
+      }
+      else{
+        fr.color="white";
+        fr.selected=false;
+      }
+      this.update_account();
     }
-    else{
-      fr.color="white";
-      fr.selected=false;
-    }
-    this.update_account();
-  }
 
 
 
-  ngOnInit(): void {
-    setTimeout(()=>{
+    ngOnInit(): void {
+      setTimeout(()=>{
       this.user.refresh_balance(()=>{
         this.refresh();
       });
@@ -167,5 +181,5 @@ export class MainComponent implements OnInit {
 
     localStorage.setItem("last_screen","main");
   }
-}
+  }
 

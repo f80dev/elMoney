@@ -38,7 +38,6 @@
   <div *ngIf="authent_method=='qrcode'" class="method_zone">
     <br>
     <div style="width: 100%;text-align: center" *ngIf="showScanner">
-      <small>Pointez le QRCode du wallet à connecter</small><br><br>
       <app-scanner [size]="230"
                    autofocus
                    (click)="showScanner=false"

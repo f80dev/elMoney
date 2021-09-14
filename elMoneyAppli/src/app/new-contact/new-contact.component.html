@@ -17,7 +17,6 @@
 
 
   <div style="width: 100%;text-align: center" *ngIf="showScanner">
-    <small>Pointez le QRCode d'un wallet Elrond pour déclencher l'envoie</small><br><br>
     <app-scanner [size]="220"
                  autofocus
                  (click)="showScanner=false"

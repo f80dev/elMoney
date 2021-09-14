@@ -36,7 +36,6 @@ export class ContactsComponent implements OnInit {
   add_contact($event: any) {
     if($event.keyCode==13){
       this.message="Ajout du contact";
-      debugger
       this.user.add_contact(this.email,(r:any)=>{
         this.user.load_contacts(()=>{
           this.message="";
@@ -51,12 +50,18 @@ export class ContactsComponent implements OnInit {
     }
   }
 
+
   del_contact(contact: any) {
     this.message="Suppression du contact";
-    this.user.contacts_addr=this.user.contacts_addr.split(",").filter(x=>x!=contact.addr).join(",");
+    this.user.contacts_addr=this.user.contacts_addr.filter(x=>x!=contact.addr);
     this.user.save_user(()=>{
       this.user.load_contacts();
       this.message="";
     });
+  }
+
+  onflash_event($event: any) {
+    this.email=$event.data;
+    this.add_contact({keyCode:13});
   }
 }
