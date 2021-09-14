@@ -12,15 +12,14 @@
              placeholder="erd" [(ngModel)]="addr" (keyup)="onscan({data:$event.target.value})">
     </mat-form-field>
 
-    <button mat-icon-button mat-raised-button class="icon-button"
+    <button mat-icon-button mat-raised-button
+            class="icon-button"
+            [disabled]="addr?.length==0"
             (click)="onscan({data:addr})">
-      <mat-icon>checkmark</mat-icon>
+      <mat-icon>camera</mat-icon>
     </button>
 
-
-
-
-      <app-scanner (flash)="onscan($event)" [size]="300"></app-scanner>
+    <app-scanner (flash)="onscan($event)" [size]="300"></app-scanner>
 
   </div>
 
@@ -35,7 +34,7 @@
       <small>Vérifier l'identité du propriétaire</small>
       <br><br>
     </div>
-    <div *ngIf="photo?.length==0">
+    <div *ngIf="photo?.length==0" title="Attention, sans preuve d'identification il est possible que l'adresse soit volée">
       <span style="font-size: xx-large">⚠️</span><br>
       aucune preuve d'identification
       <br><br>
@@ -43,8 +42,8 @@
 
     <table style="width: 100%;">
       <tr *ngFor="let nft of validate_nfts" style="text-align: left;margin-left: 10px;line-height: 70%;margin-bottom: 5px;">
-        <td><mat-icon style="font-size: small;">checkmark</mat-icon>&nbsp;</td>
-        <td>{{nft.title}} - {{nft.description}}</td>
+        <td style="width:20px;"><mat-icon>checkmark</mat-icon>&nbsp;</td>
+        <td style="text-align: left;">{{nft.title}} - {{nft.description}}</td>
         <td style="width: 20px">
           <button mat-icon-button mat-raised-button class="icon-button"
                   title="Détruire le billet"

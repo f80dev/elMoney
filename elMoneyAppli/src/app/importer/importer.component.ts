@@ -421,7 +421,7 @@ export class ImporterComponent implements OnInit {
     if(_type=="date" && _default=="")_default=new Date().toDateString();
     if(_default!="")_data.result=_default;
 
-    this.dialog.open(PromptComponent,{width: '320px',data:_data}).afterClosed().subscribe((rc) => {
+    this.dialog.open(PromptComponent,{width: '350px',data:_data}).afterClosed().subscribe((rc) => {
       if(rc=="no")rc=null;
       func(rc);
     });
@@ -502,28 +502,26 @@ export class ImporterComponent implements OnInit {
 
 
 
-  quick_secret(token,lib_secret="Saisissez votre secret, mot de passe ...",_default=""){
+  quick_secret(token,lib_secret="Saisissez votre secret (mot de passe, adresse secret, lien web ...)",_default=""){
     this.ask_for_text("Contenu embarqué",lib_secret,(secret)=>{
       if(secret){
         this.secret=secret;
-        this.ask_for_text("Un titre","Entrez un titre pour votre NFT",(title)=> {
+        this.ask_for_text("Un titre","Entrez un titre pour présenter votre NFT sur les places de marché",(title)=> {
           if(title)
-            this.ask_for_text("Description","Ecrivez une breve description",(description)=>{
-              if(description){
-                this.add_visual((visual)=>{
-                  if(visual)this.visual=visual.img;
-                  this.ask_options([
-                    {label:"<div class='bloc-bouton'>Le NFT s'autodétruit<br>après ouverture</div>",value:true,width:'200px'},
-                    {label:"<div class='bloc-bouton'>Le NFT peut être ouvert<br>plusieurs fois</div>",value:false,width:'200px'}
-                  ],(value)=>{
-                    this.self_destruction=value;
-                    this.desc=description;
-                    if(token.tags)this.desc=this.desc+" "+token.tags;
-                    this.title=title;
-                    this.ask_for_price("Quel prix pour votre secret",null,token.fee);
-                  });
-                },"Ajouter un visuel si vous le souhaitez")
-              }
+            this.ask_for_text("Description","Rédiger une brève description",(description)=>{
+              this.add_visual((visual)=>{
+                if(visual)this.visual=visual.img;
+                this.ask_options([
+                  {label:"<div class='bloc-bouton'>Le NFT s'autodétruit<br>après ouverture</div>",value:true,width:'200px'},
+                  {label:"<div class='bloc-bouton'>Le NFT peut être ouvert<br>plusieurs fois</div>",value:false,width:'200px'}
+                ],(value)=>{
+                  this.self_destruction=value;
+                  this.desc=description;
+                  if(token.tags)this.desc=this.desc+" "+token.tags;
+                  this.title=title;
+                  this.ask_for_price("Quel prix pour votre secret",null,token.fee);
+                });
+              },"Ajouter un visuel si vous le souhaitez")
             },"","memo")
         });
       }

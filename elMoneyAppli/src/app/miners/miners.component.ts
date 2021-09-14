@@ -59,39 +59,42 @@ export class MinersComponent implements OnInit {
 
   prompt_dealer(addr){
     this.dialog.open(NewDealerComponent, {
-        position: {left: '5vw', top: '5vh'},
-        maxWidth: 400, width: '90vw', height: 'auto',
-        data:{title:"Référencement d'un créateur",result:addr}
-      }).afterClosed().subscribe((result) => {
-        if (result && result.hasOwnProperty("addr")) {
-          let obj:any={
-            address:result.addr,
-            pem:this.user.pem
-          };
-          this.message="Approbation d'un nouveau créateur";
-          this.api._post("add_miner/","",obj).subscribe(()=>{
-            showMessage(this,"Mineur ajoute");
-            this.message="";
-            this.refresh();
-          },(err)=>{
-            showMessage(this,"Ce créateur n'est pas conforme");
-            this.message="";
-          })
-        }
-      });
+      position: {left: '5vw', top: '5vh'},
+      maxWidth: 400, width: '90vw', height: 'auto',
+      data:{title:"Référencement d'un créateur",result:addr,placeholder:"coller l'adresse du créateur"}
+    }).afterClosed().subscribe((result) => {
+      if (result && result.hasOwnProperty("addr")) {
+        let obj:any={
+          address:result.addr,
+          pem:this.user.pem
+        };
+        this.message="Approbation d'un nouveau créateur";
+        this.api._post("add_miner/","",obj).subscribe(()=>{
+          showMessage(this,"Mineur ajoute");
+          this.message="";
+          this.refresh();
+        },(err)=>{
+          showMessage(this,"Ce créateur n'est pas conforme");
+          this.message="";
+        })
+      }
+    });
   }
 
 
 
   add_miner(){
-    navigator["clipboard"].readText().then((data)=>{
-      let _default=this.user.addr;
-      if(data.startsWith("erd"))
-        _default=data;
-      this.prompt_dealer(_default);
-    }).catch(()=>{
-      this.prompt_dealer(this.user.addr);
-    })
+    if(this.config.platform.FIREFOX){
+      this.prompt_dealer("");
+    } else {
+      navigator["clipboard"].readText().then((data)=>{
+        let _default=this.user.addr;
+        if(data.startsWith("erd"))_default=data;
+        this.prompt_dealer(_default);
+      }).catch(()=>{
+        this.prompt_dealer(this.user.addr);
+      })
+    }
   }
 
 

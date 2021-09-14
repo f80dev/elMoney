@@ -26,11 +26,13 @@ export class ValidateComponent implements OnInit {
     public config:ConfigService,
   ) { }
 
-  refresh(){
 
-  }
 
   ngOnInit(): void {
+    this.refresh();
+  }
+
+  refresh(){
     this.message="Chargement de vos NFT";
     this.api._get("nfts/0x0/0x0/" + this.user.addr + "/").subscribe((r: any) => {
       this.message="";
@@ -54,7 +56,8 @@ export class ValidateComponent implements OnInit {
           this.validate_nfts.push(nft);
       }
       if(this.validate_nfts.length==0){
-        showMessage(this,"Ce wallet ne posséde aucun de vos tokens")
+        showMessage(this,"Ce wallet ne posséde aucun de vos tokens");
+        this.refresh();
       } else {
         this.api._get("users/"+$event.data+"/","").subscribe((u:any)=>{
           if(u.length>0){
@@ -71,11 +74,10 @@ export class ValidateComponent implements OnInit {
 
   burn(nft: any) {
     this.user.check_pem(()=>{
-      this.message="Destruction du NFT";
+      var index=this.validate_nfts.indexOf(nft);
+      this.validate_nfts.splice(index,1);
       this.api._post("burn/" + nft.token_id + "/", "", this.user.pem).subscribe((r: any) => {
         showMessage(this, "NFT détruit");
-        this.nfts.splice(this.nfts.indexOf(nft),1);
-        this.message="";
       },(err)=>{
         showError(this,err);
         this.message="";

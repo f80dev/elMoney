@@ -1,4 +1,4 @@
-
+<div style="overflow: hidden;">
 <app-tuto   title="<br><br><br><br><br><strong>TOKENFORGE</strong>"
             color="white"
             image=""
@@ -16,10 +16,7 @@
       menu
     </mat-icon>
     &nbsp;
-    <span>
-    {{config.values?.appname}}&nbsp;
-    </span>
-    <span style="font-size: xx-small">({{appVersion}} sur {{config.server.network}})</span>
+    <small>{{user?.pseudo}}</small>
 
     &nbsp;
     <span class="fill-remaining-space"></span>
@@ -28,6 +25,7 @@
     <mat-icon style="font-size: x-large;cursor: pointer;"
               title="Revenir à l'écran précédent"
               (click)="_location.back()">navigate_before</mat-icon>
+
 
 </mat-toolbar>
 
@@ -63,3 +61,4 @@
 </mat-drawer-container>
 
 
+</div>

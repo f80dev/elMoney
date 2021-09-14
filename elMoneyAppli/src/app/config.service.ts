@@ -40,7 +40,7 @@ export class ConfigService {
   query_cache: any[]; //Conserve le contenu de la dernière requete
   unity: string ="";
   server: any={bank:""};
-  device: { isDesktop: any; isMobile: any };
+  device: { isDesktop: boolean; isMobile: boolean,isFirefox:boolean };
   egold_price:number=60;
   egold_unity:string="eGld";
   fiat_unity: string="$";
@@ -54,6 +54,7 @@ export class ConfigService {
     this.device={
       isMobile:this.platform.ANDROID || this.platform.IOS,
       isDesktop:this.platform.isBrowser,
+      isFirefox:this.platform.FIREFOX
     }
     this.domain_server=environment.domain_server;
   }
