@@ -1,16 +1,17 @@
 <ng-content></ng-content>
 <br>
 <app-hourglass [message]="message"></app-hourglass>
-<input #csvInput [hidden]="true"
-       type="file" onclick="this.value=null"
-       (change)="import($event)"
-       [accept]="extensions"/>
 
-<button mat-raised-button
-        mat-button class="app-button"
-        (click)="csvInput.click()">
-  {{label}}
-</button>
+  <input #csvInput [hidden]="true"
+         type="file" onclick="this.value=null"
+         (change)="import($event)"
+         [accept]="extensions"/>
+
+  <button mat-raised-button
+          mat-button class="app-button"
+          (click)="csvInput.click()">
+    {{label}}
+  </button>
 
 <button mat-raised-button
         *ngIf="show_cancel"

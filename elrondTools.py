@@ -633,6 +633,12 @@ class ElrondNet:
         return _u,pem
 
 
+    def estimate(self):
+        """
+        TODO: implémenter l'estimation des couts
+        :return: 
+        """
+        pass
 
 
     def execute(self,_contract,_user,function,arguments=[],value:int=None,gas_limit=LIMIT_GAS,timeout=60,gas_price_factor=1,tokenName="",simulate=False):

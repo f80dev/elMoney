@@ -118,25 +118,27 @@
               <table><tr>
                 <td>
                   <app-upload-file
+                    *ngIf="!filename || filename.length==0"
                     [send_file]="true"
                     [maxsize]="config.values.max_file_size"
                     (uploaded)="_import($event,0,'Commençons par charger le fichier dans le NFT')">
                     {{prompt}}
                   </app-upload-file>
                 </td>
-                <td>
-                  <span *ngIf="picture.length>0">'{{filename}}' est caché dans votre NFT</span>
+                <td *ngIf="filename?.length>0">
+                  '{{filename}}' <span style="color: lightgrey">est embarqué dans votre NFT</span>&nbsp;
+                </td>
+                <td *ngIf="filename?.length>0">
+                  <mat-icon style="cursor: pointer" (click)="filename=''">delete</mat-icon>
                 </td>
               </tr></table>
 
-              <br>
 
 
-              <strong *ngIf="picture.length==0">ou</strong>
+              <div style="margin: 10px" *ngIf="filename.length==0">ou</div>
 
-              <br>
 
-              <mat-form-field appearance="fill" class="app-field" *ngIf="picture.length==0">
+              <mat-form-field appearance="fill" class="app-field" *ngIf="filename.length==0">
                 <mat-label>Une phrase secrete</mat-label>
                 <input matInput type="text" (focusin)="focus_idx=1"
                        id="txtSecret"

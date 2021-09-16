@@ -1,10 +1,8 @@
 <div class="mainform">
   <br>
   <h2 *ngIf="message?.length==0">Confirmer l'achat ?</h2>
-  <app-unity [value]="nft.price" [unity]="nft.unity" fontsize="3em" fontsize_unity="large"></app-unity>
+  <app-unity *ngIf="nft.price>0" [value]="nft.price" [unity]="nft.unity" fontsize="3em" fontsize_unity="large"></app-unity>
   <br><br>
-
-
 
   <app-hourglass [message]="message" anim="./assets/gears.gif"></app-hourglass>
 

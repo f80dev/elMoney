@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
-import {showError, showMessage} from "../tools";
+import {$$, showError, showMessage} from "../tools";
 import {environment} from "../../environments/environment";
 import {NgNavigatorShareService} from "ng-navigator-share";
 import {ClipboardService} from "ngx-clipboard";
@@ -130,8 +130,8 @@ export class NftsComponent implements OnChanges {
         nft.open = r.response;
         if(nft.open.length==46)nft.open="https://ipfs.io/ipfs/"+nft.open;
 
-        //Indique que le message est programmé pour s'autodétruire
         if((nft.properties & 0b1000) > 0){
+          $$("Ce NFT est programmé pour s'autodétruire");
           nft.delay=15;
           nft.timer=setInterval(()=>{
             nft.delay=nft.delay-1;

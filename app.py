@@ -121,6 +121,7 @@ def convert_email_to_addr(dest:str,html_email:str):
     :param html_email: HTML file for the email
     :return:
     """
+    _u=None
     addr_dest = None
     if "@" in dest:
         log("L'adresse est une adresse mail, on cherche dans les corespondances")
@@ -137,7 +138,7 @@ def convert_email_to_addr(dest:str,html_email:str):
     else:
         _dest=Account(address=addr_dest)
 
-    return _dest
+    return _dest,_u
 
 
 
@@ -149,7 +150,7 @@ def transfer(idx:str,dest:str,amount:str,unity:str):
     #_money=dao.get_money_by_idx(idx)
     #if _money is None:return "Monnaie inconnue",500
 
-    _dest=convert_email_to_addr(dest,open_html_file("share", {
+    _dest,_u=convert_email_to_addr(dest,open_html_file("share", {
         "email": dest,
         "amount": str(amount),
         "appname":APPNAME,
@@ -162,7 +163,8 @@ def transfer(idx:str,dest:str,amount:str,unity:str):
     log("Demande de transfert vers "+_dest.address.bech32()+" de "+amount+" "+unity)
 
     _from=get_elrond_user(request.data)
-    dao.add_contact(_from.address.bech32(),_dest.address.bech32())
+    if not _u is None:
+        dao.add_contact(_from.address.bech32(),_dest.address.bech32())
 
     log("Appel du smartcontract")
     rc=bc.transferESDT(idx,_from,_dest.address.bech32(),int(amount)*(10**18))
@@ -469,7 +471,7 @@ def transfer_nft(token_id,dest):
     data = json.loads(str(request.data, encoding="utf-8"))
     _from=get_elrond_user(data["pem"])
 
-    _dest = convert_email_to_addr(dest,open_html_file("transfer_nft", {
+    _dest,_u = convert_email_to_addr(dest,open_html_file("transfer_nft", {
         "from":data["from"],
         "url_appli": DOMAIN_APPLI + "/?user=#addr#",
         "message":data["message"]
@@ -583,7 +585,7 @@ def mint(count:str,data:dict=None):
         if "error" in transac:return returnError()
         value=fee
     else:
-        money=""
+        money="0"
 
     arguments = [int(count),
                  "0x" + title.encode().hex(),
@@ -1032,7 +1034,8 @@ def add_contact(owner:str):
 
     #on fait le choix de ne pas enregistrer les contacts dans la blockchain
     #bc.update_account(get_elrond_user(_data),{"contacts":_owner["contacts"]})
-
+    del _contact["_id"]
+    del _contact["pem"]
     return jsonify(_contact)
 
 

@@ -122,15 +122,12 @@ export class AuthentComponent implements OnInit {
   }
 
   open_elrond_authent() {
-    debugger
     let w:any=window;
     if(w.elrondWallet){
-      w.elrondWallet.request()
-    } else {
-      if(!this.data.redirect)this.data.redirect="store";
-      let url=this.config.server.wallet_domain+"hook/login?callbackUrl="+environment.domain_appli+"/"+this.data.redirect
-      window.location.href=url;
+        $$("Prise en compte de l'elrond wallet en cours");
     }
-
+    if(!this.data.redirect)this.data.redirect="store";
+    let url=this.config.server.wallet_domain+"hook/login?callbackUrl="+environment.domain_appli+"/"+this.data.redirect
+    window.location.href=url;
   }
 }

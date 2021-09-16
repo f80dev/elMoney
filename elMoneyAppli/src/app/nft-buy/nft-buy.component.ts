@@ -33,6 +33,7 @@ export class NftBuyComponent implements OnInit {
 
   ngOnInit(): void {
     this.nft=JSON.parse(this.routes.snapshot.queryParamMap.get("nft"));
+    debugger
     this.seller=JSON.parse(this.routes.snapshot.queryParamMap.get("seller"));
     this.api._get("users/"+this.nft.miner+"/","").subscribe((data:any)=>{this.miner=data[0];});
     this.user.check_pem(()=>{
@@ -43,9 +44,8 @@ export class NftBuyComponent implements OnInit {
 
 
   buy() {
-
     let identifier=this.nft.identifier;
-    if(identifier=="")identifier="EGLD";
+    if(identifier=="0" || identifier=="")identifier="EGLD";
 
     if(this.nft.price>0){
       if(this.nft.unity=="eGld"){
