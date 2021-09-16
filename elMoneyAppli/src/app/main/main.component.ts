@@ -79,12 +79,16 @@ export class MainComponent implements OnInit {
 
 
   transfer(dest:any){
+    debugger
     var unity=this.user.moneys[this.user.selected_money].unity;
+    let question='Vous souhaitez envoyer '+this.hand+" "+unity+" à "+dest.pseudo+" ("+dest.email+") ?";
+    if(!dest.pseudo)question="Envoyer "+this.hand+" "+unity+" à "+dest.addr;
+
     this.user.check_pem(()=>{
       this.dialog.open(PromptComponent, {
         data: {
           title: 'Confirmation',
-          question: 'Vous souhaitez envoyer '+this.hand+" "+unity+" à "+dest.pseudo+" ("+dest.email+") ?",
+          question: question,
           onlyConfirm: true,
           lbl_ok: 'Oui',
           lbl_cancel: 'Non'
@@ -121,7 +125,7 @@ export class MainComponent implements OnInit {
         data:{}
       }).afterClosed().subscribe((result:any) => {
         if(result){
-          this.transfer(result.email);
+          this.transfer(result);
           this.refresh();
         }
       });
@@ -131,7 +135,7 @@ export class MainComponent implements OnInit {
       if(this.hand==0)return;
       for(let f of this.friends){
         if(f.color!="transparent")
-          this.transfer(f.email);
+          this.transfer(f);
       }
     }
 

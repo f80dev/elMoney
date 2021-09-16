@@ -1,90 +1,96 @@
-<div class="app-prompt" style="height:400px">
+<div class="app-prompt" style="height:400px;padding:2px;">
   <h3>{{data.title}}</h3>
   <br>
   <app-hourglass [message]="message"></app-hourglass>
   <div style="width: 100%;text-align: center">
-  <img src="./assets/gears.gif" style="width: 100px;margin-top:20px;display: inline;" *ngIf="message.length>0">
+    <img src="./assets/gears.gif" style="width: 100px;margin-top:20px;display: inline;" *ngIf="message.length>0">
   </div>
 
 
   <div *ngIf="message==''">
-  <mat-button-toggle-group [(ngModel)]="authent_method" appearance="legacy">
-    <mat-button-toggle value="email">Email</mat-button-toggle>
-<!--    <mat-button-toggle value="qrcode">Adresse</mat-button-toggle>-->
-    <mat-button-toggle value="elrond" (click)="open_elrond_authent()">Elrond</mat-button-toggle>
-    <mat-button-toggle value="cle"><div class="bloc-bouton">Signature</div></mat-button-toggle>
-    <mat-button-toggle value="profil"><div class="bloc-bouton">profils<br>tests</div></mat-button-toggle>
-  </mat-button-toggle-group>
+    <mat-button-toggle-group [(ngModel)]="authent_method" appearance="legacy">
+      <mat-button-toggle value="email">Email</mat-button-toggle>
+      <!--    <mat-button-toggle value="qrcode">Adresse</mat-button-toggle>-->
+      <mat-button-toggle value="elrond" (click)="open_elrond_authent()">Elrond</mat-button-toggle>
+      <mat-button-toggle value="cle"><div class="bloc-bouton">Signature</div></mat-button-toggle>
+      <mat-button-toggle value="profil"><div class="bloc-bouton">profils<br>tests</div></mat-button-toggle>
+    </mat-button-toggle-group>
 
 
-  <div *ngIf="authent_method=='email'" class="method_zone">
-    <div style="width: 100%;text-align: center">
-      <br>
-      <mat-form-field appearance="fill" class="app-field" >
-        <mat-label>Indiquez votre mail</mat-label>
-        <input matInput type="text" max="50" autofocus [(ngModel)]="user.email" (keypress)="on_keypress($event)" cdkFocusInitial>
-        <mat-hint>pour créer un nouveau compte ou récupérer votre compte existant</mat-hint>
-      </mat-form-field>
-      <br><br>
-      <button mat-raised-button
-              *ngIf="user.email.indexOf('@')>0"
-              mat-button class="app-button"
-              (click)="udpate_mail()">
-        Se connecter
-      </button>
+    <div *ngIf="authent_method=='email'" class="method_zone">
+      <div style="width: 100%;text-align: center">
+        <br>
+        <mat-form-field appearance="fill" class="app-field" >
+          <mat-label>Indiquez votre mail</mat-label>
+          <input matInput type="text" max="50" autofocus [(ngModel)]="user.email" (keypress)="on_keypress($event)" cdkFocusInitial>
+          <mat-hint>pour créer un nouveau compte ou récupérer votre compte existant</mat-hint>
+        </mat-form-field>
+        <br><br>
+        <button mat-raised-button
+                *ngIf="user.email.indexOf('@')>0"
+                mat-button class="app-button"
+                (click)="udpate_mail()">
+          Se connecter
+        </button>
+      </div>
     </div>
-  </div>
 
-  <div *ngIf="authent_method=='qrcode'" class="method_zone">
-    <br>
-    <div style="width: 100%;text-align: center" *ngIf="showScanner">
-      <app-scanner [size]="230"
-                   autofocus
-                   (click)="showScanner=false"
-                   (flash)="onflash_event($event)">
-      </app-scanner>
-      <br>
-      <table style="width: 80%"><tr style="vertical-align: top;">
-        <td>
-          <mat-form-field appearance="fill" class="app-field" style="width:150px">
-        <mat-label>Coller votre adresse</mat-label>
-        <input matInput type="text" max="50" [(ngModel)]="user.addr" (keypress)="on_keypress($event,false)">
-      </mat-form-field>
-        </td>
-        <td style="text-align: right">
-      <button mat-icon-button mat-raised-button
-              [disabled]="!user.addr || user.addr?.indexOf('erd')!=0"
-              class="icon-button" style="margin-top: 10px;"
-              (click)="quit({addr:user.addr})">
-        <mat-icon>checkmarck</mat-icon>
-      </button>
+    <div *ngIf="authent_method=='chrome'" class="method_zone">
+      <div style="width: 100%;text-align: center">
 
-        </td>
-
-      </tr></table>
-
-
+      </div>
     </div>
-  </div>
+
+    <div *ngIf="authent_method=='qrcode'" class="method_zone">
+      <br>
+      <div style="width: 100%;text-align: center" *ngIf="showScanner">
+        <app-scanner [size]="230"
+                     autofocus
+                     (click)="showScanner=false"
+                     (flash)="onflash_event($event)">
+        </app-scanner>
+        <br>
+        <table style="width: 80%"><tr style="vertical-align: top;">
+          <td>
+            <mat-form-field appearance="fill" class="app-field" style="width:150px">
+              <mat-label>Coller votre adresse</mat-label>
+              <input matInput type="text" max="50" [(ngModel)]="user.addr" (keypress)="on_keypress($event,false)">
+            </mat-form-field>
+          </td>
+          <td style="text-align: right">
+            <button mat-icon-button mat-raised-button
+                    [disabled]="!user.addr || user.addr?.indexOf('erd')!=0"
+                    class="icon-button" style="margin-top: 10px;"
+                    (click)="quit({addr:user.addr})">
+              <mat-icon>checkmarck</mat-icon>
+            </button>
+
+          </td>
+
+        </tr></table>
 
 
-  <div *ngIf="authent_method=='profil'" class="method_zone">
-    <br>
-    Pour tester l'application, choisissez un profil
-    <mat-form-field class="app-field" style="max-width: 250px;">
-      <mat-label>Profils de test</mat-label>
-      <mat-select [(ngModel)]="test_profil" (ngModelChange)="change_user($event)">
-        <mat-option *ngFor="let profil of config.profils" [value]="profil.value">{{profil.label}}</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <app-tuto label="Il est possible d'utiliser des comptes pour tester cette application. En revanche plusieurs personnes pouvant utiliser les mêmes comptes, il est possible que le comportement soit parfois imprevisible"></app-tuto>
-  </div>
+      </div>
+    </div>
 
 
-  <div *ngIf="authent_method=='cle'" class="method_zone">
-    <br>
-    <app-private [dialog]="false" (load)="authent_by_key($event)"></app-private>
-  </div>
+    <div *ngIf="authent_method=='profil'" class="method_zone">
+      <br>
+      Pour tester l'application, choisissez un profil
+      <mat-form-field class="app-field" style="max-width: 250px;">
+        <mat-label>Profils de test</mat-label>
+        <mat-select [(ngModel)]="test_profil" (ngModelChange)="change_user($event)">
+          <mat-option *ngFor="let profil of config.profils" [value]="profil.value">{{profil.label}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <app-tuto label="Il est possible d'utiliser des comptes pour tester cette application. En revanche plusieurs personnes pouvant utiliser les mêmes comptes, il est possible que le comportement soit parfois imprevisible"></app-tuto>
+    </div>
+
+
+    <div *ngIf="authent_method=='cle'" class="method_zone">
+      <br>
+      <app-private [dialog]="false" (load)="authent_by_key($event)"></app-private>
+    </div>
 
   </div>
 

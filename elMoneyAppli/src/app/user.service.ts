@@ -248,7 +248,7 @@ export class UserService {
     }
 
     else{
-      this.dialog.open(AuthentComponent,{width: '350px',height:"auto",data:
+      this.dialog.open(AuthentComponent,{width: '375px',height:"auto",data:
           {
             title: title,
             redirect:redirect

@@ -1,6 +1,5 @@
-<div *ngIf="config.webcamsAvailable">
+<div *ngIf="config.webcamsAvailable" style="width:fit-content;display: inline-block;padding:5px;" class="mat-elevation-z8">
   <webcam
-    style="border: lightgrey solid 2px"
   [height]="size"
   [width]="size"
   [trigger]="triggerObservable"
@@ -10,7 +9,7 @@
   imageType="image/jpeg"
   (imageCapture)="handleImage($event)">
 </webcam><br>
-  <span>{{caption}}</span>
+  <span style="font-size: x-small">{{caption}}</span>
 
 </div>
 

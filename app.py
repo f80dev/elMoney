@@ -123,6 +123,7 @@ def convert_email_to_addr(dest:str,html_email:str):
     """
     addr_dest = None
     if "@" in dest:
+        log("L'adresse est une adresse mail, on cherche dans les corespondances")
         _u = dao.get_user(dest)
         if not _u is None: addr_dest = _u["addr"]
     else:
@@ -1023,15 +1024,16 @@ def add_contact(owner:str):
             _contact,pem=bc.create_account(fund=NETWORKS[bc.network_name]["new_account"],email=_data["email"])
             dao.save_user(_data["email"],_contact.address.bech32(),pem)
         else:
-            return returnError("Contact inconnu")
+            return jsonify({"addr":_data["email"],"email":_data["email"]})
 
     if not _contact is None:
         _owner=dao.add_contact(owner,_contact["addr"])
 
+
     #on fait le choix de ne pas enregistrer les contacts dans la blockchain
     #bc.update_account(get_elrond_user(_data),{"contacts":_owner["contacts"]})
 
-    return jsonify(_owner["contacts"])
+    return jsonify(_contact)
 
 
 
