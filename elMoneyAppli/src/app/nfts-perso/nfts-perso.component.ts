@@ -49,10 +49,10 @@ export class NftsPersoComponent implements OnInit {
         this.selected.value=Number(this.routes.snapshot.queryParamMap.get("index"));
       }
 
-      this.filter = this.filters[0].option;
-      this.refresh();
+      this.filter = this.filters[0].value;
       localStorage.setItem("last_screen","nfts-perso");
 
+      this.refresh();
       setTimeout(()=>{this.reroutage();},2500);
 
     },this.router,null,"nfts-perso");
@@ -95,7 +95,6 @@ export class NftsPersoComponent implements OnInit {
         });
       });
     }
-
     this.user.refresh_balance();
   }
 

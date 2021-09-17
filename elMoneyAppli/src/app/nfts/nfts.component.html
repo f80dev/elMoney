@@ -160,8 +160,9 @@
             </button>
 
             <button mat-icon-button mat-flat-button class="icon-button"
-                    title="Offrir ce token"
-                    *ngIf="nft.state==1 && nft.owner==user.addr && (can_transfer(nft.properties) || nft.miner==user.addr)"
+                    title="Offrir ce token (il ne doit pas être en vente)"
+                    [disabled]="nft.state==0"
+                    *ngIf="nft.owner==user.addr && (can_transfer(nft.properties) || nft.miner==user.addr)"
                     (click)="transfer(nft)">
               <mat-icon>redeem</mat-icon>
             </button>

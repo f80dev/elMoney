@@ -5,8 +5,8 @@
 
     <mat-tab label="Les NFTs distribués" *ngIf="nfts[0]?.length>0" >
       <app-tuto label="Retrouvez ici tout les NFTs pour lesquels vous disposez d'un mandat de vente"></app-tuto>
+<!--      [filter]="{state:0,isDealer:true}"-->
       <app-nfts [user]="user" [nfts]="nfts[0]"
-                [filter]="{state:0,isDealer:true}"
                 [with_icon]="false" [art]="false"
                 height="fit-content"
                 (refresh)="refresh([0],$event)">
@@ -46,7 +46,7 @@
       <mat-form-field appearance="fill" style="width:200px;color:white;">
         <mat-label>Filtrer</mat-label>
         <mat-select [(value)]="filter">
-          <mat-option *ngFor="let f of filters" [value]="f.filter" (onSelectionChange)="refresh()">{{f.label}}</mat-option>
+          <mat-option *ngFor="let f of filters" [value]="f.filter" (onSelectionChange)="refresh([2])">{{f.label}}</mat-option>
         </mat-select>
       </mat-form-field>
 

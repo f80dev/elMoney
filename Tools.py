@@ -57,10 +57,13 @@ def base_alphabet_to_10(letters):
 
 
 def str_to_hex(letters,zerox=True):
-    if type(letters)==list:letters=",".join(letters)
-    rc=""
-    for letter in letters:
-        rc=rc+hex(ord(letter))[2:]
+    if type(letters)==int:
+        rc=hex(letters).replace("0x","")
+    else:
+        if type(letters)==list:letters=",".join(letters)
+        rc=""
+        for letter in letters:
+            rc=rc+hex(ord(letter))[2:]
 
     if len(rc) % 2==1:rc="0"+rc
 
