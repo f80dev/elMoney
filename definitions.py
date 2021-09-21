@@ -41,17 +41,18 @@ IPFS_NODE_PORT=5001
 
 NETWORKS={
     "testnet":{
-        "identifier":"TFC-e369ac",
-        "new_account":float(2*1e18),
+        "identifier":"",
+        "new_account":float(0.2*1e18),
         "bank":"bob",
-        "unity":"tEgld",
+        "unity":"xEgld",
         "faucet":"https://r3d4.fr/elrond/testnet/index.php",
         "proxy":"https://testnet-gateway.elrond.com",
         "explorer":"https://testnet-explorer.elrond.com",
         "wallet":"https://testnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqenvye722hxhzk6c08l2v6vqqpjnhhm3td8ssxer39x"
+        "nft":"erd1qqqqqqqqqqqqqpgqe2hccfqtquhzure32vwvcvlgr5fz6x50d8ssjsxd0c"
     },
 
+    #erd1qqqqqqqqqqqqqpgqkwfvpkaf6vnn89508l0gdcx26vpu8eq5d8ssz3lhlf
     "devnet":{
         "new_account":float(1*1e18),
         "bank":"bank",
@@ -61,7 +62,7 @@ NETWORKS={
         "proxy":"https://devnet-gateway.elrond.com",
         "explorer":"https://devnet-explorer.elrond.com",
         "wallet":"https://devnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqkwfvpkaf6vnn89508l0gdcx26vpu8eq5d8ssz3lhlf"
+        "nft":"erd1qqqqqqqqqqqqqpgqmw9czztwz4gtd6zzp30m2lcsqmynxunld8sskrqpcp"
     },
 
 

@@ -18,7 +18,7 @@ export class UnityComponent implements OnChanges {
   @Input("fontsize") fontsize="medium";
   @Input("fontsize_unity") fontsize_unity="small";
   showValue: number;
-  unity:string;
+  unity:string="egld";
   message: string="";
 
   constructor(public config:ConfigService) {
@@ -27,7 +27,7 @@ export class UnityComponent implements OnChanges {
 
   refresh(){
     if(localStorage.getItem("unity")=="fiat" && this.base.toLowerCase()=="egld"){
-      this.message="> $";
+      this.message=">$";
       this.config.get_price(this.unity,(convert)=>{
         this.unity=this.config.fiat_unity;
         this.showValue=this.value*convert;

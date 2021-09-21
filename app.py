@@ -524,6 +524,15 @@ def buy_nft(token_id,price,seller:str,data:dict=None):
 
 
 #http://localhost:6660/api/mint/
+@app.route('/api/deploy/',methods=["POST"])
+def deploy(count:str,data:dict=None):
+    data = str(request.data, encoding="utf-8")
+    #project = ProjectClang(Path(__file__).parent.parent)
+    #bytecode = project.get_bytecode()
+    rc=bc.deploy_contract(data["pem"],data["bytecode"])
+
+
+#http://localhost:6660/api/mint/
 @app.route('/api/mint/<count>/',methods=["POST"])
 def mint(count:str,data:dict=None):
     """
@@ -584,8 +593,9 @@ def mint(count:str,data:dict=None):
         transac=bc.transferESDT(money,owner,bc.contract,pay_count*gift*1e16)
         if "error" in transac:return returnError()
         value=fee
+        money="0x" + money.encode().hex()
     else:
-        money="0"
+        money="0x0"
 
     arguments = [int(count),
                  "0x" + title.encode().hex(),
@@ -595,7 +605,7 @@ def mint(count:str,data:dict=None):
                  properties,
                  miner_ratio,
                  gift,int(data["opt_lot"]),
-                 "0x" + money.encode().hex()]
+                 money]
     log("Minage du token "+str(data))
     result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,
                    arguments=arguments,
@@ -892,7 +902,7 @@ def del_miner(data:dict=None):
 
 
 @app.route('/api/deploy/<name>/<unity>/<nbdec>/<amount>/',methods=["POST"])
-def deploy(name:str,unity:str,nbdec:str,amount:str,data:dict=None):
+def deployESDT(name:str,unity:str,nbdec:str,amount:str,data:dict=None):
     log("Appel du service de déploiement d'ESDT de nom="+name+" unite="+unity)
 
     if data is None:

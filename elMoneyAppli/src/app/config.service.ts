@@ -76,6 +76,8 @@ export class ConfigService {
     return Promise.resolve((await this.http.get(jsonFile).toPromise()));
   }
 
+
+
   get_price(unity="egld",func=null){
     let now=new Date().getTime();
     if(this.unity_conversion && this.unity_conversion.hasOwnProperty(unity) && now-this.unity_conversion[unity].lastdate<100000){

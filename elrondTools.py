@@ -311,6 +311,30 @@ class ElrondNet:
             return {"error":str(inst.args)}
 
 
+
+    def deploy_contract(self,pem_file,bytecode):
+        """
+        Permet le déploiement du smartcontract
+        :param pem_file:
+        :param bytecode:
+        :return:
+        """
+        _user=Account(pem_file=pem_file)
+        contract = SmartContract(bytecode=bytecode)
+        return self.en.deploy_contract(
+            contract=contract,
+            owner=_user,
+            arguments=[],
+            gas_price=config.DEFAULT_GAS_PRICE,
+            gas_limit=5000000,
+            value=None,
+            chain=self.chain_id,
+            version=config.get_tx_version()
+        )
+
+
+
+
     def deploy(self,pem_file,name,unity,amount,decimals,gas_limit=LIMIT_GAS,timeout=60):
         """
         Déployer une nouvelle monnaie avec ESDT
@@ -683,8 +707,6 @@ class ElrondNet:
 
 
 
-
-
     # def owner_of(self,token):
     #     lst = self.query("tokenOwner",arguments=[token])
     #     return lst
@@ -794,8 +816,7 @@ class ElrondNet:
                 desc=translate(desc,_d)
 
                 unity=identifier.split("-")[0]
-                if money_len==0:unity="eGld"
-
+                if money_len==0 or unity=="0":unity="EGLD"
 
                 #extraction des tags
                 tags=[]
@@ -873,7 +894,6 @@ class ElrondNet:
         log("Minage avec "+str(arguments))
         tx=self.execute(contract,user_from,"mint",arguments,gas_limit=gas_limit,gas_price_factor=factor,value=value)
         return tx
-
 
 
 

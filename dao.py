@@ -96,7 +96,7 @@ class DAO:
             pem=base64.b64encode(aes256.encrypt(pem,SECRET_KEY))
         body={'email':email,'addr':addr,"pem":pem,"contacts":contacts}
         rc = self.db["users"].replace_one(filter={"addr": addr}, replacement=body, upsert=True)
-        return rc[0].modified_count,pem
+        return rc.modified_count>0 or (rc.upserted_id is not None),pem
 
 
 
