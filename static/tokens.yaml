@@ -60,7 +60,7 @@ content:
     production: true
 
   - index: game
-    title: La Question<br>qui rapport
+    title: Devinette
     icon: help
     nft_icon: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/279/artist-palette_1f3a8.png
     description: Poser une question et récompenser celui qui trouve la réponse
