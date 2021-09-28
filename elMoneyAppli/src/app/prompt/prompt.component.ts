@@ -9,6 +9,7 @@ export interface DialogData {
   placeholder:string;
   onlyConfirm:boolean;
   min:number,
+  n_rows:number,
   max:number,
   emojis:boolean;
   lbl_ok:string,
@@ -33,6 +34,7 @@ export class PromptComponent implements OnInit {
   _min: number;
   _max: number;
 
+
   constructor(
     public dialogRef_prompt: MatDialogRef<PromptComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData)
@@ -48,6 +50,7 @@ export class PromptComponent implements OnInit {
       this._type="number";
     }
     if(!data.result)data.result="";
+    if(!data.n_rows)data.n_rows=4;
   }
 
   onNoClick(): void {

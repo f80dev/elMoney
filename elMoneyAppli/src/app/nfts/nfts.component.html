@@ -205,7 +205,11 @@
           <div class="flip-card-back">
             <div class="tag">
               <div style="width:95%;font-size:2em;text-justify: inter-word;font-weight: lighter;margin-bottom: 2px;color:black;line-height: 90%;">{{nft?.title}}</div>
-              <p style="font-size: small;">{{nft.description}}</p><br>
+              <p style="font-size: small;" *ngIf="nft.description.indexOf('<br>')==-1">{{nft.description}}</p>
+              <div style="display: inline-block;font-size: small;height: fit-content;"
+                   *ngIf="nft.description.indexOf('<br>')>-1"
+                   [innerHTML]="nft.description"></div>
+              <br>
               <p style="cursor: pointer;"
                  *ngIf="nft?.miner_name?.length>0"
                  routerLink="/miner"

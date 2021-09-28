@@ -84,6 +84,32 @@ content:
     transac: 0.00015
     production: true
 
+  - index: qcm
+    title: QCM
+    icon: help
+    nft_icon: https://emojipedia-us.s3.amazonaws.com/source/skype/289/check-mark_2714-fe0f.png
+    description: Proposer une question à choix multiple et récompenser le vainqueur
+    tuto: "
+      Poser une question, proposer des réponses et récompenser celui qui a trouvé la réponse.
+      <br><br><br> Pour créer ce NFT, la procédure est la suivante :<br>
+
+           <ul>
+             <li>Rédiger votre question puis les réponses possibles,</li>
+             <li>Renseigner la bonne réponse (qui sera caché dans le NFT)</li>
+             <li>Indiquer le montant de la récompense (montant qui doit être inférieur à votre solde)</li>
+             <li>Indiquer le prix du NFT qui correspond donc au montant de la participation au jeu</li>
+             <li>Indiquer si le NFT s'autodétruit ou pas après la participation du joueur</li>
+           </ul>
+
+           <br>
+           Avant de pouvoir répondre le joueur doit avoir acheté la question. Si l'auto destruction est activée, seul le premier acheteur pourra participer
+    "
+    fee: 0.001
+    tags: "#jouer #jeu #qcm"
+    transac: 0.00015
+    production: true
+
+
   - index: file
     title: Vendre<br>un fichier
     icon: description

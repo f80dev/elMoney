@@ -20,6 +20,7 @@ import {MatChipInputEvent} from "@angular/material/chips";
 import {map, startWith} from "rxjs/operators";
 import {IpfsService} from "../ipfs.service";
 import {DatePipe, Location} from "@angular/common";
+import {stringify} from "@angular/compiler/src/util";
 
 export interface SellerProperties {
   address: string;
@@ -562,6 +563,42 @@ export class ImporterComponent implements OnInit {
     },"Exemple: Combien font 12 x 14 ?");
   }
 
+  quick_qcm(token){
+    this.ask_for_text("La question","Quel est la question du QCM",(question)=>{
+      this.title=question;
+      if(!this.title.endsWith("?"))this.title=this.title+" ?";
+      if(!question)this.cancel_wizard();
+
+      this.ask_for_text("Rédiger les réponses possible","Saisisser les différentes options possible en les séparant par un retour à la ligne",(text_options)=> {
+        let options=[];
+        let i=0;
+        for(let txt of text_options.split("\n")){
+          i++;
+          options.push(i +") => "+txt.trim());
+        }
+        this.desc=options.join("<br>");
+        this.ask_for_text("Indiquer la bonne réponse de 1 à "+options.length,"html:Les propositions sont les suivantes:<br>"+this.desc,(secret)=>{
+          secret=Number(secret).toFixed(0);
+          if(secret && secret<=options.length && secret>0){
+            this.ask_for_text("Récompense","De combien est la récompense",(gift)=>{
+              this.gift=Number(gift);
+              this.ask_options([
+                {label:"<div class='bloc-bouton'>Le NFT s'autodétruit<br>après ouverture</div>",value:true,width:'200px'},
+                {label:"<div class='bloc-bouton'>Le NFT peut être ouvert<br>plusieurs fois</div>",value:false,width:'200px'}
+              ],(value)=>{
+                this.self_destruction=value;
+                this.find_secret=true;
+                this.secret=Number(secret).toString();
+                if(token.tags)this.desc=this.desc+" "+token.tags;
+                this.ask_for_price("Combien coute la participation",null,token.fee);
+              });
+            });
+          }
+        },"Exemple: Calcul mental")
+      },"Exemple: 1","memo");
+    },"Exemple: Combien font 12 x 14 ?");
+  }
+
 
   quick_loterie(token:any){
     this.add_visual((visual:any)=> {
@@ -676,129 +713,130 @@ export class ImporterComponent implements OnInit {
       },subtitle);
     },title);
 
-    }
-
-    quick_contract($event: any,token:any,title="Ajouter un visuel",subtitle="Exemple: Manuel de fonctionnement de la TB-303",desc="Exemple: Ce manuel de fonctionnement couvre l'utilisation courante du synthétiseur") {
-      this.picture=$event.file;
-      this.filename=$event.filename;
-      this.extensions="*";
-
-      this.ask_for_text("Titre du deal","",(title)=>{
-        if(title) {
-          this.ask_for_text("Description","Rédiger une courte introduction à la rédaction du contrat",(desc)=>{
-            if(!desc)desc="";
-            this.ask_for_text("Le cosignataire","Indiquer l'adresse mail du co-signataire",(email)=>{
-              this.desc=desc+token.tags;
-              this.title=title;
-              this.owner_can_transfer=true;
-              this.owner_can_sell=false;
-              this.price=0;
-              this.count=2;
-              this.min_price=0;
-              this.max_price=0;
-
-              this.tokenizer(token.fee,(r)=>{
-                let body={pem:this.user.pem,message:"",title:this.title,from:this.config.server.explorer+"/account/"+this.user.addr};
-                this.message="Expédition au contractant";
-                debugger
-                this.api._post("transfer_nft/"+r.ids[0]+"/"+email+"/","",body).subscribe(()=>{
-                  this.message="";
-                  return;
-                },(err)=>{showError(this,err)});
-              });
-            });
-          },"","memo")
-        }
-      },subtitle);
-    }
-
-
-    show_fileupload(redirect: number,prompt:string,token:any,extension="*") {
-      this.show_zone_upload=true;
-      this.extensions=extension;
-      this.prompt=prompt;
-      this.redirect=redirect;
-    }
-
-
-
-    onupload($event: any) {
-      if(this.redirect==3)this.quick_file($event,this.tokens[4],"Ajouter la pochette du titre","Exemple: Karma Police","Exemple: Radiohead");
-      if(this.redirect==1)this.quick_file($event,this.tokens[3]);
-      if(this.redirect==2)this.quick_contract($event,this.tokens[5]);
-    }
-
-
-    create_token(token: any) {
-      this.selected_token=token;
-    }
-
-
-
-    open_wizard(token:any){
-      if(token.index=="photo")this.quick_photo(token,"Sélectionner la photo","Calibrer l'aperçu présenter sur le NFT pour inciter à la vente",null,null,false);
-      if(token.index=="pow")this.quick_pow(token,300,300);
-      if(token.index=="music")this.show_fileupload(3,'Téléverser le fichier musical',token,"audio/*");
-      if(token.index=="film")this.quick_secret(token,'Indiquer le lien internet de votre film');
-      if(token.index=="file")this.show_fileupload(1,'Téléverser le fichier à embarquer dans votre token',token);
-      if(token.index=="contract")this.show_fileupload(2,'Téléverser le contrat signé',token);
-      if(token.index=="secret")this.quick_secret(token);
-      if(token.index=="game")this.quick_game(token);
-      if(token.index=="life_events")this.quick_lifeevents(token);
-      if(token.index=="tickets")this.quick_tickets('Téléverser le visuel de votre invitation',token);
-      if(token.index=="loterie")this.quick_loterie(token);
-      if(token.index=="propriete")this.quick_propriete(token);
-    }
-
-    cancel_wizard(message=""){
-      showMessage(this,message);
-      setTimeout(()=>{this._location.back();},1000);
-    }
-
-
-    showPreview() {
-      this.create_preview();
-      this.show_preview=!this.show_preview;
-    }
-
-
-    ask_confirm(fee){
-      this.dialog.open(PromptComponent,{width: 'auto',data:
-          {
-            title: "Construire immédiatement le NFT ou le modifier avant ?",
-            question: "",
-            options: {},
-            lbl_ok:"Construire",
-            lbl_cancel:"Modifier"
-          }
-      }).afterClosed().subscribe((result) => {
-        if(result==""){
-          this.tokenizer(fee);
-        } else {
-          this.selected_tab=1;
-        }
-
-      });
-    }
-
-    make_token() {
-      if(this.tags && this.tags.length>0)
-        for(let tag of this.tags)
-          if(tag)this.desc=" "+this.desc.trim()+"#"+tag;
-
-      this.tokenizer();
-    }
-
-    inc_price(inc: number) {
-      this.price=this.price+0.1;
-    }
-
-    update_user_solde() {
-      this.solde_user=Number(this.user.moneys[this.selected_money.identifier].balance);
-    }
-
-
-    cancelUpload() {
-
-    }
   }
+
+  quick_contract($event: any,token:any,title="Ajouter un visuel",subtitle="Exemple: Manuel de fonctionnement de la TB-303",desc="Exemple: Ce manuel de fonctionnement couvre l'utilisation courante du synthétiseur") {
+    this.picture=$event.file;
+    this.filename=$event.filename;
+    this.extensions="*";
+
+    this.ask_for_text("Titre du deal","",(title)=>{
+      if(title) {
+        this.ask_for_text("Description","Rédiger une courte introduction à la rédaction du contrat",(desc)=>{
+          if(!desc)desc="";
+          this.ask_for_text("Le cosignataire","Indiquer l'adresse mail du co-signataire",(email)=>{
+            this.desc=desc+token.tags;
+            this.title=title;
+            this.owner_can_transfer=true;
+            this.owner_can_sell=false;
+            this.price=0;
+            this.count=2;
+            this.min_price=0;
+            this.max_price=0;
+
+            this.tokenizer(token.fee,(r)=>{
+              let body={pem:this.user.pem,message:"",title:this.title,from:this.config.server.explorer+"/account/"+this.user.addr};
+              this.message="Expédition au contractant";
+              debugger
+              this.api._post("transfer_nft/"+r.ids[0]+"/"+email+"/","",body).subscribe(()=>{
+                this.message="";
+                return;
+              },(err)=>{showError(this,err)});
+            });
+          });
+        },"","memo")
+      }
+    },subtitle);
+  }
+
+
+  show_fileupload(redirect: number,prompt:string,token:any,extension="*") {
+    this.show_zone_upload=true;
+    this.extensions=extension;
+    this.prompt=prompt;
+    this.redirect=redirect;
+  }
+
+
+
+  onupload($event: any) {
+    if(this.redirect==3)this.quick_file($event,this.tokens[4],"Ajouter la pochette du titre","Exemple: Karma Police","Exemple: Radiohead");
+    if(this.redirect==1)this.quick_file($event,this.tokens[3]);
+    if(this.redirect==2)this.quick_contract($event,this.tokens[5]);
+  }
+
+
+  create_token(token: any) {
+    this.selected_token=token;
+  }
+
+
+
+  open_wizard(token:any){
+    if(token.index=="photo")this.quick_photo(token,"Sélectionner la photo","Calibrer l'aperçu présenter sur le NFT pour inciter à la vente",null,null,false);
+    if(token.index=="pow")this.quick_pow(token,300,300);
+    if(token.index=="music")this.show_fileupload(3,'Téléverser le fichier musical',token,"audio/*");
+    if(token.index=="film")this.quick_secret(token,'Indiquer le lien internet de votre film');
+    if(token.index=="file")this.show_fileupload(1,'Téléverser le fichier à embarquer dans votre token',token);
+    if(token.index=="contract")this.show_fileupload(2,'Téléverser le contrat signé',token);
+    if(token.index=="secret")this.quick_secret(token);
+    if(token.index=="game")this.quick_game(token);
+    if(token.index=="qcm")this.quick_qcm(token);
+    if(token.index=="life_events")this.quick_lifeevents(token);
+    if(token.index=="tickets")this.quick_tickets('Téléverser le visuel de votre invitation',token);
+    if(token.index=="loterie")this.quick_loterie(token);
+    if(token.index=="propriete")this.quick_propriete(token);
+  }
+
+  cancel_wizard(message=""){
+    showMessage(this,message);
+    setTimeout(()=>{this._location.back();},1000);
+  }
+
+
+  showPreview() {
+    this.create_preview();
+    this.show_preview=!this.show_preview;
+  }
+
+
+  ask_confirm(fee){
+    this.dialog.open(PromptComponent,{width: 'auto',data:
+        {
+          title: "Construire immédiatement le NFT ou le modifier avant ?",
+          question: "",
+          options: {},
+          lbl_ok:"Construire",
+          lbl_cancel:"Modifier"
+        }
+    }).afterClosed().subscribe((result) => {
+      if(result==""){
+        this.tokenizer(fee);
+      } else {
+        this.selected_tab=1;
+      }
+
+    });
+  }
+
+  make_token() {
+    if(this.tags && this.tags.length>0)
+      for(let tag of this.tags)
+        if(tag)this.desc=" "+this.desc.trim()+"#"+tag;
+
+    this.tokenizer();
+  }
+
+  inc_price(inc: number) {
+    this.price=this.price+0.1;
+  }
+
+  update_user_solde() {
+    this.solde_user=Number(this.user.moneys[this.selected_money.identifier].balance);
+  }
+
+
+  cancelUpload() {
+
+  }
+}
