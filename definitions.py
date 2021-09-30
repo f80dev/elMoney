@@ -41,9 +41,9 @@ IPFS_NODE_PORT=5001
 
 NETWORKS={
     "testnet":{
-        "identifier":"",
+        "identifier":"TFE-1a1f77",
         "new_account":float(0.2*1e18),
-        "bank":"bob",
+        "bank":"bank",
         "unity":"xEgld",
         "faucet":"https://r3d4.fr/elrond/testnet/index.php",
         "proxy":"https://testnet-gateway.elrond.com",
