@@ -95,6 +95,8 @@ export class TutoComponent implements OnInit {
 
     //this.text=this.transPipe.transform(this.text);
 
+    if(this.text==null || this.text.length==0)return;
+
     this.code="histo"+hashCode(this.text+this.subtitle);
     if(!this.force){
       if(localStorage.hasOwnProperty("tuto") && localStorage.getItem("tuto").indexOf(this.code)>-1){

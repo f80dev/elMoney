@@ -28,6 +28,7 @@ CREDIT_FOR_NEWACCOUNT=100
 GIPHY_API_KEY="EL1SNvjG7dJNOC4r8Dwz7XKPf5I2uG5f"
 UNSPLASH_API_KEY="jULgaq6gGPDmyKi24nJO1Ta5SgdVpT38PjGBiu4snu4"
 
+#Analye du contrat : https://testnet-explorer.elrond.com/accounts/erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u
 ESDT_CONTRACT="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
 ESDT_PRICE=5e16
 
@@ -49,7 +50,7 @@ NETWORKS={
         "proxy":"https://testnet-gateway.elrond.com",
         "explorer":"https://testnet-explorer.elrond.com",
         "wallet":"https://testnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqe2hccfqtquhzure32vwvcvlgr5fz6x50d8ssjsxd0c"
+        "nft":"erd1qqqqqqqqqqqqqpgqf7yzwzr2ar0gmywcfmya8pnlpxesjaghd8ssy6k2cs"
     },
 
     #erd1qqqqqqqqqqqqqpgqkwfvpkaf6vnn89508l0gdcx26vpu8eq5d8ssz3lhlf

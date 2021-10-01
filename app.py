@@ -7,16 +7,13 @@ import ssl
 import sys
 
 from AesEverywhere import aes256
-from AesEverywhere.aes256 import decrypt
+
 from apscheduler.schedulers.background import BackgroundScheduler
 
 import yaml
 from erdpy.accounts import Account
 from erdpy.contracts import SmartContract
-
-
 from flask import Response, request, jsonify, send_file, make_response
-
 from Tools import log, send_mail, open_html_file, now, send, dictlist_to_csv, returnError, extract
 from apiTools import create_app
 
@@ -88,7 +85,7 @@ def event_loop(contract:str,dest:str,amount:str):
 
 @app.route('/api/analyse_pem/',methods=["POST"])
 def analyse_pem():
-    _to=get_elrond_user(request.data)
+    _to=bc.get_elrond_user(request.data)
     pubkey=_to.address.bech32()
     body=str(request.data,"utf8")
     return jsonify({"address":pubkey,"pem":body,"addr":pubkey}),200
@@ -162,7 +159,7 @@ def transfer(idx:str,dest:str,amount:str,unity:str):
 
     log("Demande de transfert vers "+_dest.address.bech32()+" de "+amount+" "+unity)
 
-    _from=get_elrond_user(request.data)
+    _from=bc.get_elrond_user(request.data)
     if not _u is None:
         dao.add_contact(_from.address.bech32(),_dest.address.bech32())
 
@@ -181,43 +178,7 @@ def transfer(idx:str,dest:str,amount:str,unity:str):
 
 
 
-from erdpy.wallet import pem
-def get_elrond_user(data):
-    """
-    Fabrique ou recupere un pemfile
-    :param data:
-    :return:
-    """
-    if type(data)==dict and not "pem" in data:
-        rc="./PEM/"+NETWORKS[bc.network_name]["bank"]+".pem"
-    else:
-        filename = "./PEM/temp" + str(now() * 1000) + ".pem"
-        log("Fabrication d'un fichier PEM pour la signature et enregistrement sur " + filename)
-
-        if type(data)==bytes:
-            content=str(data,"utf8")
-            if content.endswith(".pem"):return Account(pem_file="./PEM/"+content)
-            if not "BEGIN PRIVATE KEY" in content:
-                content=str(aes256.decrypt(base64.b64decode(content),SECRET_KEY),"utf8")
-        else:
-            if not type(data)==str and type(data["pem"]) == dict and "pem" in data["pem"]:data["pem"]=data["pem"]["pem"]
-
-            if type(data)==str:
-                content=data
-            else:
-                content=data["pem"]
-
-            if content.endswith(".pem"): return Account(pem_file="./PEM/" + content)
-            if not "BEGIN PRIVATE KEY" in content:
-                content=str(aes256.decrypt(base64.b64decode(content),SECRET_KEY),"utf8")
-
-        with open(filename, "w") as file:
-            file.write(content)
-
-        rc = Account(pem_file=filename)
-        os.remove(filename)
-
-    return rc
+import erdpy.wallet as wallet
 
 
 
@@ -236,8 +197,8 @@ def save_user(data:dict=None):
     :return:
     """
     data = json.loads(str(request.data, encoding="utf-8"))
+    _sender = bc.get_elrond_user(data["pem"])
 
-    pem_file = get_elrond_user(data)
     if "visual" in data and data["visual"].startswith("data:"):data["visual"]=client.add(data["visual"])
     if "accept_all_dealers" in data and data["accept_all_dealers"]:
         data["accept_all_dealers"]=1
@@ -249,7 +210,7 @@ def save_user(data:dict=None):
 
     if not "website" in data or len(data["website"])==0: data["website"] =app.config["DOMAIN_APPLI"]+"/miner?miner="+data["addr"]
     try:
-        bc.update_account(pem_file,data)
+        bc.update_account(_sender,data)
     except:
         return jsonify({"error": "Probleme technique"}),500
 
@@ -292,7 +253,7 @@ def get_user(addrs:str):
 
 @app.route('/api/burn/<token_id>/',methods=["POST"])
 def burn(token_id,data:dict=None):
-    rc=bc.burn(NETWORKS[bc.network_name]["nft"],get_elrond_user(request.data),token_id)
+    rc=bc.burn(NETWORKS[bc.network_name]["nft"],bc.get_elrond_user(request.data),token_id)
 
 
     send(socketio,"refresh_nft",rc["sender"])
@@ -350,7 +311,7 @@ def update_price(token_id:str,data:dict=None):
     if data is None:
         data = json.loads(str(request.data, encoding="utf-8"))
 
-    rc = bc.set_price(NETWORKS[bc.network_name]["nft"], get_elrond_user(data), token_id, float(data["price"]) * 100)
+    rc = bc.set_price(NETWORKS[bc.network_name]["nft"],bc.get_elrond_user(data), token_id, float(data["price"]) * 100)
     send(socketio,"nft_store")
     return jsonify(rc),200
 
@@ -362,7 +323,7 @@ def open_nft(token_id:str,data:dict=None):
     if data is None:
         data = json.loads(str(request.data, encoding="utf-8"))
 
-    _user=get_elrond_user(data)
+    _user=bc.get_elrond_user(data)
     addr=_user.address.bech32()
 
     if len(SECRET_KEY)>0:
@@ -407,7 +368,7 @@ def state_nft(token_id:str,state:str,data:dict=None):
     if data is None:
         data = json.loads(str(request.data, encoding="utf-8"))
 
-    tx = bc.set_state(NETWORKS[bc.network_name]["nft"], get_elrond_user(data), token_id,state)
+    tx = bc.set_state(NETWORKS[bc.network_name]["nft"], bc.get_elrond_user(data), token_id,state)
 
     send(socketio,"refresh_nft")
     return jsonify(tx),200
@@ -469,7 +430,7 @@ def sendtokenbyemail(dests:str):
 @app.route('/api/transfer_nft/<token_id>/<dest>/',methods=["POST"])
 def transfer_nft(token_id,dest):
     data = json.loads(str(request.data, encoding="utf-8"))
-    _from=get_elrond_user(data["pem"])
+    _from=bc.get_elrond_user(data["pem"])
 
     _dest,_u = convert_email_to_addr(dest,open_html_file("transfer_nft", {
         "from":data["from"],
@@ -502,7 +463,7 @@ def buy_nft(token_id,price,seller:str,data:dict=None):
     if type(price)==str and "," in price:price=price.replace(",",".")
     tokenName=data["identifier"]
 
-    _user=get_elrond_user(data)
+    _user=bc.get_elrond_user(data)
     if tokenName!="EGLD":
         #On déclenche le transfert au smartcontract
         bc.transferESDT(tokenName, _user,
@@ -570,7 +531,7 @@ def mint(count:str,data:dict=None):
         res_visual = "%%" + data["visual"]
         if data["fullscreen"]:res_visual=res_visual.replace("%%","!!")
 
-    owner = get_elrond_user(data)
+    owner = bc.get_elrond_user(data)
 
     title=data["signature"]
     desc=data["description"]+res_visual
@@ -793,7 +754,7 @@ def new_dealer(data:dict=None):
     if data is None:
         data = json.loads(str(request.data, encoding="utf-8"))
 
-    _user=get_elrond_user(data["pem"])
+    _user=bc.get_elrond_user(data["pem"])
     tx=bc.execute(NETWORKS[bc.network_name]["nft"], _user,function="new_dealer", arguments=[])
 
     tx = bc.add_miner(NETWORKS[bc.network_name]["nft"], _user, ["0x" + _user.address.hex()])
@@ -810,7 +771,7 @@ def add_dealer(token_id:str,data:dict=None):
     for dealer in data["dealers"]:
         _dealer = Account(address=dealer["address"])
         arguments = [int(token_id), "0x" + _dealer.address.hex()]
-        tx = bc.add_dealer(NETWORKS[bc.network_name]["nft"], get_elrond_user(data["pem"]), arguments)
+        tx = bc.add_dealer(NETWORKS[bc.network_name]["nft"], bc.get_elrond_user(data["pem"]), arguments)
 
     return jsonify(tx), 200
 
@@ -857,7 +818,7 @@ def ask_ref(addr_from:str,addr_to:str):
 @app.route('/api/dealer_state/<state>/',methods=["POST"])
 def dealer_state(state:str,data:dict=None):
     if data is None: data = json.loads(str(request.data, encoding="utf-8"))
-    tx=bc.dealer_state(get_elrond_user(data["pem"]), int(state))
+    tx=bc.dealer_state(bc.get_elrond_user(data["pem"]), int(state))
 
     if not tx is None and tx["status"]=="success":
         return jsonify({"message":"ok"}), 200
@@ -868,7 +829,7 @@ def dealer_state(state:str,data:dict=None):
 @app.route('/api/add_miner/',methods=["POST"])
 def add_miner(data:dict=None):
     data=json.loads(str(request.data, encoding="utf-8"))
-    _dealer=get_elrond_user(data)
+    _dealer=bc.get_elrond_user(data)
     _profil_dealer=bc.get_account(_dealer.address.bech32())
     _profil_miner=bc.get_account(data["address"])
 
@@ -894,7 +855,7 @@ def del_miner(data:dict=None):
         data = json.loads(str(request.data, encoding="utf-8"))
 
     _miner = Account(address=data["address"])
-    tx=bc.execute(NETWORKS[bc.network_name]["nft"],get_elrond_user(data["pem"]),"del_miner",["0x" + _miner.address.hex()])
+    tx=bc.execute(NETWORKS[bc.network_name]["nft"],bc.get_elrond_user(data["pem"]),"del_miner",["0x" + _miner.address.hex()])
 
     return jsonify(tx), 200
 
@@ -914,7 +875,7 @@ def deployESDT(name:str,unity:str,nbdec:str,amount:str,data:dict=None):
     if data["public"] and not dao.get_money_by_name(unity,bc._proxy.url) is None:
         return jsonify({"message": "Cette monnaie 'public' existe déjà"}), 500
 
-    owner=get_elrond_user(data)
+    owner=bc.get_elrond_user(data["pem"])
     log("Compte propriétaire de la monnaie créé. Lancement du déploiement de "+unity)
     result=bc.deploy(owner,name,unity.upper(),int(amount),int(nbdec))
 

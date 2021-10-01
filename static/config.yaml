@@ -29,6 +29,14 @@ tags:
   secret: "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/old-key_1f5dd-fe0f.png"
   fichier: "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/file-folder_1f4c1.png"
 
+tips:
+  - A tout moment vous pouvez fabriquer une nouvelle monnaie et en envoyer à vos amis
+  - A tout moment vous pouvez fabriquer de nouveaux NFT et les donner ou les vendres via la place de marché
+  - N'hésitez pas à personnaliser votre compte depuis le menu "Mes préférences"
+  - Si vous avez une question, consultez les FAQs. Si vous n'avez pas votre réponse, utiliser le Telegram de la communauté
+  - Retrouvez tous vos NFTs (ceux que vous avez fabriqué mais également ceux que vous avez achetez) dans la rubrique Mes NFT
+  - Dans TokenForge, tout le monde peut être créateur de NFT ou vendeur des NFTs des autres
+
 support:
   email: ""
   forum: "https://t.me/joinchat/Tuc8TPeJ_uw4N2U0"

@@ -66,6 +66,7 @@ def str_to_hex(letters,zerox=True):
             rc=rc+hex(ord(letter))[2:]
 
     if len(rc) % 2==1:rc="0"+rc
+    rc=rc.upper()
 
     if zerox:
         return "0x"+rc
@@ -76,7 +77,7 @@ def str_to_hex(letters,zerox=True):
 def nbr_to_hex(number,zerox=True):
     rc=hex(number)
     if len(rc) % 2 ==1:rc=rc.replace("0x","0x0")
-
+    rc=rc.upper()
     if zerox:
         return rc
     else:

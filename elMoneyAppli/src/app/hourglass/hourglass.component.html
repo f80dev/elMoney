@@ -24,5 +24,11 @@
     <img [src]="src" style="width: 150px">
   </div>
 
+  <div *ngIf="showMessage?.length>0" style="font-size: small;display: inline-block;width:90%;">
+    {{showMessage}}
+  </div>
+
+  <app-tuto [label]="showTips"></app-tuto>
+
 </div>
 

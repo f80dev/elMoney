@@ -79,7 +79,6 @@ export class MainComponent implements OnInit {
 
 
   transfer(dest:any){
-    debugger
     var unity=this.user.moneys[this.user.selected_money].unity;
     let question='Vous souhaitez envoyer '+this.hand+" "+unity+" à "+dest.pseudo+" ("+dest.email+") ?";
     if(!dest.pseudo)question="Envoyer "+this.hand+" "+unity+" à "+dest.addr;

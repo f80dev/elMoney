@@ -10,8 +10,9 @@
 
       <mat-button-toggle-group [(ngModel)]="private_method" appearance="legacy" >
         <mat-button-toggle value="file"><div class="bloc-bouton">Fichier de<br>signature</div></mat-button-toggle>
-<!--        <mat-button-toggle value="input"><div class="bloc-bouton">Clé<br>privée</div></mat-button-toggle>-->
+        <!--        <mat-button-toggle value="input"><div class="bloc-bouton">Clé<br>privée</div></mat-button-toggle>-->
         <mat-button-toggle value="walletconnect"><div class="bloc-bouton">Wallet<br>Connect</div></mat-button-toggle>
+        <mat-button-toggle value="seed_phrase"><div class="bloc-bouton">Phrase<br>secrete</div></mat-button-toggle>
       </mat-button-toggle-group>
 
       <br><br>
@@ -19,7 +20,7 @@
         <input #csvInput hidden="true"
                type="file" onclick="this.value=null"
                (change)="import($event)"
-               accept=".pem"/>
+               accept="pem|xpem|json"/>
 
         <button mat-raised-button
                 mat-button class="app-button"
@@ -27,15 +28,20 @@
                 (click)="csvInput.click()">
           <div class="bloc-bouton">Importer la<br>signature</div>
         </button>
-        <p style="font-size: x-small;line-height:90%;font-weight: lighter;margin: 10px;">Votre fichier de signature vous a été envoyé sur votre mail à votre première connexion</p>
 
-        <br>
-        <button mat-raised-button
-                mat-button class="app-button"
-                (click)="resend()">
-          <div class="bloc-bouton">Me renvoyer<br>la signature</div>
-        </button>
-        <div style="font-size: x-small" *ngIf="user?.email?.length>0">sur {{user.email}}</div>
+        <div *ngIf="user.email?.length>0">
+          <p style="font-size: x-small;line-height:90%;font-weight: lighter;margin: 10px;">Votre fichier de signature vous a été envoyé sur votre mail à votre première connexion</p>
+
+          <br>
+          <button mat-raised-button
+                  mat-button class="app-button"
+                  *ngIf="user.email?.length>0"
+                  (click)="resend()">
+            <div class="bloc-bouton">Me renvoyer<br>la signature</div>
+          </button>
+          <div style="font-size: x-small" *ngIf="user?.email?.length>0">sur {{user.email}}</div>
+        </div>
+
       </div>
 
 
@@ -59,6 +65,23 @@
         </qrcode>
         <br>
       </div>
+
+      <div *ngIf="private_method=='seed_phrase'" class="method_zone">
+        <mat-form-field appearance="fill" class="app-field">
+          <mat-label>Saisissez votre phrase secrète</mat-label>
+          <textarea matInput style="text-align: left;font-size: small;color: lightsalmon;" autofocus
+                    rows="3" type="text" cdkFocusInitial
+                    [(ngModel)]="seed_phrase">
+       </textarea>
+        </mat-form-field>
+        <button mat-raised-button
+                mat-button class="app-button"
+                (click)="send_pem({seed_phrase:seed_phrase})">
+          Envoyer
+        </button>
+      </div>
+
+
     </div>
 
     <mat-slide-toggle [(ngModel)]="savePrivateKey">Conserver ma clé sur cet appareil</mat-slide-toggle>

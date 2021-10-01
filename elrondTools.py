@@ -6,18 +6,21 @@ from datetime import datetime, timedelta
 
 from time import sleep
 
+import nacl
 import requests
+from AesEverywhere import aes256
 from erdpy.proxy import ElrondProxy
-from erdpy import config
+from erdpy import config, wallet
 from erdpy.accounts import Account, AccountsRepository, Address
 from erdpy.contracts import SmartContract
 from erdpy.environments import TestnetEnvironment
 from erdpy.transactions import Transaction
-from erdpy.wallet import derive_keys
+from erdpy.wallet import derive_keys, pem
+from erdpy.wallet.keyfile import load_from_key_file
 from requests_cache import CachedSession
 
-from Tools import log, base_alphabet_to_10, str_to_hex, hex_to_str, nbr_to_hex, translate
-from definitions import LIMIT_GAS, ESDT_CONTRACT, NETWORKS, ESDT_PRICE, IPFS_NODE_PORT, IPFS_NODE_HOST
+from Tools import log, base_alphabet_to_10, str_to_hex, hex_to_str, nbr_to_hex, translate, now
+from definitions import LIMIT_GAS, ESDT_CONTRACT, NETWORKS, ESDT_PRICE, IPFS_NODE_PORT, IPFS_NODE_HOST, SECRET_KEY
 from ipfs import IPFS
 
 
@@ -71,6 +74,58 @@ class ElrondNet:
 
         log("Initialisation terminée")
 
+
+    def get_elrond_user(self,data):
+        """
+        Fabrique ou recupere un pemfile
+        :param data:
+        :return:
+        """
+        rc=None
+        if type(data) == dict and "pem" in data:data=data["pem"]
+        if type(data)!=str: data=str(data, "utf8")
+
+        if data.endswith(".pem"):
+            return Account(pem_file="./PEM/"+data)
+
+        if data.startswith("{"):
+            data = json.loads(data)
+        else:
+            data={"file":data}
+
+        if "seed_phrase" in data:
+            private_key, public_key = derive_keys(data["seed_phrase"], 0)
+            rc=Account(address=public_key)
+            rc.private_key_seed=private_key.hex()
+
+        if "file" in data:
+            content=data["file"]
+            if not "BEGIN PRIVATE KEY" in data["file"]:
+                content=str(aes256.decrypt(base64.b64decode(content), SECRET_KEY), "utf8")
+
+            contents=content.replace("\n","").replace("BEGIN PRIVATE KEY for ","").split("-----")
+            res = bytes.fromhex(base64.b64decode(contents[2]).decode())
+            seed=res[:32]
+            pubkey=res[32:]
+
+            rc = Account(address=Address(pubkey))
+            rc.private_key_seed = seed.hex()
+
+        # rc="./PEM/"+NETWORKS[bc.network_name]["bank"]+".pem"
+
+        #filename = "./PEM/temp" + str(now() * 1000) + ".xpem"
+        #log("Fabrication d'un fichier xPEM pour la signature et enregistrement sur " + filename)
+
+        # if type(data)==bytes:
+        #     content=str(data,"utf8")
+        #     if content.endswith(".pem"):return Account(pem_file="./PEM/"+content)
+
+        # with open(filename, "w") as file:
+        #     file.write(private_key.hex())
+
+        #os.remove(filename)
+
+        return rc
 
     def check_contract(self,contrat_addr):
         _ctr=SmartContract(address=contrat_addr)
@@ -567,12 +622,13 @@ class ElrondNet:
         required_gas=250000+50000 #TODO à évaluer correctement
 
         for k in values.keys():
-            key=str_to_hex(k,False)
-            value=str_to_hex(values[k],False)
-            if len(value)>0 or key=="contacts":
+            key=str_to_hex(k,True)
+            value=str_to_hex(values[k],True)
+            if len(value)>2 or key=="contacts":
                 data=data+"@"+key+"@"+value
                 required_gas=required_gas+10000*(len(value)+len(key))
 
+        log("Envoi de la transaction d'enregistrement "+data)
         return self.send_transaction(_sender,_sender,_sender,0,data)
 
 
@@ -974,14 +1030,14 @@ class ElrondNet:
                           )
         return tx
 
+
+
     def add_miner(self, contract, pem_file, arguments):
         tx = self.execute(contract, pem_file,
                           function="add_miner",
                           arguments=arguments,
                           )
         return tx
-
-
 
 
 
@@ -1073,6 +1129,13 @@ class ElrondNet:
         private_key=_user.private_key_seed
         # TODO ajouter la durée limite et le cryptage
         return private_key
+
+    def decrypt_json_keyfile(self, content):
+        _content=json.loads(content)
+
+
+
+
 
 
 

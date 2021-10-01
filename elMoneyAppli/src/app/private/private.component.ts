@@ -26,6 +26,7 @@ export class PrivateComponent implements OnInit {
   @Input("dialog") frm_dialog:boolean=true;
   @Output('load') onload: EventEmitter<any>=new EventEmitter();
   private_method="file";
+  seed_phrase="";
 
   constructor(public config:ConfigService,
               public dialogRef: MatDialogRef<PrivateComponent>,
@@ -52,15 +53,32 @@ export class PrivateComponent implements OnInit {
     }
   }
 
+  send_pem(body:any){
+    this.api._post("analyse_pem", "", body, 240).subscribe((r: any) => {
+      this.quit({pem:r.pem,addr:r.address});
+    });
+  }
+
 
   import(fileInputEvent: any) {
     var reader = new FileReader();
     this.message = "Signature ...";
-    reader.onload = () => {
+    reader.onload = (file) => {
       this.message = "Changement de compte";
-      this.api._post("analyse_pem", "", reader.result.toString(), 240).subscribe((r: any) => {
-        this.quit({pem:r.pem,addr:r.address});
-      });
+      if(fileInputEvent.target.files[0].name.endsWith(".json")){
+        this.dialog.open(PromptComponent,{width: 'auto',data:
+            {
+              title: "Mot de passe du fichier",
+              question: "",
+              onlyConfirm:false,
+              lbl_ok:"Ok",
+              lbl_cancel:"Annuler"
+            }
+        }).afterClosed().subscribe((result) => {
+          if(result)this.send_pem({file:reader.result.toString(),password:result,filename:fileInputEvent.target.files[0].name});
+        });
+      }
+      this.send_pem({file:reader.result.toString(),filename:fileInputEvent.target.files[0].name})
     }
     reader.readAsBinaryString(fileInputEvent.target.files[0]);
   }
@@ -113,7 +131,7 @@ export class PrivateComponent implements OnInit {
   }
 
   logout() {
-   this.user.logout("Se déconnecter",()=>{
+    this.user.logout("Se déconnecter",()=>{
 
     },null,"fit-contain",true);
   }
@@ -122,4 +140,5 @@ export class PrivateComponent implements OnInit {
     this.api._get("resend/"+this.user.addr+"/","",60,"").subscribe(()=>{});
     showMessage(this,"Consulter votre messagerie pour récupérer le fichier de signature");
   }
+
 }
