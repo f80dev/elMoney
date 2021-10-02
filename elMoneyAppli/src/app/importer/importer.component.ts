@@ -563,6 +563,9 @@ export class ImporterComponent implements OnInit {
     },"Exemple: Combien font 12 x 14 ?");
   }
 
+
+
+
   quick_qcm(token){
     this.ask_for_text("La question","Quel est la question du QCM",(question)=>{
       this.title=question;
@@ -573,11 +576,15 @@ export class ImporterComponent implements OnInit {
         let options=[];
         let i=0;
         for(let txt of text_options.split("\n")){
-          i++;
-          options.push(i +") => "+txt.trim());
+          if(txt.trim().length>0){
+            i++;
+            options.push("Réponse "+i+" : "+txt.trim());
+          }
         }
-        this.desc=options.join("<br>");
-        this.ask_for_text("Indiquer la bonne réponse de 1 à "+options.length,"html:Les propositions sont les suivantes:<br>"+this.desc,(secret)=>{
+        this.desc="<li style='text-align: left;'>"+options.join("</li><li>")+"</li>";
+        this.desc="Les propositions sont les suivantes:<br><ul style='text-align: left;display:inline-block;width:fit-content;'>"+this.desc+"</ul>";
+
+        this.ask_for_text("Indiquer la bonne réponse de 1 à "+options.length,"html"+this.desc,(secret)=>{
           secret=Number(secret).toFixed(0);
           if(secret && secret<=options.length && secret>0){
             this.ask_for_text("Récompense","De combien est la récompense",(gift)=>{

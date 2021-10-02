@@ -14,7 +14,7 @@ import yaml
 from erdpy.accounts import Account
 from erdpy.contracts import SmartContract
 from flask import Response, request, jsonify, send_file, make_response
-from Tools import log, send_mail, open_html_file, now, send, dictlist_to_csv, returnError, extract
+from Tools import log, send_mail, open_html_file, now, send, dictlist_to_csv, returnError, extract, str_to_hex
 from apiTools import create_app
 
 from dao import DAO
@@ -556,7 +556,7 @@ def mint(count:str,data:dict=None):
         value=fee
         money="0x" + money.encode().hex()
     else:
-        money="0x0"
+        money=str_to_hex("EGLD")
 
     arguments = [int(count),
                  "0x" + title.encode().hex(),
