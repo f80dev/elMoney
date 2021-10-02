@@ -51,7 +51,7 @@
 
         <div
           style="width:90%;margin:5%;line-height: 95%;font-size: small;text-align: center;">
-          <div [innerHTML]="nft.description"></div><br>
+          <div [innerHTML]="nft.description | safe"></div><br>
           <div style="font-size: x-small;color:lightgrey;margin-top: 3px;">{{nft.tags}}</div>
         </div>
 

@@ -581,8 +581,8 @@ export class ImporterComponent implements OnInit {
             options.push("Réponse "+i+" : "+txt.trim());
           }
         }
-        this.desc="<li style='text-align: left;'>"+options.join("</li><li>")+"</li>";
-        this.desc="Les propositions sont les suivantes:<br><ul style='text-align: left;display:inline-block;width:fit-content;'>"+this.desc+"</ul>";
+        this.desc="<li>"+options.join("</li><li>")+"</li>";
+        this.desc="<div style='text-align: left;'>Les propositions sont les suivantes:<br><ul style='text-align: left;'>"+this.desc+"</ul></div>";
 
         this.ask_for_text("Indiquer la bonne réponse de 1 à "+options.length,"html"+this.desc,(secret)=>{
           secret=Number(secret).toFixed(0);
