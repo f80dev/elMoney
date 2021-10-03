@@ -125,6 +125,7 @@ export class AuthentComponent implements OnInit {
 
   open_elrond_authent() {
     let w:any=window;
+    debugger
     if(w.elrondWallet){
         $$("Prise en compte de l'elrond wallet en cours");
     }

@@ -1,0 +1,24 @@
+1 impose
+ 2 quick
+ 3 hair
+ 4 question
+ 5 emotion
+ 6 tribe
+ 7 cage
+ 8 curtain
+ 9 shield
+ 10 maple
+ 11 federal
+ 12 assume
+ 13 glance
+ 14 opinion
+ 15 road
+ 16 novel
+ 17 swim
+ 18 punch
+ 19 napkin
+ 20 consider
+ 21 special
+ 22 swarm
+ 23 feed
+ 24 brave

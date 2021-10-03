@@ -30,7 +30,7 @@
                matInput
                [(ngModel)]="data.result"
                [placeholder]="data.placeholder"
-               cdkFocusInitial
+               cdkFocusInitial autocomplete="false"
                (keypress)="onEnter($event)">
         <mat-icon *ngIf="data.emojis" matSuffix (click)="showEmoji=!showEmoji">emoji_emotions</mat-icon>
 

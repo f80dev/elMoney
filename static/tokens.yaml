@@ -86,7 +86,7 @@ content:
 
   - index: qcm
     title: QCM
-    icon: help
+    icon: checkmark
     nft_icon: https://emojipedia-us.s3.amazonaws.com/source/skype/289/check-mark_2714-fe0f.png
     description: Proposer une question à choix multiple et récompenser le vainqueur
     tuto: "

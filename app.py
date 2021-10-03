@@ -239,6 +239,7 @@ def get_user(addrs:str):
 
         data = bc.get_account(addr)
         data["contacts"]=contacts
+        if not "email" in data:data["email"]=_user["email"]
 
         if not data is None:
             if "visual" in data and len(data["visual"])==46:data["visual"]="https://ipfs.io/ipfs/"+data["visual"]
@@ -521,7 +522,7 @@ def mint(count:str,data:dict=None):
         else:
             secret=secret.encode().hex()
     else:
-        secret=""
+        secret="0"
 
     if "file" in data and len(secret)==0:
         secret=data["file"].encode().hex()

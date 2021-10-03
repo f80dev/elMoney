@@ -135,10 +135,10 @@
 
 
 
-              <div style="margin: 10px" *ngIf="filename.length==0">ou</div>
+              <div style="margin: 10px" *ngIf="filename?.length==0">ou</div>
 
 
-              <mat-form-field appearance="fill" class="app-field" *ngIf="filename.length==0">
+              <mat-form-field appearance="fill" class="app-field" *ngIf="filename?.length==0">
                 <mat-label>Une phrase secrete</mat-label>
                 <input matInput type="text" (focusin)="focus_idx=1"
                        id="txtSecret"
