@@ -384,12 +384,13 @@ export class ImporterComponent implements OnInit {
   }
 
 
-  ask_for_price(question="",func:Function=null,fee=0){
+  ask_for_price(question="",func:Function=null,fee=0,default_price=0){
     this.dialog.open(PromptComponent,{width: '280px',data:
         {
           title: "Prix de vente ?",
           question: question,
           result:0,
+          value:default_price+"",
           subtitle:"Montant en "+this.selected_money.label,
           min:0,max:10,
           type:"number",
@@ -578,7 +579,7 @@ export class ImporterComponent implements OnInit {
         for(let txt of text_options.split("\n")){
           if(txt.trim().length>0){
             i++;
-            options.push("Réponse "+i+" : "+txt.trim());
+            options.push("Choix "+i+" - "+txt.trim());
           }
         }
         this.desc="<li>"+options.join("</li><li>")+"</li>";

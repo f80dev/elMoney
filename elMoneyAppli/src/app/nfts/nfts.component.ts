@@ -107,7 +107,7 @@ export class NftsComponent implements OnChanges {
         data: {
           title:"Répondez pour gagner !",
           subtitle: 'Donner la réponse pour gagner (souvent en 1 seul mot ou un seul nombre)',
-          question:nft.description,
+          question:"html:"+nft.description,
           onlyConfirm: false,
           lbl_ok: 'Répondre',
           lbl_cancel: 'Abandonner'
