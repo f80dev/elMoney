@@ -390,7 +390,7 @@ export class ImporterComponent implements OnInit {
           title: "Prix de vente ?",
           question: question,
           result:0,
-          value:default_price+"",
+          value:default_price,
           subtitle:"Montant en "+this.selected_money.label,
           min:0,max:10,
           type:"number",
@@ -603,7 +603,7 @@ export class ImporterComponent implements OnInit {
             });
           }
         },"Exemple: Calcul mental")
-      },"Exemple: 1","memo");
+      },"","memo");
     },"Exemple: Combien font 12 x 14 ?");
   }
 
@@ -632,8 +632,6 @@ export class ImporterComponent implements OnInit {
       }
     },"Visuel de vos billets de participation");
   }
-
-
 
 
 
@@ -716,7 +714,7 @@ export class ImporterComponent implements OnInit {
                   this.ask_for_price("Quel est votre prix pour ce fichier",null,token.fee);
                 } else
                   this.cancel_wizard("Annulation");
-              },"Indiquer le nombre de NFT identique à créer","number")
+              },"Indiquer le nombre de NFT identique à créer","number",15,1);
             }
           },desc,"memo")
         }
