@@ -33,7 +33,6 @@ export class NftBuyComponent implements OnInit {
 
   ngOnInit(): void {
     this.nft=JSON.parse(this.routes.snapshot.queryParamMap.get("nft"));
-    debugger
     this.seller=JSON.parse(this.routes.snapshot.queryParamMap.get("seller"));
     this.api._get("users/"+this.nft.miner+"/","").subscribe((data:any)=>{this.miner=data[0];});
     this.user.check_pem(()=>{
@@ -66,9 +65,13 @@ export class NftBuyComponent implements OnInit {
     let price = this.nft.price;
     this.api._post("buy_nft/" + this.nft.token_id + "/" + price + "/" + this.seller.address, "", {pem:this.user.pem,identifier:this.nft.identifier}).subscribe((r: any) => {
       this.message = "";
-      showMessage(this, "Achat du NFT pour " + this.nft.price + " "+this.nft.unity);
-      this.user.refresh_balance(() => {});
-      this.router.navigate(['nfts-perso'],{queryParams:{index:0},replaceUrl:true})
+      if(r.status=="success"){
+        showMessage(this, "Achat du NFT pour " + this.nft.price + " "+this.nft.unity);
+        this.user.refresh_balance(() => {});
+        this.router.navigate(['nfts-perso'],{queryParams:{index:0},replaceUrl:true})
+      } else {
+        showMessage(this,"Achat annulé : "+r.receipt.data);
+      }
     }, () => {
       this.message = "";
       showMessage(this, "Achat annulé");
