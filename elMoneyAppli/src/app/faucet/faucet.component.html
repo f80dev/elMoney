@@ -45,10 +45,12 @@
   ______
   <br> <br> <br>
 
-  <app-elrond-addr label="Journal de transactions"
-                   type="address"
-                   [addr]="user.addr">
-  </app-elrond-addr>
+  <button mat-raised-button mat-button
+          *ngIf="message?.length==0"
+          class="app-button"
+          (click)="router.navigate(['transactions'])">
+    <div class="bloc-bouton">Journal des<br>transactions</div>
+  </button>
 
   <br><br>
 

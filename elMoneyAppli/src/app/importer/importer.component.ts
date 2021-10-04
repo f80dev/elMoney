@@ -579,13 +579,13 @@ export class ImporterComponent implements OnInit {
         for(let txt of text_options.split("\n")){
           if(txt.trim().length>0){
             i++;
-            options.push("Choix "+i+" - "+txt.trim());
+            options.push("Choix "+i+" : <strong>"+txt.trim()+"</strong>");
           }
         }
         this.desc="<li>"+options.join("</li><li>")+"</li>";
         this.desc="<div style='text-align: left;'>Les propositions sont les suivantes:<br><ul style='text-align: left;'>"+this.desc+"</ul></div>";
 
-        this.ask_for_text("Indiquer la bonne réponse de 1 à "+options.length,"html"+this.desc,(secret)=>{
+        this.ask_for_text("Indiquer la bonne réponse de 1 à "+options.length,"html:"+this.desc,(secret)=>{
           secret=Number(secret).toFixed(0);
           if(secret && secret<=options.length && secret>0){
             this.ask_for_text("Récompense","De combien est la récompense",(gift)=>{
