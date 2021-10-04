@@ -201,10 +201,10 @@ export class ImporterComponent implements OnInit {
     let properties:number=0b00000000;
     if(this.owner_can_transfer)properties=properties+0b00000001;
     if(this.owner_can_sell)properties=properties    +0b00000010;
-    if(this.direct_sell)properties=properties       +0b00000100;
-    if(this.self_destruction)properties=properties  +0b00001000;
+    if(this.direct_sell)properties=properties       +0b00000100; //Le NFT est disponible en vente directe
+    if(this.self_destruction)properties=properties  +0b00001000; //Le token s'autodétruit après ouverture
     if(this.find_secret)properties=properties       +0b00010000; //L'utilisateur doit fournir le secret dans l'open pour recevoir le cadeau
-    if(this.opt_gift)properties=properties          +0b00100000; //On affiche l'option d'ouverture même si aucun secret
+    if(this.opt_gift)properties=properties          +0b00100000; //On affiche l'option d'ouverture même si aucun secret (utilisé pour la loterie)
     if(this.transparent)properties=properties       +0b01000000; //on affiche un cadre autour de l'image ou pas
 
     this.message="Transfert des fichiers vers IPFS";
@@ -647,7 +647,7 @@ export class ImporterComponent implements OnInit {
                 this.ask_for_text("Heure","Indiquer L'heure",(hr)=> {
                   this.desc =lieu +" - "+ this.datepipe.transform(dt,"dd/MM/yyyy") +" à "+hr;
                   this.title = title;
-                  this.secret = "Billet: @id@";
+                  this.secret = "@id";
                   if (token.tags) this.desc = this.desc + " " + token.tags;
                   this.ask_for_price("Prix unitaire du billet", (price) => {
                     this.ask_for_text("Combien de billets", "Indiquer le nombre de billets à fabriquer (maximum 30)", (num) => {
@@ -696,6 +696,7 @@ export class ImporterComponent implements OnInit {
 
 
   quick_file($event: any,token:any,title="Ajouter un visuel",subtitle="Exemple: Manuel de fonctionnement de la TB-303",desc="Exemple: Ce manuel de fonctionnement couvre l'utilisation courante du synthétiseur") {
+    debugger
     this.picture=$event.file;
     this.filename=$event.filename;
     this.extensions="*";
@@ -713,7 +714,8 @@ export class ImporterComponent implements OnInit {
                   if(token.tags)this.desc=this.desc+" "+token.tags;
                   this.title=title;
                   this.ask_for_price("Quel est votre prix pour ce fichier",null,token.fee);
-                }
+                } else
+                  this.cancel_wizard("Annulation");
               },"Indiquer le nombre de NFT identique à créer","number")
             }
           },desc,"memo")
@@ -797,6 +799,7 @@ export class ImporterComponent implements OnInit {
   }
 
   cancel_wizard(message=""){
+    this.show_zone_upload=false;
     showMessage(this,message);
     setTimeout(()=>{this._location.back();},1000);
   }

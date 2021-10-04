@@ -1,11 +1,13 @@
 import base64
 from io import BytesIO
+from typing import BinaryIO
+
 import pandas as pd
 import json
-import os
 import ssl
 import sys
 
+import py7zr
 from AesEverywhere import aes256
 
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -524,7 +526,7 @@ def mint(count:str,data:dict=None):
     else:
         secret="0"
 
-    if "file" in data and len(secret)==0:
+    if "file" in data and secret=="0":
         secret=data["file"].encode().hex()
 
     res_visual = ""
@@ -715,7 +717,8 @@ def charts():
 @app.route('/api/upload_file/',methods=["POST"])
 def upload_file():
     if len(request.files)>0:
-        cid=client.add_file(request.files.get("file"))
+        r=request.files.get("file")
+        cid=client.add_file(r)
     else:
         try:
             cid=client.add(str(request.data,"utf8"))
@@ -936,7 +939,8 @@ def server_config():
         "explorer":bc._proxy.url.replace("-gateway","-explorer"),
         "contract_explorer": bc._proxy.url.replace("-api", "-explorer")+"/address/"+NETWORKS[bc.network_name]["nft"],
         "wallet": bc._proxy.url.replace("-gateway", "-wallet")+"/unlock/pem",
-        "wallet_domain": bc._proxy.url.replace("-gateway","-wallet") +"/"
+        "wallet_domain": bc._proxy.url.replace("-gateway","-wallet") +"/",
+        "faucet":NETWORKS[bc.network_name]["faucet"]
     }
 
     bank_balance=bc.getMoneys(bc.bank)

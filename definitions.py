@@ -36,8 +36,8 @@ LIMIT_GAS=60000000
 
 #IPFS_NODE="http://207.180.198.227:5001" Server main
 #IPFS_NODE="http://161.97.75.165:5001"
-#IPFS_NODE="/dns/161.97.75.165/tcp/5001/http"
-IPFS_NODE_HOST="161.97.75.165"
+IPFS_NODE_HOST="/ip4/161.97.75.165/tcp/5001/http"
+#IPFS_NODE_HOST="161.97.75.165"
 IPFS_NODE_PORT=5001
 
 NETWORKS={
@@ -50,7 +50,7 @@ NETWORKS={
         "proxy":"https://testnet-gateway.elrond.com",
         "explorer":"https://testnet-explorer.elrond.com",
         "wallet":"https://testnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqc43962cef6t7hz6vpz9w23gstul7afvyd8ssppln8a"
+        "nft":"erd1qqqqqqqqqqqqqpgq8j2nrge7w8cna9wv2vf0h8gn59jkzvusd8sspgqjm8"
     },
 
     #erd1qqqqqqqqqqqqqpgqkwfvpkaf6vnn89508l0gdcx26vpu8eq5d8ssz3lhlf

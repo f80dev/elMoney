@@ -2,11 +2,10 @@ import base64
 import json
 import os
 from datetime import datetime
-from os import remove
 
 import requests
-from ipfsapi import Client
-from werkzeug.datastructures import FileStorage
+from ipfshttpclient import Client
+from multiaddr import Multiaddr
 
 from Tools import log
 
@@ -15,7 +14,7 @@ class IPFS:
     client=None
 
     def __init__(self, addr:str,port:int):
-        self.client=Client(addr,port)
+        self.client=Client(Multiaddr(addr))
         log("Adresse du client IPFS: " + addr)
 
 
