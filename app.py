@@ -1,13 +1,11 @@
 import base64
 from io import BytesIO
-from typing import BinaryIO
 
 import pandas as pd
 import json
 import ssl
 import sys
 
-import py7zr
 from AesEverywhere import aes256
 
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -240,10 +238,14 @@ def get_user(addrs:str):
         if _user is None and "@" in addr:break
 
         data = bc.get_account(addr)
-        data["contacts"]=contacts
-        if not "email" in data:data["email"]=_user["email"]
-
         if not data is None:
+            data["contacts"] = contacts
+            if not "email" in data:
+                if _user is None:
+                    data["email"] = ""
+                else:
+                    data["email"] = _user["email"]
+
             if "visual" in data and len(data["visual"])==46:data["visual"]="https://ipfs.io/ipfs/"+data["visual"]
             if "identity" in data and len(data["identity"]) == 46: data["identity"] = "https://ipfs.io/ipfs/" + data["identity"]
             if "shop_visual" in data and len(data["shop_visual"])==46:data["shop_visual"]="https://ipfs.io/ipfs/"+data["shop_visual"]
