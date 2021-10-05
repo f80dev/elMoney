@@ -6,6 +6,7 @@ import {UserService} from "../user.service";
 import {NgNavigatorShareService} from "ng-navigator-share";
 import {ClipboardService} from "ngx-clipboard";
 import {showMessage} from "../tools";
+import {ConfigService} from "../config.service";
 
 @Component({
   selector: 'app-promo',
@@ -25,15 +26,16 @@ export class PromoComponent implements OnInit {
               public toast: MatSnackBar,
               public router: Router,
               public user: UserService,
+              public config:ConfigService,
               public ngNavigatorShareService:NgNavigatorShareService,
               public _clipboardService:ClipboardService) {
-
   }
 
 
   ngOnInit(): void {
     this.url=this.routes.snapshot.queryParamMap.get("url")+"&premium="+this.routes.snapshot.queryParamMap.get("premium");
     this.visual=this.routes.snapshot.queryParamMap.get("visual");
+    if(!this.visual)this.visual=this.config.server.domain_appli+"/assets/img/coin.png";
     this.title=this.routes.snapshot.queryParamMap.get("title");
     this.message=this.routes.snapshot.queryParamMap.get("message");
     this.body="Découvrez mon NFT '"+this.title+"' sur "+this.url+" "+this.message;

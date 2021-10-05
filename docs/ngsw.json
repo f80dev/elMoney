@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1633450666975,
+  "timestamp": 1633453363062,
   "index": "https://tf.f80.fr/index.html",
   "assetGroups": [
     {
@@ -33,7 +33,6 @@
         "https://tf.f80.fr/assets/TokenForgeFromExcel.xlsm",
         "https://tf.f80.fr/assets/admin.xlsx",
         "https://tf.f80.fr/assets/cmk.html",
-        "https://tf.f80.fr/assets/coin.png",
         "https://tf.f80.fr/assets/gears.gif",
         "https://tf.f80.fr/assets/icons/coin.png",
         "https://tf.f80.fr/assets/icons/gift.png",
@@ -62,7 +61,6 @@
         "https://tf.f80.fr/assets/img/vendu.png",
         "https://tf.f80.fr/assets/img/work.png",
         "https://tf.f80.fr/assets/store.html",
-        "https://tf.f80.fr/assets/tf.svg",
         "https://tf.f80.fr/favicon.png"
       ],
       "patterns": []
@@ -89,7 +87,6 @@
     "https://tf.f80.fr/assets/TokenForgeFromExcel.xlsm": "bb13298ed2ab37a6c5290c0dcd9bb8b3afa970d1",
     "https://tf.f80.fr/assets/admin.xlsx": "d2714bd4237d49e5cac4e8dba19dc1cc12032c75",
     "https://tf.f80.fr/assets/cmk.html": "6f06383ca5f4552828853e7bd98e516195470229",
-    "https://tf.f80.fr/assets/coin.png": "9b5eb5e2fbadf0386fd6925a9e3b1b73fbfeafbc",
     "https://tf.f80.fr/assets/gears.gif": "bc355afcdcd7c1ab2a1018257b35f10df37c829f",
     "https://tf.f80.fr/assets/icons/coin.png": "8d066c2ff9ec582b7143b25b45a4a627276aff71",
     "https://tf.f80.fr/assets/icons/gift.png": "df331c0067c6d81d7bb34a48a84a8b109c811590",
@@ -118,12 +115,11 @@
     "https://tf.f80.fr/assets/img/vendu.png": "508f0b23afafa2c0284dde1eb9a0ff448c0caa43",
     "https://tf.f80.fr/assets/img/work.png": "817016b0bb4190f9715aae75cfab36a952359d53",
     "https://tf.f80.fr/assets/store.html": "05ec2470b9fed1a8b2466c78224e5c4c4cb2dc91",
-    "https://tf.f80.fr/assets/tf.svg": "ea111c6d5e3d277b7bbb417a99602e9648566a93",
     "https://tf.f80.fr/exif.js": "b5962aef35409d93f1ff55461045a6796e80343f",
     "https://tf.f80.fr/favicon.ico": "c3bbe9dfa628852d8131849561b7fd52194f4d8d",
     "https://tf.f80.fr/favicon.png": "9d07b4062b45b028a517877c4b51af7a330eab1a",
-    "https://tf.f80.fr/index.html": "f4708a85c1b8229b6f80a293749b655fca7d5f18",
-    "https://tf.f80.fr/main.js": "024e6f2e130e7871c614f702c2699d82293adaa7",
+    "https://tf.f80.fr/index.html": "618beef9bcba722ef7f0a5d6ed5dd1f47480d1f1",
+    "https://tf.f80.fr/main.js": "e5e3eeee01d02aa41e3b7d5bb811c5d93bd55832",
     "https://tf.f80.fr/manifest.webmanifest": "8291133aeacc475e061eb544514d2c1e8c02c576",
     "https://tf.f80.fr/polyfills.js": "4765ca307b079d05563d72f8ab98bf801f675ce9",
     "https://tf.f80.fr/runtime.js": "de56d9a36135095cf0ac02c9a71705a7294a844d",

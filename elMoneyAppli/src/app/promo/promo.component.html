@@ -5,7 +5,7 @@
   <mat-form-field appearance="fill"
                   style="width:80%;max-width:600px;margin-right: 10px;" cdkFocusInitial>
     <mat-label>Message d'accompagnement</mat-label>
-    <input matInput matNativeControl [(ngModel)]="message">
+    <textarea matInput rows="3" type="text" matNativeControl [(ngModel)]="message"></textarea>
     <mat-icon matSuffix style="cursor: pointer" (click)="message=''">cancel</mat-icon>
   </mat-form-field>
 
