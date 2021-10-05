@@ -1,4 +1,5 @@
 @import '~@angular/material/theming';
+@import '~ngx-sharebuttons/themes/circles';
 @include mat-core();
 
 $my-custom-primary: mat-palette($mat-deep-orange);

@@ -589,7 +589,8 @@ export class ImporterComponent implements OnInit {
           secret=Number(secret).toFixed(0);
           if(secret && secret<=options.length && secret>0){
             this.ask_for_text("Récompense","De combien est la récompense",(gift)=>{
-              this.gift=Number(gift);
+              this.gift=gift;
+              this.title=this.title+" Gagnez "+gift+" "+this.selected_money.label+" en trouvant la réponse";
               this.ask_options([
                 {label:"<div class='bloc-bouton'>Le NFT s'autodétruit<br>après ouverture</div>",value:true,width:'200px'},
                 {label:"<div class='bloc-bouton'>Le NFT peut être ouvert<br>plusieurs fois</div>",value:false,width:'200px'}
@@ -600,7 +601,7 @@ export class ImporterComponent implements OnInit {
                 if(token.tags)this.desc=this.desc+" "+token.tags;
                 this.ask_for_price("Combien coute la participation",null,token.fee);
               });
-            });
+            },"","number");
           }
         },"Exemple: Calcul mental")
       },"","memo");

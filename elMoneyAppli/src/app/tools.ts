@@ -11,7 +11,18 @@ export function showError(vm:any,err:any=null){
     if(!err.hasOwnProperty("error"))err.error="L'application ne répond pas. Veuillez vérifier l'état de votre connexion et recommencer d'ici quelques instants";
     showMessage(vm,err.error);
   }
+}
 
+//Supprime le code html d'une fonction
+export function removeHTML(html_code:string,code_replace=" ") {
+  while(html_code.indexOf("<")>-1){
+    let pos=html_code.indexOf("<")
+    if(pos>-1){
+      let end=html_code.indexOf(">");
+      html_code=html_code.substr(0,pos)+code_replace+html_code.substr(end+1,html_code.length-end);
+    }
+  }
+  return html_code;
 }
 
 

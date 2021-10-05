@@ -18,6 +18,7 @@ export class PromoComponent implements OnInit {
   title:string;
   email: string;
   body:string;
+  visual: string;
 
   constructor(public api: ApiService,
               public routes: ActivatedRoute,
@@ -32,6 +33,7 @@ export class PromoComponent implements OnInit {
 
   ngOnInit(): void {
     this.url=this.routes.snapshot.queryParamMap.get("url")+"&premium="+this.routes.snapshot.queryParamMap.get("premium");
+    this.visual=this.routes.snapshot.queryParamMap.get("visual");
     this.title=this.routes.snapshot.queryParamMap.get("title");
     this.message=this.routes.snapshot.queryParamMap.get("message");
     this.body="Découvrez mon NFT '"+this.title+"' sur "+this.url+" "+this.message;

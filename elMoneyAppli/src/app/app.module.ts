@@ -84,6 +84,9 @@ import {MatProgressBar, MatProgressBarModule} from "@angular/material/progress-b
 import { ChartsComponent } from './charts/charts.component';
 import { NftConfirmComponent } from './nft-confirm/nft-confirm.component';
 import { MinicontactsComponent } from './minicontacts/minicontacts.component';
+import {ShareModule} from "ngx-sharebuttons";
+import {ShareButtonsModule} from "ngx-sharebuttons/buttons";
+import {ShareIconsModule} from "ngx-sharebuttons/icons";
 
 
 
@@ -178,8 +181,8 @@ const config: SocketIoConfig = {
     ImageCropperModule,
     MatChipsModule,
     CommonModule,
-    CommonModule,
-    CommonModule
+    ShareButtonsModule,
+    ShareIconsModule
   ],
   providers: [
     ApiService,

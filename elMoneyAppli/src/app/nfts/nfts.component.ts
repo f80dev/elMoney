@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
-import {$$, showError, showMessage} from "../tools";
+import {$$, removeHTML, showError, showMessage} from "../tools";
 import {environment} from "../../environments/environment";
 import {NgNavigatorShareService} from "ng-navigator-share";
 import {ClipboardService} from "ngx-clipboard";
@@ -74,7 +74,8 @@ export class NftsComponent implements OnChanges {
   share(nft){
     this.router.navigate(["promo"],{queryParams:{
         url:environment.domain_appli+"/?filter="+nft.token_id,
-        message:nft.description,
+        visual:nft.visual,
+        message:removeHTML(nft.description),
         title:nft.title,
         premium:nft.premium
       }});

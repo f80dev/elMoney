@@ -24,7 +24,19 @@
   <br>
   <app-tuto label="Toucher le QRCode pour copier l'adresse de l'annonce"></app-tuto>
 
+
+
+  <br>
+  <p>Partagez directement sur les réseaux</p>
+  <share-buttons [theme]="'circles-dark'"
+                 [show]="11"
+                 [url]="url"
+                 [image] ="visual"
+                 [title]="title">
+  </share-buttons>
+
   <br><br>
+
   <div class="wrap-list">
     <button mat-raised-button
             (click)="share()"
@@ -41,6 +53,8 @@
       <div class="bloc-bouton">Envoyer<br>par email</div>
     </button>
   </div>
+  <br>
+
 
 
 
