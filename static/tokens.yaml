@@ -34,6 +34,7 @@ content:
     transac: 0.00015
     production: true
 
+
   - index: pow
     title: Tokeniser<br>une oeuvre
     icon: person
@@ -59,6 +60,7 @@ content:
     transac: 0.00015
     production: true
 
+
   - index: game
     title: Devinette
     icon: help
@@ -83,6 +85,7 @@ content:
     tags: "#jouer #jeu #laquestion"
     transac: 0.00015
     production: true
+
 
   - index: qcm
     title: QCM
@@ -132,6 +135,7 @@ content:
     transac: 0.00015
     production: true
 
+
   - index: propriete
     title: Attestation<br>de propriété
     icon: copyright
@@ -172,6 +176,7 @@ content:
     transac: 0.00015
     production: true
 
+
   - index: film
     title: Vendre<br>un film
     icon: movie
@@ -189,6 +194,7 @@ content:
     tags: "#film #cinema"
     transac: 0.00015
     production: true
+
 
   - index: secret
     title: Vendre<br>un secret

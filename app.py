@@ -210,6 +210,7 @@ def save_user(data:dict=None):
 
     if not "website" in data or len(data["website"])==0: data["website"] =app.config["DOMAIN_APPLI"]+"/miner?miner="+data["addr"]
     try:
+        #https://docs.elrond.com/developers/account-storage/
         bc.update_account(_sender,data)
     except:
         return jsonify({"error": "Probleme technique"}),500
@@ -632,69 +633,76 @@ def transactions(user:str=""):
             except:
                 data=t["data"]
 
-            sign=0
-            fee = -float(t["fee"])/1e18
-            value = float(t["value"]) / 1e18
-
-            comment=""
-            if t["status"]!="success":
-                value=0
-                comment="annulée"
-
+            sign = 0
             if len(user)==0:
                 sign=1
             else:
                 if t["sender"]==user:sign=-1
                 if t["receiver"]==user:sign=+1
 
-            if data.startswith("mint"):data="Creation d'un token"
-            if data.startswith("add_dealer"):data= "Ajout d'un distributeur"
-            if data.startswith("new_dealer"):data= "Se déclarer commme distributeur"
-            if data.startswith("add_miner"):data= "Approuver un fabricant"
-            if data.startswith("price"): data = "Mise a jour du prix"
-            if data.startswith("burn"): data = "Destruction d'un token"
-            if data.startswith("setstate"): data = "Mise en vente"
-            if data.startswith("open"):
-                data = "Révéler le secret"
-                if "scResults" in t and len(t["scResults"])>1:sign=0
-
-            if data.startswith("buy"):
-                data="Achat d'un NFT"
-                t=bc.getTransaction(t["hash"])
-
             if sign!=0:
-                log("Ajout de la transaction "+data+" : " + str(t))
-                rc["transactions"].append({
-                    "sender":t["sender"],
-                    "receiver":t["receiver"],
-                    "data": data,
-                    "value": sign * value,
-                    "fee": fee,
-                    "transaction": t["hash"],
-                    "comment":comment
-                })
+                t = bc.getTransaction(t["hash"])
+
+                fee = -float(t["fee"])/1e18
+                value = float(t["value"]) / 1e18
+
+                comment=""
+                if t["status"]!="success":
+                    value=0
+                    comment="annulée"
 
 
-            if "smartContractResults" in t:
-                for tt in t["smartContractResults"]:
-                    if len(user)==0 or (tt["receiver"]==user or tt["sender"]==user):
-                        if tt["receiver"]==user:sign=1
-                        if tt["sender"] == user: sign=-1
-                        if len(user)==0:sign=1
-                        data2 = tt["data"]
-                        if len(data2)>0:
-                            rc["transactions"].append({
-                                "receiver":tt["receiver"],
-                                "sender": tt["sender"],
-                                "data":data+": "+data2,
-                                "value":sign*float(tt["value"])/1e18,
-                                "fee":0,
-                                "transaction":t["hash"]
-                            })
-                            if data.startswith("Achat"):
-                                k=tt["receiver"]
-                                if not k in charts:charts[k]=dict({"key":k,"value":0,"profil":dict()})
-                                charts[k]["value"] = charts[k]["value"] + sign * value
+                if data.startswith("mint"):data="Creation d'un token"
+                if data.startswith("add_dealer"):data= "Ajout d'un distributeur"
+                if data.startswith("new_dealer"):data= "Se déclarer commme distributeur"
+                if data.startswith("add_miner"):data= "Approuver un fabricant"
+                if data.startswith("price"): data = "Mise a jour du prix"
+                if data.startswith("burn"): data = "Destruction d'un token"
+                if data.startswith("setstate"): data = "Mise en vente"
+                if data.startswith("open"):
+                    data = "Révéler le secret"
+                    if "scResults" in t and len(t["scResults"])>1:sign=0
+
+
+                if data.startswith("buy"):
+                    data="Achat d'un NFT"
+                    t=bc.getTransaction(t["hash"])
+
+                if sign!=0:
+                    log("Ajout de la transaction "+data+" : " + str(t))
+                    cost=0
+                    rc["transactions"].append({
+                        "sender":t["sender"],
+                        "receiver":t["receiver"],
+                        "data": data,
+                        "value": sign * value,
+                        "fee": fee,
+                        "cost": cost,
+                        "transaction": t["hash"],
+                        "comment":comment
+                    })
+
+
+                if "smartContractResults" in t:
+                    for tt in t["smartContractResults"]:
+                        if len(user)==0 or (tt["receiver"]==user or tt["sender"]==user):
+                            if tt["receiver"]==user:sign=1
+                            if tt["sender"] == user: sign=-1
+                            if len(user)==0:sign=1
+                            data2 = tt["data"]
+                            if len(data2)>0:
+                                rc["transactions"].append({
+                                    "receiver":tt["receiver"],
+                                    "sender": tt["sender"],
+                                    "data":data+": "+data2,
+                                    "value":sign*float(tt["value"])/1e18,
+                                    "fee":0,
+                                    "transaction":t["hash"]
+                                })
+                                if data.startswith("Achat"):
+                                    k=tt["receiver"]
+                                    if not k in charts:charts[k]=dict({"key":k,"value":0,"profil":dict()})
+                                    charts[k]["value"] = charts[k]["value"] + sign * value
 
     for profil in sorted(charts.values(),key=lambda item: item["value"],reverse=True):
         _profil=bc.get_account(profil["key"])

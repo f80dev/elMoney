@@ -619,17 +619,19 @@ class ElrondNet:
             del values["addr"]
 
         data = "SaveKeyValue"
-        required_gas=250000+50000 #TODO à évaluer correctement
-
+        required_gas=250000+50000 #voir https://docs.elrond.com/developers/account-storage/
+        persist_per_byte=10000
+        store_per_byte=50000
         for k in values.keys():
             key=str_to_hex(k,True)
             value=str_to_hex(values[k],True)
             if len(value)>2 or key=="contacts":
                 data=data+"@"+key+"@"+value
-                required_gas=required_gas+10000*(len(value)+len(key))
+                required_gas=required_gas+persist_per_byte*(len(value)+len(key))+store_per_byte*len(value)
 
         log("Envoi de la transaction d'enregistrement "+data)
-        return self.send_transaction(_sender,_sender,_sender,0,data)
+        t=self.send_transaction(_sender,_sender,_sender,0,data,gas_limit=required_gas)
+        return t
 
 
     def get_account(self, addr):
@@ -1048,7 +1050,11 @@ class ElrondNet:
 
 
     def getTransaction(self, hash):
-        rc=self._proxy.get_transaction(hash,with_results=True)
+        url = self._proxy.url.replace("gateway","api") + "/transactions/" + hash
+        resp = requests.get(url)
+        #rc=self._proxy.get_transaction(hash,with_results=True)
+        rc=json.loads(resp.text)
+        rc["hash"]=hash
         return rc
 
 
@@ -1059,7 +1065,8 @@ class ElrondNet:
         :return:
         """
         _c=SmartContract(address=addr)
-        rc=requests.get(self._proxy.url+"/address/"+_c.address.bech32()+"/transactions")
+        url=self._proxy.url+"/address/"+_c.address.bech32()+"/transactions"
+        rc=requests.get(url)
         if rc.status_code==200:
             rc=json.loads(rc.text)["data"]["transactions"]
         else:
