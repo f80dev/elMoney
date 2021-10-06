@@ -2,6 +2,7 @@ import os
 import sys
 
 from flask import Flask
+from flask_caching import Cache
 from flask_cors import CORS
 from flask_socketio import SocketIO
 
@@ -21,6 +22,12 @@ def create_app():
     """
 
     app = Flask(__name__, static_folder="static", instance_relative_config=True)
+    app.config.from_mapping({
+        "DEBUG": True,          # some Flask specific configs
+        "CACHE_TYPE": "SimpleCache",  # Flask-Caching related configs
+        "CACHE_DEFAULT_TIMEOUT": 300
+    })
+    cache=Cache(app)
     app.app_context().push()
 
     domain_server = "https://server.f80.fr"
@@ -74,4 +81,4 @@ def create_app():
     def version():
         return 'version 1.0'
 
-    return app, socketio
+    return app, socketio,cache

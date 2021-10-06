@@ -8,11 +8,12 @@
       </td>
 
       <td style="text-align: right">
-        <button mat-icon-button mat-raised-button class="icon-button"
+        <button mat-icon-button mat-raised-button class="icon-button" color="primary"
+                style="font-weight: bold !important;"
                 title="Recharger mon compte"
                 *ngIf="user.gas/1e18<1"
                 (click)="router.navigate(['faucet'],{queryParams:{auto:'reload'}})">
-          <mat-icon>plus_one</mat-icon>
+          +{{config.server.reload_amount/1e18}}
         </button>
       </td>
     </tr></table>

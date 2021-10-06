@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {$$, autoRotate, cropToSquare, resizeBase64Img, showError, showMessage} from "../tools";
+import {$$,isHTML, showError, showMessage} from "../tools";
 import {ApiService} from "../api.service";
 import {UserService} from "../user.service";
 import {ImageSelectorComponent} from "../image-selector/image-selector.component";
@@ -724,16 +724,16 @@ export class ImporterComponent implements OnInit {
 
   }
 
-  quick_contract($event: any,token:any,title="Ajouter un visuel",subtitle="Exemple: Manuel de fonctionnement de la TB-303",desc="Exemple: Ce manuel de fonctionnement couvre l'utilisation courante du synthétiseur") {
+  quick_contract($event: any,token:any,title="Ajouter un visuel",subtitle="Contrat de travail à durée indéterminée",desc="Entre les soussignés Madame X et Monsieur Y") {
     this.picture=$event.file;
     this.filename=$event.filename;
     this.extensions="*";
 
-    this.ask_for_text("Titre du deal","",(title)=>{
+    this.ask_for_text("Titre du contrat","",(title)=>{
       if(title) {
-        this.ask_for_text("Description","Rédiger une courte introduction à la rédaction du contrat",(desc)=>{
+        this.ask_for_text("Description","Préciser l'objet du contrat",(desc)=>{
           if(!desc)desc="";
-          this.ask_for_text("Le cosignataire","Indiquer l'adresse mail du co-signataire",(email)=>{
+          this.ask_for_text("L'identité des cosignataires","Indiquer les noms, prénoms, date et lieu de naissance des cosignataires",(email)=>{
             this.desc=desc+token.tags;
             this.title=title;
             this.owner_can_transfer=true;
@@ -848,5 +848,9 @@ export class ImporterComponent implements OnInit {
 
   cancelUpload() {
 
+  }
+
+  is_html(desc: string) {
+    return isHTML(desc);
   }
 }

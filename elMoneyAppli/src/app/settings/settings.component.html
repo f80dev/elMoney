@@ -231,13 +231,19 @@
               color="alert"
               [disabled]="!this.user?.addr || user?.pem?.endsWith('.pem')"
               (click)="delete_account()">
-        Supprimer le compte
+        <div class="bloc-bouton">Supprimer<br>le compte</div>
       </button>
 
       <button mat-raised-button mat-button
               class="app-button"
               (click)="raz_pem_ondevice()">
-        Effacer votre clé
+        <div class="bloc-bouton">Effacer<br>votre clé</div>
+      </button>
+
+      <button mat-raised-button mat-button
+              class="app-button"
+              (click)="show_explorer()">
+        <div class="bloc-bouton">Voir mes<br>transactions</div>
       </button>
 
       <br>

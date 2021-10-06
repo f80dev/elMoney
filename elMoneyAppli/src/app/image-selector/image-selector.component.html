@@ -3,14 +3,14 @@
 <mat-dialog-content>
 
   <div style="display: flex;flex-wrap:wrap; align-items: flex-start;width:100%;">
-<!--    <div style="display: inline-flex;">-->
-<!--      <button mat-flat-button mat-button-->
-<!--              *ngIf="data.internet"-->
-<!--              class="app-button"-->
-<!--              (click)="addUrl()">-->
-<!--        Internet-->
-<!--      </button>-->
-<!--    </div>-->
+    <!--    <div style="display: inline-flex;">-->
+    <!--      <button mat-flat-button mat-button-->
+    <!--              *ngIf="data.internet"-->
+    <!--              class="app-button"-->
+    <!--              (click)="addUrl()">-->
+    <!--        Internet-->
+    <!--      </button>-->
+    <!--    </div>-->
 
     <div style="display: inline-flex;">
       <button mat-flat-button mat-button
@@ -33,9 +33,9 @@
       </div>
     </div>
 
-    <div style="display: inline-flex;height:50px;padding: 10px;font-size: large;">/</div>
+    <div *ngIf="data.bank" style="display: inline-flex;width:250px;height:50px;">
+      <div style="display:inline-block;padding: 10px;font-size: large;">/</div>
 
-    <div style="display: inline-flex;width:250px;height:50px;" *ngIf="data.bank">
       <mat-form-field appearance="fill" class="app-field" style="font-size: small;width:170px;margin:0px;">
         <mat-label>Rechercher des images</mat-label>
         <input matInput [placeholder]="inputSearch" type="text"  [(ngModel)]="query" (keypress)="search($event)" cdkFocusInitial>
@@ -48,7 +48,13 @@
           <mat-option *ngFor="let t of types" [value]="t.value">{{t.label}}</mat-option>
         </mat-select>
       </mat-form-field>
+
     </div>
+
+
+
+
+
   </div>
 
   <div *ngIf="showWebcam" style="width: 100%;text-align: center;">
@@ -61,14 +67,14 @@
       imageType="image/jpeg"
       (click)="takePhoto()"
       (imageCapture)="handleImage($event)">
-  </webcam><br>
+    </webcam><br>
 
     <button mat-button mat-raised-button
-          class="app-button"
-          title="Déclenche la prise de vue"
-          (click)="takePhoto()">
-    Déclenche
-  </button>
+            class="app-button"
+            title="Déclenche la prise de vue"
+            (click)="takePhoto()">
+      Déclenche
+    </button>
 
   </div>
 
@@ -129,8 +135,9 @@
           mat-button mat-icon-button mat-raised-button (click)="onNoClick()">
     <mat-icon>cancel</mat-icon>
   </button>
+
   <button id="cmdValide" class="app-button" mat-button mat-raised-button
-          *ngIf="pictures?.length==0"
+          *ngIf="pictures?.length==0 && data.result?.length>0"
           [mat-dialog-close]="{img:data.result,original:original,file:originalFile}">
     Ok
   </button>

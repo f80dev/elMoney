@@ -75,6 +75,13 @@ export function normaliser(s:string):string {
 }
 
 
+export function isHTML(code:string):boolean {
+  if(code.startsWith("html:"))return true;
+  if(code.indexOf("<div")>-1)return true;
+  if(code.indexOf("<")>-1 && code.indexOf("</")>code.indexOf("<") && code.indexOf(">")>code.indexOf("<"))return true;
+  return false;
+}
+
 
 
 export function extract_id(url:string):string {

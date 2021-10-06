@@ -9,6 +9,7 @@ import {environment} from "../../environments/environment";
 import {ConfigService} from "../config.service";
 import {SelDealerComponent} from "../sel-dealer/sel-dealer.component";
 import {MatDialog} from "@angular/material/dialog";
+import {Location} from "@angular/common";
 
 @Component({
   selector: 'app-nft-store',
@@ -44,6 +45,7 @@ export class NftStoreComponent implements OnInit {
               public routes: ActivatedRoute,
               public toast:  MatSnackBar,
               public socket: Socket,
+              public location:Location,
               public dialog: MatDialog,
               public config: ConfigService,
               public router: Router,
@@ -106,7 +108,6 @@ export class NftStoreComponent implements OnInit {
         if(dealer.state==0 && (!store || store==dealer.address))this.dealers.push(dealer);
       }
 
-
       if(!store || this.dealers.length==0)
         this.dealers.splice(0,0,{
           shop_name:'Vente directe',
@@ -145,6 +146,13 @@ export class NftStoreComponent implements OnInit {
       this.message = "";
       this.cache=r;
       this.nfts=this.apply_filter(r);
+      if(this.nfts.length==0 && this.filter_id){
+        setTimeout(()=>{
+          this.filter_id=null;
+          this.location.replaceState(".");
+          this.refresh();
+        },5000);
+      }
       if(this.selected_tag.length==0)this.tags=extract_tags(this.nfts);
     });
   }

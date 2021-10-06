@@ -217,5 +217,9 @@ export class SettingsComponent implements OnInit,OnDestroy {
     this.user.identity="";
     this.mustSave=true;
   }
+
+  show_explorer() {
+    open(this.config.server.explorer+"/address/"+this.user.addr,"_blank");
+  }
 }
 

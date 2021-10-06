@@ -25,7 +25,6 @@ from elrondTools import ElrondNet
 from giphy_search import ImageSearchEngine
 from ipfs import IPFS
 
-
 scheduler = BackgroundScheduler()
 
 def init_default_money(bc,dao):
@@ -72,7 +71,7 @@ def init_default_money(bc,dao):
 bc = ElrondNet(network_name=sys.argv[2])
 dao=DAO("server",sys.argv[3])
 init_default_money(bc,dao)
-app, socketio = create_app()
+app, socketio,cache = create_app()
 
 
 
@@ -190,6 +189,7 @@ def evalprice(sender,data="",value=0):
 
 
 @app.route('/api/users/',methods=["POST"])
+@cache.cached(timeout=60)
 def save_user(data:dict=None):
     """
     Enregistrement de l'utilisateur
@@ -220,6 +220,7 @@ def save_user(data:dict=None):
 
 
 @app.route('/api/users/<addrs>/',methods=["GET"])
+@cache.cached(timeout=60)
 def get_user(addrs:str):
     """
     Return the property of one or several users.
@@ -238,7 +239,7 @@ def get_user(addrs:str):
 
         if _user is None and "@" in addr:break
 
-        data = bc.get_account(addr)
+        data = bc.get_account(addr,False)
         if not data is None:
             data["contacts"] = contacts
             if not "email" in data:
@@ -261,7 +262,6 @@ def get_user(addrs:str):
 def burn(token_id,data:dict=None):
     rc=bc.burn(NETWORKS[bc.network_name]["nft"],bc.get_elrond_user(request.data),token_id)
 
-
     send(socketio,"refresh_nft",rc["sender"])
     send(socketio,"nft_store")
 
@@ -281,6 +281,7 @@ def burn(token_id,data:dict=None):
 @app.route('/api/nfts/<seller_filter>/',methods=["GET"])
 @app.route('/api/nfts/<seller_filter>/<owner_filter>/',methods=["GET"])
 @app.route('/api/nfts/<seller_filter>/<owner_filter>/<miner_filter>/',methods=["GET"])
+@cache.cached(timeout=30)
 def nfts(seller_filter="0x0",owner_filter="0x0",miner_filter="0x0"):
     rc=[]
 
@@ -916,6 +917,7 @@ def deployESDT(name:str,unity:str,nbdec:str,amount:str,data:dict=None):
 
 #http://localhost:6660/api/server_config/
 @app.route('/api/server_config/')
+@cache.cached(timeout=3600)
 def server_config():
     log("Récupération de la configuration du server avec la bank "+bc.bank.address.bech32())
 
@@ -941,6 +943,7 @@ def server_config():
         "proxy": bc._proxy.url,
         "network":bc.network_name,
         "profils":profils,
+        "reload_amount":NETWORKS[bc.network_name]["new_account"],
         "new_esdt_price":ESDT_PRICE/1e18,
         "nft_contract": NETWORKS[bc.network_name]["nft"],
         "domain_appli":DOMAIN_APPLI,
@@ -997,6 +1000,7 @@ def del_contracts(idx:str):
 
 
 @app.route('/api/find_contact/<email>/')
+@cache.cached(timeout=3600)
 def find_contact(email:str):
     contact=dao.get_user(email)
     return jsonify(contact),201
@@ -1028,6 +1032,7 @@ def add_contact(owner:str):
 
 #test http://localhost:5555/api/balance/erd1qqqqqqqqqqqqqpgqqvtq3xx0pgnehaynt6flzp8hyc0ckahf9e3se00ejh/erd1jgffp69cxeqqzvrv3u96da6lqwx5d6d6e7j9uau3dv84e34vwq4q3gzjxl/
 @app.route('/api/balance/<addr>/')
+@cache.cached(timeout=30)
 def getbalance(addr:str):
     _u = Account(address=addr)
     rc = bc.getMoneys(_u)
@@ -1044,6 +1049,7 @@ def get_gas(addr:str):
 
 
 @app.route('/api/getyaml/<name>/')
+@cache.cached(timeout=3600*24)
 def getyaml(name):
     f=open("./static/"+name+".yaml","r",encoding="utf-8")
     rc=yaml.safe_load(f.read())

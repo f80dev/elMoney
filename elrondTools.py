@@ -6,7 +6,6 @@ from datetime import datetime, timedelta
 
 from time import sleep
 
-import nacl
 import requests
 from AesEverywhere import aes256
 from erdpy.proxy import ElrondProxy
@@ -16,7 +15,6 @@ from erdpy.contracts import SmartContract
 from erdpy.environments import TestnetEnvironment
 from erdpy.transactions import Transaction
 from erdpy.wallet import derive_keys, pem
-from erdpy.wallet.keyfile import load_from_key_file
 from requests_cache import CachedSession
 
 from Tools import log, base_alphabet_to_10, str_to_hex, hex_to_str, nbr_to_hex, translate, now
@@ -47,8 +45,6 @@ class ElrondNet:
     network_name="devnet"
     ipfs=IPFS(IPFS_NODE_HOST,IPFS_NODE_PORT)
     cached_sess = CachedSession(expire_after=timedelta(hours=1))
-
-
 
     def __init__(self,network_name="devnet"):
         """
@@ -591,10 +587,8 @@ class ElrondNet:
             if len(not_equal) > 0 and rc[field] != not_equal: break
             timeout=timeout-interval
 
-        gasUsed=0
-        if "gasUsed" in rc:gasUsed=rc["gasUsed"]
-
-        rc["cost"]=float(rc["gasLimit"]*rc["gasPrice"])/1e18
+        transaction_with_cost=self.getTransaction(rc["hash"])
+        rc["cost"]=float(transaction_with_cost["fee"])/1e18
 
         log("Transaction executé "+str(rc))
         if timeout<=0:log("Timeout de "+self.getExplorer(tx)+" "+field+" est a "+str(rc[field]))
@@ -614,9 +608,7 @@ class ElrondNet:
         if "contacts" in values and type(values["contacts"])==str:
             values["contacts"]=",".join(list(set(values["contacts"].split(","))))
 
-        if "addr" in values:
-            self.cached_sess.cache.delete_url(self._proxy.url + "/address/" + values["addr"] + "/keys")
-            del values["addr"]
+        rc=self.cached_sess.cache.delete_url(self._proxy.url + "/address/" + _sender.address.bech32() + "/keys")
 
         data = "SaveKeyValue"
         required_gas=250000+50000 #voir https://docs.elrond.com/developers/account-storage/
@@ -630,11 +622,11 @@ class ElrondNet:
                 required_gas=required_gas+persist_per_byte*(len(value)+len(key))+store_per_byte*len(value)
 
         log("Envoi de la transaction d'enregistrement "+data)
-        t=self.send_transaction(_sender,_sender,_sender,0,data,gas_limit=required_gas)
+        t=self.send_transaction(_sender,_sender,_sender,0,data,gas_limit=required_gas*2)
         return t
 
 
-    def get_account(self, addr):
+    def get_account(self, addr,with_cache=True):
         """
         Récupération des informations du compte
         :see https://docs.elrond.com/sdk-and-tools/rest-api/addresses/
@@ -650,7 +642,11 @@ class ElrondNet:
         if not addr.startswith("erd"):
             addr=_a.address.bech32()
 
-        rc = self.cached_sess.get(self._proxy.url + "/address/" + addr + "/keys")
+        if with_cache:
+            rc = self.cached_sess.get(self._proxy.url + "/address/" + addr + "/keys")
+        else:
+            rc = requests.get(self._proxy.url + "/address/" + addr + "/keys")
+
         if rc.status_code == 200:
             obj=dict()
             rc = dict(json.loads(rc.text)["data"]["pairs"])
