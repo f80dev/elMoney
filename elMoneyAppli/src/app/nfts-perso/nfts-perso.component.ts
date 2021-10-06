@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {UserService} from "../user.service";
 import {ApiService} from "../api.service";
-import {$$, group_tokens, showError, showMessage, subscribe_socket} from "../tools";
+import {$$, group_tokens, now, showError, showMessage, subscribe_socket} from "../tools";
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormControl} from "@angular/forms";
 import {Socket, SocketIoModule} from "ngx-socket-io";
@@ -38,7 +38,7 @@ export class NftsPersoComponent implements OnInit {
     public user:UserService,
   ) {
     subscribe_socket(this, "refresh_nft", () => {
-      setTimeout(() => {this.refresh();}, 200)
+      setTimeout(() => {this.refresh([0,1,2],"force");}, 200)
     });
 
   }
@@ -73,13 +73,15 @@ export class NftsPersoComponent implements OnInit {
 
 
   refresh(identifiers=[0,1,2],evt:any=null) {
+    let param="";
     if(evt=="open")return;
+    if(evt=="burn" || evt=="transfer" || evt=="force")param=""+now();
     $$("Refresh de la liste des NFTs possédés/achetés");
     for(let identifier of identifiers){
       let filters=["0x0","0x0","0x0"];
       filters[identifier]=this.user.addr;
       this.message = "Chargement des tokens ...";
-      this.api._get("nfts/"+filters[0]+"/"+filters[1]+"/"+filters[2]).subscribe((r: any) => {
+      this.api._get("nfts/"+filters[0]+"/"+filters[1]+"/"+filters[2],param).subscribe((r: any) => {
         this.message = "";
 
         for(let i=0;i<r.length;i++){
@@ -110,7 +112,7 @@ export class NftsPersoComponent implements OnInit {
           let body={pem:this.user.pem,message:"",title:nft.uri,from:this.config.server.explorer+"/account/"+this.user.addr};
           this.api._post("transfer_nft/"+nft.token_id+"/"+result.email+"/","",body).subscribe(()=>{
             nft.message="";
-            this.refresh();
+            this.refresh([0,1,2],"transfer");
           },(err)=>{showError(this,err)});
         }
       });

@@ -588,7 +588,10 @@ class ElrondNet:
             timeout=timeout-interval
 
         transaction_with_cost=self.getTransaction(rc["hash"])
-        rc["cost"]=float(transaction_with_cost["fee"])/1e18
+        if "fee" in transaction_with_cost:
+            rc["cost"]=float(transaction_with_cost["fee"])/1e18
+        else:
+            rc["cost"]=0
 
         log("Transaction executé "+str(rc))
         if timeout<=0:log("Timeout de "+self.getExplorer(tx)+" "+field+" est a "+str(rc[field]))

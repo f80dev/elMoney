@@ -20,10 +20,11 @@ class DAO:
 
     def add_contact(self, owner_addr, contact_addr):
         _user=self.get_user(owner_addr)
-        if not "contacts" in _user:_user["contacts"]=[]
-        if contact_addr not in _user["contacts"]:
-            _user["contacts"].append(contact_addr)
-            self.db["users"].update_one(filter={"addr": _user["addr"]},update={"$set":{"contacts":_user["contacts"]}})
+        if not _user is None:
+            if not "contacts" in _user:_user["contacts"]=[]
+            if contact_addr not in _user["contacts"]:
+                _user["contacts"].append(contact_addr)
+                self.db["users"].update_one(filter={"addr": _user["addr"]},update={"$set":{"contacts":_user["contacts"]}})
 
         return _user
 

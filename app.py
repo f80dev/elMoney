@@ -449,9 +449,7 @@ def transfer_nft(token_id,dest):
 
     rc=bc.nft_transfer(NETWORKS[bc.network_name]["nft"], _from, token_id, _dest)
     if not rc is None:
-        send(socketio,"refresh_nft")
-        send(socketio,"refresh_balance",rc["sender"])
-        send(socketio, "refresh_balance", rc["receiver"])
+        send(socketio,"refresh_nft",rc["receiver"])
     return jsonify(rc)
 
 
