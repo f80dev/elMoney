@@ -43,42 +43,41 @@ export class NftBuyComponent implements OnInit {
 
 
   buy() {
-    let identifier=this.nft.identifier;
-    if(identifier=="0" || identifier=="")identifier="EGLD";
+    this.user.check_pem(()=>{
+      let identifier=this.nft.identifier;
+      if(identifier=="0" || identifier=="")identifier="EGLD";
 
-    if(this.nft.price>0){
-      if(this.nft.unity=="eGld"){
-        if (!this.user.moneys.hasOwnProperty(identifier) || this.nft.price > Number(this.user.moneys[identifier].balance)/ 1e18 ) {
+      if(this.nft.price>0){
+        if(this.nft.unity=="eGld"){
+          if (!this.user.moneys.hasOwnProperty(identifier) || this.nft.price > Number(this.user.moneys[identifier].balance)/ 1e18 ) {
 
-          showMessage(this, "Votre solde est insuffisant (prix + frais de transaction)", 5000, () => {
-            if(this.nft.identifier.startsWith("EGLD"))
-              this.router.navigate(["faucet"]);
-            else
-              this.router.navigate(["main"]);
-          }, "Recharger ?");
-          return false;
+            showMessage(this, "Votre solde est insuffisant (prix + frais de transaction)", 5000, () => {
+              if(this.nft.identifier.startsWith("EGLD"))
+                this.router.navigate(["faucet"]);
+              else
+                this.router.navigate(["main"]);
+            }, "Recharger ?");
+            return false;
+          }
         }
       }
-    }
 
-    this.message = "Achat en cours";
-    let price = this.nft.price;
-    this.api._post("buy_nft/" + this.nft.token_id + "/" + price + "/" + this.seller.address, "", {pem:this.user.pem,identifier:this.nft.identifier}).subscribe((r: any) => {
-      this.message = "";
-      if(r.status=="success"){
-        showMessage(this, "Achat réalisé. Prix unitaire + frais de service (" + r.cost + " eGld)");
-        this.user.refresh_balance(() => {});
-        this.router.navigate(['nfts-perso'],{queryParams:{index:0},replaceUrl:true})
-      } else {
-        showMessage(this,"Achat annulé : "+r.receipt.data);
-      }
-    }, () => {
-      this.message = "";
-      showMessage(this, "Achat annulé");
-    });
-
-
-
+      this.message = "Achat en cours";
+      let price = this.nft.price;
+      this.api._post("buy_nft/" + this.nft.token_id + "/" + price + "/" + this.seller.address, "", {pem:this.user.pem,identifier:this.nft.identifier}).subscribe((r: any) => {
+        this.message = "";
+        if(r.status=="success"){
+          showMessage(this, "Achat réalisé. Prix unitaire + frais de service (" + r.cost + " eGld)");
+          this.user.refresh_balance(() => {});
+          this.router.navigate(['nfts-perso'],{queryParams:{index:0},replaceUrl:true})
+        } else {
+          showMessage(this,"Achat annulé : "+r.receipt.data);
+        }
+      }, () => {
+        this.message = "";
+        showMessage(this, "Achat annulé");
+      });
+    },this);
   }
 
   cancel() {

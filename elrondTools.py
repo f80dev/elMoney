@@ -96,7 +96,7 @@ class ElrondNet:
 
         if "file" in data:
             content=data["file"]
-            if not "BEGIN PRIVATE KEY" in data["file"]:
+            if not "BEGIN PRIVATE KEY" in content:
                 content=str(aes256.decrypt(base64.b64decode(content), SECRET_KEY), "utf8")
 
             contents=content.replace("\n","").replace("BEGIN PRIVATE KEY for ","").split("-----")

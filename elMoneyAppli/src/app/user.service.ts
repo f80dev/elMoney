@@ -279,11 +279,6 @@ export class UserService {
 
   check_pem(func,vm=null,title=null,func_abort=null) {
     this.check_email(()=>{
-      if(vm && vm.user && vm.user.gas==0){
-        showMessage(vm,"Vous devez acheter quelques eGolds pour effectuer des transactions sur le réseau");
-        func();
-        return;
-      }
       title=title || "Cette opération doit être signée";
       if(!this.pem)this.pem=localStorage.getItem("pem");
       if(this.pem && this.pem.length>0){
@@ -303,6 +298,13 @@ export class UserService {
             } else {
               if(!this.addr)this.init(result.addr);
               this.pem=result.pem;
+
+              if(vm && vm.user && vm.user.gas==0){
+                showMessage(vm,"Vous devez acheter quelques eGolds pour effectuer des transactions sur le réseau");
+                func();
+                return;
+              }
+
               if(func)func();
             }
           } else {
