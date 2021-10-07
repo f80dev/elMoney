@@ -7,7 +7,9 @@
   <br>
   <app-hourglass [message]="message"></app-hourglass>
 
-  <table *ngIf="message?.length==0" style="display: inline-block;vertical-align: middle;width:90%;max-width: 400px;padding: 3px;">
+  <div *ngIf="message?.length==0 && moneys?.length==0">Vous ne possédez aucune monnaie</div>
+
+  <table *ngIf="message?.length==0 && moneys?.length>0" style="display: inline-block;vertical-align: middle;width:90%;max-width: 400px;padding: 3px;">
     <tr color="primary">
       <th></th>
       <th>Unité</th>

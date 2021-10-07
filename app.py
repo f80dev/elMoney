@@ -211,7 +211,8 @@ def save_user(data:dict=None):
     if not "website" in data or len(data["website"])==0: data["website"] =app.config["DOMAIN_APPLI"]+"/miner?miner="+data["addr"]
     try:
         #https://docs.elrond.com/developers/account-storage/
-        bc.update_account(_sender,data)
+        if bc.update_account(_sender,data) is None:
+            return jsonify({"error": "Probleme technique"}), 500
     except:
         return jsonify({"error": "Probleme technique"}),500
 

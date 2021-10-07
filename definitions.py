@@ -58,12 +58,12 @@ NETWORKS={
         "new_account":float(1*1e18),
         "bank":"bank",
         "unity":"xEgld",
-        "identifier":"TFE-8fc2c8",
+        "identifier":"TFE-2785a2",
         "faucet":"https://r3d4.fr/elrond/devnet/index.php",
         "proxy":"https://devnet-gateway.elrond.com",
         "explorer":"https://devnet-explorer.elrond.com",
         "wallet":"https://devnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqqd22usaj5hupah45w202nm2zg8ac9p77d8ssvte7kd"
+        "nft":"erd1qqqqqqqqqqqqqpgqe20chv90s6nxzhykhwmnn9gt6v62dn95d8sstu9nuy"
     },
 
 
@@ -93,3 +93,5 @@ DB_SERVERS=dict(
     }
 )
 
+DEFAULT_VISUAL="/assets/img/anonymous.jpg"
+DEFAULT_VISUAL_SHOP="/assets/img/shop.png"

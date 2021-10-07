@@ -73,7 +73,7 @@ export class UserService {
 
 
 
-  save_user(func=null){
+  save_user(func=null,func_error=null){
     if(this.pem){
       let body={
         addr:this.addr,
@@ -95,6 +95,8 @@ export class UserService {
       this.api._post("users/","",body).subscribe((id:any)=>{
         $$("Enregistrement de l'utilisateur ",body);
         if(func)func();
+      },()=>{
+        if(func_error)func_error();
       });
     }else {
       $$("Impossible d'enregistrer");
@@ -166,7 +168,7 @@ export class UserService {
       body=body[0];
       this.contacts_addr=body.contacts || [];
       this.pseudo=body.pseudo || "";
-      this.visual=body.visual || "/assets/img/anonymous.jpg";
+      this.visual=body.visual || "";
       this.identity=body.identity || "";
       this.description=body.description || "";
       this.accept_all_dealers=(body.accept_all_dealers==1)
@@ -175,7 +177,7 @@ export class UserService {
       this.shop_website=body.shop_website || "";
       this.email=body.email || "";
       this.website=body.website || "";
-      this.shop_visual=body.shop_visual || "/assets/img/shop.png";
+      this.shop_visual=body.shop_visual || "";
 
       if(this.selected_money.length==0)this.selected_money=this.api.identifier;
       //this.refresh_balance(func,func_error);

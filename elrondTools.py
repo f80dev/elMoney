@@ -18,7 +18,8 @@ from erdpy.wallet import derive_keys, pem
 from requests_cache import CachedSession
 
 from Tools import log, base_alphabet_to_10, str_to_hex, hex_to_str, nbr_to_hex, translate, now
-from definitions import LIMIT_GAS, ESDT_CONTRACT, NETWORKS, ESDT_PRICE, IPFS_NODE_PORT, IPFS_NODE_HOST, SECRET_KEY
+from definitions import LIMIT_GAS, ESDT_CONTRACT, NETWORKS, ESDT_PRICE, IPFS_NODE_PORT, IPFS_NODE_HOST, SECRET_KEY, \
+    DEFAULT_VISUAL, DEFAULT_VISUAL_SHOP
 from ipfs import IPFS
 
 
@@ -587,11 +588,11 @@ class ElrondNet:
             if len(not_equal) > 0 and rc[field] != not_equal: break
             timeout=timeout-interval
 
-        transaction_with_cost=self.getTransaction(rc["hash"])
+        rc["cost"] = 0
+        transaction_with_cost=self.getTransaction(tx)
         if "fee" in transaction_with_cost:
             rc["cost"]=float(transaction_with_cost["fee"])/1e18
-        else:
-            rc["cost"]=0
+
 
         log("Transaction executé "+str(rc))
         if timeout<=0:log("Timeout de "+self.getExplorer(tx)+" "+field+" est a "+str(rc[field]))
@@ -610,6 +611,8 @@ class ElrondNet:
 
         if "contacts" in values and type(values["contacts"])==str:
             values["contacts"]=",".join(list(set(values["contacts"].split(","))))
+        if "shop_visual" in values and values["shop_visual"]==DEFAULT_VISUAL_SHOP:del values["shop_visual"]
+        if "visual" in values and values["visual"]==DEFAULT_VISUAL:del values["visual"]
 
         rc=self.cached_sess.cache.delete_url(self._proxy.url + "/address/" + _sender.address.bech32() + "/keys")
 
@@ -618,14 +621,14 @@ class ElrondNet:
         persist_per_byte=10000
         store_per_byte=50000
         for k in values.keys():
-            key=str_to_hex(k,True)
-            value=str_to_hex(values[k],True)
+            key=str_to_hex(k,False)
+            value=str_to_hex(values[k],False)
             if len(value)>2 or key=="contacts":
                 data=data+"@"+key+"@"+value
                 required_gas=required_gas+persist_per_byte*(len(value)+len(key))+store_per_byte*len(value)
 
         log("Envoi de la transaction d'enregistrement "+data)
-        t=self.send_transaction(_sender,_sender,_sender,0,data,gas_limit=required_gas*2)
+        t=self.send_transaction(_sender,_sender,_sender,0,data,gas_limit=required_gas)
         return t
 
 
@@ -636,8 +639,6 @@ class ElrondNet:
         :param addr:
         :return:
         """
-
-        log("Récupération de l'utilisateur "+addr)
         if addr is None or len(addr)<20:
             return {"error": 500, "message": "address incorrect"}
 
@@ -645,10 +646,12 @@ class ElrondNet:
         if not addr.startswith("erd"):
             addr=_a.address.bech32()
 
+        url=self._proxy.url + "/address/" + addr + "/keys"
+        log("Récupération de l'utilisateur " + addr + " via " + url)
         if with_cache:
-            rc = self.cached_sess.get(self._proxy.url + "/address/" + addr + "/keys")
+            rc = self.cached_sess.get(url)
         else:
-            rc = requests.get(self._proxy.url + "/address/" + addr + "/keys")
+            rc = requests.get(url)
 
         if rc.status_code == 200:
             obj=dict()
@@ -657,6 +660,11 @@ class ElrondNet:
                 obj[hex_to_str(k)]=hex_to_str(rc[k])
             obj["addr"]=addr
             obj["hex_addr"]=_a.address.hex()
+
+            #Affectation des valeurs par defaut
+            if not "visual" in obj:obj["visual"]=DEFAULT_VISUAL
+            if not "shop_visual" in obj:obj["shop_visual"]=DEFAULT_VISUAL_SHOP
+
             log("Récupération terminée "+str(obj))
             rc=obj
         else:

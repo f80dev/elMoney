@@ -148,10 +148,13 @@ export class SettingsComponent implements OnInit,OnDestroy {
         this.message="";
         showMessage(this,"Informations enregistrées");
         if(func)func();
+      },()=>{
+        showError(this);
       });
     }
-
   }
+
+
 
   delete_account(){
     if(this.user.gas>0.01 && this.config.isProd()){
