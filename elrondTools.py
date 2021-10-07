@@ -15,6 +15,7 @@ from erdpy.contracts import SmartContract
 from erdpy.environments import TestnetEnvironment
 from erdpy.transactions import Transaction
 from erdpy.wallet import derive_keys, pem
+from erdpy.wallet.keyfile import load_from_key_file
 from requests_cache import CachedSession
 
 from Tools import log, base_alphabet_to_10, str_to_hex, hex_to_str, nbr_to_hex, translate, now
@@ -97,16 +98,28 @@ class ElrondNet:
 
         if "file" in data:
             content=data["file"]
-            if not "BEGIN PRIVATE KEY" in content:
-                content=str(aes256.decrypt(base64.b64decode(content), SECRET_KEY), "utf8")
 
-            contents=content.replace("\n","").replace("BEGIN PRIVATE KEY for ","").split("-----")
-            res = bytes.fromhex(base64.b64decode(contents[2]).decode())
-            seed=res[:32]
-            pubkey=res[32:]
+            if content.startswith("{"):
+                content=json.loads(content)
+                if "filename" in data and "password" in data:
+                    filename="./temp/"+data["filename"]
+                    with open(filename,"w") as f:
+                        f.write(data["file"])
 
-            rc = Account(address=Address(pubkey))
-            rc.private_key_seed = seed.hex()
+                    address_from_key_file, seed = load_from_key_file(filename, data["password"])
+                    rc=Account(address=Address(address_from_key_file))
+                    rc.private_key_seed = seed.hex()
+            else:
+                if not "BEGIN PRIVATE KEY" in content:
+                    content=str(aes256.decrypt(base64.b64decode(content), SECRET_KEY), "utf8")
+
+                contents=content.replace("\n","").replace("BEGIN PRIVATE KEY for ","").split("-----")
+                res = bytes.fromhex(base64.b64decode(contents[2]).decode())
+                seed=res[:32]
+                pubkey=res[32:]
+
+                rc = Account(address=Address(pubkey))
+                rc.private_key_seed = seed.hex()
 
         # rc="./PEM/"+NETWORKS[bc.network_name]["bank"]+".pem"
 
@@ -464,8 +477,6 @@ class ElrondNet:
             "owner":user.address.bech32(),
             "id":id
         }
-
-
 
 
 

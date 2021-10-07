@@ -77,8 +77,10 @@ export class PrivateComponent implements OnInit {
         }).afterClosed().subscribe((result) => {
           if(result)this.send_pem({file:reader.result.toString(),password:result,filename:fileInputEvent.target.files[0].name});
         });
+      } else {
+        this.send_pem({file:reader.result.toString(),filename:fileInputEvent.target.files[0].name})
       }
-      this.send_pem({file:reader.result.toString(),filename:fileInputEvent.target.files[0].name})
+
     }
     reader.readAsBinaryString(fileInputEvent.target.files[0]);
   }

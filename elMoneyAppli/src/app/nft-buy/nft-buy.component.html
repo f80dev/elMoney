@@ -1,33 +1,28 @@
 <div class="mainform">
+  <h3 *ngIf="message?.length==0">Confirmer l'achat ?</h3>
+  pour&nbsp;&nbsp;<app-unity *ngIf="nft.price>0" [value]="nft.price" [unity]="nft.unity" fontsize="2em" fontsize_unity="large"></app-unity>
   <br>
-  <h2 *ngIf="message?.length==0">Confirmer l'achat ?</h2>
-  <app-unity *ngIf="nft.price>0" [value]="nft.price" [unity]="nft.unity" fontsize="3em" fontsize_unity="large"></app-unity>
-  <br><br>
-
   <app-hourglass [message]="message" anim="./assets/gears.gif"></app-hourglass>
 
   <app-nfts [with_icon]="false"
+            height="220px"
             [with_actions]="false"
             [force_text]="true" [art]="false"
             [user]="user" [nfts]="[nft]"></app-nfts>
 
   <br>
-
-  <p *ngIf="message?.length==0">
+  <p *ngIf="message?.length==0" style="font-size: small;line-height: 95%;">
     Distribué par {{seller?.shop_name}}<br>
     Réalisé par
     <a [href]="miner?.website" target="_blank">
       <span *ngIf="miner?.pseudo?.length>0">{{miner?.pseudo}}</span>
       <span *ngIf="miner?.pseudo?.length==0">un anonyme</span>
     </a>
-    <br>
   </p>
-
-  <p *ngIf="seller?.shop_name=='Vente directe' && nft.price>0">
-    <br>
-    <small>
-    Attention ! il est conseillé de n'achetez des NFTs via la vente directe qu'a des créateurs dont vous avez confiance
-  </small></p>
+  <br>
+  <div *ngIf="seller?.shop_name=='Vente directe' && nft.price>0" style="line-height: 95%;width:80%;display: inline-block;">
+    Attention ! N'achetez des NFTs via la vente directe qu'aux créateurs que vous connaissez
+  </div>
 
 </div>
 

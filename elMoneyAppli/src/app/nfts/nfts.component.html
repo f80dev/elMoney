@@ -83,8 +83,8 @@
           <button mat-raised-button mat-button
                   color="primary"
                   title="Ouvrir le NFT pour découvrir le secret"
-                  *ngIf="nft.open?.length==0 && user.addr==nft.owner && user.addr!=nft.miner && nft.has_secret==1"
-                  class="app-button" style="max-width: 60px !important;"
+                  *ngIf="nft.open?.length==0 && user.addr==nft.owner && user.addr!=nft.miner && nft.has_secret==1 && nft.state==1"
+                  class="app-button" style="min-width: 40px !important;"
                   (click)="give_response(nft)">
             Ouvrir
           </button>
@@ -176,12 +176,11 @@
           </div>
 
 
-          <button mat-button mat-raised-button
+          <button mat-icon-button mat-flat-button class="icon-button"
                   *ngIf="nft.state==0 && nft.owner==user.addr && can_sell(nft.properties)"
                   title="Faire la promotion de ce token"
-                  class="app-button"
                   (click)="share(nft)">
-            Promotion
+            <mat-icon>share</mat-icon>
           </button>
 
         </div>
