@@ -3,6 +3,7 @@ import json
 import logging
 import os
 from datetime import datetime, timedelta
+from hashlib import md5
 
 from time import sleep
 
@@ -970,6 +971,45 @@ class ElrondNet:
         log("Minage avec "+str(arguments))
         tx=self.execute(contract,user_from,"mint",arguments,gas_limit=gas_limit,gas_price_factor=factor,value=value)
         return tx
+
+
+
+    def mint_standard_nft(self, user_from,title,properties:dict,price=0,quantity=1,visual=""):
+        """
+        Fabriquer un NFT au standard elrond
+        https://docs.elrond.com/developers/nft-tokens/
+        :param contract:
+        :param user_from:
+        :param arguments:
+        :return:
+        """
+
+        tokenName=md5(bytes(title,"utf8")).hexdigest()[:19]
+        tokenTicker="TFT"
+        hash = hex(int(now() * 1000)).upper().replace("0X", "")
+
+        data="issueSemiFungible@"+str_to_hex(tokenName,False)+"@"+str_to_hex(tokenTicker,False)
+        t=self.send_transaction(user_from,Account(address="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"),user_from,50000000000000000,data)
+
+        if t["status"]=="success":
+            token_id=hex_to_str(t["smartContractResults"][0]["data"].split("@")[2])
+
+            t = self.send_transaction(user_from,
+                                      Account(address="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"),
+                                      user_from, 0,
+                                      "setSpecialRole@"+user_from.address.hex+"@45534454526f6c654e4654437265617465@45534454526f6c654e46544164645175616e74697479")
+
+            if t["status"] == "success":
+                data="ESDTNFTCreate@"+str_to_hex(token_id,False)+"@"+str_to_hex(quantity,False)+"@"+str_to_hex(title,False)
+                data=data+"@"+str_to_hex(price,False)+"@"+str_to_hex(hash,False)+"@"
+                for k in properties.keys():
+                    if k!="title":
+                        data=data+str_to_hex(k+":"+properties[k]+",",False)
+                data=data+"@"+str_to_hex(visual,False)
+
+                t=self.send_transaction(user_from,user_from,user_from,0,data)
+
+                return t
 
 
 

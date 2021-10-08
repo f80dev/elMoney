@@ -110,6 +110,8 @@ def refund(dest:str):
         return Response("probleme de rechargement",500)
 
 
+
+
 def convert_email_to_addr(dest:str,html_email:str):
     """
     Ouvre un compte si besoin pour une adresse email
@@ -529,6 +531,7 @@ def mint(count:str,data:dict=None):
     else:
         secret="0"
 
+
     if "file" in data and secret=="0":
         secret=data["file"].encode().hex()
 
@@ -574,10 +577,15 @@ def mint(count:str,data:dict=None):
                  gift,int(data["opt_lot"]),
                  money]
     log("Minage du token "+str(data))
-    result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,
-                   arguments=arguments,
-                   gas_limit=int(LIMIT_GAS*(1+int(count)/2)),
-                   value=value,simulate=simulate)
+
+
+    if data["elrond_standard"]:
+        result=bc.mint_standard_nft(owner,title,{"description":desc.split("%%")[0]},price,count,data["visual"])
+    else:
+        result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,
+                       arguments=arguments,
+                       gas_limit=int(LIMIT_GAS*(1+int(count)/2)),
+                       value=value,simulate=simulate)
 
     if not result is None:
         if result["status"] == "fail" or not "smartContractResults" in result:

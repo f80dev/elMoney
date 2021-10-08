@@ -2373,6 +2373,7 @@ h1 {
   font-size: 0.8em !important;
   margin: 2px !important;
   display: inline-block;
+  color: white;
   background: #221913;
 }
 .large-card {

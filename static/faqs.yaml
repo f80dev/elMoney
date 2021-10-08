@@ -33,7 +33,7 @@ content:
         une place de marché de NFTs à acheter
       </li>
       <li>
-        un système de contrôle de propriété des NFTs (par exemple pour l'usage de NFT comme billet spectacle)
+        un système de vérification de propriété des NFTs (par exemple pour l'usage de NFT comme billet spectacle)
       </li>
 
       </ul>
@@ -46,8 +46,14 @@ content:
     format: html
     content: "
       <p>
-      Techniquement {{appname}} s'appuie sur les API ESDT et un smartcontract déployé sur la blockchaine en charge de la gestion des NFTs.<br>
-      Ce smartcontract respect la norme ERC721 et ajoute quelques fonctionnalités pour gérer une logique d'achat / vente via un prix fixé par le créateur (mineur) du NFT.
+      Pour la création de monnaie, {{appname}} repose sur les ESDT Elrond (équivalent des ERC20 d'éther).
+      Pour les NFTs {{appname}} s'inspire de la norme ERC721 en ajoutant de nombreuses innovations comme<br>
+       <ul>
+       <li>la gestion des secrets</li>
+       <li>l'autodestruction</li>
+       <li>la distribution via tiers avec gestion des reversements</li>
+       </ul>
+      Pour cette raison les NFT de {{appname}} n'apparaissent pas dans le wallet Elrond.
       </p>
       "
 

@@ -143,6 +143,7 @@ export class ImporterComponent implements OnInit {
   extensions: string="*";
   uploadProgress: number;
   selected_tab = 0;
+  elrond_standard:boolean=false;
 
 
   add(event: MatChipInputEvent): void {
@@ -220,6 +221,7 @@ export class ImporterComponent implements OnInit {
           signature: this.title,
           secret: this.secret,
           price: this.price,
+          elrond_standard:this.elrond_standard,
           fee: fee,
           tags: this.tags,
           description: this.desc,
