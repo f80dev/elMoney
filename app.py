@@ -580,7 +580,7 @@ def mint(count:str,data:dict=None):
 
 
     if data["elrond_standard"]:
-        result=bc.mint_standard_nft(owner,title,{"description":desc.split("%%")[0]},price,count,data["visual"])
+        result=bc.mint_standard_nft(owner,title,{"description":desc.split("%%")[0]},price,count,res_visual)
     else:
         result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,
                        arguments=arguments,

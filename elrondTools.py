@@ -808,8 +808,8 @@ class ElrondNet:
         else:
             miner_filter="0x"+str(Account(address=miner_filter).address.hex())
 
+        #On récupére les extended NFT
         tokens = self.query( "tokens", arguments=[seller_filter,owner_filter,miner_filter],isnumber=True,n_try=1)
-
         if not tokens is None and len(tokens)>0 and tokens[0]!="":
             tokens=tokens[0].hex
             index=0
@@ -937,6 +937,18 @@ class ElrondNet:
 
                 rc.append(obj)
 
+        #On récupère les NFT standards
+        #voir https://docs.elrond.com/developers/nft-tokens/#get-nft-data-for-an-address
+        if owner_filter.replace("0","")!="x":
+            url=self._proxy.url+"/address/"+Account(address=owner_filter.replace("0x","")).address.bech32()+"/esdts-with-role/ESDTRoleNFTCreate"
+            r=requests.get(url)
+            if r.status_code==200:
+                for id in json.loads(r.text)["data"]["tokens"]:
+                    url = self._proxy.url + "/address/" + A ccount(address=owner_filter.replace("0x", "")).address.bech32() + "/nft/"+id+"/nonce/0"
+                    r = requests.get(url)
+                    if r.status_code==200:
+                        data=json.loads(r.text)
+                        pass
 
         rc=sorted(rc,key=lambda i: i["token_id"],reverse=True)
         return rc
@@ -992,15 +1004,15 @@ class ElrondNet:
         t=self.send_transaction(user_from,Account(address="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"),user_from,50000000000000000,data)
 
         if t["status"]=="success":
-            token_id=hex_to_str(t["smartContractResults"][0]["data"].split("@")[2])
-
+            token_id=t["smartContractResults"][0]["data"].split("@")[2]
+            data="setSpecialRole@"+token_id+"@"+ user_from.address.hex()+"@45534454526f6c654e4654437265617465@45534454526f6c654e46544164645175616e74697479"
             t = self.send_transaction(user_from,
                                       Account(address="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"),
                                       user_from, 0,
-                                      "setSpecialRole@"+user_from.address.hex+"@45534454526f6c654e4654437265617465@45534454526f6c654e46544164645175616e74697479")
+                                      data)
 
             if t["status"] == "success":
-                data="ESDTNFTCreate@"+str_to_hex(token_id,False)+"@"+str_to_hex(quantity,False)+"@"+str_to_hex(title,False)
+                data="ESDTNFTCreate@"+token_id+"@"+str_to_hex(quantity,False)+"@"+str_to_hex(title,False)
                 data=data+"@"+str_to_hex(price,False)+"@"+str_to_hex(hash,False)+"@"
                 for k in properties.keys():
                     if k!="title":
