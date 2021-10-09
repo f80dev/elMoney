@@ -944,7 +944,7 @@ class ElrondNet:
             r=requests.get(url)
             if r.status_code==200:
                 for id in json.loads(r.text)["data"]["tokens"]:
-                    url = self._proxy.url + "/address/" + A ccount(address=owner_filter.replace("0x", "")).address.bech32() + "/nft/"+id+"/nonce/0"
+                    url = self._proxy.url + "/address/" + Account(address=owner_filter.replace("0x", "")).address.bech32() + "/nft/"+id+"/nonce/0"
                     r = requests.get(url)
                     if r.status_code==200:
                         data=json.loads(r.text)
