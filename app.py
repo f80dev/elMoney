@@ -46,7 +46,7 @@ def init_default_money(bc,dao):
 
     if len(money_idx) == 0:
         log("Pas de monnaie dans la configuration, on déploy "+MAIN_NAME+" d'unite "+MAIN_UNITY)
-        rc=bc.deploy(bc.bank, MAIN_NAME,MAIN_UNITY,TOTAL_DEFAULT_UNITY,MAIN_DECIMALS,timeout=20)
+        rc=bc.deploy(bc.bank, MAIN_NAME,MAIN_UNITY,TOTAL_DEFAULT_UNITY,MAIN_DECIMALS)
         if "error" in rc:
             log("Impossible de déployer le contrat de la monnaie par defaut "+rc["message"])
             return None

@@ -42,7 +42,7 @@ IPFS_NODE_PORT=5001
 
 NETWORKS={
     "testnet":{
-        "identifier":"TFE-1a1f77",
+        "identifier":"TFE-5b67ba",
         "new_account":float(0.2*1e18),
         "bank":"bank",
         "unity":"xEgld",
@@ -50,7 +50,7 @@ NETWORKS={
         "proxy":"https://testnet-gateway.elrond.com",
         "explorer":"https://testnet-explorer.elrond.com",
         "wallet":"https://testnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqqtzyuqk800564c0cmgxsctgyyhavqytcd8ssv4pt0v"
+        "nft":"erd1qqqqqqqqqqqqqpgqdys26968wluwd5m4z0xupu2efzj5n2t3qqesr726ul"
     },
 
     #erd1qqqqqqqqqqqqqpgqkwfvpkaf6vnn89508l0gdcx26vpu8eq5d8ssz3lhlf
