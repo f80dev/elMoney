@@ -66,7 +66,7 @@
       <button mat-raised-button mat-button
               class="app-button"
               (click)="router.navigate(['miner'],{queryParams:{miner:user.addr}})">
-        <div class="bloc-bouton">Voir votre profil<br>de créateur</div>
+        <div class="bloc-bouton">Votre profil<br>de créateur</div>
       </button>
 
 
@@ -213,6 +213,7 @@
       <button mat-raised-button mat-button
               class="app-button"
               color="alert"
+              title="Pour certain NFT (billeterie) il peut être nécessaire d'associer une photo d'identité à son compte"
               *ngIf="user.identity?.length==0"
               (click)="update_identity()">
         <div class="bloc-bouton">Ajouter une<br>identification</div>
@@ -243,7 +244,7 @@
       <button mat-raised-button mat-button
               class="app-button"
               (click)="show_explorer()">
-        <div class="bloc-bouton">Voir mes<br>transactions</div>
+        <div class="bloc-bouton">mon compte<br>sur l'explorer</div>
       </button>
 
       <br>

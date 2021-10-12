@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ApiService} from "../api.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {showError, showMessage} from "../tools";
+import {api, showMessage} from "../tools";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {UserService} from "../user.service";
 import {ConfigService} from "../config.service";
@@ -50,5 +50,9 @@ export class AdminComponent implements OnInit {
       showMessage(this,'Comptes rechargés');
       this.message="";
     });
+  }
+
+  account_list() {
+    open(api("account_list",""),"_blank");
   }
 }

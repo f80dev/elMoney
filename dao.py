@@ -95,7 +95,7 @@ class DAO:
         #TODO: ajouter le cryptage de l'email
         if not pem.endswith(".pem"):
             pem=base64.b64encode(aes256.encrypt(pem,SECRET_KEY))
-        body={'email':email,'addr':addr,"pem":pem,"contacts":contacts}
+        body={'email':email.lower(),'addr':addr,"pem":pem,"contacts":contacts}
         rc = self.db["users"].replace_one(filter={"addr": addr}, replacement=body, upsert=True)
         return rc.modified_count>0 or (rc.upserted_id is not None),pem
 
@@ -104,13 +104,19 @@ class DAO:
     def get_user(self, email):
         field="email"
         if not "@" in email and email.startswith("erd"):field="addr"
-        rc=self.db["users"].find_one(filter={field: email})
+        rc=self.db["users"].find_one(filter={field: email.lower()})
         return rc
 
 
     def del_user(self, addr):
         rc=self.db["users"].delete_one(filter={"addr": addr})
         return rc
+
+    def get_all_users(self,field=None):
+        if field:
+            return [_u[field] for _u in self.db["users"].find()]
+        else:
+            return list(self.db["users"].find())
 
 
 

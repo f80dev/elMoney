@@ -1065,13 +1065,16 @@ export function group_tokens(tokens:any[],tags:any,func_validate:Function=null):
 
     //Affectation de l'icon du token en fonction du tag
     item.icon="/assets/icons/gift.png";
-    for(let tag of item.tags.split(" ")){
-      let key=tag.replace("#","");
-      if(tags.hasOwnProperty(key)){
-        item.icon=tags[key];
-        break;
+    if(item.hasOwnProperty("tags")){
+      for(let tag of item.tags.split(" ")){
+        let key=tag.replace("#","");
+        if(tags.hasOwnProperty(key)){
+          item.icon=tags[key];
+          break;
+        }
       }
     }
+
 
     let same_item = null;
     for (let i of nfts) {

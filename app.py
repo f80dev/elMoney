@@ -243,7 +243,7 @@ def get_user(addrs:str):
         if _user is None and "@" in addr:break
 
         data = bc.get_account(addr,False)
-        if not data is None:
+        if not data is None and not "error" in data:
             data["contacts"] = contacts
             if not "email" in data:
                 if _user is None:
@@ -254,6 +254,8 @@ def get_user(addrs:str):
             if "visual" in data and len(data["visual"])==46:data["visual"]="https://ipfs.io/ipfs/"+data["visual"]
             if "identity" in data and len(data["identity"]) == 46: data["identity"] = "https://ipfs.io/ipfs/" + data["identity"]
             if "shop_visual" in data and len(data["shop_visual"])==46:data["shop_visual"]="https://ipfs.io/ipfs/"+data["shop_visual"]
+        else:
+            return jsonify(data),500
 
         rc.append(data)
 
@@ -294,6 +296,12 @@ def nfts(seller_filter="0x0",owner_filter="0x0",miner_filter="0x0"):
             uri["miner_name"]=_miner["pseudo"]
         rc.append(uri)
 
+    if seller_filter+owner_filter+miner_filter=="0x00x00x0":
+        addrs=dao.get_all_users("addr")
+        rc=rc+bc.get_tokens_standard(addrs)
+    else:
+        rc = rc + bc.get_tokens_standard([seller_filter.replace("0x0","")+owner_filter.replace("0x0","")+miner_filter.replace("0x0","")])
+
     format=request.args.get("format","json")
     if format=="json":
         return jsonify(rc),200
@@ -312,6 +320,19 @@ def nfts(seller_filter="0x0",owner_filter="0x0",miner_filter="0x0"):
 
     if format=="csv":
         return Response(dictlist_to_csv(rc),mimetype="text/csv")
+
+
+
+
+@app.route('/api/account_list/',methods=["GET"])
+def account_list():
+    rc=[]
+    for _u in dao.get_all_users():
+        del _u["_id"]
+        del _u["pem"]
+        rc.append(_u)
+    return jsonify(rc)
+
 
 
 
@@ -464,11 +485,13 @@ def buy_nft(token_id,price,seller:str,data:dict=None):
 
     if seller == "0x0":
         seller = "0x0000000000000000000000000000000000000000000000000000000000000000"
+        if data["token_id"].startswith("TFT"):
+            seller=Account(address=data["owner"]).address.hex()
     else:
         seller = "0x" + str(Account(address=seller).address.hex())
-    #if seller.startswith("erd"): seller = "0x" + Account(address=seller).address.hex()
 
     if type(price)==str and "," in price:price=price.replace(",",".")
+    if not "identifier" in data:data["identifier"]="EGLD"
     tokenName=data["identifier"]
 
     _user=bc.get_elrond_user(data)
@@ -480,7 +503,7 @@ def buy_nft(token_id,price,seller:str,data:dict=None):
                         )
         price=0
 
-    rc=bc.nft_buy(NETWORKS[bc.network_name]["nft"],_user,token_id,float(price),seller,tokenName)
+    rc=bc.nft_buy(NETWORKS[bc.network_name]["nft"],_user,token_id,float(price),seller)
 
     if not rc is None:
         send(socketio,"refresh_nft")
@@ -580,7 +603,10 @@ def mint(count:str,data:dict=None):
 
 
     if data["elrond_standard"]:
-        result=bc.mint_standard_nft(owner,title,{"description":desc.split("%%")[0]},price,count,res_visual)
+        res_visual=res_visual.replace("%%","")
+        result=bc.mint_standard_nft(owner,title,
+                                    {"description":desc.split("%%")[0],"money":money,"properties":hex(properties),"state":hex(1)}
+                                    ,price,count,res_visual)
     else:
         result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,
                        arguments=arguments,
@@ -633,7 +659,7 @@ def mint(count:str,data:dict=None):
 def transactions(user:str=""):
     rc={"transactions":[],"charts":[]}
     charts=dict()
-    for addr in [NETWORKS[bc.network_name]["nft"]]:
+    for addr in [NETWORKS[bc.network_name]["nft"],user]:
         for t in bc.getTransactionsByRest(addr):
             try:
                 data = str(base64.b64decode(t["data"]), "utf-8")
@@ -659,13 +685,21 @@ def transactions(user:str=""):
                     value=0
                     comment="annulée"
 
-
-                if data.startswith("mint"):data="Creation d'un token"
+                if data.startswith("mint"):data="Creation d'un eNFT"
                 if data.startswith("add_dealer"):data= "Ajout d'un distributeur"
                 if data.startswith("new_dealer"):data= "Se déclarer commme distributeur"
                 if data.startswith("add_miner"):data= "Approuver un fabricant"
+                if data.startswith("setSpecialRole") or data.startswith("issueSemiFungible"):data= "Autorisation de création d'un NFT"
                 if data.startswith("price"): data = "Mise a jour du prix"
+                if data.startswith("transferOwnership"): data = "Achat d'un NFT"
                 if data.startswith("burn"): data = "Destruction d'un token"
+                if data.startswith("ESDTNFTCreate"): data = "Création d'un NFT elrond"
+                if data.startswith("ESDTTransfer"): data = "Transfert d'un NFT"
+                if data.startswith("SaveKeyValue"): data = "Sauvegarde de vos préférences"
+                if data.startswith("Sent from") or data.startswith("refund"):
+                    data = "Rechargement"
+                    fee=0
+
                 if data.startswith("setstate"): data = "Mise en vente"
                 if data.startswith("open"):
                     data = "Révéler le secret"

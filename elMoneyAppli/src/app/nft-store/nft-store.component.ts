@@ -128,6 +128,7 @@ export class NftStoreComponent implements OnInit {
 
   apply_filter(nfts) : any[] {
     return group_tokens(nfts,this.config.tags,(item)=> {
+      if(item.tags==null)item.tags="";
       if (!this.filter_id || this.filter_id == item.token_id) {
         if (item.state == 0 && item.properties >= 4 && item.owner != this.user.addr) {
           if ((item.tags.lenght==0 || item.tags.indexOf(this.selected_tag)>-1) && (this.filter.length == 0 || item.search.toLowerCase().indexOf(this.filter.toLowerCase())) > -1){

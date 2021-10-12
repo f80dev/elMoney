@@ -195,17 +195,17 @@ class ElrondNet:
     def getMoneys(self,_user:Account):
         url = self._proxy.url + '/address/' + _user.address.bech32() + "/esdt"
         log("Interrogation de la balance : " + url)
-        lst = []
+        lst = [{
+            "tokenIdentifier": "EGLD",
+            "balance": self._proxy.get_account_balance(_user.address)
+        }]
+
         try:
-            result=requests.get(url).json()
-            lst = list(result["data"]["esdts"].values())
+            result=requests.get(url).json()["data"]["esdts"].values()
+            for r in result:
+                if not "royalties" in r:lst.append(r)
         except Exception as arg:
             log("L'interrogation des tokens ne fonctionne pas="+str(arg))
-
-        lst.append({
-            "tokenIdentifier":"EGLD",
-            "balance": self._proxy.get_account_balance(_user.address)
-        })
 
         #Transforme la liste en dict sur la base du tokenIdentifier
         rc=dict()
@@ -216,7 +216,6 @@ class ElrondNet:
                 rc[l["tokenIdentifier"]]["unity"]=l["tokenIdentifier"].split("-")[0]
                 rc[l["tokenIdentifier"]]["url"]=""
                 #TODO ajouter ici la documentation des monnaies via la base de données
-
 
         return rc
 
@@ -611,6 +610,8 @@ class ElrondNet:
         return rc
 
 
+
+
     def update_account(self,_sender,values:dict):
         """
         Ajoute l'objet values à l'adresse _sender
@@ -742,8 +743,11 @@ class ElrondNet:
         pass
 
 
+
+
     def execute(self,_contract,_user,function,arguments=[],value:int=None,gas_limit=LIMIT_GAS,timeout=60,gas_price_factor=1,tokenName="",simulate=False):
         if type(_contract) == str: _contract = SmartContract(_contract)
+        if type(_user)==str:_user=Account(address=_user)
         _user.sync_nonce(self._proxy)
         if not value is None:value=int(value)
         try:
@@ -762,6 +766,8 @@ class ElrondNet:
 
         tr = self.wait_transaction(tx, "status", not_equal="pending",timeout=timeout)
         return tr
+
+
 
 
 
@@ -789,9 +795,11 @@ class ElrondNet:
     #     return lst
 
 
-
+    #/nfts
+    #récupération de l'ensemble des NFT issue du contrat
     def get_tokens(self,seller_filter,owner_filter,miner_filter):
         rc = list()
+        max_id=0
 
         if owner_filter=="0x0":
             owner_filter = "0x0000000000000000000000000000000000000000000000000000000000000000"
@@ -909,8 +917,7 @@ class ElrondNet:
                 desc=desc.strip()
 
                 premium=(len(visual)>0 and len(desc)>10 and len(title)>5)
-
-
+                if id>max_id:max_id=id
                 obj=dict({"token_id": id,
                           "title": title,
                           "tags":" ".join(tags),
@@ -937,23 +944,61 @@ class ElrondNet:
 
                 rc.append(obj)
 
-        #On récupère les NFT standards
-        #voir https://docs.elrond.com/developers/nft-tokens/#get-nft-data-for-an-address
-        if owner_filter.replace("0","")!="x":
-            url=self._proxy.url+"/address/"+Account(address=owner_filter.replace("0x","")).address.bech32()+"/esdts-with-role/ESDTRoleNFTCreate"
-            r=requests.get(url)
-            if r.status_code==200:
-                for id in json.loads(r.text)["data"]["tokens"]:
-                    url = self._proxy.url + "/address/" + Account(address=owner_filter.replace("0x", "")).address.bech32() + "/nft/"+id+"/nonce/0"
-                    r = requests.get(url)
-                    if r.status_code==200:
-                        data=json.loads(r.text)
-                        pass
 
-        rc=sorted(rc,key=lambda i: i["token_id"],reverse=True)
+        #Tri de la liste
+        rc=sorted(rc,key=lambda i: i["token_id"] if i["token_id"]==int else 0 ,reverse=True)
         return rc
 
 
+
+    def get_tokens_standard(self,addrs):
+        rc=[]
+        for addr in addrs:
+            # On récupère les NFT standards
+            # voir https://docs.elrond.com/developers/nft-tokens/#get-nft-data-for-an-address
+
+            # url=self._proxy.url+"/address/"+Account(address=owner_filter.replace("0x","")).address.bech32()+"/esdts-with-role/ESDTRoleNFTCreate"
+            # r=requests.get(url)
+            # if r.status_code==200:
+
+            url = self._proxy.url + "/address/" + addr + "/esdt"
+            r = requests.get(url)
+            if r.status_code == 200:
+                for nft in json.loads(r.text)["data"]["esdts"].values():
+                    # url = self._proxy.url + "/vm-values/query"
+                    # body={
+                    #     "scAddress":"erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
+                    #     "funcName": "getTokenProperties",
+                    #     "args": [str_to_hex(x,False) for x in list(json.loads(r.text)["data"]["tokens"])]
+                    # }
+                    if "royalties" in nft:
+                        prop = dict({
+                            "visual": "",
+                            "state": "0x0",
+                            "properties": "0x0",
+                            "tags":"",
+                            "identifier":"EGLD",
+                            "has_secret":False
+                        })
+                        for p in str(base64.b64decode(bytes(nft["attributes"], "utf8")), "utf8").split(","):
+                            if ":" in p: prop[p.split(":")[0]] = p.split(":")[1]
+                        if len(nft["uris"]) > 0: prop["visual"] = nft["uris"][0]
+                        rc.append({
+                            "token_id": nft["tokenIdentifier"],
+                            "price": int(nft["royalties"]),
+                            "miner": nft["creator"],
+                            "owner": addr,
+                            "description": prop["description"],
+                            "visual": prop["visual"],
+                            "title": nft["name"],
+                            "state": int(prop["state"], 16),
+                            "properties": int(prop["properties"], 16)
+                        })
+                        log("Ajout de " + str(rc))
+            else:
+                log("Problème de lecture de "+url)
+
+        return rc
 
 
     def evalprice(self,sender_addr,receiver_addr,value=0,data="exemplededata"):
@@ -1000,7 +1045,11 @@ class ElrondNet:
         tokenTicker="TFT"
         hash = hex(int(now() * 1000)).upper().replace("0X", "")
 
-        data="issueSemiFungible@"+str_to_hex(tokenName,False)+"@"+str_to_hex(tokenTicker,False)
+        data="issueSemiFungible@"+str_to_hex(tokenName,False)+"@"\
+             +str_to_hex(tokenTicker,False)\
+             +"@"+str_to_hex("canChangeOwner",False)+"@"+ str_to_hex("true",False)\
+             +"@"+str_to_hex("canUpgrade",False)+"@"+str_to_hex("true",False)\
+             +"@"+str_to_hex("canWipe",False)+"@"+ str_to_hex("true",False)
         t=self.send_transaction(user_from,Account(address="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"),user_from,50000000000000000,data)
 
         if t["status"]=="success":
@@ -1019,6 +1068,7 @@ class ElrondNet:
                         data=data+str_to_hex(k+":"+properties[k]+",",False)
                 data=data+"@"+str_to_hex(visual,False)
 
+                sleep(5)
                 t=self.send_transaction(user_from,user_from,user_from,0,data)
 
                 return t
@@ -1026,25 +1076,42 @@ class ElrondNet:
 
 
 
-    def nft_transfer(self, contract, pem_file, token_id, _dest):
-        tr = self.execute(contract, pem_file,
-                          function="transfer",
-                          arguments=[token_id,"0x"+_dest.address.hex()],
-                          value=0)
+    def nft_transfer(self, contract, _owner, token_id, _dest):
+        if type(token_id)==int:
+            tr = self.execute(contract, _owner,
+                              function="transfer",
+                              arguments=[token_id,"0x"+_dest.address.hex()],
+                              value=0)
+        else:
+            #https://docs.elrond.com/developers/esdt-tokens/
+            data="transferOwnership@"+str_to_hex(token_id, False)+"@"+_dest.address.hex().upper()
+            tr = self.send_transaction(_owner,
+                                       Account(address="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"),
+                                       _owner,0,data)
         return tr
 
 
 
-    def nft_buy(self, contract, _user, token_id,price,seller,identifier):
-        value=int(1e7*price)*1e11
-        tr = self.execute(
-               contract,_user,
-               function="buy",
-               arguments=[token_id,seller],
-               value=value,
-            gas_price_factor=2
-        )
+    def nft_buy(self, contract, _user, token_id,price,seller):
+        if type(token_id)==int:
+            value=int(1e7*price)*1e11
+            tr = self.execute(
+                   contract,_user,
+                   function="buy",
+                   arguments=[token_id,seller],
+                   value=value,
+                gas_price_factor=2
+            )
+        else:
+            tr = self.execute(
+                SmartContract(address="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"), seller,
+                function="transferOwnership",
+                arguments=[str_to_hex(token_id,False), _user.address.hex()],
+                value=0,
+                gas_price_factor=2
+            )
         return tr
+
 
 
     def nft_open(self, contract, pem_file, token_id,response:str=""):
