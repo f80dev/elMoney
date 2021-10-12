@@ -286,8 +286,11 @@ export class ImporterComponent implements OnInit {
 
 
   add_visual(func=null,title="",width=200,height=200,square=true,can_be_null:boolean=true,bank=true,subtitle="") {
-    this.dialog.open(ImageSelectorComponent, {position:{left: '10vw', top: '10vh'},
-      maxWidth: 900, maxHeight: 900, width: '80vw', height: 'auto', data:
+    this.dialog.open(ImageSelectorComponent, {
+      position:{left: '10vw', top: '10vh'},
+      backdropClass:'removeBackground',
+      maxWidth: 900, maxHeight: 900, width: '80vw', height: 'auto',
+      data:
         {
           title:title,
           subtitle:subtitle,
@@ -387,7 +390,9 @@ export class ImporterComponent implements OnInit {
 
 
   ask_for_price(question="",func:Function=null,fee=0,default_price=0){
-    this.dialog.open(PromptComponent,{width: '280px',data:
+    this.dialog.open(PromptComponent,{
+      backdropClass:'removeBackground',
+      width: '280px',data:
         {
           title: "Prix de vente ?",
           question: question,
@@ -426,7 +431,11 @@ export class ImporterComponent implements OnInit {
     if(_type=="date" && _default=="")_default=new Date().toDateString();
     if(_default!="")_data.result=_default;
 
-    this.dialog.open(PromptComponent,{width: '350px',data:_data}).afterClosed().subscribe((rc) => {
+    this.dialog.open(PromptComponent,{
+      backdropClass:"removeBackground",
+      width: '350px',
+      data:_data
+    }).afterClosed().subscribe((rc) => {
       if(rc=="no")rc=null;
       func(rc);
     });
@@ -455,7 +464,7 @@ export class ImporterComponent implements OnInit {
             }
           });
         });
-      }
+      } else this.cancel_wizard();
     },"Télécharger un visuel de votre oeuvre",w,h,true);
   }
 

@@ -114,6 +114,10 @@
         <a [href]="config.server.wallet" target="_blank">
           Wallet de la banque
         </a>
+        <br>
+        <a [href]="config.server?.faucet" ngxClipboard
+           target="_blank"
+           [cdkCopyToClipboard]="config.server?.bank_addr">Rechargement alternatif</a>
       </mat-expansion-panel>
 
 

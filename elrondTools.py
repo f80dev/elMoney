@@ -19,7 +19,7 @@ from erdpy.wallet import derive_keys, pem
 from erdpy.wallet.keyfile import load_from_key_file
 from requests_cache import CachedSession
 
-from Tools import log, base_alphabet_to_10, str_to_hex, hex_to_str, nbr_to_hex, translate, now, is_standard
+from Tools import log, base_alphabet_to_10, str_to_hex, hex_to_str, nbr_to_hex, translate, now, is_standard, returnError
 from definitions import LIMIT_GAS, ESDT_CONTRACT, NETWORKS, ESDT_PRICE, IPFS_NODE_PORT, IPFS_NODE_HOST, SECRET_KEY, \
     DEFAULT_VISUAL, DEFAULT_VISUAL_SHOP
 from ipfs import IPFS
@@ -746,6 +746,7 @@ class ElrondNet:
 
 
     def execute(self,_contract,_user,function,arguments=[],value:int=None,gas_limit=LIMIT_GAS,timeout=60,gas_price_factor=1,tokenName="",simulate=False):
+        if _user is None:return None
         if type(_contract) == str: _contract = SmartContract(_contract)
         if type(_user)==str:_user=Account(address=_user)
         _user.sync_nonce(self._proxy)
@@ -1052,7 +1053,7 @@ class ElrondNet:
         :return:
         """
 
-        tokenName=md5(bytes(title,"utf8")).hexdigest()[:19]
+        tokenName="TFT"+md5(bytes(title,"utf8")).hexdigest()[:10]
         tokenTicker="TFT"
         hash = hex(int(now() * 1000)).upper().replace("0X", "")
 
@@ -1063,7 +1064,7 @@ class ElrondNet:
              +"@"+str_to_hex("canWipe",False)+"@"+ str_to_hex("true",False)
         t=self.send_transaction(user_from,Account(address="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"),user_from,50000000000000000,data)
 
-        if t["status"]=="success":
+        if t["status"]=="success" and len(t["smartContractResults"][0]["data"].split("@"))>2:
             token_id=t["smartContractResults"][0]["data"].split("@")[2]
             data="setSpecialRole@"+token_id+"@"+ user_from.address.hex()+"@45534454526f6c654e4654437265617465@45534454526f6c654e46544164645175616e74697479"
             t = self.send_transaction(user_from,
@@ -1072,7 +1073,7 @@ class ElrondNet:
                                       data)
 
             if t["status"] == "success":
-                data="ESDTNFTCreate@"+token_id+"@"+str_to_hex(quantity,False)+"@"+str_to_hex(title,False)
+                data="ESDTNFTCreate@"+token_id+"@"+hex(int(quantity)).replace("0x","")+"@"+str_to_hex(title,False)
                 data=data+"@"+str_to_hex(price,False)+"@"+str_to_hex(hash,False)+"@"
                 for k in properties.keys():
                     if k!="title":
@@ -1083,6 +1084,8 @@ class ElrondNet:
                 t=self.send_transaction(user_from,user_from,user_from,0,data)
 
                 return t
+
+        return returnError("Impossible de créer le NFT")
 
 
 
@@ -1097,7 +1100,7 @@ class ElrondNet:
             #https://docs.elrond.com/developers/esdt-tokens/
             data="transferOwnership@"+str_to_hex(token_id, False)+"@"+_dest.address.hex()
             tr = self.send_transaction(_owner,
-                                       Account(address="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"),
+                                       SmartContract(address="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"),
                                        _owner,0,data)
         return tr
 
@@ -1114,13 +1117,7 @@ class ElrondNet:
                 gas_price_factor=2
             )
         else:
-            tr = self.execute(
-                SmartContract(address="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"), seller,
-                function="transferOwnership",
-                arguments=[str_to_hex(token_id,False), _user.address.hex()],
-                value=0,
-                gas_price_factor=2
-            )
+            tr=self.nft_transfer(None,seller,token_id,_user)
         return tr
 
 
@@ -1134,11 +1131,15 @@ class ElrondNet:
         return tr
 
 
-    def burn(self, contract,sender,token_id):
-        tr = self.execute(contract,sender,
-                            function="burn",
-                            arguments=[int(token_id)]
-                          )
+    def burn(self, contract,sender,token_id,quantity=1):
+        if is_standard(token_id):
+            data="ESDTNFTBurn@"+str_to_hex(token_id,False)+"@1@"+hex(quantity).replace("0x","")
+            tr=self.send_transaction(sender,sender,sender,0,data)
+        else:
+            tr = self.execute(contract,sender,
+                                function="burn",
+                                arguments=[int(token_id)]
+                              )
         return tr
 
 

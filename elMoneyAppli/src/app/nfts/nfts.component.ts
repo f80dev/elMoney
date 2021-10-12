@@ -202,8 +202,9 @@ export class NftsComponent implements OnChanges {
         lbl_cancel: 'Non'
       }}).afterClosed().subscribe((result:any) => {
       if(result){
+        debugger
         let obj={
-          pem:this.user.pem.pem,
+          pem:this.user.pem,
           price:Number(result),
         };
         nft.message="Mise à jour du prix";
@@ -226,9 +227,9 @@ export class NftsComponent implements OnChanges {
   add_dealer(nft: any) {
     this.user.check_pem(()=>{
       this.dialog.open(SelDealerComponent, {
-        position:
-          {left: '5vw', top: '5vh'},
-        maxWidth: 500, width: '90vw', height: 'auto',
+        backdropClass:"removeBackground",
+        position: {left: '5vw', top: '5vh'},
+        maxWidth: 500, width: '90vw', height: 'auto',minWidth:300,
         data:{
           title: "Choisissez un distributeur pour votre NFT",
           result:this.user.addr

@@ -1,8 +1,17 @@
 <div class="mainform">
   <app-hourglass [message]="message"></app-hourglass>
 
+
+
   <div *ngIf="message.length==0">
     <h3>Classement des vendeurs</h3>
+
+    <div *ngIf="profils.length==0">
+      <br>
+      Aucun vendeur classé. Soyez le premier à entrer dans ce classement
+      <br>
+    </div>
+
     <table style="display: inline-block;font-size: x-large;">
       <tr *ngFor="let profil of profils" style="width:60%;max-width: 600px;">
         <td style="font-size: large;">
@@ -29,5 +38,12 @@
     </table>
 
   </div>
+
+  <button mat-raised-button color="primary"
+          mat-button class="app-button"
+          (click)="router.navigate(['settings'],{queryParams:{section:2}})">
+    <div class="bloc-bouton">Devenez<br>vendeur</div>
+  </button>
+
 
 </div>

@@ -1,5 +1,6 @@
 <mat-dialog-content style="padding: 8px !important;">
   <h3>{{data.title}}</h3>
+  <app-tuto label="Après sélection d'un distributeur vos NFTs apparaissent immédiatement dans sa boutique"></app-tuto>
   <div style="height: 300px;overflow: scroll;width:94%;margin-left: 3%;">
     <mat-selection-list [multiple]="false"
                         [(ngModel)]="sel_dealers" (click)="return_dealers()">

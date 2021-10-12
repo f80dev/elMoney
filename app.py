@@ -265,7 +265,8 @@ def get_user(addrs:str):
 
 
 @app.route('/api/burn/<token_id>/',methods=["POST"])
-def burn(token_id,data:dict=None):
+def burn(token_id):
+    log("Burn de "+str(token_id))
     rc=bc.burn(NETWORKS[bc.network_name]["nft"],bc.get_elrond_user(request.data),token_id)
 
     send(socketio,"refresh_nft",rc["sender"])
@@ -343,9 +344,13 @@ def update_price(token_id:str,data:dict=None):
     if data is None:
         data = json.loads(str(request.data, encoding="utf-8"))
 
-    rc = bc.set_price(NETWORKS[bc.network_name]["nft"],bc.get_elrond_user(data), token_id, float(data["price"]) * 100)
-    send(socketio,"nft_store")
-    return jsonify(rc),200
+    _dealer=bc.get_elrond_user(data["pem"])
+    rc = bc.set_price(NETWORKS[bc.network_name]["nft"],_dealer, token_id, float(data["price"]) * 100)
+    if not rc is None:
+        send(socketio,"nft_store")
+        return jsonify(rc),200
+    else:
+        return returnError("Impossible de mettre a jour le prix")
 
 
 

@@ -202,5 +202,5 @@ def dictlist_to_csv(lst):
     return output.getvalue()
 
 
-def returnError(msg:str="Problème technique"):
-    return msg,500
+def returnError(msg:str=""):
+    return "Ooops ! Petit problème technique. "+msg,500
