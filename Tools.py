@@ -93,6 +93,9 @@ def hex_to_str(number):
     return rc
 
 
+def is_standard(id):
+    if type(id)==str and id.startswith("TFT"):return True
+    return False
 
 
 def open_html_file(name:str,replace=dict(),domain_appli=DOMAIN_APPLI):

@@ -31,7 +31,7 @@ content:
     "
     fee: 0.002
     tags: "#photos"
-    transac: 0.00015
+    transac: 0.0007
     production: true
 
 
@@ -57,7 +57,7 @@ content:
     "
     fee: 0.001
     tags: "#artiste #oeuvre #photo"
-    transac: 0.00015
+    transac: 0.0007
     production: true
 
 
@@ -83,7 +83,7 @@ content:
     "
     fee: 0.001
     tags: "#jouer #jeu #laquestion"
-    transac: 0.00015
+    transac: 0.0007
     production: true
 
 
@@ -109,7 +109,7 @@ content:
     "
     fee: 0.001
     tags: "#jouer #jeu #qcm"
-    transac: 0.00015
+    transac: 0.0007
     production: true
 
 
@@ -132,7 +132,7 @@ content:
     "
     fee: 0.002
     tags: "#fichier #secret"
-    transac: 0.00015
+    transac: 0.0007
     production: true
 
 
@@ -147,7 +147,7 @@ content:
     "
     fee: 0.002
     tags: "#propriete #titre"
-    transac: 0.00015
+    transac: 0.0007
     production: false
 
 
@@ -173,7 +173,7 @@ content:
         "
     fee: 0.002
     tags: "#music #audio #track"
-    transac: 0.00015
+    transac: 0.0007
     production: true
 
 
@@ -192,7 +192,7 @@ content:
       "
     fee: 0.002
     tags: "#film #cinema"
-    transac: 0.00015
+    transac: 0.0007
     production: true
 
 
@@ -212,7 +212,7 @@ content:
           qu'il embarque sa présentation sur la place de marché.
 
           "
-    transac: 0.00015
+    transac: 0.0007
     help: Utiliser la commande "ouvrir" pour découvrir le secret que contient ce token
     production: true
 
@@ -235,7 +235,7 @@ content:
           <p>Une option de TokenForge vous permet de contrôler les billets en 'scannant' simplement le QRCode du propriétaire. Cela permet
           de voir l'ensemble des NFTs (billet) qu'il posséde ainsi que la photo / document qu'il a enregistré pour renforcer la sécurité</p>
           "
-    transac: 0.00015
+    transac: 0.0007
     tags: "#billets #spectacle"
     help: Présenter votre code perso à l'entrée de l'événement pour contrôle du billet
     production: true
@@ -301,7 +301,7 @@ content:
           Le partage doit être réservé à ceux qui posséde le lien<br>
           Grâce à TokenForge le lien est caché dans le NFT et visible uniquement du propriétaire / acheteur.
           "
-    transac: 0.00015
+    transac: 0.0007
     help: Après achat, ouvrer ce token pour découvrir si vous avez gagné. Si c'est le cas le gain est immédiatement versé sur votre compte
     production: true
     tags: "#jeu #loterie"

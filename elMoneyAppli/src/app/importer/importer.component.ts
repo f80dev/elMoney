@@ -604,8 +604,8 @@ export class ImporterComponent implements OnInit {
                 this.ask_for_price("Combien coute la participation",null,token.fee);
               });
             },"","number");
-          }
-        },"Exemple: Calcul mental")
+          } else this.cancel_wizard("Cette réponse n'est pas possible");
+        },"","number",options.length,1)
       },"","memo");
     },"Exemple: Combien font 12 x 14 ?");
   }
@@ -801,7 +801,7 @@ export class ImporterComponent implements OnInit {
 
   cancel_wizard(message=""){
     this.show_zone_upload=false;
-    showMessage(this,message);
+    showMessage(this,"Création du NFT annulée. "+message);
     setTimeout(()=>{this._location.back();},1000);
   }
 

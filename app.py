@@ -14,7 +14,8 @@ import yaml
 from erdpy.accounts import Account
 from erdpy.contracts import SmartContract
 from flask import Response, request, jsonify, send_file, make_response
-from Tools import log, send_mail, open_html_file, now, send, dictlist_to_csv, returnError, extract, str_to_hex
+from Tools import log, send_mail, open_html_file, now, send, dictlist_to_csv, returnError, extract, str_to_hex, \
+    is_standard
 from apiTools import create_app
 
 from dao import DAO
@@ -396,6 +397,13 @@ def open_nft(token_id:str,data:dict=None):
 
 @app.route('/api/state_nft/<token_id>/<state>/',methods=["POST"])
 def state_nft(token_id:str,state:str,data:dict=None):
+    """
+    changement du statut en vente / pas en vente
+    :param token_id:
+    :param state:
+    :param data:
+    :return:
+    """
     if data is None:
         data = json.loads(str(request.data, encoding="utf-8"))
 
@@ -485,7 +493,7 @@ def buy_nft(token_id,price,seller:str,data:dict=None):
 
     if seller == "0x0":
         seller = "0x0000000000000000000000000000000000000000000000000000000000000000"
-        if data["token_id"].startswith("TFT"):
+        if is_standard(data["token_id"]):
             seller=Account(address=data["owner"]).address.hex()
     else:
         seller = "0x" + str(Account(address=seller).address.hex())
@@ -582,7 +590,7 @@ def mint(count:str,data:dict=None):
 
     value=fee+pay_count*gift*1e16
     if not money.startswith("EGLD") and not simulate:
-        #Dans ce cas on sequestre le montant ESDT pour le cadeau
+        log("Dans ce cas on sequestre vers le contrat le montant ESDT")
         transac=bc.transferESDT(money,owner,bc.contract,pay_count*gift*1e16)
         if "error" in transac:return returnError()
         value=fee
@@ -603,15 +611,23 @@ def mint(count:str,data:dict=None):
 
 
     if data["elrond_standard"]:
+        log("Construction d'un NFT standard elrond")
         res_visual=res_visual.replace("%%","")
         result=bc.mint_standard_nft(owner,title,
-                                    {"description":desc.split("%%")[0],"money":money,"properties":hex(properties),"state":hex(1)}
+                                    {
+                                        "description":desc.split("%%")[0],
+                                        "money":money,
+                                        "secret":secret,
+                                        "properties":hex(properties),
+                                        "state":hex(1)}
                                     ,price,count,res_visual)
     else:
+        log("Construction d'un extended NFT")
         result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,
                        arguments=arguments,
                        gas_limit=int(LIMIT_GAS*(1+int(count)/2)),
-                       value=value,simulate=simulate)
+                       value=value,
+                       simulate=simulate)
 
     if not result is None:
         if result["status"] == "fail" or not "smartContractResults" in result:

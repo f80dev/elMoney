@@ -19,7 +19,7 @@ from erdpy.wallet import derive_keys, pem
 from erdpy.wallet.keyfile import load_from_key_file
 from requests_cache import CachedSession
 
-from Tools import log, base_alphabet_to_10, str_to_hex, hex_to_str, nbr_to_hex, translate, now
+from Tools import log, base_alphabet_to_10, str_to_hex, hex_to_str, nbr_to_hex, translate, now, is_standard
 from definitions import LIMIT_GAS, ESDT_CONTRACT, NETWORKS, ESDT_PRICE, IPFS_NODE_PORT, IPFS_NODE_HOST, SECRET_KEY, \
     DEFAULT_VISUAL, DEFAULT_VISUAL_SHOP
 from ipfs import IPFS
@@ -973,25 +973,36 @@ class ElrondNet:
                     # }
                     if "royalties" in nft:
                         prop = dict({
+                            "picture":"",
                             "visual": "",
-                            "state": "0x0",
                             "properties": "0x0",
                             "tags":"",
                             "identifier":"EGLD",
-                            "has_secret":False
                         })
-                        for p in str(base64.b64decode(bytes(nft["attributes"], "utf8")), "utf8").split(","):
+                        p_s=str(base64.b64decode(bytes(nft["attributes"], "utf8")), "utf8").split(",")
+                        for p in p_s:
                             if ":" in p: prop[p.split(":")[0]] = p.split(":")[1]
+
+                        visual=""
+                        picture=""
+                        if len(nft["uris"])>0:visual=str(base64.b64decode(bytes(nft["uris"][0], "utf8")), "utf8")
+                        if len(nft["uris"]) > 1: picture = str(base64.b64decode(bytes(nft["uris"][1], "utf8")), "utf8")
+
                         if len(nft["uris"]) > 0: prop["visual"] = nft["uris"][0]
                         rc.append({
                             "token_id": nft["tokenIdentifier"],
                             "price": int(nft["royalties"]),
                             "miner": nft["creator"],
                             "owner": addr,
+                            "tags":prop["tags"],
+                            "is_selled": int(prop["state"], 16) > 0 and nft["creator"] != addr,
                             "description": prop["description"],
-                            "visual": prop["visual"],
+                            "visual": visual,
+                            "picture": picture,
+                            "has_secret":int("secret" in prop),
                             "title": nft["name"],
-                            "state": int(prop["state"], 16),
+                            "unity":"EGLD",
+                            "state": int(addr!=self.bank.address.bech32()),
                             "properties": int(prop["properties"], 16)
                         })
                         log("Ajout de " + str(rc))
@@ -1077,14 +1088,14 @@ class ElrondNet:
 
 
     def nft_transfer(self, contract, _owner, token_id, _dest):
-        if type(token_id)==int:
+        if not is_standard(token_id):
             tr = self.execute(contract, _owner,
                               function="transfer",
                               arguments=[token_id,"0x"+_dest.address.hex()],
                               value=0)
         else:
             #https://docs.elrond.com/developers/esdt-tokens/
-            data="transferOwnership@"+str_to_hex(token_id, False)+"@"+_dest.address.hex().upper()
+            data="transferOwnership@"+str_to_hex(token_id, False)+"@"+_dest.address.hex()
             tr = self.send_transaction(_owner,
                                        Account(address="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"),
                                        _owner,0,data)
@@ -1093,7 +1104,7 @@ class ElrondNet:
 
 
     def nft_buy(self, contract, _user, token_id,price,seller):
-        if type(token_id)==int:
+        if not is_standard(token_id):
             value=int(1e7*price)*1e11
             tr = self.execute(
                    contract,_user,
@@ -1132,10 +1143,21 @@ class ElrondNet:
 
 
     def set_state(self, contract, pem_file, token_id, state):
-        tx = self.execute(contract,pem_file,
-                            function="setstate",
-                            arguments=[int(token_id),int(state)],
-                          )
+        """
+        Mise en vente (to sale)
+        :param contract:
+        :param pem_file:
+        :param token_id:
+        :param state:
+        :return:
+        """
+        if not is_standard(token_id):
+            tx = self.execute(contract,pem_file,
+                                function="setstate",
+                                arguments=[int(token_id),int(state)],
+                              )
+        else:
+            tx=self.nft_transfer(None,pem_file,token_id,self.bank)
 
         return tx
 
