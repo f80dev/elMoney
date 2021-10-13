@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {$$,isHTML, showError, showMessage} from "../tools";
+import {$$, eval_properties, isHTML, showError, showMessage} from "../tools";
 import {ApiService} from "../api.service";
 import {UserService} from "../user.service";
 import {ImageSelectorComponent} from "../image-selector/image-selector.component";
@@ -199,15 +199,8 @@ export class ImporterComponent implements OnInit {
       return;
     }
 
-    let properties:number=0b00000000;
-    if(this.owner_can_transfer)properties=properties+0b00000001;
-    if(this.owner_can_sell)properties=properties    +0b00000010;
-    if(this.direct_sell)properties=properties       +0b00000100; //Le NFT est disponible en vente directe
-    if(this.self_destruction)properties=properties  +0b00001000; //Le token s'autodétruit après ouverture
-    if(this.find_secret)properties=properties       +0b00010000; //L'utilisateur doit fournir le secret dans l'open pour recevoir le cadeau
-    if(this.opt_gift)properties=properties          +0b00100000; //On affiche l'option d'ouverture même si aucun secret (utilisé pour la loterie)
-    if(this.transparent)properties=properties       +0b01000000; //on affiche un cadre autour de l'image ou pas
 
+    let properties=eval_properties(this);
     this.message="Transfert des fichiers vers IPFS";
     this.ipfs.add(this.visual,this,(cid_visual)=>{
       this.ipfs.add(this.picture,this,(cid_picture)=> {

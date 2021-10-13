@@ -96,7 +96,18 @@ content:
     format: html
     content: "
       <p>
-      {{appname}} permet de frabriquer des 'objets' virtuels attribuables à un propriétaire, associés à un prix
+      {{appname}} permet de frabriquer des 'objets' virtuels attribuables à un propriétaire.<br>
+      {{appname}} utilise un type de NFT enrichie de certaines fonctionnalités, d'ou le nom de extended NFT (eNFT)
+      Ces fonctionnalités sont les suivantes:
+      <ul>
+        <li>un prix de vente</li>
+        <li>des distributeurs autorisés</li>
+        <li>des limites haute et basse pour la marge des revendeurs</li>
+        <li>un secret, visible uniquement par le propriétaire</li>
+        <li>la capacité de s'auto-détruire</li>
+        <li>de l'argent qui peut être attribué au propriétaire, soit automatiquement à l'ouverture soit uniquement s'il découvre le secret</li>
+      </ul>
+       associés à un prix
       (donc commercialisables) et pouvant contenir un secret uniquement visible par le propriétaire.
       Dans la terminologie habituellement utilisée, on désigne ces objets par NFT (Non fugible token).
       </p>

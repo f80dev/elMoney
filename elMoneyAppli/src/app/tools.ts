@@ -1055,6 +1055,22 @@ export function extract_tags(tokens:any[]) {
   return tags;
 }
 
+
+//Permet de faire le calcul du champs properties pour les NFT en focntion des options choisies
+export function eval_properties(vm:any): number {
+  let properties:number=0b00000000;
+  if(vm.owner_can_transfer)properties=properties+0b00000001;
+  if(vm.owner_can_sell)properties=properties    +0b00000010;
+  if(vm.direct_sell)properties=properties       +0b00000100; //Le NFT est disponible en vente directe
+  if(vm.self_destruction)properties=properties  +0b00001000; //Le token s'autodétruit après ouverture
+  if(vm.find_secret)properties=properties       +0b00010000; //L'utilisateur doit fournir le secret dans l'open pour recevoir le cadeau
+  if(vm.opt_gift)properties=properties          +0b00100000; //On affiche l'option d'ouverture même si aucun secret (utilisé pour la loterie)
+  if(vm.transparent)properties=properties       +0b01000000; //on affiche un cadre autour de l'image ou pas
+  return properties;
+}
+
+
+
 //Regroupement des tokens et affectation de l'icon en fonction du tag
 export function group_tokens(tokens:any[],tags:any,func_validate:Function=null):any {
   let nfts = [];

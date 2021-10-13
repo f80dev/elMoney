@@ -55,7 +55,7 @@ export class AuthentComponent implements OnInit {
     this.showSaveKey=false;
     this.api._get("users/"+this.user.email+"/").subscribe((r:any)=> {
       if(r.length==0){
-        this.message="ouverture d'un nouveau compte sur le "+this.config.server.network+" elrond";
+        this.message="ouverture d'un nouveau compte Elrond ("+this.config.server.network+") pour TokenForge";
         this.long_message="Bienvenu sur "+this.config.values.appName+"/Nous allons vous envoyer toutes les infos de votre nouveau compte sur votre mail/Dés l'ouverture vous pouvez commencer à fabriquer vos propres NFT/Vous pouvez éghalement créer votre propre monnaie";
         this.showSaveKey=false;
         this.api._get("new_account/","email="+this.user.email,240).subscribe((r:any)=> {

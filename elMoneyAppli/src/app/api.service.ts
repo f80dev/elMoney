@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {$$, api, showError} from './tools';
+import {$$, api, now, showError} from './tools';
 import {timeout} from 'rxjs/operators';
 import {HttpClient, HttpHeaders, HttpParams, HttpRequest} from '@angular/common/http';
 import {environment} from '../environments/environment';
@@ -87,7 +87,7 @@ export class ApiService {
 
 
   getyaml(name: string){
-    return this._get('getyaml/'+name+"/", "");
+    return this._get('getyaml/'+name+"/", "time="+now());
   }
 
   updateData(token) {

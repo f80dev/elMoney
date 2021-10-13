@@ -6,7 +6,7 @@ export const environment = {
   domain_server: "https://server.f80.fr:5555",
   config_file: "config",
   domain_appli: "https://tokenforge.f80.fr",
-  appVersion: version,
+  appVersion: "1.0.1",
   default_contract: "erd1qqqqqqqqqqqqqpgqeyayz09s2a4gnvcghdh9ma3he3j7cda0d8ss2apk2a",
   transac_cost: 0.001
 };

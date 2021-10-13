@@ -33,6 +33,36 @@ content:
     tags: "#photos"
     transac: 0.0007
     production: true
+    samples:
+      - file: ""
+        pem: ""
+        owner: ""
+        visual: "https://pbs.twimg.com/media/EycP3huWEAMfCU1?format=jpg&name=900x900"
+        filename: ""
+        format: ""
+        title: "Le couronnement d'épines (Caravage)"
+        secret: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/The_Crowning_with_Thorns-Caravaggio_%281602%29.jpg/1280px-The_Crowning_with_Thorns-Caravaggio_%281602%29.jpg"
+        price: 0.4
+        elrond_standard: 0
+        fee: 0.001
+        tags: "#news #secret #motdepasse"
+        description: "Découvrez cette reproduction du tableau retrouvé du Caravage"
+        gift: 0
+        fullscreen: 0
+        max_markup: 2
+        min_markup: 0
+        dealers: ""
+        owner_can_transfer: 0
+        owner_can_sell: 0
+        direct_sell: 1
+        self_destruction: 0
+        find_secret: 0
+        opt_gift: 0
+        transparent: 0
+        opt_lot: 0
+        miner_ratio: 0.1
+        money: "EGLD"
+
 
 
   - index: pow
@@ -134,6 +164,36 @@ content:
     tags: "#fichier #secret"
     transac: 0.0007
     production: true
+    samples:
+      - file: "./temp/test.pdf"
+        pem: ""
+        owner: ""
+        visual: "https://cdn.pixabay.com/photo/2020/11/03/15/32/man-5710164_960_720.jpg"
+        filename: "test.pdf"
+        format: "pdf"
+        title: "picasso"
+        secret: ""
+        price: 0.1
+        elrond_standard: 0
+        fee: 0.001
+        tags: "#contrat #document"
+        description: "Manuel utilisateur de fonctionnement du téléphone"
+        gift: 0
+        fullscreen: 0
+        max_markup: 2
+        min_markup: 0
+        dealers: ""
+        owner_can_transfer: 0
+        owner_can_sell: 0
+        direct_sell: 1
+        self_destruction: 0
+        find_secret: 0
+        opt_gift: 0
+        transparent: 0
+        opt_lot: 0
+        miner_ratio: 0.1
+        money: "EGLD"
+        online: 1
 
 
   - index: propriete
@@ -149,6 +209,8 @@ content:
     tags: "#propriete #titre"
     transac: 0.0007
     production: false
+
+
 
 
   - index: music
@@ -175,6 +237,36 @@ content:
     tags: "#music #audio #track"
     transac: 0.0007
     production: true
+    samples:
+      - file: "./temp/malu.mp3"
+        pem: ""
+        owner: ""
+        visual: "https://cdn.pixabay.com/photo/2016/03/09/09/32/guitar-1245856_960_720.jpg"
+        filename: "malu.mp3"
+        format: "mp3"
+        title: "Le nouveau single de Malu"
+        secret: ""
+        price: 0.25
+        elrond_standard: 0
+        fee: 0.001
+        tags: "#starwars #avantpremiere"
+        description: "Soyez le premier à écouter le nouveau single de Malu"
+        gift: 0
+        fullscreen: 0
+        max_markup: 2
+        min_markup: 0
+        dealers: ""
+        owner_can_transfer: 0
+        owner_can_sell: 0
+        direct_sell: 1
+        self_destruction: 0
+        find_secret: 0
+        opt_gift: 0
+        transparent: 0
+        opt_lot: 0
+        miner_ratio: 0.1
+        money: "EGLD"
+        online: 1
 
 
   - index: film
@@ -194,6 +286,38 @@ content:
     tags: "#film #cinema"
     transac: 0.0007
     production: true
+    samples:
+      - file: ""
+        pem: ""
+        owner: ""
+        visual: "https://cdn.pixabay.com/photo/2019/10/25/19/31/lego-4577848_960_720.jpg"
+        filename: ""
+        format: ""
+        title: "La nouvelle bande d'annonce de StarWars"
+        secret: "https://www.youtube.com/watch?v=pHgwf2eMFnA"
+        price: 0.2
+        elrond_standard: 0
+        fee: 0.001
+        tags: "#starwars #avantpremiere"
+        description: "Soyez le premier à voir la nouvelle bande annonce du dernier épisode de la sage Starwars"
+        gift: 0
+        fullscreen: 0
+        max_markup: 2
+        min_markup: 0
+        dealers: ""
+        owner_can_transfer: 1
+        owner_can_sell: 1
+        direct_sell: 1
+        self_destruction: 1
+        find_secret: 0
+        opt_gift: 0
+        transparent: 0
+        opt_lot: 0
+        miner_ratio: 0.1
+        money: "EGLD"
+        online: 1
+
+
 
 
   - index: secret
@@ -215,6 +339,39 @@ content:
     transac: 0.0007
     help: Utiliser la commande "ouvrir" pour découvrir le secret que contient ce token
     production: true
+    samples:
+      - file: ""
+        pem: ""
+        owner: ""
+        visual: "https://cdn.pixabay.com/photo/2019/08/08/22/51/man-4393964_960_720.jpg"
+        filename: ""
+        format: ""
+        title: "Accèder à mon serveur"
+        secret: "Le mot de passe est kkkkk12"
+        price: 0.2
+        elrond_standard: 0
+        fee: 0.001
+        tags: "#news #secret #motdepasse"
+        description: "Achetez le mot de passe d'accès a mon serveur de news"
+        gift: 0
+        fullscreen: 0
+        max_markup: 2
+        min_markup: 0
+        dealers: ""
+        owner_can_transfer: 0
+        owner_can_sell: 0
+        direct_sell: 1
+        self_destruction: 0
+        find_secret: 0
+        opt_gift: 0
+        transparent: 0
+        opt_lot: 0
+        miner_ratio: 0.1
+        money: "EGLD"
+        online: 1
+
+
+
 
   - index: tickets
     title: Billeterie
@@ -236,9 +393,42 @@ content:
           de voir l'ensemble des NFTs (billet) qu'il posséde ainsi que la photo / document qu'il a enregistré pour renforcer la sécurité</p>
           "
     transac: 0.0007
-    tags: "#billets #spectacle"
+    tags: "#billets #concert"
     help: Présenter votre code perso à l'entrée de l'événement pour contrôle du billet
     production: true
+    samples:
+      - file: ""
+        pem: ""
+        owner: ""
+        visual: "https://cdn.pixabay.com/photo/2015/11/22/19/04/crowd-1056764_960_720.jpg"
+        filename: ""
+        format: ""
+        title: "Concert Gratuit des Malu"
+        secret: "Billet #00124"
+        price: 0
+        elrond_standard: 0
+        fee: 0.001
+        tags: "#concert #rock"
+        description: "Concert gratuit mais les places sont limitées. 18 rue Partel, Marseille - le 04/02/2022"
+        gift: 0
+        fullscreen: 0
+        max_markup: 2
+        min_markup: 0
+        dealers: ""
+        owner_can_transfer: 1
+        owner_can_sell: 1
+        direct_sell: 1
+        self_destruction: 0
+        find_secret: 0
+        opt_gift: 0
+        transparent: 0
+        opt_lot: 0
+        miner_ratio: 0.1
+        money: "EGLD"
+        online: 1
+        count: 3
+
+
 
 
   - index: life_events
@@ -288,6 +478,36 @@ content:
     help:
     production: true
     tags: "#contrat #business"
+    samples:
+      - file: "./temp/test.pdf"
+        pem: ""
+        owner: ""
+        visual: "https://cdn.pixabay.com/photo/2020/11/03/15/32/man-5710164_960_720.jpg"
+        filename: "test.pdf"
+        format: "pdf"
+        title: "picasso"
+        secret: ""
+        price: 0.1
+        elrond_standard: 0
+        fee: 0.001
+        tags: "#contrat #document"
+        description: "Manuel utilisateur de fonctionnement du téléphone"
+        gift: 0
+        fullscreen: 0
+        max_markup: 2
+        min_markup: 0
+        dealers: ""
+        owner_can_transfer: 0
+        owner_can_sell: 0
+        direct_sell: 1
+        self_destruction: 0
+        find_secret: 0
+        opt_gift: 0
+        transparent: 0
+        opt_lot: 0
+        miner_ratio: 0.1
+        money: "EGLD"
+        online: 1
 
 
   - index: loterie

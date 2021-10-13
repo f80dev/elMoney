@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ApiService} from "../api.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {api, showMessage} from "../tools";
+import {$$, api, eval_properties, now, showError, showMessage} from "../tools";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {UserService} from "../user.service";
 import {ConfigService} from "../config.service";
@@ -16,20 +16,20 @@ export class AdminComponent implements OnInit {
   password: any="";
   message="";
 
-   constructor(public api:ApiService,
-               public toast:MatSnackBar,
-               public config:ConfigService,
-               public routes:ActivatedRoute,
-               public user:UserService,
-               public router:Router) {
-   }
+  constructor(public api:ApiService,
+              public toast:MatSnackBar,
+              public config:ConfigService,
+              public routes:ActivatedRoute,
+              public user:UserService,
+              public router:Router) {
+  }
 
 
   ngOnInit(): void {
-     this.password=this.routes.snapshot.queryParamMap.get("password");
-     if(!environment.production){
+    this.password=this.routes.snapshot.queryParamMap.get("password");
+    if(!environment.production){
       this.password="hh4271";
-   }
+    }
   }
 
 
@@ -41,7 +41,7 @@ export class AdminComponent implements OnInit {
   }
 
   reload_test_accounts() {
-     this.message="Chargement des comptes";
+    this.message="Chargement des comptes";
     let body={amount:10,accounts:[]};
     for(let p of this.config.profils){
       body.accounts.push(p.value);
@@ -55,4 +55,48 @@ export class AdminComponent implements OnInit {
   account_list() {
     open(api("account_list",""),"_blank");
   }
+
+
+  create_sample(samples,index){
+    if(samples.length>index){
+      let sample=samples[index];
+      this.message="Création de "+sample.title+" ("+index+"/"+samples.length+")"
+      sample.properties=eval_properties(sample);
+      if(!sample.pem || sample.pem.length==0)sample.pem=this.user.pem;
+      if(!sample.owner || sample.owner.length==0)sample.owner=this.user.addr;
+      if(!sample.count)sample.count=1;
+
+      $$("Création du NFT ", sample);
+      this.api._post("mint/"+sample.count, "",sample).subscribe((r: any) => {
+        if (r) {
+          this.message = "";
+          showMessage(this, "Fichier tokeniser pour " + r.cost + " xEgld");
+          this.create_sample(samples,index+1);
+        }
+      }, (err) => {
+        $$("!Erreur de création");
+        this.message = "";
+        showError(this, err);
+      });
+    } else this.message="";
+  }
+
+
+  create_samples() {
+    this.user.check_pem(()=>{
+      this.message="Création des exemples";
+      this.api.getyaml("tokens").subscribe((tokens:any)=>{
+        let rc=[];
+        for(let token of tokens.content){
+          if(token.hasOwnProperty("samples")){
+            for(let sample of token.samples){
+              if(sample.online==1)rc.push(sample);
+            }
+          }
+        }
+        this.create_sample(rc,0);
+      });
+    },this);
+  }
+
 }

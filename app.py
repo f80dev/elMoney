@@ -192,7 +192,6 @@ def evalprice(sender,data="",value=0):
 
 
 @app.route('/api/users/',methods=["POST"])
-@cache.cached(timeout=60)
 def save_user(data:dict=None):
     """
     Enregistrement de l'utilisateur
@@ -532,9 +531,8 @@ def buy_nft(token_id,price,seller:str,data:dict=None):
 @app.route('/api/deploy/',methods=["POST"])
 def deploy(count:str,data:dict=None):
     data = str(request.data, encoding="utf-8")
-    #project = ProjectClang(Path(__file__).parent.parent)
-    #bytecode = project.get_bytecode()
     rc=bc.deploy_contract(data["pem"],data["bytecode"])
+    return jsonify(rc)
 
 
 #http://localhost:6660/api/mint/
@@ -567,18 +565,29 @@ def mint(count:str,data:dict=None):
     else:
         secret="0"
 
+    if "tags" in data and len(data["tags"])>0:
+        data["description"]=data["description"]+" "+data["tags"]
 
     if "file" in data and secret=="0":
+        if data["file"].startswith("."):
+            f=open(data["file"],"rb")
+            data["file"]=client.add_file(f)
+            f.close()
+
+
         secret=data["file"].encode().hex()
+
 
     res_visual = ""
     if "visual" in data and len(data["visual"])>0:
         res_visual = "%%" + data["visual"]
         if data["fullscreen"]:res_visual=res_visual.replace("%%","!!")
 
-    owner = bc.get_elrond_user(data)
+    owner = bc.get_elrond_user(data["pem"])
 
-    title=data["signature"]
+    if not "title" in data:data["title"]=data["signature"]
+    title=data["title"]
+
     desc=data["description"]+res_visual
     price = int(float(data["price"]) * 1e4)
     max_markup=int(float(data["max_markup"]) * 100)
@@ -706,44 +715,45 @@ def transactions(user:str=""):
                     value=0
                     comment="annulée"
 
-                if data.startswith("mint"):data="Creation d'un eNFT"
-                if data.startswith("add_dealer"):data= "Ajout d'un distributeur"
-                if data.startswith("new_dealer"):data= "Se déclarer commme distributeur"
-                if data.startswith("add_miner"):data= "Approuver un fabricant"
-                if data.startswith("setSpecialRole") or data.startswith("issueSemiFungible"):data= "Autorisation de création d'un NFT"
-                if data.startswith("price"): data = "Mise a jour du prix"
-                if data.startswith("transferOwnership"): data = "Achat d'un NFT"
-                if data.startswith("burn"): data = "Destruction d'un token"
-                if data.startswith("ESDTNFTCreate"): data = "Création d'un NFT elrond"
-                if data.startswith("ESDTTransfer"): data = "Transfert d'un NFT"
-                if data.startswith("SaveKeyValue"): data = "Sauvegarde de vos préférences"
-                if data.startswith("Sent from") or data.startswith("refund"):
-                    data = "Rechargement"
-                    fee=0
+                if type(data)==str:
+                    if data.startswith("mint"):data="Creation d'un eNFT"
+                    if data.startswith("add_dealer"):data= "Ajout d'un distributeur"
+                    if data.startswith("new_dealer"):data= "Se déclarer commme distributeur"
+                    if data.startswith("add_miner"):data= "Approuver un fabricant"
+                    if data.startswith("setSpecialRole") or data.startswith("issueSemiFungible"):data= "Autorisation de création d'un NFT"
+                    if data.startswith("price"): data = "Mise a jour du prix"
+                    if data.startswith("transferOwnership"): data = "Achat d'un NFT"
+                    if data.startswith("burn"): data = "Destruction d'un token"
+                    if data.startswith("ESDTNFTCreate"): data = "Création d'un NFT elrond"
+                    if data.startswith("ESDTTransfer"): data = "Transfert d'un NFT"
+                    if data.startswith("SaveKeyValue"): data = "Sauvegarde de vos préférences"
+                    if data.startswith("Sent from") or data.startswith("refund"):
+                        data = "Rechargement"
+                        fee=0
 
-                if data.startswith("setstate"): data = "Mise en vente"
-                if data.startswith("open"):
-                    data = "Révéler le secret"
-                    if "scResults" in t and len(t["scResults"])>1:sign=0
+                    if data.startswith("setstate"): data = "Mise en vente"
+                    if data.startswith("open"):
+                        data = "Révéler le secret"
+                        if "scResults" in t and len(t["scResults"])>1:sign=0
 
 
-                if data.startswith("buy"):
-                    data="Achat d'un NFT"
-                    t=bc.getTransaction(t["hash"])
+                    if data.startswith("buy"):
+                        data="Achat d'un NFT"
+                        t=bc.getTransaction(t["hash"])
 
-                if sign!=0:
-                    log("Ajout de la transaction "+data+" : " + str(t))
-                    cost=0
-                    rc["transactions"].append({
-                        "sender":t["sender"],
-                        "receiver":t["receiver"],
-                        "data": data,
-                        "value": sign * value,
-                        "fee": fee,
-                        "cost": cost,
-                        "transaction": t["hash"],
-                        "comment":comment
-                    })
+                    if sign!=0:
+                        log("Ajout de la transaction "+data+" : " + str(t))
+                        cost=0
+                        rc["transactions"].append({
+                            "sender":t["sender"],
+                            "receiver":t["receiver"],
+                            "data": data,
+                            "value": sign * value,
+                            "fee": fee,
+                            "cost": cost,
+                            "transaction": t["hash"],
+                            "comment":comment
+                        })
 
 
                 if "smartContractResults" in t:
@@ -1114,7 +1124,11 @@ def get_gas(addr:str):
 @cache.cached(timeout=3600*24)
 def getyaml(name):
     f=open("./static/"+name+".yaml","r",encoding="utf-8")
-    rc=yaml.safe_load(f.read())
+    try:
+        rc=yaml.safe_load(f.read())
+    except Exception as inst:
+        return returnError("Probleme de format du fichier "+name+" "+str(inst.args))
+
     return jsonify(rc),200
 
 

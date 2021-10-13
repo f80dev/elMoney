@@ -250,7 +250,9 @@ export class UserService {
     }
 
     else{
-      this.dialog.open(AuthentComponent,{width: '375px',height:"auto",data:
+      this.dialog.open(AuthentComponent,{
+        backdropClass:'removeBackground',
+        width: '375px',height:"auto",data:
           {
             title: title,
             redirect:redirect
@@ -286,7 +288,9 @@ export class UserService {
       if(this.pem && this.pem.length>0){
         if(func){func();return;}
       } else {
-        this.dialog.open(PrivateComponent,{width: '330px',height:"fit-content",data:
+        this.dialog.open(PrivateComponent,{
+          backdropClass:'removeBackground',
+          width: '330px',height:"fit-content",data:
             {
               canChange:false,
               title: title,

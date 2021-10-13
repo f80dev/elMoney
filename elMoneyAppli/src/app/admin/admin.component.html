@@ -42,11 +42,12 @@
           </tr>
         </table>
 
-
-
-
-
-
+        <br>
+         <button mat-raised-button
+                mat-button class="app-button"
+                (click)="create_samples()">
+          Creation des exemples
+        </button>
 
 
       </mat-expansion-panel>
@@ -94,7 +95,6 @@
 
       </mat-expansion-panel>
 
-
       <mat-expansion-panel class="app-panel">
         <mat-expansion-panel-header>Compte administrateur</mat-expansion-panel-header>
 
@@ -119,9 +119,6 @@
            target="_blank"
            [cdkCopyToClipboard]="config.server?.bank_addr">Rechargement alternatif</a>
       </mat-expansion-panel>
-
-
-
 
 
     </mat-accordion>

@@ -19,7 +19,7 @@
 
 #fabrication: docker build -t f80hub/elmoney . & docker push f80hub/elmoney:latest
 #installation: docker rm -f elmoney && docker pull f80hub/elmoney:latest
-#démarrage prod : docker rm -f elmoney && docker pull f80hub/elmoney && docker run --restart=always -v /root/certs:/certs -p 5555:5555 --name elmoney -d f80hub/elmoney:latest python3 app.py 5555 devnet ssl
+#démarrage prod : docker rm -f elmoney && docker pull f80hub/elmoney && docker run --restart=always -v /root/certs:/certs -p 5555:5555 --name elmoney -d f80hub/elmoney:latest python3 app.py 5555 testnet ssl
 
 #Ouverture des ports : firewall-cmd --zone=public --add-port=7777/tcp
 #fabrication: docker build -t f80hub/elmoney-dev . & docker push f80hub/elmoney-dev:latest

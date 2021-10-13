@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ApiService} from "../api.service";
 import {showMessage, subscribe_socket, group_tokens, extract_tags} from "../tools";
 import {UserService} from "../user.service";
@@ -28,7 +28,7 @@ export class NftStoreComponent implements OnInit {
 
   handle:any;
   options:any[]=[
-    {label:"Standard",style:{width:"90%",height:"fit-content",fontsize:"1.2em",with_icon:true,maxwidth:'350px'}},
+    {label:"Standard",style:{width:"90%",height:"fit-content",fontsize:"1em",with_icon:true,maxwidth:'350px'}},
     {label:"Mobile",style:{width:"90%",height:"fit-content",fontsize:"small",with_icon:false,maxwidth:'500px'}},
     {label:"Large",style:{width:"350px",height:"300px",fontsize:"large",with_icon:true}}
   ]
@@ -91,11 +91,10 @@ export class NftStoreComponent implements OnInit {
       this.filter_id = Number(this.routes.snapshot.queryParamMap.get("id"));
     }
 
+    if(localStorage.getItem("premium_mode"))this.art=localStorage.getItem("premium_mode")=="true";
     if (this.routes.snapshot.queryParamMap.has("premium")) {
       this.art = (this.routes.snapshot.queryParamMap.get("premium")=="true");
     }
-
-
 
     if (this.routes.snapshot.queryParamMap.has("ids")) {
       this.filter_ids = this.routes.snapshot.queryParamMap.get("ids").split(",");
@@ -194,4 +193,10 @@ export class NftStoreComponent implements OnInit {
     },"L'achat requiert une authentification préalable");
 
   }
+
+
+  update_premium_mode() {
+    localStorage.setItem("premium_mode",this.art ? "true" : "false");
+  }
 }
+

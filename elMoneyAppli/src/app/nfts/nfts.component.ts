@@ -29,7 +29,7 @@ export class NftsComponent implements OnChanges {
   @Input("art") art:boolean=true;
   @Input("filter") filter:string="*";
   @Input("nfts") nfts:any;
-  @Input("fontsize") fontsize:string="large";
+  @Input("fontsize") fontsize:string="medium";
   @Input("with_icon") with_icon:boolean=true;
   @Input("with_actions") with_actions:boolean=true;
   @Input("force_text") force_text:boolean=false;      //Force l'affichage de la description même si l'image en fullscreen

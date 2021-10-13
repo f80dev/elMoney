@@ -33,7 +33,8 @@
     <td style="text-align: left;width: 30px;">
       <mat-slide-toggle *ngIf="nfts?.length>0"
                         title="Affichage en mode gallerie"
-                        [(ngModel)]="art" style="line-height: 90%;font-size: small;">
+                        [(ngModel)]="art" (change)="update_premium_mode()"
+                        style="line-height: 90%;font-size: small;">
       </mat-slide-toggle>
     </td>
 
