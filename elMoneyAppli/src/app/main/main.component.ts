@@ -80,8 +80,8 @@ export class MainComponent implements OnInit {
 
 
 
-  transfer(dest:any,value=null){
-    if(!value)value=this.hand;
+  transfer(dest:any){
+    let value=this.hand;
     let unity=this.user.moneys[this.user.selected_money].unity;
     let question='Vous souhaitez envoyer '+value+" "+unity+" à "+dest.pseudo+" ("+dest.email+") ?";
     if(!dest.pseudo)question="Envoyer "+value+" "+unity+" à "+dest.addr;
@@ -189,9 +189,10 @@ export class MainComponent implements OnInit {
     },500)
 
     let params=this.routes.snapshot.queryParamMap;
-    if(params.has("to") && params.has("unity")){
+    if(params.has("transfer") && params.has("to") && params.has("unity")){
       this.user.selected_money=params.get("unity");
-      this.transfer(params.get("to"),params.get("value"));
+      this.hand=Number(params.get("transfer"))
+      this.transfer(params.get("to"));
     }
 
     localStorage.setItem("last_screen","main");

@@ -537,7 +537,7 @@ export class ImporterComponent implements OnInit {
 
 
   quick_game(token){
-    this.ask_for_text("La question","Quel est la question du jeu",(question)=>{
+    this.ask_for_text("La question","Quelle est la question du jeu",(question)=>{
       if(!question)this.cancel_wizard();
       this.desc=question;
       if(!this.desc.endsWith("?"))this.desc=this.desc+" ?";
@@ -572,7 +572,7 @@ export class ImporterComponent implements OnInit {
 
 
   quick_qcm(token){
-    this.ask_for_text("La question","Quel est la question du QCM",(question)=>{
+    this.ask_for_text("La question","Quelle est la question du QCM",(question)=>{
       this.title=question;
       if(!this.title.endsWith("?"))this.title=this.title+" ?";
       if(!question)this.cancel_wizard();
