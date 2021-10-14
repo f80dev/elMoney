@@ -7,7 +7,7 @@
 <div class="mainform">
   <app-tuto [if]="_max>0"
             i18n-label
-    label="Utilisez le slider pour fixer le montant à envoyer">
+            label="Utilisez le slider pour fixer le montant à envoyer">
   </app-tuto>
 
   <app-tuto [if]="user.contacts.length>0"
@@ -133,6 +133,8 @@
     Recevoir
   </button>
 
+
+
   <mat-icon *ngIf="showQRCode">arrow_drop_up</mat-icon>
   <br>
   <div *ngIf="showQRCode">
@@ -146,6 +148,19 @@
       [errorCorrectionLevel]="'M'"
       [qrdata]="user.addr">
     </qrcode><br>
+
+    <div *ngIf="showQRCode" style="display: inline-block;">
+      <br>
+      <button mat-raised-button mat-button class="app-button"
+              (click)="createDonateLink()">
+        <div class="bloc-bouton">Créer un lien<br>de donnation</div>
+      </button>
+      <br>
+      <div ngxClipboard [cdkCopyToClipboard]="donateUrl"
+           style="font-size: small;width:80%;max-width: 250px;line-height: 95%;text-align: center;height: 50px;">
+        {{donateUrl}}
+      </div>
+    </div>
 
     <app-tuto label="Flashez pour recevoir des fonds ou cliquer sur le QRcode pour récupérer votre adresse dans le presse papier"
               [if]="showQRCode"></app-tuto>

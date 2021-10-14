@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {ApiService} from "../api.service";
 import {ConfigService} from "../config.service";
 import {$$, showMessage, subscribe_socket} from "../tools";
@@ -30,12 +30,14 @@ export class MainComponent implements OnInit {
   n_profils: number=0;
   temp_max: number=0;
   last_pseudo:string="";
+  donateUrl: string="";
 
   constructor(public router:Router,
               public toast:MatSnackBar,
               public dialog: MatDialog,
               public socket:Socket,
               public user:UserService,
+              public routes:ActivatedRoute,
               public api:ApiService,
               public config:ConfigService) {
 
@@ -78,10 +80,11 @@ export class MainComponent implements OnInit {
 
 
 
-  transfer(dest:any){
-    var unity=this.user.moneys[this.user.selected_money].unity;
-    let question='Vous souhaitez envoyer '+this.hand+" "+unity+" à "+dest.pseudo+" ("+dest.email+") ?";
-    if(!dest.pseudo)question="Envoyer "+this.hand+" "+unity+" à "+dest.addr;
+  transfer(dest:any,value=null){
+    if(!value)value=this.hand;
+    let unity=this.user.moneys[this.user.selected_money].unity;
+    let question='Vous souhaitez envoyer '+value+" "+unity+" à "+dest.pseudo+" ("+dest.email+") ?";
+    if(!dest.pseudo)question="Envoyer "+value+" "+unity+" à "+dest.addr;
 
     this.user.check_pem(()=>{
       this.dialog.open(PromptComponent, {
@@ -93,8 +96,8 @@ export class MainComponent implements OnInit {
           lbl_cancel: 'Non'
         }}).afterClosed().subscribe((result:any) => {
         if (result=="yes") {
-          this.message = this.hand + " " + this.user.moneys[this.user.selected_money].unity + " en cours de transfert à " + dest.email;
-          this.api._post("transfer/" + this.api.identifier + "/" + dest.addr + "/" + this.hand + "/" + unity + "/",
+          this.message = value + " " + this.user.moneys[this.user.selected_money].unity + " en cours de transfert à " + dest.email;
+          this.api._post("transfer/" + this.api.identifier + "/" + dest.addr + "/" + value + "/" + unity + "/",
             "",
             this.user.pem, 180).subscribe((r: any) => {
             this.message = "";
@@ -102,7 +105,7 @@ export class MainComponent implements OnInit {
             this.user.refresh_balance(() => {
               this.refresh();
             })
-            this.user.moneys[this.user.selected_money].solde = this.user.moneys[this.user.selected_money].solde - this.hand;
+            this.user.moneys[this.user.selected_money].solde = this.user.moneys[this.user.selected_money].solde - value;
             this.hand = 0;
             this.refresh();
           }, (err) => {
@@ -115,74 +118,105 @@ export class MainComponent implements OnInit {
   }
 
 
-    add_contact(){
-      let height='fit-content';
-      this.dialog.open(NewContactComponent, {
-        position: {left: '10vw', top: '5vh'},
-        maxWidth: 450,
-        width: '80vw',height: height,
-        data:{}
-      }).afterClosed().subscribe((result:any) => {
-        if(result){
-          this.transfer(result);
-          this.refresh();
-        }
-      });
-    }
-
-    send_to() {
-      if(this.hand==0)return;
-      for(let f of this.friends){
-        if(f.color!="transparent")
-          this.transfer(f);
+  add_contact(){
+    let height='fit-content';
+    this.dialog.open(NewContactComponent, {
+      position: {left: '10vw', top: '5vh'},
+      maxWidth: 450,
+      width: '80vw',height: height,
+      data:{}
+    }).afterClosed().subscribe((result:any) => {
+      if(result){
+        this.transfer(result);
+        this.refresh();
       }
+    });
+  }
+
+
+
+
+  send_to() {
+    if(this.hand==0)return;
+    for(let f of this.friends){
+      if(f.color!="transparent")
+        this.transfer(f);
     }
+  }
 
 
 
-    update_account() {
-      this.n_profils=0;
-      for(let f of this.friends){
-        if(f.selected){
-          this.n_profils=this.n_profils+1;
-          this.last_pseudo=f.label;
-        }
-      }
-
-      if(this.n_profils==0){
-        this._max=this.user.moneys[this.user.selected_money].solde;
-      } else {
-        this._max=this.user.moneys[this.user.selected_money].solde/this.n_profils;
-        if(this.hand>this._max){
-          this.hand=this._max;
-        }
+  update_account() {
+    this.n_profils=0;
+    for(let f of this.friends){
+      if(f.selected){
+        this.n_profils=this.n_profils+1;
+        this.last_pseudo=f.label;
       }
     }
 
-
-
-    select_friends(fr: any) {
-      if(fr.color=="white"){
-        fr.color="deeppink";
-        fr.selected=true;
+    if(this.n_profils==0){
+      this._max=this.user.moneys[this.user.selected_money].solde;
+    } else {
+      this._max=this.user.moneys[this.user.selected_money].solde/this.n_profils;
+      if(this.hand>this._max){
+        this.hand=this._max;
       }
-      else{
-        fr.color="white";
-        fr.selected=false;
-      }
-      this.update_account();
     }
+  }
 
 
 
-    ngOnInit(): void {
-      setTimeout(()=>{
+  select_friends(fr: any) {
+    if(fr.color=="white"){
+      fr.color="deeppink";
+      fr.selected=true;
+    }
+    else{
+      fr.color="white";
+      fr.selected=false;
+    }
+    this.update_account();
+  }
+
+
+
+  ngOnInit(): void {
+    setTimeout(()=>{
       this.user.refresh_balance(()=>{
         this.refresh();
       });
     },500)
 
+    let params=this.routes.snapshot.queryParamMap;
+    if(params.has("to") && params.has("unity")){
+      this.user.selected_money=params.get("unity");
+      this.transfer(params.get("to"),params.get("value"));
+    }
+
     localStorage.setItem("last_screen","main");
   }
+
+
+
+  createDonateLink() {
+    this.dialog.open(PromptComponent, {
+      backdropClass:"removeBackground",
+      data: {
+        title: 'Combien souhaitez vous recevoir ?',
+        question: "",
+        onlyConfirm: false,
+        type:"number",
+        result:2,
+        lbl_ok: 'Confirmer',
+        lbl_cancel: 'Annuler'
+      }}).afterClosed().subscribe((result:any) => {
+      if (result) {
+        let unity=this.user.selected_money;
+        this.donateUrl=this.config.server.domain_appli+"/main?transfer="+result+"&unity="+unity+"&to="+this.user.addr;
+        showMessage(this,"Votre lien est disponible. Coller le dans vos mail ou votre site web pour pouvoir recevoir des dons en "+this.user.moneys[this.user.selected_money].unity);
+      }
+    });
   }
+}
 

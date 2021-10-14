@@ -119,7 +119,7 @@ content:
     format: html
     content: "
       <p>
-      Les applications des NFTs sont très nombreuses,
+      Les applications des eNFTs sont très nombreuses,
       <ul>
       <li>Désigner le propriétaire d'une oeuvre en attachant le NFT au fichier de l'oeuvre</li>
       <li>Billeterie: Implémenter un service de billeterie, chaque billet étant représenté par un NFT</li>

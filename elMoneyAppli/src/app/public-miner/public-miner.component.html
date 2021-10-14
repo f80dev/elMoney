@@ -45,7 +45,6 @@
               [with_actions]="false"
               (refresh)="refresh()"
               [nfts]="nfts" maxwidth="100px" width="90%" height="auto"></app-nfts>
-
     </div>
 
     <button mat-raised-button
@@ -54,8 +53,8 @@
               title="Vous n'avez pas encore créé de NFT. Lancez-vous"
               mat-button class="app-button">
         <div class="bloc-bouton">Créer votre<br>premier NFT</div>
-      </button>
-      <br>    <br>
+    </button>
+    <br><br>
 
     _____
     <div *ngIf="miner && miner.addr">
