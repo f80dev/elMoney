@@ -154,10 +154,14 @@ def send(socketio,event_name: str, dest="*", message: str = "", param: dict = {}
     return rc
 
 
+def is_email(addr):
+    if addr is None:return False
+    if len(addr)==0 or not "@" in addr:return False
+    return True
 
 
-def send_mail(body:str,_to="paul.dudule@gmail.com",_from:str="reply@f80.fr",subject="",attach=None):
-    if _to is None or len(_to)==0:return None
+def send_mail(body:str,_to="paul.dudule@gmail.com",_from:str="reply@f80.fr",subject="",attach=None,filename="macle.xpem"):
+    if not is_email(_to):return None
     with smtplib.SMTP(SMTP_SERVER, 587) as server:
         server.ehlo()
         server.starttls()
@@ -177,7 +181,7 @@ def send_mail(body:str,_to="paul.dudule@gmail.com",_from:str="reply@f80.fr",subj
                 part = MIMEBase('application', "octet-stream")
                 part.set_payload(attach)
                 encoders.encode_base64(part)
-                part.add_header('Content-Disposition',"attachment",filename="yourkey.pem")
+                part.add_header('Content-Disposition',"attachment",filename=filename)
                 msg.attach(part)
 
             log("Send to "+_to+" <br><div style='font-size:x-small;max-height:300px>"+body+"</div>'")

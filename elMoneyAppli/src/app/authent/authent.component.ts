@@ -9,6 +9,7 @@ import {Location} from "@angular/common";
 import {$$, showError, showMessage} from "../tools";
 import {Router} from "@angular/router";
 import {environment} from "../../environments/environment";
+import {PromptComponent} from "../prompt/prompt.component";
 
 
 @Component({
@@ -50,6 +51,8 @@ export class AuthentComponent implements OnInit {
     if(this.savePrivateKey)localStorage.setItem('pem',result.pem);
     this.dialogRef.close(result);
   }
+
+
 
   udpate_mail(){
     this.showSaveKey=false;
@@ -125,12 +128,31 @@ export class AuthentComponent implements OnInit {
 
   open_elrond_authent() {
     let w:any=window;
-    debugger
     if(w.elrondWallet){
         $$("Prise en compte de l'elrond wallet en cours");
     }
     if(!this.data.redirect)this.data.redirect="store";
     let url=this.config.server.wallet_domain+"hook/login?callbackUrl="+environment.domain_appli+"/"+this.data.redirect
     window.location.href=url;
+  }
+
+  anonymous_login() {
+    this.dialog.open(PromptComponent,{width: 'auto',
+      backdropClass:"removeBackground",
+      data:
+        {
+          title: "Connexion anonyme non conseillée",
+          question: "Avec une connexion anonyme, il est fortement conseillé d'enregistrer votre fichier de signature afin de pouvoir vous reconnecter depuis un autre terminal si besoin",
+          onlyConfirm:true,
+          lbl_ok:"Confirmer",
+          lbl_cancel:"Annuler"
+        }
+    }).afterClosed().subscribe((result) => {
+      if(result=="yes"){
+        this.savePrivateKey=true;
+        this.user.email="anonymous";
+        this.udpate_mail();
+      }
+    });
   }
 }

@@ -37,7 +37,7 @@ export class CreateComponent implements OnInit {
       this.user.check_pem(()=>{
         this.user.refresh_balance((r:any)=>{
             if(r.EGLD.solde<this.config.server.new_esdt_price){
-              showMessage(this,"Vous n'avez pas assez d'eGold pour créer une nouvelle monnaie. recharger votre compte jusqu'a 5 eGold");
+              showMessage(this,"Vous n'avez pas assez d'eGold pour créer une nouvelle monnaie. recharger votre compte jusqu'a "+this.config.server.new_esdt_price+" eGold");
               this.router.navigate(["faucet"]);
             }
           }
@@ -68,19 +68,22 @@ export class CreateComponent implements OnInit {
       url:this.url,
       email:this.email_confirm
     };
-    $$("Demande de déploiement de la monnaie "+this.name+" d'un montant initial de "+this.amount,obj);
 
+    $$("Demande de déploiement de la monnaie "+this.name+" d'un montant initial de "+this.amount,obj);
     this.api._post("/deploy/"+this.name+"/"+this.unity+"/18/"+this.amount,"",obj,240).subscribe((r:any)=>{
-      this.message="";
       this.api.set_identifier(r.id);
       setTimeout(()=>{
+        this.message="";
         this.user.refresh_balance(()=>{
-          showMessage(this,"Votre monnaie est maintenant disponible");
-          setTimeout(()=>{this.router.navigate(["moneys"])},1000);
+          setTimeout(()=>{
+            this.message="";
+            showMessage(this,"Votre monnaie sera bientôt disponible");
+            this.router.navigate(["moneys"]);
+          },10000);
         },()=>{
           showError(this);
         });
-      },1000);
+      },1500);
     },(err:any)=>{
       this.message="";
       $$("Erreur de fabrication de la monnaie",err);

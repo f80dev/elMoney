@@ -103,7 +103,7 @@ class DAO:
 
     def get_user(self, email):
         field="email"
-        if not "@" in email and email.startswith("erd"):field="addr"
+        if email=="anonymous" or not "@" in email and email.startswith("erd"):field="addr"
         rc=self.db["users"].find_one(filter={field: email.lower()})
         return rc
 

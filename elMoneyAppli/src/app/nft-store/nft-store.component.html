@@ -7,8 +7,6 @@
 
 <div class="mainform">
 
-  <app-tuto [if]="art">Cliquez sur les NFT pour en savoir plus et les acheter si vous le souhaitez</app-tuto>
-
   <!--  <mat-button-toggle-group #group="market_place">-->
   <!--    <mat-button-toggle *ngFor="let seller of sellers" [(ngModel)]="modelName" [checked]="modelName"></mat-button-toggle>-->
   <!--  </mat-button-toggle-group>-->
@@ -55,10 +53,14 @@
         <mat-icon>login</mat-icon>
       </button>
     </td>
-
   </tr></table>
 
 
+  <app-tuto [if]="art"
+            label="Cliquez sur les NFT pour en savoir plus et les acheter si vous le souhaitez"></app-tuto>
+
+
+<!--  Zone de recherche-->
   <div *ngIf="cache?.length>2 && !filter_id" style="margin: 1px;">
     <mat-form-field appearance="fill"
                     style="max-width:200px;width:60%;margin-right: 5px;" cdkFocusInitial>

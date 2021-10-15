@@ -104,9 +104,11 @@ export class ApiService {
     return this.http.get(api('getyaml/faqs', ''));
   }
 
-  balance(address_to: string) {
+  balance(address_to: string,force=false) {
     $$("Récupération du solde de "+address_to+" sur le contrat l'ensemble des contrats");
-    return this._get("/balance/"+address_to+"/","");
+    let s="";
+    if(force)s="?"+now();
+    return this._get("/balance/"+address_to+"/"+s,"");
   }
 
 

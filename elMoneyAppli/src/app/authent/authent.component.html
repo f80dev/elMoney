@@ -26,12 +26,22 @@
           <input matInput type="text" max="50" autofocus [(ngModel)]="user.email" (keypress)="on_keypress($event)" cdkFocusInitial>
           <mat-hint>pour créer un nouveau compte ou récupérer votre compte existant</mat-hint>
         </mat-form-field>
-        <br><br>
+        <br>
+        <app-tuto label="Votre email est uniquement utilisé pour vous envoyer les infos sur le compte Elrond qui va être créer si c'est votre première connexion"></app-tuto>
+        <br>
         <button mat-raised-button
                 *ngIf="user.email.indexOf('@')>0"
                 mat-button class="app-button"
                 (click)="udpate_mail()">
           Se connecter
+        </button>
+        <br>
+        <br>
+        <button mat-raised-button
+                *ngIf="user.email?.length==0"
+                mat-button class="app-button"
+                (click)="anonymous_login()">
+          Rester anonyme
         </button>
       </div>
     </div>

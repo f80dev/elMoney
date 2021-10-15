@@ -107,7 +107,7 @@ export class UserService {
 
 
 
-  refresh_balance(func=null,func_error=null){
+  refresh_balance(func=null,func_error=null,force=false){
     if(!this.addr || this.addr.length<10 || this.addr=="null"){
       $$("Refresh de la balance annulé pour address non conforme");
       if(func_error)func_error();
@@ -252,7 +252,7 @@ export class UserService {
     else{
       this.dialog.open(AuthentComponent,{
         backdropClass:'removeBackground',
-        width: '375px',height:"auto",data:
+        width: '95%',height:"auto",maxWidth:'400px',data:
           {
             title: title,
             redirect:redirect
@@ -299,7 +299,7 @@ export class UserService {
           if(result){
             if(this.addr && this.addr!=result.addr){
               localStorage.removeItem("pem");
-              showMessage(vm,"cette clé ne correspond pas au compte, si vous souhaitez vraiment l'utiliser vous devez préalablement vous déconnecter");
+              showMessage(vm,"cette signature ne correspond pas au compte, si vous souhaitez vraiment l'utiliser vous devez préalablement vous déconnecter");
               if(func_abort)func_abort();
             } else {
               if(!this.addr)this.init(result.addr);

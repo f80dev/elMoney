@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {brand_text, hashCode} from "../tools";
 import {ConfigService} from "../config.service";
 import {TransPipe} from "../trans.pipe";
@@ -8,7 +8,7 @@ import {TransPipe} from "../trans.pipe";
   templateUrl: './tuto.component.html',
   styleUrls: ['./tuto.component.sass']
 })
-export class TutoComponent implements OnInit {
+export class TutoComponent implements OnInit,OnChanges {
 
   @Input("text") text: string="";
   @Input("text-align") text_align: string="center";
@@ -41,6 +41,24 @@ export class TutoComponent implements OnInit {
   _position="fixed";
 
   refresh(){
+    if(this.icon!=null && this.icon.length>0)this.image="";
+    if(this.text==null || this.text.length==0)this.text=this.label;
+    if(this.title!=null && this.title.length>0 || this.subtitle.length>0){
+      this._type="title";
+      this.text=this.title;
+    }
+    if(this._type=="tips" && this._button!=null && this._button.length>0)this.image="";
+
+    if(this.text==null || this.text.length==0)return;
+
+    this.code="histo"+hashCode(this.text+this.subtitle);
+    if(!this.force){
+      if(localStorage.hasOwnProperty("tuto") && localStorage.getItem("tuto").indexOf(this.code)>-1){
+        this._if=false;
+      }
+    }
+
+    if(this.duration==0)this.duration=(this.text.split(" ").length+this.subtitle.split(" ").length)/2;
 
     if(!this.fullscreen)this._position="relative";
     this.text=brand_text(this.text,this.config);
@@ -64,8 +82,8 @@ export class TutoComponent implements OnInit {
 
 
 
-  ngOnChanges() {
-
+  ngOnChanges(changes: SimpleChanges) {
+    this.refresh();
   }
 
 
@@ -85,32 +103,13 @@ export class TutoComponent implements OnInit {
 
 
   ngOnInit(): void {
-    if(this.icon!=null && this.icon.length>0)this.image="";
-    if(this.text==null || this.text.length==0)this.text=this.label;
-    if(this.title!=null && this.title.length>0 || this.subtitle.length>0){
-      this._type="title";
-      this.text=this.title;
-    }
-    if(this._type=="tips" && this._button!=null && this._button.length>0)this.image="";
 
-    //this.text=this.transPipe.transform(this.text);
-
-    if(this.text==null || this.text.length==0)return;
-
-    this.code="histo"+hashCode(this.text+this.subtitle);
-    if(!this.force){
-      if(localStorage.hasOwnProperty("tuto") && localStorage.getItem("tuto").indexOf(this.code)>-1){
-        this._if=false;
-      }
-    }
-
-    if(this.duration==0)this.duration=(this.text.split(" ").length+this.subtitle.split(" ").length)/2;
     this.refresh();
 
   }
 
   showText(b: boolean) {
     this._if=b;
-    this.ngOnChanges();
+    this.ngOnChanges(null);
   }
 }

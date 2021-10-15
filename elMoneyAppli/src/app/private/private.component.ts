@@ -56,7 +56,7 @@ export class PrivateComponent implements OnInit {
   send_pem(body:any){
     this.api._post("analyse_pem", "", body, 240).subscribe((r: any) => {
       this.quit({pem:r.pem,addr:r.address});
-    });
+    },(err)=>{showError(this,err);});
   }
 
 

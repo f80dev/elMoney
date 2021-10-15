@@ -2,26 +2,24 @@
   <h2>Sélectionnez une monnaie</h2>
 
   <app-tuto
-            style="text-align: left;display: inline-block;max-width: 600px;"
-            label="Plusieurs monnaies sont disponibles. Sélectionnez celle que vous souhaitez utiliser. Vous pourrez changer à n'importe quel moment"></app-tuto>
+    style="text-align: left;display: inline-block;max-width: 600px;"
+    label="Plusieurs monnaies sont disponibles. Sélectionnez celle que vous souhaitez utiliser. Vous pourrez changer à n'importe quel moment"></app-tuto>
   <br>
   <app-hourglass [message]="message"></app-hourglass>
 
   <div *ngIf="message?.length==0 && moneys?.length==0">Vous ne possédez aucune monnaie</div>
 
-  <table *ngIf="message?.length==0 && moneys?.length>0" style="display: inline-block;vertical-align: middle;width:90%;max-width: 400px;padding: 3px;">
-    <tr color="primary">
-      <th></th>
+  <table *ngIf="message?.length==0 && moneys?.length>0"
+         style="font-weight: bold; display: inline-block;vertical-align: middle;width:90%;max-width: 400px;padding: 3px;">
+    <tr>
       <th>Unité</th>
       <th>Nom</th>
       <th>Solde</th>
     </tr>
-    <tr *ngFor="let m of moneys" style="pointer:cursor;width: 95vw;" (click)="select(m)">
-      <td style="text-align: left;width: fit-content;">
-        <mat-icon style="cursor: pointer;">chevron_right</mat-icon>&nbsp;
-      </td>
-      <td>
-        <span [cdkCopyToClipboard]="m.tokenIdentifier" ngxClipboard style="cursor: pointer;">{{m.unity}}</span>
+
+    <tr *ngFor="let m of moneys" style="pointer:cursor;width: 95vw;height:40px;padding:0px;" (click)="select(m)">
+      <td style="width: 100px;" [cdkCopyToClipboard]="m.tokenIdentifier" ngxClipboard>
+        <span style="cursor: pointer;">{{m.unity}}</span>
       </td>
       <td style="max-width:300px;text-align: left;font-size: large;width: 50%;">
         {{m.name}}
@@ -43,7 +41,7 @@
           cancel
         </mat-icon>
 
-         <button mat-icon-button mat-raised-button style="background-color: transparent;"
+        <button mat-icon-button mat-raised-button style="background-color: transparent;"
                 mat-button class="icon-button"
                 *ngIf="m.url && m.url?.length>0"
                 (click)="openDoc(m.url)">

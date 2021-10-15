@@ -8,12 +8,12 @@
 
   <a [href]="fileUrl"
      title="Ce fichier est strictement confidentiel, il ne doit être communiquer à personne et conserver précieusement."
-     *ngIf="user.pem"
+     *ngIf="user.pem.length>0"
      (click)="valide_save()"
-     download="macle.pem">
+     [download]="filename">
     <table class="app-button" style="display: inline-block;width:150px;border-radius: 7px;font-size: small;line-height: 95%;"><tr>
       <td><mat-icon>download</mat-icon></td>
-      <td>Sauvegardez votre<br>clé privée</td>
+      <td>Sauvegardez<br>votre signature</td>
     </tr></table>
   </a>
 

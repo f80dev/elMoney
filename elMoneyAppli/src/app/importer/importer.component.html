@@ -6,7 +6,6 @@
 
 
 <div class="mainform">
-
   <div *ngFor="let tk of tokens" >
     <app-tuto
       [title]="tk.tuto_title"
@@ -43,7 +42,6 @@
                  mat-align-tabs="center">
 
     <mat-tab label="NFT express">
-
       <mat-form-field *ngIf="!show_zone_upload" appearance="fill" style="max-width:100px;margin-top: 10px;">
         <mat-label>Monnaie</mat-label>
         <mat-select [(ngModel)]="selected_money" name="money" (ngModelChange)="update_user_solde()">
@@ -56,14 +54,14 @@
       <div *ngIf="show_zone_upload">
         <br>
         <app-upload-file
-                       [send_file]="true"
-                       style="margin: 10px"
-                       [maxsize]="config.values.max_file_size"
-                       [extensions]="extensions"
-                       (canceled)="show_zone_upload=false"
-                       (uploaded)="onupload($event)">
-        {{prompt}}
-      </app-upload-file>
+          [send_file]="true"
+          style="margin: 10px"
+          [maxsize]="config.values.max_file_size"
+          [extensions]="extensions"
+          (canceled)="show_zone_upload=false"
+          (uploaded)="onupload($event)">
+          {{prompt}}
+        </app-upload-file>
 
       </div>
 
@@ -108,30 +106,31 @@
         <mat-vertical-stepper (selectionChange)="update_idx($event)" [linear]="false" style="width:90%;display: inline-block;max-width:700px;text-align: left;background: none;">
           <mat-step>
 
-
             <app-tuto *ngIf="idx_tab==0"
                       label="TOKENFORGE permet de cacher un secret dans le NFT. Celui-ci ne peut être vue que par le propriétaire du NFT. Par exemple vous pouvez cacher un mot de passe, un lien youtube, un fichier"></app-tuto>
 
             <form>
               <ng-template matStepLabel>Embarquer dans le NFT</ng-template>
 
-              <table><tr>
-                <td>
-                  <app-upload-file
-                    *ngIf="!filename || filename.length==0"
-                    [send_file]="true"
-                    [maxsize]="config.values.max_file_size"
-                    (uploaded)="_import($event,0,'Commençons par charger le fichier dans le NFT')">
-                    {{prompt}}
-                  </app-upload-file>
-                </td>
-                <td *ngIf="filename?.length>0">
-                  '{{filename}}' <span style="color: lightgrey">est embarqué dans votre NFT</span>&nbsp;
-                </td>
-                <td *ngIf="filename?.length>0">
-                  <mat-icon style="cursor: pointer" (click)="filename=''">delete</mat-icon>
-                </td>
-              </tr></table>
+              <table>
+                <tr>
+                  <td>
+                    <app-upload-file
+                      *ngIf="!filename || filename.length==0"
+                      [send_file]="true"
+                      [maxsize]="config.values.max_file_size"
+                      (uploaded)="_import($event,0,'Commençons par charger le fichier dans le NFT')">
+                      {{prompt}}
+                    </app-upload-file>
+                  </td>
+                  <td *ngIf="filename?.length>0">
+                    '{{filename}}' <span style="color: lightgrey">est embarqué dans votre NFT</span>&nbsp;
+                  </td>
+                  <td *ngIf="filename?.length>0">
+                    <mat-icon style="cursor: pointer" (click)="filename=''">delete</mat-icon>
+                  </td>
+                </tr>
+              </table>
 
 
 
@@ -304,8 +303,6 @@
                 +0,1
               </button>
 
-
-
             </form>
           </mat-step>
           <mat-step>
@@ -336,13 +333,19 @@
                 <br>
               </mat-tab>
 
-              <mat-tab label="Les revendeurs">
+              <mat-tab label="Vos revendeurs">
                 <div *ngIf="dataSource.data.length==0"><br>Aucun revendeur autorisé</div>
                 <br>
                 <button mat-raised-button
                         mat-button class="app-button"
-                        (click)="add_seller()">
-                  Ajouter
+                        (click)="add_seller(false)">
+                  Sélectionner
+                </button>
+
+                <button mat-raised-button
+                        mat-button class="app-button"
+                        (click)="add_seller(true)">
+                  Tous
                 </button>
 
 
@@ -423,88 +426,88 @@
           <mat-step>
             <app-tuto *ngIf="idx_tab==3" label="Dés le NFT fabriqué, celui-ci est visible dans la place de marché de TOKENFORGE"></app-tuto>
 
-              <ng-template matStepLabel>Fabrication</ng-template>
-              <mat-form-field appearance="fill" class="app-field" style="max-width: 250px;width:80%;">
-                <mat-label>Combien d'exemplaire (max 30)</mat-label>
-                <input matInput type="number"
-                       id="txtNumber" autocomplete="false"
-                       min="1" step="1" max="30" [(ngModel)]="count"
-                       [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=10">
-                <mat-hint *ngIf="focus_idx==10">Attention le coût de fabrication dépend également du nombre de NFT fabriqués</mat-hint>
-              </mat-form-field>
+            <ng-template matStepLabel>Fabrication</ng-template>
+            <mat-form-field appearance="fill" class="app-field" style="max-width: 250px;width:80%;">
+              <mat-label>Combien d'exemplaire (max 30)</mat-label>
+              <input matInput type="number"
+                     id="txtNumber" autocomplete="false"
+                     min="1" step="1" max="30" [(ngModel)]="count"
+                     [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=10">
+              <mat-hint *ngIf="focus_idx==10">Attention le coût de fabrication dépend également du nombre de NFT fabriqués</mat-hint>
+            </mat-form-field>
 
-              <button mat-button mat-icon-button mat-raised-button
-                      id="cmdIncNumber"
-                      class="icon-button"
-                      (click)="count=count+1">
-                +1
-              </button>
+            <button mat-button mat-icon-button mat-raised-button
+                    id="cmdIncNumber"
+                    class="icon-button"
+                    (click)="count=count+1">
+              +1
+            </button>
 
-              <br>
+            <br>
 
+            <mat-slide-toggle
+              color="primary"
+              *ngIf="count>1 && gift>0"
+              name="opt_gift"
+              [(ngModel)]="opt_gift">
+              N'attribuer la récompense qu'a un seul NFT sur les {{count}}(loterie)
+            </mat-slide-toggle>
+            <br>
+
+            <br>
+            <small *ngIf="!opt_gift">Cout de fabrication: {{count*gift}} {{selected_money.label}} + frais de transactions</small>
+            <span *ngIf="count*gift>user.gas/1e18">(Solde insuffisant)</span>
+            <br><br>
+            <div *ngIf="show_preview" style="width: 100%;text-align: center;">
+              <app-nfts [nfts]="nfts_preview" [user]="user"
+                        height="fit-content"></app-nfts><br>
+              <small>Visualisation de votre NFT dans la place de marché</small>
+            </div>
+
+            <div *ngIf="secret.length==0">
               <mat-slide-toggle
                 color="primary"
-                *ngIf="count>1 && gift>0"
-                name="opt_gift"
-                [(ngModel)]="opt_gift">
-                N'attribuer la récompense qu'a un seul NFT sur les {{count}}(loterie)
+                title="Fabriquer un NFT au standard Elrond"
+
+                [(ngModel)]="elrond_standard">NFT compatible Elrond
               </mat-slide-toggle>
               <br>
-
-              <br>
-              <small *ngIf="!opt_gift">Cout de fabrication: {{count*gift}} {{selected_money.label}} + frais de transactions</small>
-              <span *ngIf="count*gift>user.gas/1e18">(Solde insuffisant)</span>
-              <br><br>
-              <div *ngIf="show_preview" style="width: 100%;text-align: center;">
-                <app-nfts [nfts]="nfts_preview" [user]="user"
-                          height="fit-content"></app-nfts><br>
-                <small>Visualisation de votre NFT dans la place de marché</small>
-              </div>
-
-              <div *ngIf="secret.length==0">
-                <mat-slide-toggle
-                  color="primary"
-                  title="Fabriquer un NFT au standard Elrond"
-
-                  [(ngModel)]="elrond_standard">NFT compatible Elrond
-                </mat-slide-toggle>
-                <br>
-              </div>
+            </div>
 
 
 
-              <br>
+            <br>
 
-              <button mat-raised-button
-                      mat-button class="app-button"
-                      id="cmdShowPreview"
-                      (click)="showPreview()">
-                <span *ngIf="!show_preview">Preview</span>
-                <span *ngIf="show_preview">Cacher</span>
-              </button>
+            <button mat-raised-button
+                    mat-button class="app-button"
+                    id="cmdShowPreview"
+                    (click)="showPreview()">
+              <span *ngIf="!show_preview">Preview</span>
+              <span *ngIf="show_preview">Cacher</span>
+            </button>
 
-              <button mat-raised-button  color="primary"
-                      mat-button class="app-button"
-                      id="cmdMakeNFT"
-                      [disabled]="title?.length==0 || count*gift>solde_user/1e18"
-                      (click)="make_token()">
-                Fabriquer !
-              </button>
+            <button mat-raised-button  color="primary"
+                    mat-button class="app-button"
+                    id="cmdMakeNFT"
+                    [disabled]="title?.length==0 || count*gift>solde_user/1e18"
+                    (click)="make_token()">
+              Fabriquer !
+            </button>
 
           </mat-step>
         </mat-vertical-stepper>&nbsp;
       </div>
     </mat-tab>
 
-<!--    <mat-tab label="Création automatique">-->
-<!--      <br>-->
-<!--      TokenForge propose une interface de création en masse de NFTs. Cette interface repose sur un fichier Excel téléchargeable<br><br>-->
+    <!--    <mat-tab label="Création automatique">-->
+    <!--      <br>-->
+    <!--      TokenForge propose une interface de création en masse de NFTs. Cette interface repose sur un fichier Excel téléchargeable<br><br>-->
 
-<!--      <a href="./assets/TokenForgeFromExcel.xlsm" download="TokenForge.xlsm" target="_blank">Télécharger le fichier</a>-->
+    <!--      <a href="./assets/TokenForgeFromExcel.xlsm" download="TokenForge.xlsm" target="_blank">Télécharger le fichier</a>-->
 
-<!--      <br>-->
+    <!--      <br>-->
 
-<!--    </mat-tab>-->
+    <!--    </mat-tab>-->
 
 
 

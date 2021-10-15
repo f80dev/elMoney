@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {UserService} from "../user.service";
 import {DomSanitizer} from "@angular/platform-browser";
 
@@ -7,30 +7,34 @@ import {DomSanitizer} from "@angular/platform-browser";
   templateUrl: './savekey.component.html',
   styleUrls: ['./savekey.component.sass']
 })
-export class SavekeyComponent implements OnInit {
+export class SavekeyComponent implements OnChanges {
 
   fileUrl:any;
   save_key=false;
+  @Input("filename") filename="macle.pem";
 
   constructor(
     public user:UserService,
     public sanitizer:DomSanitizer
   ) {}
 
-  ngOnInit(): void {
-    this.save_key=(localStorage.getItem("save_key") && localStorage.getItem("save_key")=="true");
-    if(this.user.pem){
-      const blob = new Blob([this.user.pem], { type: 'text/plain' });
-      this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(blob));
-    }
-  }
 
   valide_save() {
-    localStorage.setItem("save_key","true");
-    this.save_key=true;
+
   }
 
   already_save() {
     this.valide_save();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    setTimeout(()=>{
+      if(this.user.pem){
+        if(this.user.pem.indexOf("\"file\":")>0)this.user.pem=JSON.parse(this.user.pem).file;
+        const blob = new Blob([this.user.pem], { type: 'application/octet-stream' });
+        this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(blob));
+      }
+    },2000);
+
   }
 }

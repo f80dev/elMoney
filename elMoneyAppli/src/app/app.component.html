@@ -41,6 +41,7 @@
     </mat-drawer>
 
     <mat-drawer-content style="overflow: scroll;margin:0px;">
+
       <div class="sidenav-container" (mousedown)="closeMenu()">
 
         <div style="width:60%;margin-left: 20%;">
@@ -56,6 +57,7 @@
                        *ngIf="message.length==0">
         </router-outlet>
       </div>
+
     </mat-drawer-content>
 
 </mat-drawer-container>

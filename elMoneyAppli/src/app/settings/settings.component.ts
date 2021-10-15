@@ -29,6 +29,7 @@ export class SettingsComponent implements OnInit,OnDestroy {
   domain_appli=environment.domain_appli;
   mustSave: boolean=false;
   qrcode_w=100;
+  keyfilename="macle.xpem";
 
   constructor(public router:Router,
               public user:UserService,
@@ -46,9 +47,10 @@ export class SettingsComponent implements OnInit,OnDestroy {
 
   ngOnInit(): void {
     this.user.check_pem(()=>{
+      this.keyfilename=(this.user.pseudo || "macle")+".xpem";
       this.open_section=Number(this.routes.snapshot.queryParamMap.get("section"));
       if(!this.open_section)this.open_section=1;
-    },this.router,null,"settings?section=1")
+    },this)
   }
 
 

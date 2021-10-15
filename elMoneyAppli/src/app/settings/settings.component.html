@@ -80,11 +80,6 @@
 
       <br><br>
 
-      <mat-slide-toggle [(ngModel)]="user.accept_all_dealers">
-        Accepter tous les distributeurs
-      </mat-slide-toggle>
-            <br>
-
       <div *ngIf="message.length==0" [cdkCopyToClipboard]="user.addr" ngxClipboard style="cursor: pointer">
         <br>
         <small>Votre adresse</small><br>
@@ -249,11 +244,11 @@
       <button mat-raised-button mat-button
               class="app-button"
               (click)="show_explorer()">
-        <div class="bloc-bouton">mon compte<br>sur l'explorer</div>
+        <div class="bloc-bouton">mon compte sur<br>la blockchaine</div>
       </button>
 
       <br>
-      <app-savekey style="display: inline-block;"></app-savekey>
+      <app-savekey [filename]="keyfilename" style="display: inline-block;"></app-savekey>
       <app-tuto label="Si besoin, télécharger votre clé privée et conserver là en lieu sûr pour effecture les transferts et la création de nouvelle monnaie"></app-tuto>
 
       <br>

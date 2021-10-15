@@ -329,24 +329,28 @@ export class ImporterComponent implements OnInit {
     //TODO: a coder la récupération de l'ensemble des distributeurs ayant reconnu le créateur
   }
 
-  add_seller() {
-    this.dialog.open(SelDealerComponent, {
-      position: {left: '5vw', top: '5vh'},
-      maxWidth: 500, width: '95vw', height: 'auto',
-      data:{
-        title:"Ajouter mes distributeurs",
-        direct_sel:false,
-        no_dealer_message:"Aucun distributeur ne vous a référencé. Demander votre référencement depuis la marketplace"
-      }
-    }).afterClosed().subscribe((result:any) => {
-      if (result && Object.keys(result).length>0) {
-        for(let seller of result){
-          let obj:SellerProperties={address:seller.address,name:seller.name};
-          this.dataSource.data.push(obj);
+  add_seller(all_seller=false) {
+    if(all_seller){
+
+    } else {
+      this.dialog.open(SelDealerComponent, {
+        position: {left: '5vw', top: '5vh'},
+        maxWidth: 500, width: '95vw', height: 'auto',
+        data:{
+          title:"Ajouter mes distributeurs",
+          direct_sel:false,
+          no_dealer_message:"Aucun distributeur ne vous a référencé. Demander votre référencement depuis la marketplace"
         }
-        this.dataSource._updateChangeSubscription();
-      }
-    });
+      }).afterClosed().subscribe((result:any) => {
+        if (result && Object.keys(result).length>0) {
+          for(let seller of result){
+            let obj:SellerProperties={address:seller.address,name:seller.name};
+            this.dataSource.data.push(obj);
+          }
+          this.dataSource._updateChangeSubscription();
+        }
+      });
+    }
   }
 
 
@@ -359,7 +363,6 @@ export class ImporterComponent implements OnInit {
       this.dataSource._updateChangeSubscription();
     }
   }
-
 
 
   update_idx($event: StepperSelectionEvent) {

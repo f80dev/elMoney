@@ -232,32 +232,35 @@ def get_user(addrs:str):
     :return:
     """
 
+
+
     rc=[]
-    for addr in addrs.split(","):
-        _user = dao.get_user(addr)
-        contacts = []
-        if not _user is None:
-            addr=_user["addr"]
-            if "contacts" in _user:contacts = _user["contacts"]
+    if addrs != "anonymous" and len(addrs) > 0:
+        for addr in addrs.split(","):
+            _user = dao.get_user(addr)
+            contacts = []
+            if not _user is None:
+                addr=_user["addr"]
+                if "contacts" in _user:contacts = _user["contacts"]
 
-        if _user is None and "@" in addr:break
+            if _user is None and "@" in addr:break
 
-        data = bc.get_account(addr,False)
-        if not data is None and not "error" in data:
-            data["contacts"] = contacts
-            if not "email" in data:
-                if _user is None:
-                    data["email"] = ""
-                else:
-                    data["email"] = _user["email"]
+            data = bc.get_account(addr,False)
+            if not data is None and not "error" in data:
+                data["contacts"] = contacts
+                if not "email" in data:
+                    if _user is None:
+                        data["email"] = ""
+                    else:
+                        data["email"] = _user["email"]
 
-            if "visual" in data and len(data["visual"])==46:data["visual"]="https://ipfs.io/ipfs/"+data["visual"]
-            if "identity" in data and len(data["identity"]) == 46: data["identity"] = "https://ipfs.io/ipfs/" + data["identity"]
-            if "shop_visual" in data and len(data["shop_visual"])==46:data["shop_visual"]="https://ipfs.io/ipfs/"+data["shop_visual"]
-        else:
-            return jsonify(data),500
+                if "visual" in data and len(data["visual"])==46:data["visual"]="https://ipfs.io/ipfs/"+data["visual"]
+                if "identity" in data and len(data["identity"]) == 46: data["identity"] = "https://ipfs.io/ipfs/" + data["identity"]
+                if "shop_visual" in data and len(data["shop_visual"])==46:data["shop_visual"]="https://ipfs.io/ipfs/"+data["shop_visual"]
+            else:
+                return jsonify(data),500
 
-        rc.append(data)
+            rc.append(data)
 
     return jsonify(rc),200
 
@@ -433,14 +436,18 @@ def resend_pem(addr:str):
     :return:
     """
     _user=dao.get_user(addr)
+    _user_elrond=bc.get_account(_user["addr"])
     if _user and "pem" in _user and len(_user["pem"])>0:
         instant_access =app.config["DOMAIN_APPLI"]  + "/?instant_access=" + str(_user["pem"],"utf8")+"&address="+_user["addr"]
+        key_filename="macle.xpem"
+        if "pseuco" in _user_elrond["pseudo"]:key_filename=_user_elrond["pseudo"]+".xpem"
+
         send_mail(open_html_file("resend_pem", {
             "dest": _user["email"],
             "delay":60,
             "public_key": _user["addr"],
             "instant_access":instant_access
-        }), _user["email"], subject="Renvoi de votre fichier de signature", attach=_user["pem"])
+        }), _user["email"], subject="Renvoi de votre fichier de signature", attach=_user["pem"],filename=key_filename)
         return "consultez le mail de "+addr+" pour récupérer l'accès",200
     else:
         return returnError("Pas de fichier de signature sauvegardé sur le serveur")
@@ -691,6 +698,7 @@ def transactions(user:str=""):
     charts=dict()
     for addr in [NETWORKS[bc.network_name]["nft"],user]:
         for t in bc.getTransactionsByRest(addr):
+            if not "results" in t: t["results"] = []
             try:
                 data = str(base64.b64decode(t["data"]), "utf-8")
                 t["data"]=data
@@ -703,6 +711,10 @@ def transactions(user:str=""):
             else:
                 if t["sender"]==user:sign=-1
                 if t["receiver"]==user:sign=+1
+                if sign==0:
+                    for tt in t["results"]:
+                        if tt["sender"] == user: sign = -1
+                        if tt["receiver"] == user: sign = +1
 
             if sign!=0:
                 t = bc.getTransaction(t["hash"])
@@ -736,7 +748,6 @@ def transactions(user:str=""):
                         data = "Révéler le secret"
                         if "scResults" in t and len(t["scResults"])>1:sign=0
 
-
                     if data.startswith("buy"):
                         data="Achat d'un NFT"
                         t=bc.getTransaction(t["hash"])
@@ -744,38 +755,39 @@ def transactions(user:str=""):
                     if sign!=0:
                         log("Ajout de la transaction "+data+" : " + str(t))
                         cost=0
-                        rc["transactions"].append({
-                            "sender":t["sender"],
-                            "receiver":t["receiver"],
-                            "data": data,
-                            "value": sign * value,
-                            "fee": fee,
-                            "cost": cost,
-                            "transaction": t["hash"],
-                            "comment":comment
-                        })
+                        if len(rc["transactions"])==0 or not t["hash"] in [_t["transaction"] for _t in rc["transactions"]]:
+                            rc["transactions"].append({
+                                "sender":t["sender"],
+                                "receiver":t["receiver"],
+                                "data": data,
+                                "value": sign * value,
+                                "fee": fee,
+                                "cost": cost,
+                                "transaction": t["hash"],
+                                "comment":comment
+                            })
 
-
-                if "smartContractResults" in t:
-                    for tt in t["smartContractResults"]:
+                if "results" in t:
+                    for tt in t["results"]:
                         if len(user)==0 or (tt["receiver"]==user or tt["sender"]==user):
                             if tt["receiver"]==user:sign=1
                             if tt["sender"] == user: sign=-1
                             if len(user)==0:sign=1
-                            data2 = tt["data"]
-                            if len(data2)>0:
+                            data2 = str(base64.b64decode(bytes(tt["data"],"utf8")),"utf8")
+                            if data2.startswith("Owner pay"):
                                 rc["transactions"].append({
                                     "receiver":tt["receiver"],
                                     "sender": tt["sender"],
-                                    "data":data+": "+data2,
+                                    "data":"Vente d'un NFT",
+                                    "cost":0,
                                     "value":sign*float(tt["value"])/1e18,
                                     "fee":0,
                                     "transaction":t["hash"]
                                 })
-                                if data.startswith("Achat"):
-                                    k=tt["receiver"]
-                                    if not k in charts:charts[k]=dict({"key":k,"value":0,"profil":dict()})
-                                    charts[k]["value"] = charts[k]["value"] + sign * value
+                                    # if data.startswith("Achat"):
+                                    #     k=tt["receiver"]
+                                    #     if not k in charts:charts[k]=dict({"key":k,"value":0,"profil":dict()})
+                                    #     charts[k]["value"] = charts[k]["value"] + sign * value
 
     for profil in sorted(charts.values(),key=lambda item: item["value"],reverse=True):
         _profil=bc.get_account(profil["key"])
@@ -1138,11 +1150,13 @@ def new_account():
     _user=dao.get_user(email)
     if _user is None:
         _a,pem=bc.create_account(NETWORKS[bc.network_name]["new_account"],email=email)
-        n_row,pem=dao.save_user(email,_a.address.bech32(),pem)
+
         log("Création du compte " + _a.address.bech32() + ". Demande de transfert de la monnaie par defaut")
 
+        n_row, pem = dao.save_user(email, _a.address.bech32(), pem)
         instant_access = app.config["DOMAIN_APPLI"] + "/?instant_access=" + str(pem,"utf8") + "&address=" + _a.address.bech32()
         private = _a.private_key_seed
+
         send_mail(open_html_file("new_account",{
             "dest":email,
             "instant_access":instant_access,
@@ -1184,7 +1198,15 @@ def new_account():
 
 @app.route('/api/moneys/<addr>/')
 @app.route('/api/moneys/')
+@cache.cached(timeout=10)
 def getmoneys(addr:str=""):
+    """
+    get_moneys
+    récupération des /esdt
+    test:
+    :param addr:
+    :return:
+    """
     log("Récépuration de l'ensemble des monnaies pour "+addr)
     return jsonify(bc.getMoneys(Account(address=addr)))
 
