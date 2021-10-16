@@ -15,7 +15,7 @@ from erdpy.accounts import Account
 from erdpy.contracts import SmartContract
 from flask import Response, request, jsonify, send_file, make_response
 from Tools import log, send_mail, open_html_file, now, send, dictlist_to_csv, returnError, extract, str_to_hex, \
-    is_standard
+    is_standard, hex_to_str
 from apiTools import create_app
 
 from dao import DAO
