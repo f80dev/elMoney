@@ -37,6 +37,7 @@ export class UserService {
   accept_all_dealers: boolean=true;
   public_email: string="";
   transaction_delay=0;
+  shard: any=0;
 
 
   constructor(public api:ApiService,
@@ -159,6 +160,7 @@ export class UserService {
       this.pseudo=body.pseudo || "";
       this.visual=body.visual || "";
       this.transaction_delay=body.transaction_delay || 35;
+      this.shard=body.shard;
       this.identity=body.identity || "";
       this.description=body.description || "";
       this.accept_all_dealers=(body.accept_all_dealers==1)
@@ -305,7 +307,11 @@ export class UserService {
               if(func)func();
             }
           } else {
-            if(func_abort)func_abort("annulation");
+            if(func_abort)
+              func_abort("annulation");
+            else{
+              if(vm.router)vm.router.navigate(["store"]);
+            }
           }
         });
       }
@@ -355,5 +361,13 @@ export class UserService {
         if(func)func(this.contacts);
       });
     }
+  }
+
+  ckeck_account(f_err:Function) {
+    this.api._get("check_account/"+this.addr).subscribe(()=>{
+      $$("Le compte "+this.addr+" est valide")
+    },(err)=>{
+      f_err();
+    })
   }
 }

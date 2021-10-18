@@ -50,7 +50,8 @@ NETWORKS={
         "proxy":"https://testnet-gateway.elrond.com",
         "explorer":"https://testnet-explorer.elrond.com",
         "wallet":"https://testnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqu3y8wel4pt3dm92w954stlgrqvfxtmwsqqes5tan66"
+        "nft":"erd1qqqqqqqqqqqqqpgqu3y8wel4pt3dm92w954stlgrqvfxtmwsqqes5tan66",
+        "shard":1
     },
 
     #erd1qqqqqqqqqqqqqpgqkwfvpkaf6vnn89508l0gdcx26vpu8eq5d8ssz3lhlf
@@ -63,7 +64,8 @@ NETWORKS={
         "proxy":"https://devnet-gateway.elrond.com",
         "explorer":"https://devnet-explorer.elrond.com",
         "wallet":"https://devnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgq6fy27mfjm42ev5anlqln72w4hn7ke5wwqqeskf70z6"
+        "nft":"erd1qqqqqqqqqqqqqpgq6fy27mfjm42ev5anlqln72w4hn7ke5wwqqeskf70z6",
+        "shard": 1
     },
 
 
@@ -103,3 +105,5 @@ DIRECT_SELL     =0b00000100
 CAN_RESELL      =0b00000010
 CAN_TRANSFERT   =0b00000001
 
+LONG_DELAY_TRANSACTION=38 #sec
+SHORT_DELAY_TRANSACTION=8

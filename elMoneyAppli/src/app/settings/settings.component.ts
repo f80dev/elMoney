@@ -30,6 +30,7 @@ export class SettingsComponent implements OnInit,OnDestroy {
   mustSave: boolean=false;
   qrcode_w=100;
   keyfilename="macle.xpem";
+  duration=10;
 
   constructor(public router:Router,
               public user:UserService,
@@ -46,6 +47,15 @@ export class SettingsComponent implements OnInit,OnDestroy {
 
 
   ngOnInit(): void {
+    setTimeout(()=>{
+      if(this.user.addr){
+        this.user.ckeck_account(()=>{
+          this.user.reset(true);
+        })
+      }
+    },3000);
+
+
     this.user.check_pem(()=>{
       this.keyfilename=(this.user.pseudo || "macle")+".xpem";
       this.open_section=Number(this.routes.snapshot.queryParamMap.get("section"));
@@ -92,12 +102,14 @@ export class SettingsComponent implements OnInit,OnDestroy {
 
   make_store() {
     this.user.check_pem(()=>{
+      this.duration=this.user.transaction_delay;
       this.message="Création / Modification de la boutique";
       if(!this.user.shop_website || this.user.shop_website=="")this.user.shop_website=environment.domain_appli+"/?store="+this.user.addr;
       this.user.save_user(()=>{
         if(this.user.shop_website.length+this.user.shop_name.length+this.user.shop_description.length>0){
           this.user.new_dealer(()=>{
             this.message="";
+            this.duration=10;
             showMessage(this,"Vous avez été ajouté comme distributeur. Référencez des créateurs dés maintenant si vous pouvez");
           },(err)=>{
             showError(this,err);

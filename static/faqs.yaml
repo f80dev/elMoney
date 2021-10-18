@@ -131,6 +131,16 @@ content:
       </p>
       "
 
+  - index: delay
+    title: Pourquoi certaines opérations sont si longues ?
+    order: 1
+    format: html
+    content: "
+      <p>
+      Certaines opérations sur {{appname}} nécéssite d'inscrire des informations dans la blockchaine. Ce processus peut être long
+      </p>
+      "
+
   - index: private_key
     title: Qu'est-ce que la clé privée ?
     order: 1

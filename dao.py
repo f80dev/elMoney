@@ -91,11 +91,11 @@ class DAO:
         return self.db["nfts"].find_one({"owner":addr})
 
 
-    def save_user(self, email, addr,pem="",contacts=[]):
+    def save_user(self, email, addr,pem="",contacts=[],shard=0):
         #TODO: ajouter le cryptage de l'email
         if not pem.endswith(".pem"):
             pem=base64.b64encode(aes256.encrypt(pem,SECRET_KEY))
-        body={'email':email.lower(),'addr':addr,"pem":pem,"contacts":contacts}
+        body={'email':email.lower(),'addr':addr,"pem":pem,"contacts":contacts,"shard":shard}
         rc = self.db["users"].replace_one(filter={"addr": addr}, replacement=body, upsert=True)
         return rc.modified_count>0 or (rc.upserted_id is not None),pem
 

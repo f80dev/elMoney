@@ -23,7 +23,7 @@
     </app-tuto>
   </div>
 
-  <app-hourglass [message]="message" anim="./assets/gears.gif"></app-hourglass>
+  <app-hourglass [duration]="user.transaction_delay" [message]="message" anim="./assets/gears.gif"></app-hourglass>
 
   <!--  progression de l'upload-->
   <mat-progress-bar class="progress-bar"

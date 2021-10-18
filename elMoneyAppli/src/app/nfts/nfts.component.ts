@@ -155,9 +155,8 @@ export class NftsComponent implements OnChanges {
         } else {
           this.onrefresh.emit("open");
         }
-
       },(err)=>{
-        showMessage(this,"Impossible d'ouvrir ce NFT");
+        showError(this,"Impossible d'ouvrir ce NFT");
       });
     },this,null);
   }

@@ -22,7 +22,7 @@ from dao import DAO
 from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, \
     MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, \
     MAIN_NAME, MAIN_DECIMALS, NETWORKS, ESDT_CONTRACT, LIMIT_GAS, SECRET_KEY, ESDT_PRICE, IPFS_NODE_HOST, \
-    IPFS_NODE_PORT, ONE_WINNER
+    IPFS_NODE_PORT, ONE_WINNER, LONG_DELAY_TRANSACTION, SHORT_DELAY_TRANSACTION
 from elrondTools import ElrondNet
 from giphy_search import ImageSearchEngine
 from ipfs import IPFS
@@ -87,9 +87,13 @@ def event_loop(contract:str,dest:str,amount:str):
 @app.route('/api/analyse_pem/',methods=["POST"])
 def analyse_pem():
     _to=bc.get_elrond_user(request.data)
-    pubkey=_to.address.bech32()
-    body=str(request.data,"utf8")
-    return jsonify({"address":pubkey,"pem":body,"addr":pubkey}),200
+    if _to:
+        pubkey=_to.address.bech32()
+        _infos = bc.get_shard(pubkey)
+        body=str(request.data,"utf8")
+        return jsonify({"address":pubkey,"pem":body,"addr":pubkey,"shard":_infos["shard"]}),200
+    else:
+        return returnError()
 
 
 
@@ -135,6 +139,9 @@ def convert_email_to_addr(dest:str,html_email:str):
         _dest,pem_dest=bc.create_account(NETWORKS[bc.network_name]["new_account"],name=dest.split("@")[0],email=dest)
         html_email = html_email.replace("#addr#",_dest.address.bech32())
         send_mail(html_email, _to=dest, subject="Transfert",attach=pem_dest)
+
+        _infos = bc.get_shard(_dest.address.bech32())
+        dao.save_user(dest, _dest.address.bech32(), pem_dest, shard=_infos["shard"])
     else:
         _dest=Account(address=addr_dest)
 
@@ -222,6 +229,17 @@ def save_user(data:dict=None):
     return jsonify({"reponse": "ok","body":data})
 
 
+@app.route('/api/check_account/<addr>/',methods=["GET"])
+def check_account(addr:str):
+    log("Vérification du compte "+addr)
+    _a=bc.get_account(addr,with_cache=False)
+    if not _a is None:
+        _aa=dao.get_user(_a["addr"])
+        if not _aa is None:
+            return jsonify(_a)
+
+    return returnError("Compte incorrect")
+
 
 @app.route('/api/users/<addrs>/',methods=["GET"])
 @cache.cached(timeout=60)
@@ -247,6 +265,7 @@ def get_user(addrs:str):
             data = bc.get_account(addr,False)
             if not data is None and not "error" in data:
                 data["contacts"] = contacts
+                data["shard"]=_user["shard"]
                 if not "email" in data:
                     if _user is None:
                         data["email"] = ""
@@ -259,7 +278,10 @@ def get_user(addrs:str):
             else:
                 return jsonify(data),500
 
-            data["transaction_delay"]=37
+            if "shard" in data:
+                data["transaction_delay"]=LONG_DELAY_TRANSACTION
+                if data["shard"]==NETWORKS[bc.network_name]["shard"]:data["transaction_delay"]=SHORT_DELAY_TRANSACTION
+
             #TODO mettre ici un delay en fonction du shard
             rc.append(data)
 
@@ -726,29 +748,33 @@ def transactions(user:str=""):
                     comment="annulée"
 
                 if type(data)==str:
-                    if data.startswith("mint"):data="Creation d'un eNFT"
-                    if data.startswith("add_dealer"):data= "Ajout d'un distributeur"
-                    if data.startswith("new_dealer"):data= "Se déclarer commme distributeur"
-                    if data.startswith("add_miner"):data= "Approuver un fabricant"
-                    if data.startswith("setSpecialRole") or data.startswith("issueSemiFungible"):data= "Autorisation de création d'un NFT"
-                    if data.startswith("price"): data = "Mise a jour du prix"
-                    if data.startswith("transferOwnership"): data = "Achat d'un NFT"
-                    if data.startswith("burn"): data = "Destruction d'un token"
-                    if data.startswith("ESDTNFTCreate"): data = "Création d'un NFT elrond"
-                    if data.startswith("ESDTTransfer"): data = "Transfert d'un NFT"
-                    if data.startswith("SaveKeyValue"): data = "Sauvegarde de vos préférences"
+                    lbl=""
+                    if data.startswith("mint"):lbl="Creation d'un eNFT"
+                    if data.startswith("add_dealer"):lbl= "Ajout d'un distributeur"
+                    if data.startswith("new_dealer"):lbl= "Se déclarer commme distributeur"
+                    if data.startswith("add_miner"):lbl= "Approuver un fabricant"
+                    if data.startswith("setSpecialRole") or data.startswith("issueSemiFungible"):lbl= "Autorisation de création d'un NFT"
+                    if data.startswith("price"): lbl = "Mise a jour du prix"
+                    if data.startswith("transferOwnership"): lbl = "Achat d'un NFT"
+                    if data.startswith("burn"): lbl = "Destruction d'un token"
+                    if data.startswith("ESDTNFTCreate"): lbl = "Création d'un NFT elrond"
+                    if data.startswith("ESDTTransfer"): lbl = "Transfert d'un NFT"
+                    if data.startswith("SaveKeyValue"): lbl = "Sauvegarde de vos préférences"
                     if data.startswith("Sent from") or data.startswith("refund"):
-                        data = "Rechargement"
+                        lbl = "Rechargement"
                         fee=0
 
-                    if data.startswith("setstate"): data = "Mise en vente"
+                    if data.startswith("setstate"): lbl = "Mise en vente"
                     if data.startswith("open"):
-                        data = "Révéler le secret"
+                        lbl = "Révéler le secret"
                         if "scResults" in t and len(t["scResults"])>1:sign=0
 
                     if data.startswith("buy"):
-                        data="Achat d'un NFT"
+                        lbl="Achat d'un NFT"
                         t=bc.getTransaction(t["hash"])
+
+                    data=lbl
+
 
                     if sign!=0:
                         log("Ajout de la transaction "+data+" : " + str(t))
@@ -828,8 +854,9 @@ def reload_accounts():
     for acc in data["accounts"]:
         _test=Account(pem_file="./PEM/"+acc)
         _user=dao.get_user(_test.address.bech32())
+        _infos=bc.get_shard(_user["addr"])
         if _user is None:
-            if not dao.save_user("",_test.address.bech32(),"./PEM/"+acc):
+            if not dao.save_user("",_test.address.bech32(),"./PEM/"+acc,shard=_infos["shard"]):
                 log("Probleme de création de "+acc)
 
     for acc in data["accounts"]:
@@ -1101,7 +1128,8 @@ def add_contact(owner:str):
     if _contact is None:
         if "@" in _data["email"]:
             _contact,pem=bc.create_account(fund=NETWORKS[bc.network_name]["new_account"],email=_data["email"])
-            dao.save_user(_data["email"],_contact.address.bech32(),pem)
+            _infos = bc.get_shard(_contact.address.bech32())
+            dao.save_user(_data["email"],_contact.address.bech32(),pem,shard=_infos["shard"])
         else:
             return jsonify({"addr":_data["email"],"email":_data["email"]})
 
@@ -1153,10 +1181,10 @@ def new_account():
     _user=dao.get_user(email)
     if _user is None:
         _a,pem=bc.create_account(NETWORKS[bc.network_name]["new_account"],email=email)
+        _infos=bc.get_shard(_a.address.bech32())
 
         log("Création du compte " + _a.address.bech32() + ". Demande de transfert de la monnaie par defaut")
-
-        n_row, pem = dao.save_user(email, _a.address.bech32(), pem)
+        n_row, pem = dao.save_user(email, _a.address.bech32(), pem,shard=_infos["shard"])
         instant_access = app.config["DOMAIN_APPLI"] + "/?instant_access=" + str(pem,"utf8") + "&address=" + _a.address.bech32()
         private = _a.private_key_seed
 

@@ -100,6 +100,9 @@ class ElrondNet:
         if "file" in data:
             content=data["file"]
 
+            if content.endswith(".pem"):
+                return Account(pem_file="./PEM/" + content)
+
             if content.startswith("{"):
                 content=json.loads(content)
                 if "filename" in data and "password" in data:
@@ -195,9 +198,11 @@ class ElrondNet:
     def getMoneys(self,_user:Account):
         url = self._proxy.url + '/address/' + _user.address.bech32() + "/esdt"
         log("Interrogation de la balance : " + url)
+        _infos=self._proxy.get_account(_user.address)
         lst = [{
             "tokenIdentifier": "EGLD",
-            "balance": self._proxy.get_account_balance(_user.address)
+            "balance": _infos["balance"],
+            "nonce":_infos["nonce"]
         }]
 
         try:
@@ -645,6 +650,17 @@ class ElrondNet:
         return t
 
 
+    def get_shard(self,addr):
+        url = self._proxy.url.replace("gateway","api")+ "/accounts/" + addr
+        rc = requests.get(url)
+        if rc.status_code == 200:
+            return json.loads(rc.text)
+        else:
+            return None
+
+
+
+
     def get_account(self, addr,with_cache=True):
         """
         Récupération des informations du compte
@@ -683,6 +699,8 @@ class ElrondNet:
         else:
             rc = {"error": rc.status_code, "message": rc.text}
         return rc
+
+
 
 
     def create_account(self,fund=0,name=None,email=None,seed_phrase=""):
@@ -1212,7 +1230,6 @@ class ElrondNet:
     def getTransaction(self, hash):
         url = self._proxy.url.replace("gateway","api") + "/transactions/" + hash
         resp = requests.get(url)
-        #rc=self._proxy.get_transaction(hash,with_results=True)
         rc=json.loads(resp.text)
         rc["hash"]=hash
         return rc

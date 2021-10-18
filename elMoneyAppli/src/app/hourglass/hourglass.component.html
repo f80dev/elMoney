@@ -1,7 +1,7 @@
 <div *ngIf="message?.length>0" [ngStyle]="{maxwidth:maxwidth,marginTop:marginTop,display:'inline-block',marginBottom:'5px'}">
   <table style="width:100%;display: inline-block;height: min-content;">
     <tr>
-      <td>
+      <td *ngIf="diameter>0">
         <mat-spinner [diameter]="diameter"></mat-spinner>
       </td>
 
@@ -22,6 +22,7 @@
 
   <div *ngIf="src.length>0">
     <img [src]="src" style="width: 150px">
+    <br>
   </div>
 
   <mat-progress-bar

@@ -1,9 +1,11 @@
 <div class="mainform">
-  <div *ngIf="nft.price>0">
-    <h3 *ngIf="message?.length==0">Confirmer l'achat ?</h3>
-    pour&nbsp;&nbsp;<app-unity *ngIf="nft.price>0" [value]="nft.price" [unity]="nft.unity" fontsize="2em" fontsize_unity="large"></app-unity>
+  <div *ngIf="nft.price>0 && message?.length==0" style="font-size: large;">
+    <br>
+    Confirmer l'achat ?<br>
+    pour&nbsp;&nbsp;<app-unity *ngIf="nft.price>0" [value]="nft.price" [unity]="nft.unity" fontsize="1,7em" fontsize_unity="large"></app-unity>
     <br>
   </div>
+
   <app-hourglass [duration]="user.transaction_delay" [message]="message" anim="./assets/gears.gif"></app-hourglass>
 
   <app-nfts [with_icon]="false"
