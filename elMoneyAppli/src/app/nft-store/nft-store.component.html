@@ -40,7 +40,7 @@
       <button mat-raised-button mat-icon-button
               mat-button class="icon-button"
               title="Demander votre référencement à ce distributeur"
-              *ngIf="selected_dealer?.email?.length>0 && user.isCreator()"
+              *ngIf="selected_dealer?.public_email?.length>0 && user.isCreator()"
               (click)="ask_reference(selected_dealer)">
         <mat-icon>control_point</mat-icon>
       </button>
@@ -93,7 +93,7 @@
   <app-tuto [if]="nfts?.length>0"
             label="Ici, vous pouvez acheter des NFTs vendu directement par les propriétaires. Si vous ne disposez pas de fonds suffisants, il est possible de recharger votre compte"></app-tuto>
 
-  <app-hourglass [message]="message"></app-hourglass>
+  <app-hourglass [message]="message" [duration]="user.transaction_delay"></app-hourglass>
 
   <div *ngIf="nfts?.length==0 && message.length==0">
     <span *ngIf="filter_id">

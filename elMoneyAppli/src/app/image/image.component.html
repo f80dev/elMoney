@@ -1,13 +1,13 @@
 <img class="mat-elevation-z4"
-     *ngIf="border && img.length>0"
+     *ngIf="border && img?.length>0"
      alt="L'image est en cours de téléchargement"
      [src]="img"
      [ngStyle]="{'max-width':maxwidth,'max-height':maxheight,'width':width,'height':height}">
 
 <img
     alt="L'image est en cours de téléchargement"
-     *ngIf="!border && img.length>0"
+     *ngIf="!border && img?.length>0"
      [src]="img"
      [ngStyle]="{'max-width':maxwidth,'max-height':maxheight,'width':width,'height':height}">
 
-<span *ngIf="img.length==0">Image en cours de téléchargement</span>
+<span *ngIf="img?.length==0">Image en cours de téléchargement</span>

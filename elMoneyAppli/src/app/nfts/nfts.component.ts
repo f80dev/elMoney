@@ -1,5 +1,15 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
-import {$$, removeHTML, showError, showMessage} from "../tools";
+import {
+  $$,
+  CAN_RESELL,
+  CAN_TRANSFERT,
+  FIND_SECRET,
+  removeHTML,
+  SELF_DESTRUCTION,
+  showError,
+  showMessage,
+  TRANSPARENT
+} from "../tools";
 import {environment} from "../../environments/environment";
 import {NgNavigatorShareService} from "ng-navigator-share";
 import {ClipboardService} from "ngx-clipboard";
@@ -103,7 +113,7 @@ export class NftsComponent implements OnChanges {
 
 
   give_response(nft:any){
-    if ((nft.properties & 0b10000) > 0) {
+    if ((nft.properties & FIND_SECRET) > 0) {
       this.dialog.open(PromptComponent, {
         data: {
           title:"Répondez pour gagner !",
@@ -131,7 +141,7 @@ export class NftsComponent implements OnChanges {
         nft.open = r.response;
         if(nft.open.length==46)nft.open="https://ipfs.io/ipfs/"+nft.open;
 
-        if((nft.properties & 0b1000) > 0){
+        if((nft.properties & SELF_DESTRUCTION) > 0){
           $$("Ce NFT est programmé pour s'autodétruire");
           nft.delay=15;
           nft.timer=setInterval(()=>{
@@ -261,19 +271,19 @@ export class NftsComponent implements OnChanges {
   }
 
   can_sell(properties: number):boolean {
-    let b=properties & 0b00000010;
+    let b=properties & CAN_RESELL;
     return (b>0);
   }
 
 
   is_transparent(properties: number):boolean {
-    let b=properties & 0b01000000;
+    let b=properties & TRANSPARENT;
     return (b>0);
   }
 
 
   can_transfer(properties: number):boolean {
-    let b=properties & 0b00000001;
+    let b=properties & CAN_TRANSFERT;
     return (b>0);
   }
 

@@ -226,5 +226,9 @@ export class SettingsComponent implements OnInit,OnDestroy {
   show_explorer() {
     open(this.config.server.explorer+"/address/"+this.user.addr,"_blank");
   }
+
+  link_to_email() {
+
+  }
 }
 

@@ -24,6 +24,12 @@
     <img [src]="src" style="width: 150px">
   </div>
 
+  <mat-progress-bar
+                    style="width: 90%;margin:0px;margin-left: 5%;"
+                    mode="determinate"
+                    [value]="current" *ngIf="step>0">
+  </mat-progress-bar>
+
   <div *ngIf="showMessage?.length>0" style="font-size: small;display: inline-block;width:90%;">
     {{showMessage}}
   </div>

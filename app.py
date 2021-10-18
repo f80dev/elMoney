@@ -21,7 +21,8 @@ from apiTools import create_app
 from dao import DAO
 from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, \
     MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, \
-    MAIN_NAME, MAIN_DECIMALS, NETWORKS, ESDT_CONTRACT, LIMIT_GAS, SECRET_KEY, ESDT_PRICE, IPFS_NODE_HOST,IPFS_NODE_PORT
+    MAIN_NAME, MAIN_DECIMALS, NETWORKS, ESDT_CONTRACT, LIMIT_GAS, SECRET_KEY, ESDT_PRICE, IPFS_NODE_HOST, \
+    IPFS_NODE_PORT, ONE_WINNER
 from elrondTools import ElrondNet
 from giphy_search import ImageSearchEngine
 from ipfs import IPFS
@@ -232,8 +233,6 @@ def get_user(addrs:str):
     :return:
     """
 
-
-
     rc=[]
     if addrs != "anonymous" and len(addrs) > 0:
         for addr in addrs.split(","):
@@ -260,6 +259,8 @@ def get_user(addrs:str):
             else:
                 return jsonify(data),500
 
+            data["transaction_delay"]=37
+            #TODO mettre ici un delay en fonction du shard
             rc.append(data)
 
     return jsonify(rc),200
@@ -374,7 +375,7 @@ def open_nft(token_id:str,data:dict=None):
     tx = bc.nft_open(NETWORKS[bc.network_name]["nft"], _user, token_id,response)
 
     if "smartContractResults" in tx:
-        if tx["status"]=="fail" or "returnMessage" in tx["smartContractResults"][0]>0:
+        if tx["status"]=="fail" or "returnMessage" in tx["smartContractResults"][0]:
             rc=tx["smartContractResults"][0]["returnMessage"]
         else:
             for t in tx["smartContractResults"]:
@@ -388,9 +389,6 @@ def open_nft(token_id:str,data:dict=None):
                             rc=str(bytearray.fromhex(rc),"utf8")
                     except:
                         rc=str(bytearray.fromhex(rc),"utf8")
-            # if len(rc)==46:
-            #     obj=client.get_dict(rc)
-            #     pass
     else:
         rc="Impossible d'ouvrir le token"
 
@@ -534,7 +532,7 @@ def buy_nft(token_id,price,seller:str,data:dict=None):
 
 
 
-#http://localhost:6660/api/mint/
+#http://localhost:6660/api/deploy/
 @app.route('/api/deploy/',methods=["POST"])
 def deploy(count:str,data:dict=None):
     data = str(request.data, encoding="utf-8")
@@ -606,7 +604,7 @@ def mint(count:str,data:dict=None):
     money:str=data["money"]
 
     pay_count=int(count)
-    if data["properties"] & 0b00100000>0:
+    if data["properties"] & ONE_WINNER>0:
         pay_count=1 #Nombre de payment
 
     value=fee+pay_count*gift*1e16
@@ -931,6 +929,11 @@ def add_miner(data:dict=None):
     _dealer=bc.get_elrond_user(data)
     _profil_dealer=bc.get_account(_dealer.address.bech32())
     _profil_miner=bc.get_account(data["address"])
+
+    miners = bc.miners(_dealer.address.bech32())
+    if data["address"] in [x["addr"] for x in miners]:
+        return returnError("Vous avez déjà référencé ce createur")
+
 
     if not "pseudo" in _profil_miner or len(_profil_miner["pseudo"])==0:
         return jsonify({"error":"Le créateur doit au moins avoir un pseudo"}),500

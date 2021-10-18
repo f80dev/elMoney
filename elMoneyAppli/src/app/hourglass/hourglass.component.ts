@@ -16,12 +16,15 @@ export class HourglassComponent implements OnInit {
   @Input("canCancel") canCancel=false;
   @Input("maxwidth") maxwidth="100vw";
   @Input("faq") faq="";
+  @Input("duration") duration=0;
   @Input("fontsize") fontsize="medium";
   @Output('cancel') oncancel: EventEmitter<any>=new EventEmitter();
   @Input("marginTop") marginTop="0px";
   pos=0;
   showMessage="";
   showTips="";
+  current=0;
+  step=0;
 
   constructor(public router:Router) { }
 
@@ -33,6 +36,25 @@ export class HourglassComponent implements OnInit {
     if(this.tips.length>0){
       this.showTips=this.tips[Math.random()*this.tips.length];
     }
+
+    if(this.duration>0){
+      this.current=0;
+      this.step=100/this.duration;
+      this.decompte(0);
+    }
+  }
+
+  handle=0;
+  decompte(current){
+    if(current>=100){
+      clearTimeout(this.handle);
+    } else {
+      this.current=current;
+      this.handle=setTimeout(()=>{
+        this.decompte(current+this.step);
+        },1000);
+    }
+
   }
 
   read_message(){
@@ -46,6 +68,8 @@ export class HourglassComponent implements OnInit {
       this.showMessage="";
     }
   }
+
+
 
   openfaq() {
     this.router.navigate(["faq"],{queryParams:{open:this.faq}});

@@ -72,7 +72,7 @@
       <mat-card-actions class="app-card-action" *ngIf="with_actions">
 
         <div *ngIf="nft.message?.length>0" style="width:100%;display: inline-block;text-align: center;">
-          <app-hourglass [message]="nft.message" fontsize="small"></app-hourglass>
+          <app-hourglass [duration]="user.transaction_delay" [message]="nft.message" fontsize="small"></app-hourglass>
         </div>
 
 

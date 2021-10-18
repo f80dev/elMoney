@@ -39,9 +39,9 @@
       <br>
 
       <mat-form-field appearance="fill" class="app-field">
-        <mat-label>Mail de contact (jamais communiqué)</mat-label>
-        <input matInput type="email" (focusin)="focus_idx=8" maxlength="200" [(ngModel)]="user.email"
-               [ngModelOptions]="{standalone: true}"  (keypress)="mustSave=true">
+        <mat-label>Mail de contact</mat-label>
+        <input matInput type="email" (focusin)="focus_idx=8" maxlength="200" [(ngModel)]="user.public_email"
+               [ngModelOptions]="{standalone: true}"  (change)="mustSave=true">
         <mat-hint *ngIf="focus_idx==8">Permet de mettre en relation le distributeur et le créateur pour le référencement</mat-hint>
       </mat-form-field>
       <br>
@@ -50,14 +50,15 @@
         <mat-label>Votre parcours</mat-label>
         <textarea matInput matInput type="text" (focusin)="focus_idx=2"
                   maxlength="400" [(ngModel)]="user.description"
-                  [ngModelOptions]="{standalone: true}"  (keypress)="mustSave=true"></textarea>
+                  [ngModelOptions]="{standalone: true}"  (change)="mustSave=true"></textarea>
         <mat-hint *ngIf="focus_idx==2">Décrivez brievement votre parcours, ce texte est surtout utiliser pour profil de créateur</mat-hint>
       </mat-form-field>
       <br>
 
       <mat-form-field appearance="fill" class="app-field">
         <mat-label>L'adresse de votre site</mat-label>
-        <input matInput type="url" (focusin)="focus_idx=3" maxlength="200" [(ngModel)]="user.website" [ngModelOptions]="{standalone: true}" (keypress)="mustSave=true">
+        <input matInput type="url" (focusin)="focus_idx=3" maxlength="200" [(ngModel)]="user.website" [ngModelOptions]="{standalone: true}"
+               (change)="mustSave=true">
         <mat-hint *ngIf="focus_idx==3">En tant que créateur de NFT vous disposez peut être d'un site</mat-hint>
       </mat-form-field>
 
@@ -96,10 +97,24 @@
         </qrcode><br>
         <app-tuto label="Votre adresse publique peut être flashé pour recevoir des fonds, vérifier que vous êtes le propriétaire d'un NFT, être déclaré comme distributeur ... et pleins d'autres choses encore"></app-tuto>
       </div>
+      <div *ngIf="user.email" style="font-size: small;line-height: 85%;color: lightgrey;">
+        <br>
+        Email associé:<br>
+        {{user.email}}
+      </div>
+
+      <button mat-raised-button mat-button
+              class="app-button"
+              *ngIf="!user.email"
+              (click)="link_to_email()">
+        <div class="bloc-bouton">Associer une<br>adresse mail</div>
+      </button>
+
+
     </mat-expansion-panel>
 
 
-<!--    Boutique -->
+    <!--    Boutique -->
     <mat-expansion-panel class="app-panel" style="text-align: center;max-width: 500px" [expanded]="open_section==2">
       <mat-expansion-panel-header>Distribuer des NFTs</mat-expansion-panel-header>
       <app-tuto [if]="open_section==2"

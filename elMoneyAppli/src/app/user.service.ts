@@ -35,6 +35,9 @@ export class UserService {
   dealer: any=null;
   identity: string="";
   accept_all_dealers: boolean=true;
+  public_email: string="";
+  transaction_delay=0;
+
 
   constructor(public api:ApiService,
               public socket:Socket,
@@ -58,21 +61,6 @@ export class UserService {
 
 
 
-
-  // loadFromDevice(){
-  //   if(!this.addr)this.addr=localStorage.getItem("addr");
-  //   if(!this.addr || this.addr.length<10 || this.addr=="null"){
-  //     this.addr=null;
-  //     $$("Pas de compte disponible sur le device");
-  //     return false;
-  //   }
-  //   $$("Chargement de compte ok depuis le device, adresse de l'utilisateur "+this.addr);
-  //   return true;
-  // }
-
-
-
-
   save_user(func=null,func_error=null){
     if(this.pem){
       let body={
@@ -88,6 +76,7 @@ export class UserService {
         shop_name:this.shop_name,
         shop_description:this.shop_description,
         email:this.email,
+        public_email:this.public_email,
         shop_website:this.shop_website,
         pem:this.pem
       };
@@ -169,12 +158,14 @@ export class UserService {
       this.contacts_addr=body.contacts || [];
       this.pseudo=body.pseudo || "";
       this.visual=body.visual || "";
+      this.transaction_delay=body.transaction_delay || 35;
       this.identity=body.identity || "";
       this.description=body.description || "";
       this.accept_all_dealers=(body.accept_all_dealers==1)
       this.shop_name=body.shop_name || "";
       this.shop_description=body.shop_description || "";
       this.shop_website=body.shop_website || "";
+      this.public_email=body.public_email || "";
       this.email=body.email || "";
       this.website=body.website || "";
       this.shop_visual=body.shop_visual || "";
@@ -344,7 +335,7 @@ export class UserService {
   }
 
   isCreator() {
-    return (this.pseudo.length>0 && this.email.length>0);
+    return (this.pseudo.length>0 && this.public_email.length>0);
   }
 
   load_contacts(func=null) {

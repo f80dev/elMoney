@@ -1126,7 +1126,7 @@ class ElrondNet:
         tr = self.execute(contract,pem_file,
                             function="open",
                             arguments=[int(token_id),"0x"+response],
-                            value=0
+                            value=0,gas_limit=LIMIT_GAS/2
                           )
         return tr
 

@@ -50,7 +50,7 @@ NETWORKS={
         "proxy":"https://testnet-gateway.elrond.com",
         "explorer":"https://testnet-explorer.elrond.com",
         "wallet":"https://testnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqpqnt0rdt2tqxg9mrcahtrxp0au8qdhgwqqesjkkjvk"
+        "nft":"erd1qqqqqqqqqqqqqpgqu3y8wel4pt3dm92w954stlgrqvfxtmwsqqes5tan66"
     },
 
     #erd1qqqqqqqqqqqqqpgqkwfvpkaf6vnn89508l0gdcx26vpu8eq5d8ssz3lhlf
@@ -95,3 +95,11 @@ DB_SERVERS=dict(
 
 DEFAULT_VISUAL="/assets/img/anonymous.jpg"
 DEFAULT_VISUAL_SHOP="/assets/img/shop.png"
+
+ONE_WINNER      =0b00100000
+FIND_SECRET     =0b00010000
+SELF_DESTRUCTION=0b00001000
+DIRECT_SELL     =0b00000100
+CAN_RESELL      =0b00000010
+CAN_TRANSFERT   =0b00000001
+

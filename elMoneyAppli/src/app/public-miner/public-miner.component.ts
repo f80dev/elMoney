@@ -4,6 +4,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {UserService} from "../user.service";
 import {group_tokens, showMessage} from "../tools";
 import {ConfigService} from "../config.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-public-miner',
@@ -13,11 +14,13 @@ import {ConfigService} from "../config.service";
 export class PublicMinerComponent implements OnInit {
   miner: any;
   nfts: any;
+  show_add_miner=true;
   message: string="";
 
   constructor(
     public api:ApiService,
     public router:Router,
+    public toast:MatSnackBar,
     public config:ConfigService,
     public routes:ActivatedRoute,
     public user:UserService
@@ -50,7 +53,9 @@ export class PublicMinerComponent implements OnInit {
         this.message="";
         this.router.navigate(["miners"]);
       },(err)=>{
-        showMessage(this,"Ce créateur n'est pas conforme");
+        this.show_add_miner=false;
+        this.router.navigate(["miners"]);
+        showMessage(this,err.error);
         this.message="";
       })
     },this);

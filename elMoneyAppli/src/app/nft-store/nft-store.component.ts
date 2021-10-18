@@ -125,6 +125,8 @@ export class NftStoreComponent implements OnInit {
   }
 
 
+
+
   apply_filter(nfts) : any[] {
     return group_tokens(nfts,this.config.tags,(item)=> {
       if(item.tags==null)item.tags="";

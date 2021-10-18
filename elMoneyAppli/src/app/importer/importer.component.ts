@@ -823,7 +823,7 @@ export class ImporterComponent implements OnInit {
           title: "Construire immédiatement le NFT ou le modifier avant ?",
           question: "",
           options: {},
-          lbl_ok:"Construire",
+          lbl_ok:"Fabriquer",
           lbl_cancel:"Modifier"
         }
     }).afterClosed().subscribe((result) => {

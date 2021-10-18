@@ -18,7 +18,7 @@
       <br>
       <p style="margin-top: 5px;">{{miner?.description}}</p>
     </td>
-    <td *ngIf="user.isDealer() && user?.addr!=miner?.addr && message?.length==0" style="width:80px;text-align: right">
+    <td *ngIf="user.isDealer() && user?.addr!=miner?.addr && message?.length==0 && show_add_miner" style="width:80px;text-align: right">
       <button mat-raised-button
               (click)="ref_miner()"
               title="Référencer ce créateur dans votre boutique"
@@ -37,7 +37,7 @@
     </div>
   <br>
 
-    <div *ngIf="nfts.length>0">
+    <div *ngIf="nfts?.length>0">
       <h3>Ses créations</h3>
     <app-nfts [user]="user" [with_icon]="false"
               (buy)="refresh()" seller="0x0"
@@ -48,7 +48,7 @@
     </div>
 
     <button mat-raised-button
-            *ngIf="nfts.length==0" color="primary"
+            *ngIf="nfts?.length==0" color="primary"
               (click)="router.navigate(['importer'])"
               title="Vous n'avez pas encore créé de NFT. Lancez-vous"
               mat-button class="app-button">

@@ -4,6 +4,14 @@ import {WebcamUtil} from "ngx-webcam";
 declare var EXIF: any;
 export const ADMIN_PASSWORD="hh4271";
 
+export const TRANSPARENT      =0b01000000;
+export const FORCE_OPEN       =0b00100000;
+export const FIND_SECRET      =0b00010000;
+export const SELF_DESTRUCTION =0b00001000;
+export const DIRECT_SELL      =0b00000100;
+export const CAN_RESELL       =0b00000010;
+export const CAN_TRANSFERT    =0b00000001;
+
 export function showError(vm:any,err:any=null){
   $$("!Error ",err);
   if(vm && vm.hasOwnProperty("message"))vm.message="";
@@ -1058,14 +1066,14 @@ export function extract_tags(tokens:any[]) {
 
 //Permet de faire le calcul du champs properties pour les NFT en focntion des options choisies
 export function eval_properties(vm:any): number {
-  let properties:number=0b00000000;
-  if(vm.owner_can_transfer)properties=properties+0b00000001;
-  if(vm.owner_can_sell)properties=properties    +0b00000010;
-  if(vm.direct_sell)properties=properties       +0b00000100; //Le NFT est disponible en vente directe
-  if(vm.self_destruction)properties=properties  +0b00001000; //Le token s'autodétruit après ouverture
-  if(vm.find_secret)properties=properties       +0b00010000; //L'utilisateur doit fournir le secret dans l'open pour recevoir le cadeau
-  if(vm.opt_gift)properties=properties          +0b00100000; //On affiche l'option d'ouverture même si aucun secret (utilisé pour la loterie)
-  if(vm.transparent)properties=properties       +0b01000000; //on affiche un cadre autour de l'image ou pas
+  let properties:number=0;
+  if(vm.owner_can_transfer)properties=properties+CAN_TRANSFERT;
+  if(vm.owner_can_sell)properties=properties    +CAN_RESELL;
+  if(vm.direct_sell)properties=properties       +DIRECT_SELL; //Le NFT est disponible en vente directe
+  if(vm.self_destruction)properties=properties  +SELF_DESTRUCTION; //Le token s'autodétruit après ouverture
+  if(vm.find_secret)properties=properties       +FIND_SECRET; //L'utilisateur doit fournir le secret dans l'open pour recevoir le cadeau
+  if(vm.opt_gift)properties=properties          +FORCE_OPEN; //On affiche l'option d'ouverture même si aucun secret (utilisé pour la loterie)
+  if(vm.transparent)properties=properties       +TRANSPARENT; //on affiche un cadre autour de l'image ou pas
   return properties;
 }
 
