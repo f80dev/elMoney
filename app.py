@@ -5,7 +5,7 @@ import pandas as pd
 import json
 import ssl
 import sys
-
+from hashlib import sha256
 from AesEverywhere import aes256
 
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -13,19 +13,20 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import yaml
 from erdpy.accounts import Account
 from erdpy.contracts import SmartContract
-from flask import Response, request, jsonify, send_file, make_response
-from Tools import log, send_mail, open_html_file, now, send, dictlist_to_csv, returnError, extract, str_to_hex, \
+from flask import Response, request, jsonify, send_file
+from Tools import log, send_mail, open_html_file,  send, dictlist_to_csv, returnError,  str_to_hex, \
     is_standard, hex_to_str
 from apiTools import create_app
 
 from dao import DAO
 from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, \
     MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, \
-    MAIN_NAME, MAIN_DECIMALS, NETWORKS, ESDT_CONTRACT, LIMIT_GAS, SECRET_KEY, ESDT_PRICE, IPFS_NODE_HOST, \
-    IPFS_NODE_PORT, ONE_WINNER, LONG_DELAY_TRANSACTION, SHORT_DELAY_TRANSACTION
+    MAIN_NAME, MAIN_DECIMALS, NETWORKS, ESDT_CONTRACT, LIMIT_GAS, ESDT_PRICE, IPFS_NODE_HOST, \
+    IPFS_NODE_PORT, ONE_WINNER, LONG_DELAY_TRANSACTION, SHORT_DELAY_TRANSACTION, FIND_SECRET
 from elrondTools import ElrondNet
 from giphy_search import ImageSearchEngine
 from ipfs import IPFS
+from secret import CRYPT_KEY_FOR_NFT
 
 scheduler = BackgroundScheduler()
 
@@ -388,11 +389,7 @@ def open_nft(token_id:str,data:dict=None):
     _user=bc.get_elrond_user(data)
     addr=_user.address.bech32()
 
-    if len(SECRET_KEY)>0:
-        response=data["response"]
-        response=aes256.encrypt(response,SECRET_KEY).hex()
-    else:
-        response=data["response"].encode().hex()
+    response=sha256(bytes(data["response"],"utf8")).hexdigest()
 
     tx = bc.nft_open(NETWORKS[bc.network_name]["nft"], _user, token_id,response)
 
@@ -405,8 +402,8 @@ def open_nft(token_id:str,data:dict=None):
                 if "@" in rc and not rc.startswith("ESDTTransfer"):
                     rc=rc.split("@")[2]
                     try:
-                        if len(SECRET_KEY)>0:
-                            rc=str(aes256.decrypt(bytearray.fromhex(rc),SECRET_KEY),"utf8")
+                        if len(CRYPT_KEY_FOR_NFT)>0:
+                            rc=str(aes256.decrypt(bytearray.fromhex(rc),CRYPT_KEY_FOR_NFT),"utf8")
                         else:
                             rc=str(bytearray.fromhex(rc),"utf8")
                     except:
@@ -477,7 +474,12 @@ def resend_pem(addr:str):
 #http://localhost:6660/api/test/
 @app.route('/api/test/',methods=["GET"])
 def test():
-    pass
+    secret="monsecret"
+    for i in range(0,10):
+        result=hashlib.sha256(bytes(secret,"utf8")).hexdigest()
+        print(result)
+    return result
+
 
 
 
@@ -585,22 +587,28 @@ def mint(count:str,data:dict=None):
 
     # TODO: ajouter ici un encodage du secret dont la clé est connu par le contrat
     if len(secret)>0:
-        if len(SECRET_KEY)>0:
-            secret = aes256.encrypt(secret, SECRET_KEY).hex()
+        if data["find_secret"]:
+            secret=sha256(bytes(secret,"utf8")).hexdigest()
         else:
-            secret=secret.encode().hex()
+            if len(CRYPT_KEY_FOR_NFT)>0:
+                secret = aes256.encrypt(secret, CRYPT_KEY_FOR_NFT).hex()
+            else:
+                secret=secret.encode().hex()
     else:
         secret="0"
 
+
+
     if "tags" in data and len(data["tags"])>0:
         data["description"]=data["description"]+" "+data["tags"]
+
+
 
     if "file" in data and secret=="0":
         if data["file"].startswith("."):
             f=open(data["file"],"rb")
             data["file"]=client.add_file(f)
             f.close()
-
 
         secret=data["file"].encode().hex()
 

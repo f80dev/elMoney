@@ -47,6 +47,8 @@ export class HourglassComponent implements OnInit {
   handle=0;
   decompte(current){
     if(current>=100){
+      this.current=0;
+      this.duration=0;
       clearTimeout(this.handle);
     } else {
       this.current=current;

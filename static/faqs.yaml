@@ -266,5 +266,33 @@ content:
       le cryptage du secret
       </p>
       "
+
+
+  - index: nft_structure
+    title: Quelles sont les propriétés d'un extended-NFT ?
+    order: 3
+    format: html
+    content: "
+      <p>
+      Les propriétés d'un eNFT sont les suivantes:
+      <ul>
+              <li>un titre</li>
+              <li>une description (pouvant contenir des htags et un visuel)</li>
+              <li>un contenu crypté (qui peut donc être un secret)</li>
+              <li>une liste de distributeurs autorisés</li>
+              <li>une marge à réserver au distributeur ainsi qu'un markup minimum et maximum</li>
+              <li>un montant à remettre au propriétaire ainsi que l'identifiant de la monnaie à utiliser</li>
+              <li>un état indiquant si le NFT est en vente ou pas</li>
+              <li>des états</li>
+              <li>l'adresse de son créateur (mineur)</li>
+              <li>l'adresse de son propriétaire</li>
+
+            </ul>
+            Toutes ses propriétés sont directement stockées dans la blockchaine (pas de recours à un hébergement tiers)
+      </p>
+      "
+
+
+
       
       

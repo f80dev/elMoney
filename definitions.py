@@ -5,8 +5,7 @@ PASSWORD=MAIL_PASSWORD
 SMTP_SERVER="smtp.ionos.fr"
 IMAP_SERVER="imap.ionos.fr"
 
-#SECRET_KEY=APP_SECRET_KEY
-SECRET_KEY="hh4271"
+SECRET_KEY=APP_SECRET_KEY
 
 APPNAME="TOKEN FORGE"
 
@@ -50,7 +49,7 @@ NETWORKS={
         "proxy":"https://testnet-gateway.elrond.com",
         "explorer":"https://testnet-explorer.elrond.com",
         "wallet":"https://testnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqu3y8wel4pt3dm92w954stlgrqvfxtmwsqqes5tan66",
+        "nft":"erd1qqqqqqqqqqqqqpgqtpk48r66tz3t5zshytm2cjeqzvjha5tqqqesk6rgg6",
         "shard":1
     },
 
