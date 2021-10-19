@@ -76,7 +76,7 @@
              style="display: inline-block;text-align: center;">
 
           <button mat-raised-button
-                  *ngIf="token.production=='true' || !config.isProd()"
+                  *ngIf="token.production || !config.isProd()"
                   mat-button class="square-button"
                   [title]="token.description"
                   (click)="create_token(token)">

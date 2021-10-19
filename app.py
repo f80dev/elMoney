@@ -1291,7 +1291,6 @@ if __name__ == '__main__':
     #vérifier la connexion avec IPFS
     client:IPFS = IPFS(IPFS_NODE_HOST,IPFS_NODE_PORT)
 
-
     if "debug" in sys.argv:
         socketio.run(app,host="0.0.0.0", port=_port, debug=True)
     else:
