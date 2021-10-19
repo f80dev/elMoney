@@ -16,7 +16,11 @@
       menu
     </mat-icon>
     &nbsp;
-    <small>{{user?.pseudo}}</small>
+
+    <span *ngIf="user?.pseudo?.length>0"><small>{{user?.pseudo}}</small></span>
+    <span *ngIf="!user?.addr">Non connecté</span>
+    <span *ngIf="user?.addr?.length>0 && user?.email?.length==0 && user?.pseudo?.length==0"><small>Anonyme</small></span>
+
 
     &nbsp;
     <span class="fill-remaining-space"></span>

@@ -265,6 +265,7 @@ content:
       {{appname}} va continuer de se développer pour
       <ul>
         <li>la possibilité d'utiliser les ESDT pour payer les NFT</li>
+        <li>Améliorer la mise en ligne des fichiers (actuellement trop lent via IPFS)</li>
         <li>Simlifier l'authentification en utilisant WalletConnect et l'extension chrome du wallet elrond</li>
         <li>Gérer une durée de validité des eNFTs</li>
         <li>Permettre l'impression d'une carte d'identité lié au wallet (pour la validation de propriété)</li>
