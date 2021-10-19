@@ -27,9 +27,7 @@ export class AdminComponent implements OnInit {
 
   ngOnInit(): void {
     this.password=this.routes.snapshot.queryParamMap.get("password");
-    if(!environment.production){
-      this.password="hh4271";
-    }
+    if(!environment.production){this.password="hh4271";}
   }
 
 
@@ -49,7 +47,7 @@ export class AdminComponent implements OnInit {
     this.api._post("reload_accounts","",body).subscribe(()=>{
       showMessage(this,'Comptes rechargés');
       this.message="";
-    });
+    },(err)=>{showError(this,err);});
   }
 
   account_list() {

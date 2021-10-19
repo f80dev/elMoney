@@ -578,13 +578,14 @@ def mint(count:str,data:dict=None):
     :return:
     """
 
-
     if data is None:
         data = str(request.data, encoding="utf-8")
         log("Les données de fabrication sont " + data)
         data = json.loads(data)
 
-    log("Minage du NFT " + data['title'])
+    if not "title" in data: data["title"] = data["signature"]
+    title = data["title"]
+    log("Minage du NFT " + title)
 
     if data["gift"] is None:data["gift"]=0
     simulate=(request.args.get("simulate")=="true")
@@ -625,8 +626,7 @@ def mint(count:str,data:dict=None):
 
     owner = bc.get_elrond_user(data["pem"])
 
-    if not "title" in data:data["title"]=data["signature"]
-    title=data["title"]
+
 
     desc=data["description"]+res_visual
     price = int(float(data["price"]) * 1e4)
@@ -865,14 +865,16 @@ def upload_file():
 def reload_accounts():
     data = json.loads(str(request.data, encoding="utf-8"))
     for acc in data["accounts"]:
+        log("Traitement de "+acc)
         _test=Account(pem_file="./PEM/"+acc)
         _user=dao.get_user(_test.address.bech32())
-        _infos=bc.get_shard(_user["addr"])
+        _infos=bc.get_shard(_test.address.bech32())
         if _user is None:
             if not dao.save_user("",_test.address.bech32(),"./PEM/"+acc,shard=_infos["shard"]):
                 log("Probleme de création de "+acc)
 
     for acc in data["accounts"]:
+        log("Transfert de fond pour " + acc)
         _test = Account(pem_file="./PEM/" + acc)
         bc.transferESDT(idx=NETWORKS[bc.network_name]["identifier"],
                             user_from=bc.bank,
