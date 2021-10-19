@@ -103,8 +103,9 @@ export class NftsPersoComponent implements OnInit {
   transfer(nft:any){
     this.user.check_pem(()=>{
       this.dialog.open(NewContactComponent, {
-        position: {left: '10vw', top: '5vh'},
-        maxWidth: 450,
+        backdropClass:"removeBackground",
+        position: {left: '5vw', top: '5vh'},
+        maxWidth: 350, width: '90vw', height: 'auto',minWidth:250,
         data:{}
       }).afterClosed().subscribe((result:any) => {
         if(result){

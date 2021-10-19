@@ -1,6 +1,7 @@
 <mat-dialog-content>
   <h3>Destinataire</h3>
   <app-hourglass [message]="message"></app-hourglass>
+  <app-tuto label="Si votre destinataire, désigné par son mail, n'a pas de wallet Elrond, TokenForge lui en créé automatiquement un puis lui envoie toutes les infos nécéssaires pour s'y connecter et récupérer son NFT"></app-tuto>
   <mat-form-field appearance="fill" class="app-field">
     <mat-label>Mail ou adresse Elrond du destinataire</mat-label>
     <input matInput type="text" max="50" [(ngModel)]="email"
