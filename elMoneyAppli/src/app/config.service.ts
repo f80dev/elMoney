@@ -167,7 +167,8 @@ export class ConfigService {
   }
 
   public isProd() : boolean {
-    return environment.production;
+    if(this.server.domain_server.indexOf("localhost")>-1)return false;
+    return true;
   }
 
 
