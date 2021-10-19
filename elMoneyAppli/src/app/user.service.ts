@@ -178,11 +178,13 @@ export class UserService {
       if(func)func(body);
     },(err)=>{
       if(err.status==404) {
-        $$("Impossible de charger l'user");
         this.save_user();
         func();
-      } else
-      if(func_error)func_error();
+      } else {
+        showError(this,err);
+        if(func_error)func_error();
+      }
+
     });
 
 

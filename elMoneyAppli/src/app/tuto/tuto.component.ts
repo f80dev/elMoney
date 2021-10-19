@@ -42,7 +42,7 @@ export class TutoComponent implements OnInit,OnChanges {
 
   refresh(){
     if(this.icon!=null && this.icon.length>0)this.image="";
-    if(this.text==null || this.text.length==0)this.text=this.label;
+    if(this.text==null || this.text.length==0){this.text=this.label;}
     if(this.title!=null && this.title.length>0 || this.subtitle.length>0){
       this._type="title";
       this.text=this.title;
@@ -74,7 +74,9 @@ export class TutoComponent implements OnInit,OnChanges {
         this.hideTuto();
       }
     }
-    else this.hideTuto();
+    else{
+      this.hideTuto();
+    }
 
     if(this._type!="title")this.color="#ecdb95";
 
@@ -103,8 +105,6 @@ export class TutoComponent implements OnInit,OnChanges {
 
 
   ngOnInit(): void {
-
-    this.refresh();
 
   }
 

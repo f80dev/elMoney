@@ -49,7 +49,7 @@ NETWORKS={
         "proxy":"https://testnet-gateway.elrond.com",
         "explorer":"https://testnet-explorer.elrond.com",
         "wallet":"https://testnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqtpk48r66tz3t5zshytm2cjeqzvjha5tqqqesk6rgg6",
+        "nft":"erd1qqqqqqqqqqqqqpgqn3ck08hklg2cv8nzl0x2x8nlfpmxf54nqqeshg5rcc",
         "shard":1
     },
 
@@ -104,5 +104,5 @@ DIRECT_SELL     =0b00000100
 CAN_RESELL      =0b00000010
 CAN_TRANSFERT   =0b00000001
 
-LONG_DELAY_TRANSACTION=38 #sec
+LONG_DELAY_TRANSACTION=32 #sec
 SHORT_DELAY_TRANSACTION=8

@@ -678,27 +678,27 @@ class ElrondNet:
         url=self._proxy.url + "/address/" + addr + "/keys"
         log("Récupération de l'utilisateur " + addr + " via " + url)
         if with_cache:
-            rc = self.cached_sess.get(url)
+            req = self.cached_sess.get(url)
         else:
-            rc = requests.get(url)
+            req = requests.get(url)
 
-        if rc.status_code == 200:
-            obj=dict()
-            rc = dict(json.loads(rc.text)["data"]["pairs"])
+        obj = dict({"addr":addr,"hex_addr":_a.address.hex()})
+
+        if req.status_code == 200:
+            rc = dict(json.loads(req.text)["data"]["pairs"])
             for k in rc.keys():
                 obj[hex_to_str(k)]=hex_to_str(rc[k])
-            obj["addr"]=addr
-            obj["hex_addr"]=_a.address.hex()
 
             #Affectation des valeurs par defaut
             if not "visual" in obj:obj["visual"]=DEFAULT_VISUAL
             if not "shop_visual" in obj:obj["shop_visual"]=DEFAULT_VISUAL_SHOP
 
             log("Récupération terminée "+str(obj))
-            rc=obj
+
         else:
-            rc = {"error": rc.status_code, "message": rc.text}
-        return rc
+            log("Erreur "+ req.text)
+
+        return obj
 
 
 

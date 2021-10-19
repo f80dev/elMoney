@@ -243,7 +243,7 @@ def check_account(addr:str):
 
 
 @app.route('/api/users/<addrs>/',methods=["GET"])
-@cache.cached(timeout=60)
+@cache.cached(timeout=30)
 def get_user(addrs:str):
     """
     Return the property of one or several users.
@@ -266,7 +266,11 @@ def get_user(addrs:str):
             data = bc.get_account(addr,False)
             if not data is None and not "error" in data:
                 data["contacts"] = contacts
-                data["shard"]=_user["shard"]
+                if not _user is None and "shard" in _user:
+                    data["shard"]=_user["shard"]
+                else:
+                    data["shard"]=2
+
                 if not "email" in data:
                     if _user is None:
                         data["email"] = ""
@@ -457,7 +461,7 @@ def resend_pem(addr:str):
     if _user and "pem" in _user and len(_user["pem"])>0:
         instant_access =app.config["DOMAIN_APPLI"]  + "/?instant_access=" + str(_user["pem"],"utf8")+"&address="+_user["addr"]
         key_filename="macle.xpem"
-        if "pseuco" in _user_elrond["pseudo"]:key_filename=_user_elrond["pseudo"]+".xpem"
+        if "pseudo" in _user_elrond["pseudo"]:key_filename=_user_elrond["pseudo"]+".xpem"
 
         send_mail(open_html_file("resend_pem", {
             "dest": _user["email"],
@@ -573,18 +577,19 @@ def mint(count:str,data:dict=None):
     :param data:
     :return:
     """
-    log("Appel du service de déploiement de contrat NFT")
+
 
     if data is None:
         data = str(request.data, encoding="utf-8")
         log("Les données de fabrication sont " + data)
         data = json.loads(data)
 
+    log("Minage du NFT " + data['title'])
+
     if data["gift"] is None:data["gift"]=0
     simulate=(request.args.get("simulate")=="true")
 
     secret = data["secret"]
-
     # TODO: ajouter ici un encodage du secret dont la clé est connu par le contrat
     if len(secret)>0:
         if data["find_secret"]:
@@ -604,7 +609,7 @@ def mint(count:str,data:dict=None):
 
 
 
-    if "file" in data and secret=="0":
+    if "file" in data and len(data["file"])>0 and secret=="0":
         if data["file"].startswith("."):
             f=open(data["file"],"rb")
             data["file"]=client.add_file(f)
@@ -1196,12 +1201,13 @@ def new_account():
         instant_access = app.config["DOMAIN_APPLI"] + "/?instant_access=" + str(pem,"utf8") + "&address=" + _a.address.bech32()
         private = _a.private_key_seed
 
+        filename=email.split("@")[0].replace(".","_")+".xpem"
         send_mail(open_html_file("new_account",{
             "dest":email,
             "instant_access":instant_access,
             "public_key":_a.address.bech32(),
             "pem":_a.private_key_seed
-        }),email,subject="Ouverture de votre compte",attach=pem)
+        }),email,subject="Ouverture de votre compte",attach=pem,filename=filename)
 
 
         # TODO: private key a crypter

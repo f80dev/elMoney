@@ -1,12 +1,13 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {Router} from "@angular/router";
+import {clear} from "../tools";
 
 @Component({
   selector: 'app-hourglass',
   templateUrl: './hourglass.component.html',
   styleUrls: ['./hourglass.component.sass']
 })
-export class HourglassComponent implements OnInit {
+export class HourglassComponent implements OnInit,OnDestroy {
 
   @Input("diameter") diameter=18;
   @Input("message") message="";
@@ -75,6 +76,13 @@ export class HourglassComponent implements OnInit {
 
   openfaq() {
     this.router.navigate(["faq"],{queryParams:{open:this.faq}});
+  }
+
+  ngOnDestroy(): void {
+    clearTimeout(this.handle);
+    this.current=0;
+    this.duration=0;
+    this.step=0;
   }
 
 }

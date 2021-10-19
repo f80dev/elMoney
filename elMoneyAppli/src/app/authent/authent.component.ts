@@ -94,7 +94,9 @@ export class AuthentComponent implements OnInit {
       this.savePrivateKey=true;
       this.user.pem=r.pem;
       this.user.init(r.address, ()=>{this.quit(r);});
-    },(err)=>{showError(this)});
+    },(err)=>{
+      showError(this,"Désolé ce compte de test ne fonctionne plus");
+    });
   }
 
 
@@ -108,6 +110,9 @@ export class AuthentComponent implements OnInit {
         this.quit({addr: this.user.addr})
     }
   }
+
+
+
 
 
   onflash_event($event: any) {
@@ -126,6 +131,9 @@ export class AuthentComponent implements OnInit {
     })
   }
 
+
+
+
   open_elrond_authent() {
     let w:any=window;
     if(w.elrondWallet){
@@ -135,6 +143,8 @@ export class AuthentComponent implements OnInit {
     let url=this.config.server.wallet_domain+"hook/login?callbackUrl="+environment.domain_appli+"/"+this.data.redirect
     window.location.href=url;
   }
+
+
 
   anonymous_login() {
     this.dialog.open(PromptComponent,{width: 'auto',

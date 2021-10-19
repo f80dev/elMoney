@@ -10,7 +10,7 @@ import {$$, initAvailableCameras} from "./tools";
   providedIn: 'root'
 })
 export class ConfigService {
-  visibleTuto: Boolean | boolean=true;
+  visibleTuto: Boolean | boolean=false;
   user: any;
   values: any;
   config: any;

@@ -70,7 +70,7 @@ export class AdminComponent implements OnInit {
       this.api._post("mint/"+sample.count, "",sample).subscribe((r: any) => {
         if (r) {
           this.message = "";
-          showMessage(this, "Fichier tokeniser pour " + r.cost + " xEgld");
+          showMessage(this, "Fichier 'tokenisé' pour " + r.cost + " xEgld");
           this.create_sample(samples,index+1);
         }
       }, (err) => {
@@ -95,7 +95,8 @@ export class AdminComponent implements OnInit {
           }
         }
         this.create_sample(rc,0);
-      });
+        this.user.refresh_balance();
+      },(err)=>{showError(this,err)});
     },this);
   }
 

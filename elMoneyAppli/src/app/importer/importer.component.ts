@@ -241,7 +241,7 @@ export class ImporterComponent implements OnInit {
             $$("Enregistrement dans la blockchain");
             if (r) {
               this.message = "";
-              showMessage(this, "Fichier tokeniser pour " + r.cost + " xEgld");
+              showMessage(this, "Fichier tokenisé pour " + r.cost + " xEgld");
               this.user.refresh_balance(() => {
                 this.router.navigate(["nfts-perso"], {queryParams: {index: 2}});
               });

@@ -2,7 +2,7 @@ version: 1
 date: 04/09/2020
 test: http://localhost:5555/api/faqs
 
-#content va contenir le corpus des FAQ
+#content va contenir l'ensemble des tokens pouvant être créé avec des exemples
 #chaque faq contient différent champs, pas forcément obligatoire:
 #- index (obligatoire) doit être unique, il peut être utilisé au sein de l'interface client pour directement renvoyer vers une FAQ
 #- title contient le titre du token affiché dans le bouto
@@ -168,7 +168,54 @@ content:
       - file: "./temp/test.pdf"
         pem: ""
         owner: ""
-        visual: "https://cdn.pixabay.com/photo/2020/11/03/15/32/man-5710164_960_720.jpg"
+        visual: "https://reparateur-telephone.com/wp-content/uploads/2019/04/repare-t%C3%A9l%C3%A9phone-pas-cher.jpg"
+        filename: "test.pdf"
+        format: "pdf"
+        title: "Reparez votre SG125"
+        secret: ""
+        price: 0.2
+        elrond_standard: 0
+        fee: 0.001
+        tags: "#contrat #document"
+        description: "Manuel de réparation du téléphone SG125"
+        gift: 0
+        fullscreen: 0
+        max_markup: 2
+        min_markup: 0
+        dealers: ""
+        owner_can_transfer: 1
+        owner_can_sell: 1
+        direct_sell: 1
+        self_destruction: 0
+        find_secret: 0
+        opt_gift: 0
+        transparent: 0
+        opt_lot: 0
+        miner_ratio: 0.1
+        money: "EGLD"
+        online: 1
+
+
+
+
+  - index: propriete
+    title: Attestation<br>de propriété
+    icon: copyright
+    nft_icon: "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/copyright_a9-fe0f.png"
+    description: ""
+    tuto: "
+          Grâce à TokenForge vous pouvez établir une attestation de propriété et l'enregistrer dans la blockchain.<br>
+          Elle devient ainsi infalsifiable
+    "
+    fee: 0.002
+    tags: "#propriete #titre"
+    transac: 0.0007
+    production: false
+    samples:
+      - file: "./temp/test.pdf"
+        pem: ""
+        owner: ""
+        visual: "https://media0.giphy.com/media/mvqrnHDH4QBVu/giphy-preview.webp?cid=5c5be08bz2j90rfgezzhlcmp6ngnqf0czp66pc4x65clnxpv&rid=giphy-preview.webp&ct=s"
         filename: "test.pdf"
         format: "pdf"
         title: "picasso"
@@ -193,22 +240,7 @@ content:
         opt_lot: 0
         miner_ratio: 0.1
         money: "EGLD"
-        online: 1
-
-
-  - index: propriete
-    title: Attestation<br>de propriété
-    icon: copyright
-    nft_icon: "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/copyright_a9-fe0f.png"
-    description: ""
-    tuto: "
-          Grâce à TokenForge vous pouvez établir une attestation de propriété et l'enregistrer dans la blockchain.<br>
-          Elle devient ainsi infalsifiable
-    "
-    fee: 0.002
-    tags: "#propriete #titre"
-    transac: 0.0007
-    production: false
+        online: 0
 
 
 
@@ -249,7 +281,7 @@ content:
         price: 0.25
         elrond_standard: 0
         fee: 0.001
-        tags: "#starwars #avantpremiere"
+        tags: "#music #track"
         description: "Soyez le premier à écouter le nouveau single de Malu"
         gift: 0
         fullscreen: 0
@@ -267,6 +299,8 @@ content:
         miner_ratio: 0.1
         money: "EGLD"
         online: 1
+
+
 
 
   - index: film
@@ -334,8 +368,8 @@ content:
 
           Comme pour les autres NFTs vous pouvez donner un titre et une description à votre NFT,<br>indépedemment du secret
           qu'il embarque sa présentation sur la place de marché.
-
           "
+
     transac: 0.0007
     help: Utiliser la commande "ouvrir" pour découvrir le secret que contient ce token
     production: true
@@ -343,16 +377,16 @@ content:
       - file: ""
         pem: ""
         owner: ""
-        visual: "https://cdn.pixabay.com/photo/2019/08/08/22/51/man-4393964_960_720.jpg"
+        visual: "https://media4.giphy.com/media/aIRy1u0xHGWm77Fnaz/giphy-preview.webp?cid=5c5be08b80z6hh63bymw5lr1rsono5rxj42b74ylgoflbwmb&rid=giphy-preview.webp&ct=s"
         filename: ""
         format: ""
-        title: "Accèder à mon serveur"
+        title: "Des centaines d'images gratuitement"
         secret: "Le mot de passe est kkkkk12"
         price: 0.2
         elrond_standard: 0
         fee: 0.001
         tags: "#news #secret #motdepasse"
-        description: "Achetez le mot de passe d'accès a mon serveur de news"
+        description: "Achetez le mot de passe d'accès à ma banque d'image"
         gift: 0
         fullscreen: 0
         max_markup: 2
@@ -369,8 +403,7 @@ content:
         miner_ratio: 0.1
         money: "EGLD"
         online: 1
-
-
+        count: 3
 
 
   - index: tickets
@@ -397,6 +430,37 @@ content:
     help: Présenter votre code perso à l'entrée de l'événement pour contrôle du billet
     production: true
     samples:
+      - file: ""
+        pem: ""
+        owner: ""
+        visual: "https://media1.giphy.com/media/Q1KurotoB23bkO6pBM/giphy-preview.webp?cid=5c5be08bxkceiuv4xx8wip3srj2uhepv9pv6j2w3tcbxctrh&rid=giphy-preview.webp&ct=ts"
+        filename: ""
+        format: ""
+        title: "-50% sur le produit de votre choix"
+        secret: ""
+        price: 0.1
+        elrond_standard: 0
+        fee: 0.001
+        tags: "#reduction #promo #soldes"
+        description: "Gagnez 50% sur présentation de votre QRCode au magasin en achetant ce bon de réduction"
+        gift: 0
+        fullscreen: 0
+        max_markup: 2
+        min_markup: 0
+        dealers: ""
+        owner_can_transfer: 1
+        owner_can_sell: 1
+        direct_sell: 1
+        self_destruction: 0
+        find_secret: 0
+        opt_gift: 0
+        transparent: 1
+        opt_lot: 0
+        miner_ratio: 0.1
+        money: "EGLD"
+        online: 1
+        count: 3
+
       - file: ""
         pem: ""
         owner: ""
@@ -431,6 +495,8 @@ content:
 
 
 
+
+
   - index: life_events
     title: Graver des<br>souvenirs
     icon: favorite
@@ -454,6 +520,9 @@ content:
     tags: "#evenement #souvenir"
     help:
     production: true
+
+
+
 
 
   - index: contract
@@ -485,7 +554,7 @@ content:
         visual: "https://cdn.pixabay.com/photo/2020/11/03/15/32/man-5710164_960_720.jpg"
         filename: "test.pdf"
         format: "pdf"
-        title: "picasso"
+        title: "Manuel utilisateur"
         secret: ""
         price: 0.1
         elrond_standard: 0
@@ -507,11 +576,11 @@ content:
         opt_lot: 0
         miner_ratio: 0.1
         money: "EGLD"
-        online: 1
+        online: 0
 
 
   - index: loterie
-    title: Loterie
+    title: Cartes<br>à grater
     icon: casino
     nft_icon: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/279/game-die_1f3b2.png
     description: Organiser une loterie, des cartes à grater en récompensant le gagnant en eGold ou dans la monnaie de votre choix
@@ -525,6 +594,36 @@ content:
     help: Après achat, ouvrer ce token pour découvrir si vous avez gagné. Si c'est le cas le gain est immédiatement versé sur votre compte
     production: true
     tags: "#jeu #loterie"
-
+    samples:
+      - file: ""
+        pem: ""
+        owner: ""
+        visual: "https://media0.giphy.com/media/8ak9dSdHxLyBy5ejgO/giphy-preview.webp?cid=5c5be08b6x8chzbxkzanchz7bfnkyg9b6p4ncfv6mp8nx7bf&rid=giphy-preview.webp&ct=s"
+        filename: ""
+        format: ""
+        title: "Jeu à gratter"
+        secret: ""
+        price: 0.1
+        elrond_standard: 0
+        fee: 0.001
+        tags: "#jeu #bingo"
+        description: "1 chance sur 3 de gagner 0.1 egld"
+        gift: 0.1
+        fullscreen: 0
+        max_markup: 2
+        min_markup: 0
+        dealers: ""
+        owner_can_transfer: 1
+        owner_can_sell: 1
+        direct_sell: 1
+        self_destruction: 0
+        find_secret: 0
+        opt_gift: 1
+        transparent: 0
+        opt_lot: 1
+        miner_ratio: 0.1
+        money: "EGLD"
+        count: 3
+        online: 0
 
 

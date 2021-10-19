@@ -262,8 +262,16 @@ content:
     format: html
     content: "
       <p>
-      {{appname}} va continuer de se développer pour intégrer notamment
-      le cryptage du secret
+      {{appname}} va continuer de se développer pour
+      <ul>
+        <li>la possibilité d'utiliser les ESDT pour payer les NFT</li>
+        <li>Simlifier l'authentification en utilisant WalletConnect et l'extension chrome du wallet elrond</li>
+        <li>Gérer une durée de validité des eNFTs</li>
+        <li>Permettre l'impression d'une carte d'identité lié au wallet (pour la validation de propriété)</li>
+        <li>mieux gèrer le stockage des fichiers + ajout d'un hashage du contenu dans le token</li>
+        <li>Renforcer la sécurité, notamment via décryptage du secret au sein du smartcontract</li>
+        <li>Un meilleur affichage des coûts</li>
+      </ul>
       </p>
       "
 
