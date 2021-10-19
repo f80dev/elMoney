@@ -529,7 +529,7 @@ export class ImporterComponent implements OnInit {
                   this.desc=description;
                   if(token.tags)this.desc=this.desc+" "+token.tags;
                   this.title=title;
-                  this.ask_for_price("Quel prix pour votre secret",null,token.fee);
+                  this.ask_for_price("Quel prix pour votre NFT",null,token.fee);
                 });
               },"Ajouter un visuel si vous le souhaitez")
             },"","memo")

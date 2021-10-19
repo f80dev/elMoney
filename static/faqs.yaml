@@ -237,6 +237,24 @@ content:
     "
 
 
+  - index: compatibility
+    title: Mes NFT n'apparaissent pas dans mon wallet Elrond ?
+    order: 3
+    format: html
+    content: "
+      Pour l'instant les NFTs créés via TokenForge ne sont pas compatible avec les NFT natifs Elrond.
+      Au moment de la création, il est tout de même possible de créé un NFT compatible si celui-ci
+      <ul>
+        <li>ne comporte pas de secret</li>
+        <li>est gratuit</li>
+        <li>n'a pas vocation a être distribué via TokenForge</li>
+      </ul>
+
+    "
+
+
+
+
 
   - index: ipfs
     title: Ou sont conservé les fichiers de mes NFTs ?
