@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges
 import {brand_text, hashCode} from "../tools";
 import {ConfigService} from "../config.service";
 import {TransPipe} from "../trans.pipe";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-tuto',
@@ -34,7 +35,9 @@ export class TutoComponent implements OnInit,OnChanges {
   @Output('click') onclick: EventEmitter<any>=new EventEmitter();
   @Output('close') onclose: EventEmitter<any>=new EventEmitter();
 
-  constructor(public config:ConfigService,public transPipe:TransPipe) {}
+  constructor(public config:ConfigService,
+              public router:Router,
+              public transPipe:TransPipe) {}
 
   handle:any;
   code:string="";

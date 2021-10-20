@@ -2304,8 +2304,11 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
 }
 .app-separator {
   margin: 20%;
+  margin-left: 30%;
+  max-width: 50px;
   margin-top: 20px;
   margin-bottom: 20px;
+  color: gray !important;
 }
 .container {
   width: 100vw;

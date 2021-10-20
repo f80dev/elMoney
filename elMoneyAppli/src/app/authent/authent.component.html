@@ -31,7 +31,7 @@
         <app-tuto label="Votre email est uniquement utilisé pour vous envoyer les infos sur le compte Elrond qui va être créer si c'est votre première connexion"></app-tuto>
         <br>
         <button mat-raised-button
-                *ngIf="user.email.indexOf('@')>0"
+                *ngIf="user.email?.indexOf('@')>0"
                 mat-button class="app-button"
                 (click)="udpate_mail()">
           Se connecter

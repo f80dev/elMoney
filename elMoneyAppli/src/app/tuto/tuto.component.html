@@ -25,6 +25,9 @@
             {{text}}
           </span>
         </td>
+        <td *ngIf="faq?.length>0" (click)="router.navigate(['faqs'],{queryParams:{open:faq}})">
+          <mat-icon>help</mat-icon>
+        </td>
       </tr>
     </table>
   </div>

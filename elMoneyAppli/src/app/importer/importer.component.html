@@ -114,66 +114,66 @@
 
             <form>
               <ng-template matStepLabel>Embarquer dans le NFT</ng-template>
-
-              <table>
-                <tr>
-                  <td>
-                    <app-upload-file
-                      *ngIf="!filename || filename.length==0"
-                      [send_file]="true"
-                      [maxsize]="config.values.max_file_size"
-                      (uploaded)="_import($event,0,'Commençons par charger le fichier dans le NFT')">
-                      {{prompt}}
-                    </app-upload-file>
-                  </td>
-                  <td *ngIf="filename?.length>0">
-                    '{{filename}}' <span style="color: lightgrey">est embarqué dans votre NFT</span>&nbsp;
-                  </td>
-                  <td *ngIf="filename?.length>0">
-                    <mat-icon style="cursor: pointer" (click)="filename=''">delete</mat-icon>
-                  </td>
-                </tr>
-              </table>
-
-
-
-              <div style="margin: 10px" *ngIf="filename?.length==0">ou</div>
+              <div *ngIf="!elrond_standard">
+                <table>
+                  <tr>
+                    <td>
+                      <app-upload-file
+                        *ngIf="!filename || filename.length==0"
+                        [send_file]="true"
+                        [maxsize]="config.values.max_file_size"
+                        (uploaded)="_import($event,0,'Commençons par charger le fichier dans le NFT')">
+                        {{prompt}}
+                      </app-upload-file>
+                    </td>
+                    <td *ngIf="filename?.length>0">
+                      '{{filename}}' <span style="color: lightgrey">est embarqué dans votre NFT</span>&nbsp;
+                    </td>
+                    <td *ngIf="filename?.length>0">
+                      <mat-icon style="cursor: pointer" (click)="filename=''">delete</mat-icon>
+                    </td>
+                  </tr>
+                </table>
 
 
-              <mat-form-field appearance="fill" class="app-field" *ngIf="filename?.length==0">
-                <mat-label>Une phrase secrete</mat-label>
-                <input matInput type="text" (focusin)="focus_idx=1"
-                       id="txtSecret"
-                       maxlength="200" [(ngModel)]="secret" [ngModelOptions]="{standalone: true}">
-                <mat-hint *ngIf="focus_idx==1">un mot de passe, une adresse internet qui ne sera accessible qu'au propriétaire</mat-hint>
-              </mat-form-field>
-              <br>
 
-              <div *ngIf="(secret && secret.length>0) || filename?.length>0" style="margin-bottom: 15px">
-                <mat-slide-toggle color="primary"
-                                  [(ngModel)]="self_destruction" [ngModelOptions]="{standalone: true}">Auto-destruction après ouverture
-                </mat-slide-toggle>
+                <div style="margin: 10px" *ngIf="filename?.length==0">ou</div>
+
+
+                <mat-form-field appearance="fill" class="app-field" *ngIf="filename?.length==0">
+                  <mat-label>Une phrase secrete</mat-label>
+                  <input matInput type="text" (focusin)="focus_idx=1"
+                         id="txtSecret"
+                         maxlength="200" [(ngModel)]="secret" [ngModelOptions]="{standalone: true}">
+                  <mat-hint *ngIf="focus_idx==1">un mot de passe, une adresse internet qui ne sera accessible qu'au propriétaire</mat-hint>
+                </mat-form-field>
+                <br>
+
+                <div *ngIf="(secret && secret.length>0) || filename?.length>0" style="margin-bottom: 15px">
+                  <mat-slide-toggle color="primary"
+                                    [(ngModel)]="self_destruction" [ngModelOptions]="{standalone: true}">Auto-destruction après ouverture
+                  </mat-slide-toggle>
+                </div>
+
+
+                <mat-form-field appearance="fill" class="app-field" style="width: 175px;">
+                  <mat-label>Récompense à l'ouverture</mat-label>
+                  <input matInput type="number"
+                         id="txtGift"
+                         (focusin)="focus_idx=1.5" step="0.1" min="0" [max]="user.gas/1e18" [(ngModel)]="gift"
+                         [ngModelOptions]="{standalone: true}">
+                  <mat-hint *ngIf="focus_idx==1.5">Débitée de votre compte à la création et crédité sur le compte de l'acheteur à l'ouverture du NFT</mat-hint>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" style="max-width:100px">
+                  <mat-label>Monnaie</mat-label>
+                  <mat-select [(ngModel)]="selected_money" name="money" (ngModelChange)="update_user_solde()">
+                    <mat-option *ngFor="let money of moneys" [value]="money">
+                      {{money?.label}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
               </div>
-
-
-              <mat-form-field appearance="fill" class="app-field" style="width: 175px;">
-                <mat-label>Récompense à l'ouverture</mat-label>
-                <input matInput type="number"
-                       id="txtGift"
-                       (focusin)="focus_idx=1.5" step="0.1" min="0" [max]="user.gas/1e18" [(ngModel)]="gift"
-                       [ngModelOptions]="{standalone: true}">
-                <mat-hint *ngIf="focus_idx==1.5">Débitée de votre compte à la création et crédité sur le compte de l'acheteur à l'ouverture du NFT</mat-hint>
-              </mat-form-field>
-
-              <mat-form-field appearance="fill" style="max-width:100px">
-                <mat-label>Monnaie</mat-label>
-                <mat-select [(ngModel)]="selected_money" name="money" (ngModelChange)="update_user_solde()">
-                  <mat-option *ngFor="let money of moneys" [value]="money">
-                    {{money?.label}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-
             </form>
 
             <br>
@@ -468,10 +468,13 @@
             </div>
 
             <div *ngIf="secret.length==0">
+
+              <app-tuto [if]="elrond_standard" faq="compatibility"
+                        label="La compatibilité avec les NFTs Elrond réduit les possibilités du token, en revanche celui-ci devient visible sur d'autres places de marché"></app-tuto>
+
               <mat-slide-toggle
                 color="primary"
                 title="Fabriquer un NFT au standard Elrond"
-
                 [(ngModel)]="elrond_standard">NFT compatible Elrond
               </mat-slide-toggle>
               <br>
