@@ -4,7 +4,7 @@ import {
   CAN_RESELL,
   CAN_TRANSFERT,
   FIND_SECRET,
-  removeHTML,
+  removeHTML, RENT,
   SELF_DESTRUCTION,
   showError,
   showMessage,
@@ -106,7 +106,7 @@ export class NftsComponent implements OnChanges {
         let mes="Votre NFT n'est plus en vente";
         if(new_state==0)mes="Votre NFT est en vente"
         if(r)showMessage(this, mes+". Frais de service " + (r.cost) + " xEgld");
-        this.onrefresh.emit();
+        this.onrefresh.emit("update");
       });
     },this);
   }
@@ -141,12 +141,12 @@ export class NftsComponent implements OnChanges {
         nft.open = r.response;
         if(nft.open.length==46)nft.open="https://ipfs.io/ipfs/"+nft.open;
 
-        if((nft.properties & SELF_DESTRUCTION) > 0){
+        if((nft.properties & SELF_DESTRUCTION || nft.properties & RENT) > 0){
           $$("Ce NFT est programmé pour s'autodétruire");
           nft.delay=15;
           nft.timer=setInterval(()=>{
             nft.delay=nft.delay-1;
-            nft.message="Notez ce message, il s'auto-détruira dans "+nft.delay+" secondes";
+            nft.message="Notez ce message, Vous n'y aurez plus accès dans "+nft.delay+" secondes";
             if(nft.delay<=0){
               clearInterval(nft.timer);
               this.onrefresh.emit("burn");
@@ -289,5 +289,33 @@ export class NftsComponent implements OnChanges {
 
   show_fullscreen(nft: any) {
     open(nft.visual,"fullscreen");
+  }
+
+  edit_field(nft: any, field_name: string) {
+    if(nft.owner==nft.miner && nft.owner==this.user.addr && nft.state==1){
+      this.user.check_pem(()=>{
+      this.dialog.open(PromptComponent, {
+        data: {
+          title:"Nouveau contenu",
+          default: nft[field_name],
+          onlyConfirm: false,
+          lbl_ok: 'Modifier',
+          lbl_cancel: 'Abandonner'
+        }}).afterClosed().subscribe((result:any) => {
+        if (result) {
+          nft.message="Modification du NFT";
+          this.api._post("update_field/"+nft.token_id+"/"+field_name+"/","",{pem:this.user.pem,new_value:result}).subscribe(()=>{
+            nft.message="";
+            nft[field_name]=result;
+            this.onrefresh.emit("update");
+          })
+        }
+      });
+    },this);
+    } else {
+      showMessage(this,"Vous devez à la fois être le propriétaire et le créateur d'un NFT pour pouvoir le modifier et celui-ci ne doit pas être en vente");
+    }
+
+
   }
 }

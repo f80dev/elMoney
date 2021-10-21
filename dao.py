@@ -15,6 +15,7 @@ class DAO:
     db:any
 
     def __init__(self,domain:str="cloud",dbname="coinmaker"):
+        log("Ouverture de la base de données "+dbname)
         self.db: pymongo.mongo_client = pymongo.MongoClient(DB_SERVERS[domain])[dbname]
 
 

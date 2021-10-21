@@ -75,7 +75,7 @@ export class NftsPersoComponent implements OnInit {
   refresh(identifiers=[0,1,2],evt:any=null) {
     let param="";
     if(evt=="open")return;
-    if(evt=="burn" || evt=="transfer" || evt=="force")param=""+now();
+    if(evt=="burn" || evt=="transfer" || evt=="force" || evt=="update")param=""+now();
     $$("Refresh de la liste des NFTs possédés/achetés");
     for(let identifier of identifiers){
       let filters=["0x0","0x0","0x0"];

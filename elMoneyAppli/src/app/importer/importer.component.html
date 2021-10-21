@@ -151,7 +151,13 @@
 
                 <div *ngIf="(secret && secret.length>0) || filename?.length>0" style="margin-bottom: 15px">
                   <mat-slide-toggle color="primary"
+                                    *ngIf="!rent"
                                     [(ngModel)]="self_destruction" [ngModelOptions]="{standalone: true}">Auto-destruction après ouverture
+                  </mat-slide-toggle>
+                  <br>
+
+                  <mat-slide-toggle color="primary" *ngIf="!self_destruction"
+                                    [(ngModel)]="rent" [ngModelOptions]="{standalone: true}">Retour au créateur
                   </mat-slide-toggle>
                 </div>
 

@@ -59,6 +59,7 @@ export class ImporterComponent implements OnInit {
   owner_can_transfer: boolean=true;
   find_secret: boolean=false;
   self_destruction: boolean=false;
+  rent: boolean=false;
   direct_sell: boolean=true;
 
   miner_ratio: number = 0;
@@ -216,6 +217,7 @@ export class ImporterComponent implements OnInit {
           price: this.price,
           elrond_standard:this.elrond_standard,
           fee: fee,
+          rent: this.rent,
           tags: this.tags,
           description: this.desc,
           gift: this.gift,
@@ -242,10 +244,13 @@ export class ImporterComponent implements OnInit {
             if (r) {
               this.message = "";
               showMessage(this, "Fichier tokenisé pour " + r.cost + " xEgld");
-              this.user.refresh_balance(() => {
-                this.router.navigate(["nfts-perso"], {queryParams: {index: 2}});
-              });
-              if (func) func(r);
+              setTimeout(()=>{
+                this.user.refresh_balance(() => {
+                  this.router.navigate(["nfts-perso"], {queryParams: {index: 2}});
+                });
+                if (func) func(r);
+              },1500);
+
             }
           }
 
@@ -497,6 +502,7 @@ export class ImporterComponent implements OnInit {
             this.ask_for_text("Renforcer l'identification","Ajouter un identifiant tel qu'un numéro de passeport, de carte d'identité, de sécurité sociale",(identifiant)=>{
               this.visual=visual;
               this.self_destruction=false;
+              this.rent=false;
               this.price=0;
               this.owner_can_sell=false;
               this.owner_can_transfer=false;

@@ -423,6 +423,17 @@ def open_nft(token_id:str,data:dict=None):
 
 
 
+@app.route('/api/update_field/<token_id>/<field_name>/',methods=["POST"])
+def update_nft(token_id:str,field_name:str,data:dict=None):
+    if data is None:
+        data = json.loads(str(request.data, encoding="utf-8"))
+
+    arguments=[int(token_id),str_to_hex(field_name,True),str_to_hex(data["new_value"])]
+    tx=bc.execute(NETWORKS[bc.network_name]["nft"],bc.get_elrond_user(data["pem"]),"update",arguments)
+    return jsonify(tx),200
+
+
+
 @app.route('/api/state_nft/<token_id>/<state>/',methods=["POST"])
 def state_nft(token_id:str,state:str,data:dict=None):
     """

@@ -48,8 +48,8 @@ NETWORKS={
         "faucet":"https://r3d4.fr/elrond/testnet/index.php",
         "proxy":"https://testnet-gateway.elrond.com",
         "explorer":"https://testnet-explorer.elrond.com",
-        "wallet":"https://testnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqn3ck08hklg2cv8nzl0x2x8nlfpmxf54nqqeshg5rcc",
+        "wallet":"httpRes://testnet-wallet.elrond.com",
+        "nft":"erd1qqqqqqqqqqqqqpgqas866eju02vysal08qumawfrrkpvfy82qqesgq6v45",
         "shard":1
     },
 
@@ -58,7 +58,7 @@ NETWORKS={
         "new_account":float(1*1e18),
         "bank":"bank",
         "unity":"xEgld",
-        "identifier":"TFE-2785a2",
+        "identifier":"TFE-c7b9cd",
         "faucet":"https://r3d4.fr/elrond/devnet/index.php",
         "proxy":"https://devnet-gateway.elrond.com",
         "explorer":"https://devnet-explorer.elrond.com",
@@ -100,9 +100,10 @@ DEFAULT_VISUAL_SHOP="/assets/img/shop.png"
 ONE_WINNER      =0b00100000
 FIND_SECRET     =0b00010000
 SELF_DESTRUCTION=0b00001000
+RENT            =0b10000000
 DIRECT_SELL     =0b00000100
 CAN_RESELL      =0b00000010
 CAN_TRANSFERT   =0b00000001
 
-LONG_DELAY_TRANSACTION=32 #sec
-SHORT_DELAY_TRANSACTION=8
+LONG_DELAY_TRANSACTION=34 #sec
+SHORT_DELAY_TRANSACTION=9
