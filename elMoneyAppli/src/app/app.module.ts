@@ -30,7 +30,6 @@ import { PrivateComponent } from './private/private.component';
 import { TransPipe } from './trans.pipe';
 import { MoneysComponent } from './moneys/moneys.component';
 import { SettingsComponent } from './settings/settings.component';
-import {QRCodeModule} from "angularx-qrcode";
 import {ClipboardModule} from "@angular/cdk/clipboard";
 import { SupportComponent } from './support/support.component';
 import { AccountComponent } from './account/account.component';
@@ -84,10 +83,9 @@ import {MatProgressBar, MatProgressBarModule} from "@angular/material/progress-b
 import { ChartsComponent } from './charts/charts.component';
 import { NftConfirmComponent } from './nft-confirm/nft-confirm.component';
 import { MinicontactsComponent } from './minicontacts/minicontacts.component';
-import {ShareModule} from "ngx-sharebuttons";
 import {ShareButtonsModule} from "ngx-sharebuttons/buttons";
 import {ShareIconsModule} from "ngx-sharebuttons/icons";
-
+import {QRCodeModule} from "angularx-qrcode";
 
 
 const config: SocketIoConfig = {
@@ -183,7 +181,8 @@ const config: SocketIoConfig = {
         CommonModule,
         ShareButtonsModule,
         ShareIconsModule,
-        CommonModule
+        CommonModule,
+        QRCodeModule
     ],
   providers: [
     ApiService,
