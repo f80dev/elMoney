@@ -472,7 +472,11 @@ def resend_pem(addr:str):
     if _user and "pem" in _user and len(_user["pem"])>0:
         instant_access =app.config["DOMAIN_APPLI"]  + "/?instant_access=" + str(_user["pem"],"utf8")+"&address="+_user["addr"]
         key_filename="macle.xpem"
-        if "pseudo" in _user_elrond["pseudo"]:key_filename=_user_elrond["pseudo"]+".xpem"
+        if "pseudo" in _user_elrond:
+            key_filename=_user_elrond["pseudo"]+".xpem"
+        else:
+            if "email" in _user_elrond:
+                key_filename = _user_elrond["email"].split("@")[0] + ".xpem"
 
         send_mail(open_html_file("resend_pem", {
             "dest": _user["email"],
