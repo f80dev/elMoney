@@ -26,8 +26,9 @@ export class AdminComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.password=this.routes.snapshot.queryParamMap.get("password");
-    if(!environment.production){this.password="hh4271";}
+   this.user.check_pem(()=>{
+     if(!this.user.isAdmin())this.router.navigate(["store"]);
+   })
   }
 
 

@@ -162,7 +162,7 @@
   <br><br>
   <a title="Accès au menu admin"
      routerLink="admin"
-     *ngIf="!config.isProd()"
+     *ngIf="user.isAdmin()"
      mat-list-item
      id="cmdAdmin">
     <mat-icon>constructions</mat-icon>&nbsp;

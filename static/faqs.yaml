@@ -27,10 +27,10 @@ content:
         un outil de création de nouvelles monnaies (sur base des ESDT),
       </li>
       <li>
-        un outil de création de NFT permettant de vendre des fichiers ou des secrets accessibles uniquement au propriétaire.
+        un outil de création de NFT permettant de vendre des fichiers, des secrets, de fabriquer des billets et pleins de choses encore.
       </li>
       <li>
-        une place de marché de NFTs à acheter
+        une place de marché de NFTs à acheter avec un système de distribution par des revendeurs, gestion de commission, reversement, etc ...
       </li>
       <li>
         un système de vérification de propriété des NFTs (par exemple pour l'usage de NFT comme billet spectacle)
@@ -50,7 +50,7 @@ content:
       Pour les NFTs {{appname}} s'inspire de la norme ERC721 en ajoutant de nombreuses innovations comme<br>
        <ul>
        <li>la gestion des secrets</li>
-       <li>l'autodestruction</li>
+       <li>l'autodestruction ou le retour au créateur après ouverture</li>
        <li>la distribution via tiers avec gestion des reversements</li>
        </ul>
       Pour cette raison les NFT de {{appname}} n'apparaissent pas dans le wallet Elrond.
@@ -113,6 +113,19 @@ content:
       </p>
       "
 
+  - index: update_nft
+    title: Peut on modifier un NFT après sa fabrication ?
+    order: 1
+    format: html
+    content: "
+      <p>
+      Pour l'instant le titre et la description (bientôt d'autres champs) d'un NFT peuvent être modifiés à tout moment dès lors que vous êtes 
+      à la fois le créateur et le propriétaire du NFT et que ce dernier n'est pas en vente.
+      </p>
+      "
+
+
+
   - index: application
     title: Quelles sont les applications possibles ?
     order: 1
@@ -122,8 +135,8 @@ content:
       Les applications des eNFTs sont très nombreuses,
       <ul>
       <li>Désigner le propriétaire d'une oeuvre en attachant le NFT au fichier de l'oeuvre</li>
-      <li>Billeterie: Implémenter un service de billeterie, chaque billet étant représenté par un NFT</li>
-      <li>Petites annonces: Vendre directement des objets, le secret pouvant contenir la procédure pour récupérer l'objet après la vente</li>
+      <li>Billeterie: Implémenter un service de billeterie, chaque billet étant représenté par un NFT. {{appname}} propose un système de vérification de la propriété pour le contrôle d'accès au moement de l'événement</li>
+      <li>Petites annonces: Vendre directement des objets (en photo), des fichiers (musique, film, etc...) le secret pouvant contenir la procédure pour récupérer l'objet après la vente</li>
       <li>Jeux à gratter: certains NFTs 'gagnant' peuvent contenir de l'argent</li>
       <li>Tombolla: Le secret peut contenir la description du lot</li>
       <li>Vente de contenu: le secret peut contenir un fichier, un lien non public vers une vidéo</li>
@@ -142,12 +155,17 @@ content:
       "
 
   - index: private_key
-    title: Qu'est-ce que la clé privée ?
+    title: Qu'est-ce que ma signature (ou clé privée) ?
     order: 1
     format: html
     content: "
-      <p>Chaque utilisateur de {{appname}} dispose d'un compte sur la blochaine. L'accès a se compte, permettant notamment de dépenser les egold
-      n'est possible que via la clé privée. Cette clé doit absolument restée confidentielle.
+      <p>
+      Chaque utilisateur de {{appname}} dispose d'un compte sur la blochaine désigné par une adresse publique (un peu comme votre adresse mail).
+      L'accès a se compte, permettant notamment de dépenser les egold
+      n'est possible que via la clé privée (un peu comme un mot de passe).
+      Cette clé doit absolument restée confidentielle.
+      Avec {{appname}} elle existe principalement sous forme d'un fichier PEM crypté (extension 'xpem'). Ce fichier est envoyé sur votre boite mail à
+      la création de votre compte
       </p>
     "
 
@@ -172,8 +190,7 @@ content:
     format: html
     content: "
       <p>
-      Non. Contrairement à Metamask ou d'autres wallet fonctionnant sur Ethereum, aucun wallet sur Elrond n'est
-      capable, pour l'instant, d'interroger les smartcontracts respectant le protocol ERC20.
+      Oui, les monnaies que vous posséder sont également visible dans le Wallet Elrond (contrairement aux NFTs)
       </p>
       "
 
@@ -184,8 +201,18 @@ content:
     content: "
       <p>
       {{appname}} n'est pas une application. Elle n'est donc pas disponible dans les stores Google et Apple. En fait,
-      il s'agit d'un simple site web. Pour cette raison elle est accessible via une simple adresse internet https://tf.f80.fr.<br>
+      il s'agit d'un simple site web. Pour cette raison, elle est accessible via une simple adresse internet https://tf.f80.fr.<br>
       Elle est également transmise dans les mails lorsque vous envoyer des fonds.
+      </p>
+      "
+
+  - index: share
+    title: Comment faire connaitre mes NFTs ?
+    order: 1
+    format: html
+    content: "
+      <p>
+      {{appname}} propose un système de partage de vos NFT à travers les principaux réseaux sociaux.
       </p>
       "
 
@@ -195,18 +222,20 @@ content:
     format: html
     content: "
      <p>
-     {{appname}} permet de retrouver tous les NFTs que vous avez fabriqués en posséssion d'une personne donnée, identifiée par l'adresse
-     de son wallet. Ce système peut être très utile pour des NFTs représentant des billets de concert ou d'un événement quelconque.
+     {{appname}} permet de retrouver tous les NFTs que vous avez fabriqués en possession d'une personne donnée.
+      Pour cela il suffit de se rendre dans la rubrique 'Vérifier la propriété' et saisir (ou scanner) l'adresse
+     du wallet de la personne à contrôler.<br>
+     Ce système peut être très utile pour des NFTs représentant des billets de concert ou d'un événement quelconque.
      Dans ce cas on va juste chercher à contrôler la propriété du billet pour autoriser l'accès à l'événement.
      </p>
      "
 
   - index: profils
-    title: Quels sont les différents types de profils dans TokenForge ?
+    title: Quels sont les différents types de profils dans {{appname}} ?
     order: 3
     format: html
     content: "
-      Il existe 3 types de profils dans TokenForge:
+      Il existe 3 types de profils dans {{appname}}:
       <ul>
         <li><strong>l'utilisateur</strong>: est celui qui acquière les NFTs</li>
         <li><strong>le créateur</strong>: est celui qui fabriquer des NFTs</li>
@@ -221,7 +250,7 @@ content:
     order: 3
     format: html
     content: "
-      Un distributeur est un utilisateur de TokenForge qui dispose d'un espace dédié (au sein ou en dehors de {{appname}}) pour vendre les NFTs des créateurs qu'il a référencé.
+      Un distributeur est un utilisateur de {{appname}} qui dispose d'un espace dédié (au sein ou en dehors de {{appname}}) pour vendre les NFTs des créateurs qu'il a référencé.
       Le distributeur peut toucher une commission sur la vente, si bien qu'un NFT sera parfois légèrement plus cher via un distributeur plutôt qu'en vente directe.
       En revanche, le distributeur est garant de la qualité des NFTs qu'il distribue. Ainsi il est plus prudent d'acheter des NFTs chez un distributeur plutôt qu'en vente directe.
     "
@@ -242,17 +271,14 @@ content:
     order: 3
     format: html
     content: "
-      Pour l'instant les NFTs créés via TokenForge ne sont pas compatible avec les NFT natifs Elrond.
+      Pour l'instant les NFTs créés via {{appname}} ne sont pas compatible avec les NFT natifs Elrond.
       Au moment de la création, il est tout de même possible de créé un NFT compatible si celui-ci
       <ul>
         <li>ne comporte pas de secret</li>
         <li>est gratuit</li>
-        <li>n'a pas vocation a être distribué via TokenForge</li>
+        <li>n'a pas vocation a être distribué via {{appname}}</li>
       </ul>
-
     "
-
-
 
 
 
@@ -262,7 +288,7 @@ content:
     format: html
     content: "
       <p>
-        Pour des raisons de coût, il est impossible de stoker un fichier comme une image ou de la musique directement dans la blockchain.
+        Pour des raisons de coût, il est impossible de stoker un fichier comme une image ou de la musique directement dans la blockchaine.
         Pour cela {{appname}} utilise la technologie décentralisée
         IPFS pour stocker le fichier sans divulger son adresses de stockage.
         Le principe consiste a cacher dans le NFT le code unique d'accès au fichier.

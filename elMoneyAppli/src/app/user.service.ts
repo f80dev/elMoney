@@ -227,6 +227,9 @@ export class UserService {
     });
   }
 
+  isAdmin(){
+    return (this.email=="hhoareau@gmail.com");
+  }
 
   //Vérification que l'utilisateur est authentifié
   check_email(func,func_abort=null,title=null,redirect=null,force_init=false){
