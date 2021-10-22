@@ -459,12 +459,13 @@ def state_nft(token_id:str,state:str,data:dict=None):
 def get_votes(addr:str):
     rc=dict()
     for nft in bc.get_tokens(miner_filter=addr):
-        title=nft["title"]
-        if not title in rc:rc[title]=dict({"nb_resp":0,"data":{},"title":title})
-        resp=nft["resp"]
-        if not resp in rc[title]["data"]:rc[title]["data"][resp]=0
-        rc[title]["data"][resp]=rc[title]["data"][resp]+1
-        rc[title]["nb_resp"]=rc[title]["nb_resp"]+1
+        if not nft["secret_vote"] and nft["vote"]:
+            title=nft["title"]
+            if not title in rc:rc[title]=dict({"nb_resp":0,"data":{},"title":title})
+            resp=nft["resp"]
+            if not resp in rc[title]["data"]:rc[title]["data"][resp]=0
+            rc[title]["data"][resp]=rc[title]["data"][resp]+1
+            rc[title]["nb_resp"]=rc[title]["nb_resp"]+1
 
     return jsonify(rc)
 

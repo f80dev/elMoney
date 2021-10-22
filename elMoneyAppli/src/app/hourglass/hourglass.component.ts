@@ -13,6 +13,7 @@ export class HourglassComponent implements OnInit,OnDestroy {
   @Input("message") message="";
   @Input("long_message") long_message="";
   @Input("anim") src="";
+  @Input("br") _br=false;
   @Input("tips") tips=[];
   @Input("canCancel") canCancel=false;
   @Input("maxwidth") maxwidth="100vw";

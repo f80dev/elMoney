@@ -243,14 +243,23 @@ content:
         online: 0
 
   - index: vote
-    title: Votation
-    icon: note
-    nft_icon: "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/279/musical-note_1f3b5.png"
+    title: Votations / <br>Sondages
+    icon: how_to_vote
+    nft_icon: "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/ballot-box-with-ballot_1f5f3-fe0f.png"
     description: Gestion de bulletin de vote
     tuto: "
+      TokenForge vous permet de faire des sondages et d'organiser des votes avec toute la sécurité de la blockchaine.
+      Vous pouvez
+                  <ul>
+                    <li>Garantir la confidentialité des votants</li>
+                    <li>Consulter les résultats en temps réel</li>
+                    <li>Facturer la participation aux votes (en fixant un prix a votre NFT)</li>
+                    <li>Récompenser les participants</li>
+                    <li>Permettre le transfert des droits de vote (principe de la procuration)</li>
+                  </ul>
         "
     fee: 0.002
-    tags: "#vote"
+    tags: "#vote #sondage"
     transac: 0.0007
     production: true
 

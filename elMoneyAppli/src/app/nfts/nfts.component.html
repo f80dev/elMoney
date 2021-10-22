@@ -83,7 +83,7 @@
           <button mat-raised-button mat-button
                   color="primary"
                   title="Ouvrir le NFT pour découvrir le secret"
-                  *ngIf="nft.open?.length==0 && user.addr==nft.owner && user.addr!=nft.miner && nft.has_secret==1 && !nft.for_sale"
+                  *ngIf="nft.open?.length==0 && !nft.vote && user.addr==nft.owner && user.addr!=nft.miner && nft.has_secret==1 && !nft.for_sale"
                   class="app-button" style="min-width: 40px !important;"
                   (click)="give_response(nft)">
             Ouvrir

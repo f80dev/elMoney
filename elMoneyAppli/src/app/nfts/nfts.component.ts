@@ -20,6 +20,7 @@ import {PromptComponent} from "../prompt/prompt.component";
 import {MatDialog} from "@angular/material/dialog";
 import {SelDealerComponent} from "../sel-dealer/sel-dealer.component";
 import {animate, state, style, transition, trigger} from "@angular/animations";
+import {UserService} from "../user.service";
 
 @Component({
   selector: 'app-nfts',
@@ -316,7 +317,6 @@ export class NftsComponent implements OnChanges {
       showMessage(this,"Vous devez à la fois être le propriétaire et le créateur d'un NFT pour pouvoir le modifier et celui-ci ne doit pas être en vente");
     }
 
-
   }
 
   answer(nft: any) {
@@ -328,13 +328,14 @@ export class NftsComponent implements OnChanges {
           type:"number",
           min:1,
           max:10,
-          lbl_ok: 'Modifier',
+          lbl_ok: 'Participer',
           lbl_cancel: 'Abandonner'
         }}).afterClosed().subscribe((result:any) => {
         if (result) {
           nft.message="Transfert de votre réponse dans le NFT";
           this.api._post("answer/"+nft.token_id+"/","",{pem:this.user.pem,resp:result}).subscribe(()=>{
             nft.message="";
+            this.user.refresh_balance();
             showMessage(this,"Votre réponse est bien enregistrée, elle reste modifiable tant que vous rester propriétaire du NFT");
           },(err)=>{showError(this,err);})
         }
