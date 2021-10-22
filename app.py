@@ -369,6 +369,9 @@ def account_list():
 
 
 
+
+
+
 @app.route('/api/update_price/<token_id>/',methods=["POST"])
 def update_price(token_id:str,data:dict=None):
     if data is None:
@@ -450,6 +453,40 @@ def state_nft(token_id:str,state:str,data:dict=None):
 
     send(socketio,"refresh_nft")
     return jsonify(tx),200
+
+
+@app.route('/api/votes/<addr>/',methods=["GET"])
+def get_votes(addr:str):
+    rc=dict()
+    for nft in bc.get_tokens(miner_filter=addr):
+        title=nft["title"]
+        if not title in rc:rc[title]=dict({"nb_resp":0,"data":{},"title":title})
+        resp=nft["resp"]
+        if not resp in rc[title]["data"]:rc[title]["data"][resp]=0
+        rc[title]["data"][resp]=rc[title]["data"][resp]+1
+        rc[title]["nb_resp"]=rc[title]["nb_resp"]+1
+
+    return jsonify(rc)
+
+
+
+@app.route('/api/answer/<token_id>/',methods=["POST"])
+def answer(token_id:str,data:dict=None):
+    """
+    Inscrire la réponse de l'utilisateur dans le token
+    :param token_id:
+    :param state:
+    :param data:
+    :return:
+    """
+    if data is None:data = json.loads(str(request.data, encoding="utf-8"))
+    arguments=[int(token_id),int(data["resp"])]
+    _user=bc.get_elrond_user(data['pem'])
+    tx = bc.execute(NETWORKS[bc.network_name]["nft"],_user,"answer",arguments)
+
+    return jsonify(tx),200
+
+
 
 
 @app.route('/api/image_search/',methods=["GET"])

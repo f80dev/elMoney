@@ -86,6 +86,8 @@ import { MinicontactsComponent } from './minicontacts/minicontacts.component';
 import {ShareButtonsModule} from "ngx-sharebuttons/buttons";
 import {ShareIconsModule} from "ngx-sharebuttons/icons";
 import {QRCodeModule} from "angularx-qrcode";
+import { VotesComponent } from './votes/votes.component';
+import {GoogleChartsModule} from "angular-google-charts";
 
 
 const config: SocketIoConfig = {
@@ -141,7 +143,8 @@ const config: SocketIoConfig = {
     ImageComponent,
     ChartsComponent,
     NftConfirmComponent,
-    MinicontactsComponent
+    MinicontactsComponent,
+    VotesComponent
   ],
     imports: [
         MatButtonModule,
@@ -182,7 +185,8 @@ const config: SocketIoConfig = {
         ShareButtonsModule,
         ShareIconsModule,
         CommonModule,
-        QRCodeModule
+        QRCodeModule,
+        GoogleChartsModule
     ],
   providers: [
     ApiService,

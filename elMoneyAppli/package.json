@@ -16,7 +16,6 @@
   },
   "private": true,
   "dependencies": {
-    "bcrypt": "^5.0.1",
     "@angular/animations": "12.2.11",
     "@angular/cdk": "12.2.11",
     "@angular/common": "12.2.11",
@@ -35,8 +34,10 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@walletconnect/browser": "^1.0.0",
     "@walletconnect/qrcode-modal": "^1.0.8",
+    "angular-google-charts": "^2.2.2",
     "angularx-qrcode": "^11.0.0",
     "angularx-social-login": "3.5.7",
+    "bcrypt": "^5.0.1",
     "chokidar": "^3.5.2",
     "ipfs-http-client": "^53.0.1",
     "jsqr": "^1.2.0",

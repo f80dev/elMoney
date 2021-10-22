@@ -1,0 +1,19 @@
+<div class="mainform">
+
+  <div *ngFor="let chart of charts" style="display: inline-block;">
+    <!--    https://developers.google.com/chart/interactive/docs/gallery -->
+    <google-chart
+      style="background-color: transparent;"
+      [title]="chart.title"
+      [type]="chart.type"
+      [data]="chart.data"
+      [width]="chart.width"
+      [height]="chart.height"
+      [options]="chart.options"
+      [columnNames]="['votant','votes']"
+    >
+    </google-chart>
+  </div>
+
+
+</div>

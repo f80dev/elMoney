@@ -145,7 +145,9 @@ export class ImporterComponent implements OnInit {
   uploadProgress: number;
   selected_tab = 0;
   elrond_standard:boolean=false;
-
+  vote=false;
+  secret_vote=false;
+  instant_sell=true;
 
   add(event: MatChipInputEvent): void {
     const input = event.input;
@@ -220,6 +222,7 @@ export class ImporterComponent implements OnInit {
           rent: this.rent,
           tags: this.tags,
           description: this.desc,
+          vote:this.vote,
           gift: this.gift,
           fullscreen: false,
           find_secret: this.find_secret,
@@ -578,6 +581,44 @@ export class ImporterComponent implements OnInit {
   }
 
 
+  create_options(func,title="Rédiger les réponses possible"){
+    this.ask_for_text(title,"Saisisser les différentes options possible en les séparant par un retour à la ligne",(text_options)=> {
+      let options = [];
+      let i = 0;
+      for (let txt of text_options.split("\n")) {
+        if (txt.trim().length > 0) {
+          i++;
+          options.push("Choix " + i + " : <strong>" + txt.trim() + "</strong>");
+        }
+      }
+      let rc="<li>"+options.join("</li><li>")+"</li>";
+      rc="<div style='text-align: left;'>Les propositions sont les suivantes:<br><ul style='text-align: left;'>"+rc+"</ul></div>";
+      func(rc,options);
+    },"","memo");
+  }
+
+
+  quick_vote(token){
+    this.ask_for_text("Question du sondage / du vote","",(title)=>{
+      this.title=title;
+      this.create_options((desc,options)=>{
+        this.desc=desc;
+        this.ask_for_text("Récompense","De combien est la récompense pour la participation",(gift)=> {
+          this.gift = gift;
+          this.vote=true;
+          this.secret_vote=false;
+          if(token.tags)this.desc=this.desc+" "+token.tags;
+          this.ask_for_text("Nombre de participants","",(count)=>{
+            this.count=count;
+            this.instant_sell=true;
+            this.ask_for_price("Combien coute la participation",null,token.fee);
+          },"","number");
+
+
+        });
+      },"Lister les différents choix")
+    });
+  }
 
 
   quick_qcm(token){
@@ -586,18 +627,8 @@ export class ImporterComponent implements OnInit {
       if(!this.title.endsWith("?"))this.title=this.title+" ?";
       if(!question)this.cancel_wizard();
 
-      this.ask_for_text("Rédiger les réponses possible","Saisisser les différentes options possible en les séparant par un retour à la ligne",(text_options)=> {
-        let options=[];
-        let i=0;
-        for(let txt of text_options.split("\n")){
-          if(txt.trim().length>0){
-            i++;
-            options.push("Choix "+i+" : <strong>"+txt.trim()+"</strong>");
-          }
-        }
-        this.desc="<li>"+options.join("</li><li>")+"</li>";
-        this.desc="<div style='text-align: left;'>Les propositions sont les suivantes:<br><ul style='text-align: left;'>"+this.desc+"</ul></div>";
-
+      this.create_options((desc,options)=>{
+        this.desc=desc;
         this.ask_for_text("Indiquer la bonne réponse de 1 à "+options.length,"html:"+this.desc,(secret)=>{
           secret=Number(secret).toFixed(0);
           if(secret && secret<=options.length && secret>0){
@@ -617,7 +648,7 @@ export class ImporterComponent implements OnInit {
             },"","number");
           } else this.cancel_wizard("Cette réponse n'est pas possible");
         },"","number",options.length,1)
-      },"","memo");
+      },"Rédiger les réponses possible");
     },"Exemple: Combien font 12 x 14 ?");
   }
 
@@ -808,6 +839,7 @@ export class ImporterComponent implements OnInit {
     if(token.index=="tickets")this.quick_tickets('Téléverser le visuel de votre invitation',token);
     if(token.index=="loterie")this.quick_loterie(token);
     if(token.index=="propriete")this.quick_propriete(token);
+    if(token.index=="vote")this.quick_vote(token);
   }
 
   cancel_wizard(message=""){

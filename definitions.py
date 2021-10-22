@@ -49,7 +49,7 @@ NETWORKS={
         "proxy":"https://testnet-gateway.elrond.com",
         "explorer":"https://testnet-explorer.elrond.com",
         "wallet":"httpRes://testnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqas866eju02vysal08qumawfrrkpvfy82qqesgq6v45",
+        "nft":"erd1qqqqqqqqqqqqqpgqulqcdzejekppved9ru6unjyzfcmlcgspqqes4f6dfx",
         "shard":1
     },
 
@@ -97,13 +97,16 @@ DB_SERVERS=dict(
 DEFAULT_VISUAL="/assets/img/anonymous.jpg"
 DEFAULT_VISUAL_SHOP="/assets/img/shop.png"
 
-ONE_WINNER      =0b00100000
-FIND_SECRET     =0b00010000
-SELF_DESTRUCTION=0b00001000
-RENT            =0b10000000
-DIRECT_SELL     =0b00000100
-CAN_RESELL      =0b00000010
-CAN_TRANSFERT   =0b00000001
+SECRET_VOTE     =0b0000010000000000
+FOR_SALE        =0b0000001000000000
+VOTE            =0b0000000100000000
+RENT            =0b0000000010000000
+ONE_WINNER      =0b0000000000100000
+FIND_SECRET     =0b0000000000010000
+SELF_DESTRUCTION=0b0000000000001000
+DIRECT_SELL     =0b0000000000000100
+CAN_RESELL      =0b0000000000000010
+CAN_TRANSFERT   =0b0000000000000001
 
 LONG_DELAY_TRANSACTION=34 #sec
 SHORT_DELAY_TRANSACTION=9

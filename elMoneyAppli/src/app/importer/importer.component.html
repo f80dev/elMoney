@@ -157,9 +157,10 @@
                   <br>
 
                   <mat-slide-toggle color="primary" *ngIf="!self_destruction"
-                                    [(ngModel)]="rent" [ngModelOptions]="{standalone: true}">Retour au créateur
+                                    [(ngModel)]="rent" [ngModelOptions]="{standalone: true}">Retour au créateur après ouverture
                   </mat-slide-toggle>
                 </div>
+
 
 
                 <mat-form-field appearance="fill" class="app-field" style="width: 175px;">
@@ -179,6 +180,17 @@
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
+
+                <br>
+                <mat-slide-toggle [(ngModel)]="vote"
+                                  [ngModelOptions]="{standalone: true}">Inscrire une réponse dans le NFT
+                </mat-slide-toggle>
+                <br>
+                <mat-slide-toggle [(ngModel)]="secret_vote" *ngIf="vote"
+                                  [ngModelOptions]="{standalone: true}">Réponse / Vote secret
+                </mat-slide-toggle>
+
+
               </div>
             </form>
 
@@ -462,6 +474,9 @@
               N'attribuer la récompense qu'a un seul NFT sur les {{count}}(loterie)
             </mat-slide-toggle>
             <br>
+
+            <mat-slide-toggle [(ngModel)]="instant_sell">Mettre en vente immédiatement</mat-slide-toggle>
+
 
             <br>
             <small *ngIf="!opt_gift">Cout de fabrication: {{count*gift}} {{selected_money.label}} + frais de transactions</small>

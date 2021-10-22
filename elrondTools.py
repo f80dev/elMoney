@@ -21,7 +21,7 @@ from requests_cache import CachedSession
 
 from Tools import log, base_alphabet_to_10, str_to_hex, hex_to_str, nbr_to_hex, translate, now, is_standard, returnError
 from definitions import LIMIT_GAS, ESDT_CONTRACT, NETWORKS, ESDT_PRICE, IPFS_NODE_PORT, IPFS_NODE_HOST, SECRET_KEY, \
-    DEFAULT_VISUAL, DEFAULT_VISUAL_SHOP
+    DEFAULT_VISUAL, DEFAULT_VISUAL_SHOP, VOTE, FOR_SALE, SECRET_VOTE
 from ipfs import IPFS
 
 
@@ -816,7 +816,7 @@ class ElrondNet:
 
     #/nfts
     #récupération de l'ensemble des NFT issue du contrat
-    def get_tokens(self,seller_filter,owner_filter,miner_filter):
+    def get_tokens(self,seller_filter="0x0",owner_filter="0x0",miner_filter="0x0"):
         rc = list()
         max_id=0
 
@@ -866,10 +866,10 @@ class ElrondNet:
                 has_secret = int(tokens[index:index + 2], 16)
                 index = index + 2
 
-                state = int(tokens[index:index+2], 16)
-                index = index + 2
+                properties = int(tokens[index:index + 4], 16)
+                index = index + 4
 
-                properties = int(tokens[index:index + 2], 16)
+                resp = int(tokens[index:index + 2], 16)
                 index = index + 2
 
                 min_markup = int(tokens[index:index + 4], 16)
@@ -944,13 +944,15 @@ class ElrondNet:
                           "price": price,
                           "markup":markup/100,
                           "has_secret":has_secret,
+                          "resp":resp,
+                          "secret_vote": properties & SECRET_VOTE>0,
+                          "vote":properties & VOTE>0,
+                          "for_sale":properties & FOR_SALE>0,
                           "min_markup":min_markup/100,"max_markup":max_markup/100,
                           "miner_ratio":miner_ratio/100,
-                          "state": state,
                           "miner":miner,
                           "owner":owner_addr,
                           "visual":visual,
-                          "is_selled":state>0 and miner!=owner_addr,
                           "unity":unity,
                           "premium":premium,
                           "identifier":identifier,
@@ -1014,14 +1016,13 @@ class ElrondNet:
                             "miner": nft["creator"],
                             "owner": addr,
                             "tags":prop["tags"],
-                            "is_selled": int(prop["state"], 16) > 0 and nft["creator"] != addr,
                             "description": prop["description"],
                             "visual": visual,
                             "picture": picture,
                             "has_secret":int("secret" in prop),
                             "title": nft["name"],
                             "unity":"EGLD",
-                            "state": int(addr!=self.bank.address.bech32()),
+                            "for_sale": int(prop["properties"] & FOR_SALE)>0,
                             "properties": int(prop["properties"], 16)
                         })
                         log("Ajout de " + str(rc))

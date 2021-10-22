@@ -83,7 +83,26 @@
 
   <hr class="app-separator">
 
-  <a title="Accéder à vos contacts"
+
+  <a title="Permet de vérifier si un wallet est propriétaire de vos tokens fabriqués"
+     routerLink="validate"
+     [queryParams]="{only_perso:false}"
+     mat-list-item
+     id="cmdValidate">
+    <mat-icon>checkmark</mat-icon>&nbsp;
+    Vérifier la propriété
+  </a>
+
+  <a title="Permet de receuillir les réponses"
+     routerLink="votes"
+     mat-list-item
+     id="cmdVotes">
+    <mat-icon>person</mat-icon>&nbsp;
+    Sondages & votes
+  </a>
+
+  <br>
+   <a title="Accéder à vos contacts"
      routerLink="contacts"
      mat-list-item
      id="cmdAddPerson">
@@ -98,15 +117,6 @@
      id="cmdAddMiner">
     <mat-icon>add_circle</mat-icon>&nbsp;
     Référencer des créateurs
-  </a>
-
-  <a title="Permet de vérifier si un wallet est propriétaire de vos tokens fabriqués"
-     routerLink="validate"
-     [queryParams]="{only_perso:false}"
-     mat-list-item
-     id="cmdValidate">
-    <mat-icon>checkmark</mat-icon>&nbsp;
-    Vérifier la propriété
   </a>
 
 

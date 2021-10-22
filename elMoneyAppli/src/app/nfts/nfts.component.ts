@@ -294,28 +294,52 @@ export class NftsComponent implements OnChanges {
   edit_field(nft: any, field_name: string) {
     if(nft.owner==nft.miner && nft.owner==this.user.addr && nft.state==1){
       this.user.check_pem(()=>{
-      this.dialog.open(PromptComponent, {
-        data: {
-          title:"Nouveau contenu",
-          default: nft[field_name],
-          onlyConfirm: false,
-          lbl_ok: 'Modifier',
-          lbl_cancel: 'Abandonner'
-        }}).afterClosed().subscribe((result:any) => {
-        if (result) {
-          nft.message="Modification du NFT";
-          this.api._post("update_field/"+nft.token_id+"/"+field_name+"/","",{pem:this.user.pem,new_value:result}).subscribe(()=>{
-            nft.message="";
-            nft[field_name]=result;
-            this.onrefresh.emit("update");
-          })
-        }
-      });
-    },this);
+        this.dialog.open(PromptComponent, {
+          data: {
+            title:"Nouveau contenu",
+            default: nft[field_name],
+            onlyConfirm: false,
+            lbl_ok: 'Modifier',
+            lbl_cancel: 'Abandonner'
+          }}).afterClosed().subscribe((result:any) => {
+          if (result) {
+            nft.message="Modification du NFT";
+            this.api._post("update_field/"+nft.token_id+"/"+field_name+"/","",{pem:this.user.pem,new_value:result}).subscribe(()=>{
+              nft.message="";
+              nft[field_name]=result;
+              this.onrefresh.emit("update");
+            })
+          }
+        });
+      },this);
     } else {
       showMessage(this,"Vous devez à la fois être le propriétaire et le créateur d'un NFT pour pouvoir le modifier et celui-ci ne doit pas être en vente");
     }
 
+
+  }
+
+  answer(nft: any) {
+    this.user.check_pem(()=>{
+      this.dialog.open(PromptComponent, {
+        data: {
+          title:"Donner votre réponse",
+          onlyConfirm: false,
+          type:"number",
+          min:1,
+          max:10,
+          lbl_ok: 'Modifier',
+          lbl_cancel: 'Abandonner'
+        }}).afterClosed().subscribe((result:any) => {
+        if (result) {
+          nft.message="Transfert de votre réponse dans le NFT";
+          this.api._post("answer/"+nft.token_id+"/","",{pem:this.user.pem,resp:result}).subscribe(()=>{
+            nft.message="";
+            showMessage(this,"Votre réponse est bien enregistrée, elle reste modifiable tant que vous rester propriétaire du NFT");
+          },(err)=>{showError(this,err);})
+        }
+      });
+    },this);
 
   }
 }

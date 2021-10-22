@@ -4,14 +4,18 @@ import {WebcamUtil} from "ngx-webcam";
 declare var EXIF: any;
 export const ADMIN_PASSWORD="hh4271";
 
-export const RENT             =0b10000000;
-export const TRANSPARENT      =0b01000000;
-export const FORCE_OPEN       =0b00100000;
-export const FIND_SECRET      =0b00010000;
-export const SELF_DESTRUCTION =0b00001000;
-export const DIRECT_SELL      =0b00000100;
-export const CAN_RESELL       =0b00000010;
-export const CAN_TRANSFERT    =0b00000001;
+export const SECRET_VOTE      =0b0000010000000000;
+export const FOR_SALE         =0b0000001000000000;
+export const VOTE             =0b0000000100000000;
+export const RENT             =0b0000000010000000;
+export const TRANSPARENT      =0b0000000001000000;
+export const FORCE_OPEN       =0b0000000000100000;
+export const FIND_SECRET      =0b0000000000010000;
+export const SELF_DESTRUCTION =0b0000000000001000;
+export const DIRECT_SELL      =0b0000000000000100;
+export const CAN_RESELL       =0b0000000000000010;
+export const CAN_TRANSFERT    =0b0000000000000001;
+
 
 export function showError(vm:any,err:any=null){
   $$("!Error ",err);
@@ -1069,6 +1073,9 @@ export function extract_tags(tokens:any[]) {
 //Permet de faire le calcul du champs properties pour les NFT en focntion des options choisies
 export function eval_properties(vm:any): number {
   let properties:number=0;
+  if(vm.secret_vote)properties=properties       +SECRET_VOTE;
+  if(vm.vote)properties=properties              +VOTE;
+  if(vm.instant_sell)properties=properties      +FOR_SALE;
   if(vm.owner_can_transfer)properties=properties+CAN_TRANSFERT;
   if(vm.owner_can_sell)properties=properties    +CAN_RESELL;
   if(vm.direct_sell)properties=properties       +DIRECT_SELL; //Le NFT est disponible en vente directe
@@ -1077,6 +1084,7 @@ export function eval_properties(vm:any): number {
   if(vm.find_secret)properties=properties       +FIND_SECRET; //L'utilisateur doit fournir le secret dans l'open pour recevoir le cadeau
   if(vm.opt_gift)properties=properties          +FORCE_OPEN; //On affiche l'option d'ouverture même si aucun secret (utilisé pour la loterie)
   if(vm.transparent)properties=properties       +TRANSPARENT; //on affiche un cadre autour de l'image ou pas
+  $$("Properties est initialisé à "+properties);
   return properties;
 }
 
@@ -1102,10 +1110,9 @@ export function group_tokens(tokens:any[],tags:any,func_validate:Function=null):
       }
     }
 
-
     let same_item = null;
     for (let i of nfts) {
-      if (i.title == item.title && i.description == item.description && i.miner == item.miner && i.price == item.price && i.state == item.state)
+      if (i.title == item.title && i.description == item.description && i.miner == item.miner && i.price == item.price && i.properties == item.properties)
         same_item = i;
     }
 

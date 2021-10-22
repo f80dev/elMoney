@@ -174,7 +174,7 @@
     "symbol-observable" "4.0.0"
     "uuid" "8.3.2"
 
-"@angular/common@^11.1.1", "@angular/common@^12.0.0 || ^13.0.0-0", "@angular/common@^9.0.0 || ^10.0.0 || ^11.0.0", "@angular/common@>=10.0.0", "@angular/common@>=10.0.0-0", "@angular/common@>=12.0.0", "@angular/common@12.2.11":
+"@angular/common@^11.1.1", "@angular/common@^12.0.0 || ^13.0.0-0", "@angular/common@^9.0.0 || ^10.0.0 || ^11.0.0", "@angular/common@>=10.0.0", "@angular/common@>=10.0.0-0", "@angular/common@>=12.0.0", "@angular/common@>=6.0.0 <=12.x.x", "@angular/common@12.2.11":
   "integrity" "sha512-/3QS5YaHfm2taJYUVes076ZMpL2GRYVW3HDbHXiRNjoC9EMqQ7ahRD9RPFC8XUk709JuqzonE3bB+N5Ld3mzIA=="
   "resolved" "https://registry.npmjs.org/@angular/common/-/common-12.2.11.tgz"
   "version" "12.2.11"
@@ -208,7 +208,7 @@
   dependencies:
     "tslib" "^2.2.0"
 
-"@angular/core@^11.0.6", "@angular/core@^11.1.1", "@angular/core@^12.0.0", "@angular/core@^12.0.0 || ^13.0.0-0", "@angular/core@^9.0.0 || ^10.0.0 || ^11.0.0", "@angular/core@>=10.0.0", "@angular/core@>=10.0.0-0", "@angular/core@>=12.0.0", "@angular/core@12.2.11":
+"@angular/core@^11.0.6", "@angular/core@^11.1.1", "@angular/core@^12.0.0", "@angular/core@^12.0.0 || ^13.0.0-0", "@angular/core@^9.0.0 || ^10.0.0 || ^11.0.0", "@angular/core@>=10.0.0", "@angular/core@>=10.0.0-0", "@angular/core@>=12.0.0", "@angular/core@>=6.0.0 <=12.x.x", "@angular/core@12.2.11":
   "integrity" "sha512-wzCFtVFdQlXJlzWpWNz3w8cDzhYzuO1qDqey15Wd4zPR8c8pDx3/XCZXSziskaUzA+fVzgHHSwQnOi9XSFFjzA=="
   "resolved" "https://registry.npmjs.org/@angular/core/-/core-12.2.11.tgz"
   "version" "12.2.11"
@@ -1989,6 +1989,11 @@
     "@types/minimatch" "*"
     "@types/node" "*"
 
+"@types/google.visualization@0.0.58":
+  "integrity" "sha512-ldwrhRvqSlrCYjHELGZNNMP8m5oPLBb6iU7CfKF2C/YpgRTlHihqsrL5M293u0GL7mKfjm0AjSIgEE2LU8fuTw=="
+  "resolved" "https://registry.npmjs.org/@types/google.visualization/-/google.visualization-0.0.58.tgz"
+  "version" "0.0.58"
+
 "@types/jasmine@~3.5.0":
   "integrity" "sha512-Fkgk536sHPqcOtd+Ow+WiUNuk0TSo/BntKkF8wSvcd6M2FvPjeXcUE6Oz/bwDZiUZEaXLslAgw00Q94Pnx6T4w=="
   "resolved" "https://registry.npmjs.org/@types/jasmine/-/jasmine-3.5.14.tgz"
@@ -2514,6 +2519,14 @@
   "integrity" "sha1-l6ERlkmyEa0zaR2fn0hqjsn74KM="
   "resolved" "https://registry.npmjs.org/alphanum-sort/-/alphanum-sort-1.0.2.tgz"
   "version" "1.0.2"
+
+"angular-google-charts@^2.2.2":
+  "integrity" "sha512-dbNDqhSfqxv1rMMph2xV55+nsXSREClm03bTRpq4nRjpVghC1hVwsqfeg6p/cngB7WgamQmWj5ExTwN6vBzVAg=="
+  "resolved" "https://registry.npmjs.org/angular-google-charts/-/angular-google-charts-2.2.2.tgz"
+  "version" "2.2.2"
+  dependencies:
+    "@types/google.visualization" "0.0.58"
+    "tslib" "^2.2.0"
 
 "angularx-qrcode@^11.0.0":
   "integrity" "sha512-qg6g288LO9daqBP5GCHewy9W0IMW7jDMEaAiklA1za0UhjCj6VH1Agydr4JVp7RMkw1LsLapFhWsVSYqrWaERA=="

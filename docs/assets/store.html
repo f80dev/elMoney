@@ -212,7 +212,7 @@
       .then(resp => {
         var html="<table style='width: 90vw;'>";
         for(let ticket of resp){
-          if(ticket.state==0){
+          if(ticket.for_sale){
             html=html+"<tr style='width:100%;text-align:center;'><td><strong>";
             html=html+ticket.title+"</strong><br><small>"+ticket.description+"</small></td><td>"+ticket.price+" xEgld</td>";
             html=html+"<td><a href='javascript:buy("+ticket.token_id+","+ticket.price+",\""+seller+"\")'>acheter</a></td></tr>";
