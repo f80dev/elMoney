@@ -1,15 +1,18 @@
 <div class="mainform">
   <app-hourglass [message]="message" [br]="true"></app-hourglass>
-  <div *ngFor="let chart of charts" style="display: inline-block;margin: 8px;background-color: #7b7b7b" class="mat-elevation-z2">
+  <div *ngFor="let chart of charts" style="display: inline-block;margin: 8px;background-color: #7b7b7b;padding:10px !important;" class="mat-elevation-z2">
     <!--    https://developers.google.com/chart/interactive/docs/gallery -->
-    <div style="margin-top:5px;">{{chart.title}}</div>
+    <div style="font-size: large;">{{chart.title}}</div>
     <google-chart
+      style="margin-top: 5px;"
+      *ngIf="chart.data.length>0"
       [type]="chart.type"
       [data]="chart.data"
       [options]="chart.options"
       [columnNames]="['votant','votes']"
     >
     </google-chart>
+    <span *ngIf="chart.data.length==0">Pas de réponse/vote</span>
   </div>
   <br>
   <mat-slide-toggle [(ngModel)]="all_nfts" (change)="refresh()">Inclure les non répondants</mat-slide-toggle>

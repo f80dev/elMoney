@@ -28,6 +28,7 @@ export class VotesComponent implements OnInit {
     this.message="Récupération des statistiques";
     this.api._get("votes/"+this.user.addr,"").subscribe((r:any)=>{
       this.charts=[];
+      let visible=false;
       for(let item of Object.values(r)){
         let data=[];
         for(let k of Object.keys(item["data"])){
@@ -35,12 +36,14 @@ export class VotesComponent implements OnInit {
           if(k!="0" || this.all_nfts){
             if(k=="0")label="Non Réponse";
             data.push([label,item["data"][k]]);
+            visible=true;
           }
         }
 
         this.charts.push({
           title: item["title"],
           type:"PieChart",
+          visible:visible,
           data:data,
           width:400,
           height:400,
