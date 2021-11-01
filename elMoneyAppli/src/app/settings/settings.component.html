@@ -129,7 +129,7 @@
       </mat-form-field>
       <br>
 
-      <div *ngIf="user.shop_visual" style="display: inline-block;text-align: center;width: 100%">
+      <div *ngIf="user.shop_visual" style="display: inline-block;text-align: center;width: 100%" title="Cliquez sur le visuel pour le modifier">
         <h4>Visuel de votre place de marché</h4>
         <app-image [cover]="false" maxwidth="150px" [src]="user.shop_visual"
                    [border]="false"

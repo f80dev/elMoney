@@ -86,7 +86,8 @@ export class NftsComponent implements OnChanges {
     this.router.navigate(["promo"],{queryParams:{
         url:environment.domain_appli+"/?filter="+nft.token_id,
         visual:nft.visual,
-        message:removeHTML(nft.description),
+        tags:nft.tags,
+        body:removeHTML(nft.description),
         title:nft.title,
         premium:nft.premium
       }});

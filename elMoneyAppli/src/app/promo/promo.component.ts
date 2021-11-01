@@ -20,6 +20,8 @@ export class PromoComponent implements OnInit {
   email: string;
   body:string;
   visual: string;
+  tags: string;
+  description: string;
 
   constructor(public api: ApiService,
               public routes: ActivatedRoute,
@@ -36,8 +38,9 @@ export class PromoComponent implements OnInit {
     this.url=this.routes.snapshot.queryParamMap.get("url")+"&premium="+this.routes.snapshot.queryParamMap.get("premium");
     this.visual=this.routes.snapshot.queryParamMap.get("visual");
     if(!this.visual)this.visual=this.config.server.domain_appli+"/assets/img/coin.png";
-    this.title=this.routes.snapshot.queryParamMap.get("title");
-    this.message=this.routes.snapshot.queryParamMap.get("message");
+    this.message="Découvrez mon NFT '"+this.routes.snapshot.queryParamMap.get("title")+"' sur "+this.config.server.appname;
+    this.tags=this.routes.snapshot.queryParamMap.get("tags");
+    this.description=this.routes.snapshot.queryParamMap.get("description");
     this.body="Découvrez mon NFT '"+this.title+"' sur "+this.url+" "+this.message;
   }
 

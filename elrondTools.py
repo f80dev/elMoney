@@ -9,8 +9,8 @@ from time import sleep
 
 import requests
 from AesEverywhere import aes256
-from erdpy.proxy import ElrondProxy
-from erdpy import config, wallet
+from erdpy.proxy import ElrondProxy,TransactionCostEstimator,TxTypes
+from erdpy import config
 from erdpy.accounts import Account, AccountsRepository, Address
 from erdpy.contracts import SmartContract
 from erdpy.environments import TestnetEnvironment
@@ -64,6 +64,7 @@ class ElrondNet:
         log("Initialisation du proxy")
         self._proxy=ElrondProxy(proxy)
         self.chain_id=self._proxy.get_chain_id()
+        self.tce=TransactionCostEstimator(self._proxy.url)
 
         log("Initialisation de l'environnement")
         self.environment = TestnetEnvironment(proxy)
@@ -113,6 +114,7 @@ class ElrondNet:
                     address_from_key_file, seed = load_from_key_file(filename, data["password"])
                     rc=Account(address=Address(address_from_key_file))
                     rc.private_key_seed = seed.hex()
+                    rc.secret_key = seed.hex()
             else:
                 if not "BEGIN PRIVATE KEY" in content:
                     content=str(aes256.decrypt(base64.b64decode(content), SECRET_KEY), "utf8")
@@ -123,6 +125,7 @@ class ElrondNet:
                 pubkey=res[32:]
 
                 rc = Account(address=Address(pubkey))
+                rc.secret_key = seed.hex()
                 rc.private_key_seed = seed.hex()
 
         # rc="./PEM/"+NETWORKS[bc.network_name]["bank"]+".pem"
@@ -753,17 +756,12 @@ class ElrondNet:
         return _u,pem
 
 
-    def estimate(self):
-        """
-        TODO: implémenter l'estimation des couts
-        :return: 
-        """
-        pass
+    def estimate(self,contract_addr,function,arguments):
+        result = self.tce._estimate_sc_call(contract_addr, function, arguments)
+        return result
 
 
-
-
-    def execute(self,_contract,_user,function,arguments=[],value:int=None,gas_limit=LIMIT_GAS,timeout=60,gas_price_factor=1,tokenName="",simulate=False):
+    def execute(self,_contract,_user,function,arguments=[],value:int=None,gas_limit=LIMIT_GAS,timeout=60,gas_price_factor=1,tokenName=""):
         if _user is None:return None
         if type(_contract) == str: _contract = SmartContract(_contract)
         if type(_user)==str:_user=Account(address=_user)
@@ -1048,7 +1046,7 @@ class ElrondNet:
 
 
 
-    def mint(self, contract, user_from,arguments,gas_limit=LIMIT_GAS,value=0,factor=1,simulate=False):
+    def mint(self, contract, user_from,arguments,gas_limit=LIMIT_GAS,value=0,factor=1):
         """
         Fabriquer un NFT
         :param contract:

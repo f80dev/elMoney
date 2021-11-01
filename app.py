@@ -679,15 +679,17 @@ def mint(count:str,data:dict=None):
 
     owner = bc.get_elrond_user(data["pem"])
 
-
-
     desc=data["description"]+res_visual
+
+    if type(data["price"]) == str: data["price"] = data["price"].replace(",", ".")
     price = int(float(data["price"]) * 1e4)
+
     max_markup=int(float(data["max_markup"]) * 100)
     min_markup=int(float(data["min_markup"]) * 100)
     properties=int(data["properties"])
     miner_ratio=int(data["miner_ratio"]*100)
     fee=int(float(data["fee"])*1e18)
+    if type(data["gift"])==str:data["gift"]=data["gift"].replace(",",".")
     gift=int(float(data["gift"])*100)
     money:str=data["money"]
 
@@ -729,12 +731,15 @@ def mint(count:str,data:dict=None):
                                         "state":hex(1)}
                                     ,price,count,res_visual)
     else:
-        log("Construction d'un extended NFT")
-        result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,
-                       arguments=arguments,
-                       gas_limit=int(LIMIT_GAS*(1+int(count)/2)),
-                       value=value,
-                       simulate=simulate)
+        if simulate:
+            gasCost=bc.estimate(NETWORKS[bc.network_name]["nft"],"mint",arguments)
+            return jsonify({"gas":gasCost})
+        else:
+            log("Construction d'un extended NFT")
+            result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,
+                           arguments=arguments,
+                           gas_limit=int(LIMIT_GAS*(1+int(count)/2)),
+                           value=value)
 
     if not result is None:
         if result["status"] == "fail" or not "smartContractResults" in result:
@@ -822,7 +827,10 @@ def transactions(user:str=""):
                     if data.startswith("setSpecialRole") or data.startswith("issueSemiFungible"):lbl= "Autorisation de création d'un NFT"
                     if data.startswith("price"): lbl = "Mise a jour du prix"
                     if data.startswith("transferOwnership"): lbl = "Achat d'un NFT"
-                    if data.startswith("burn"): lbl = "Destruction d'un token"
+                    if data.startswith("burn"):
+                        lbl = "Destruction d'un token"
+                        sign=0
+
                     if data.startswith("ESDTNFTCreate"): lbl = "Création d'un NFT elrond"
                     if data.startswith("ESDTTransfer"): lbl = "Transfert d'un NFT"
                     if data.startswith("SaveKeyValue"): lbl = "Sauvegarde de vos préférences"
@@ -864,11 +872,11 @@ def transactions(user:str=""):
                             if tt["sender"] == user: sign=-1
                             if len(user)==0:sign=1
                             data2 = str(base64.b64decode(bytes(tt["data"],"utf8")),"utf8")
-                            if data2.startswith("Owner pay"):
+                            if data2.startswith("Owner pay") or data2.startswith("Miner refund"):
                                 rc["transactions"].append({
                                     "receiver":tt["receiver"],
                                     "sender": tt["sender"],
-                                    "data":"Vente d'un NFT",
+                                    "data":lbl,
                                     "cost":0,
                                     "value":sign*float(tt["value"])/1e18,
                                     "fee":0,
@@ -1125,6 +1133,7 @@ def server_config():
         "proxy": bc._proxy.url,
         "network":bc.network_name,
         "profils":profils,
+        "appname":APPNAME,
         "reload_amount":NETWORKS[bc.network_name]["new_account"],
         "new_esdt_price":ESDT_PRICE/1e18,
         "nft_contract": NETWORKS[bc.network_name]["nft"],

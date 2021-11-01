@@ -12,7 +12,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "$localize": () => (/* binding */ $localize)
 /* harmony export */ });
 /**
- * @license Angular v12.2.11
+ * @license Angular v12.2.12
  * (c) 2010-2021 Google LLC. https://angular.io/
  * License: MIT
  */
@@ -67,7 +67,7 @@ const _global = __globalThis || __global || __window || __self;
  * ```
  *
  * This format is the same as that used for `i18n` markers in Angular templates. See the
- * [Angular 18n guide](guide/i18n-common-prepare#mark-text-in-component-template).
+ * [Angular i18n guide](guide/i18n-common-prepare#mark-text-in-component-template).
  *
  * **Naming placeholders**
  *

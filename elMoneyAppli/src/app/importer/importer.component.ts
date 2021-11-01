@@ -51,7 +51,6 @@ export class ImporterComponent implements OnInit {
   max_price: any=0;
   min_price: any=0;
   focus_idx=0;
-  show_preview=false;
 
   displayedColumns: string[] = ['Address', 'name','delete'];
   dataSource = new MatTableDataSource<SellerProperties>([]);
@@ -78,7 +77,6 @@ export class ImporterComponent implements OnInit {
   //Money à utiliser pour la transaction du NFT
   selected_money: any={label:"eGld",identifier:"egld"};
   moneys: any[]=[];
-
 
   //Gestion des tags
   visible = true;
@@ -242,10 +240,10 @@ export class ImporterComponent implements OnInit {
         window.scrollTo(0, 0);
         this.show_zone_upload = false;
         this.api._post("mint/" + this.count, "simulate="+simulate, obj).subscribe((r: any) => {
+          this.message = "";
           if(!simulate){
             $$("Enregistrement dans la blockchain");
             if (r) {
-              this.message = "";
               showMessage(this, "Fichier tokenisé pour " + r.cost + " xEgld");
               setTimeout(()=>{
                 this.user.refresh_balance(() => {
@@ -253,8 +251,9 @@ export class ImporterComponent implements OnInit {
                 });
                 if (func) func(r);
               },1500);
-
             }
+          } else {
+            showMessage(this,"Cout estimé "+r.gas);
           }
 
         }, (err) => {
@@ -272,17 +271,20 @@ export class ImporterComponent implements OnInit {
     this.nfts_preview=[
       {
         title:this.title,
+        properties:eval_properties(this),
         description:this.desc,
         secret:this.secret,
+        tags:this.tags.join(" "),
         visual:this.visual,
-        miner:"0x1",
-        owner:"0x2",
+        miner:this.user.addr,
+        owner:this.user.addr,
         state:0,
         isDealer:false,
         message:"",
         price:this.price
       }
     ]
+    $$("Fabrication du NFT pour prévisualisation ",this.nfts_preview[0]);
   }
 
 
@@ -424,14 +426,18 @@ export class ImporterComponent implements OnInit {
     let _data= {
       title: title,
       question: question,
-      type: _type, max: _max,
+      type: _type,
+      max: _max,
       onlyConfirm: false,
       lbl_ok: "Ok",
       lbl_cancel: "Annuler",
-      result: placeholder,
+      result:_default,
+      placeholder: placeholder,
       subtitle:subtitle
     }
+    if(_type=="text")_type="string";
     if(_type=="number" && _default=="")_default=0;
+    if(_max>0 && _type!="number")_max=0;
     if(_type=="date" && _default=="")_default=new Date().toDateString();
     if(_default!="")_data.result=_default;
 
@@ -543,7 +549,7 @@ export class ImporterComponent implements OnInit {
               },"Ajouter un visuel si vous le souhaitez")
             },"","memo")
         });
-      }
+      } else this.cancel_wizard();
     },"ce lien ne sera visible qu'au propriétaire du NFT","url",0,"",_default);
   }
 
@@ -581,8 +587,9 @@ export class ImporterComponent implements OnInit {
   }
 
 
-  create_options(func,title="Rédiger les réponses possible"){
+  create_options(func,title="Rédiger les réponses possible",func_abort=null){
     this.ask_for_text(title,"Saisisser les différentes options possible en les séparant par un retour à la ligne",(text_options)=> {
+      if(text_options.length>0){
       let options = [];
       let i = 0;
       for (let txt of text_options.split("\n")) {
@@ -594,6 +601,11 @@ export class ImporterComponent implements OnInit {
       let rc="<li>"+options.join("</li><li>")+"</li>";
       rc="<div style='text-align: left;'>Les propositions sont les suivantes:<br><ul style='text-align: left;'>"+rc+"</ul></div>";
       func(rc,options);
+      } else {
+        if(!func_abort)func_abort();
+      }
+
+
     },"","memo");
   }
 
@@ -613,11 +625,9 @@ export class ImporterComponent implements OnInit {
             this.instant_sell=true;
             this.ask_for_price("Combien coute la participation",null,token.fee);
           },"","number");
-
-
         });
-      },"Lister les différents choix")
-    });
+      },"Lister les différents choix",()=>{this.cancel_wizard()})
+    },"Exemple: Pour ou contre le nucléaire ?","string",0,"");
   }
 
 
@@ -648,7 +658,7 @@ export class ImporterComponent implements OnInit {
             },"","number");
           } else this.cancel_wizard("Cette réponse n'est pas possible");
         },"","number",options.length,1)
-      },"Rédiger les réponses possible");
+      },"Rédiger les réponses possible",()=>{this.cancel_wizard()});
     },"Exemple: Combien font 12 x 14 ?");
   }
 
@@ -707,8 +717,8 @@ export class ImporterComponent implements OnInit {
             },"Exemple: Rendez-vous 12 rue Martel, Paris");
           }
         },"Exemple: Les dessins de Picasso");
-      }
-    },"Visuel de votre invitation");
+      } else this.cancel_wizard();
+    },"Visuel du billet",200,200,true,false);
   }
 
 
@@ -826,11 +836,11 @@ export class ImporterComponent implements OnInit {
 
 
   open_wizard(token:any){
-    if(token.index=="photo")this.quick_photo(token,"Sélectionner la photo","Calibrer l'aperçu présenter sur le NFT pour inciter à la vente",null,null,false);
+    if(token.index=="photo")this.quick_photo(token,"Sélectionner la photo","Sélectionnez une partie de la photo pour présenter le NFT sur la place de marché",null,null,false);
     if(token.index=="pow")this.quick_pow(token,300,300);
     if(token.index=="music")this.show_fileupload(3,'Téléverser le fichier musical',token,"audio/*");
     if(token.index=="film")this.quick_secret(token,'Indiquer le lien internet de votre film');
-    if(token.index=="file")this.show_fileupload(1,'Téléverser le fichier à embarquer dans votre token',token);
+    if(token.index=="file")this.show_fileupload(1,'Téléverser le fichier à embarquer dans votre eNFT',token);
     if(token.index=="contract")this.show_fileupload(2,'Téléverser le contrat signé',token);
     if(token.index=="secret")this.quick_secret(token);
     if(token.index=="game")this.quick_game(token);
@@ -846,12 +856,6 @@ export class ImporterComponent implements OnInit {
     this.show_zone_upload=false;
     showMessage(this,"Création du NFT annulée. "+message);
     setTimeout(()=>{this._location.back();},1000);
-  }
-
-
-  showPreview() {
-    this.create_preview();
-    this.show_preview=!this.show_preview;
   }
 
 
@@ -874,12 +878,12 @@ export class ImporterComponent implements OnInit {
     });
   }
 
-  make_token() {
+  make_token(bSimulate=false) {
     if(this.tags && this.tags.length>0)
       for(let tag of this.tags)
         if(tag)this.desc=" "+this.desc.trim()+"#"+tag;
 
-    this.tokenizer();
+    this.tokenizer(0,null,null,bSimulate);
   }
 
   inc_price(inc: number) {

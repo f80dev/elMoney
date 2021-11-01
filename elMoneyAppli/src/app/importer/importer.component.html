@@ -45,7 +45,8 @@
                  mat-align-tabs="center">
 
     <mat-tab label="NFT express">
-      <mat-form-field *ngIf="!show_zone_upload" appearance="fill" style="max-width:100px;margin-top: 10px;">
+      <mat-form-field *ngIf="!show_zone_upload" appearance="fill"
+                      style="max-width:100px;margin-top: 10px;">
         <mat-label>Monnaie</mat-label>
         <mat-select [(ngModel)]="selected_money" name="money" (ngModelChange)="update_user_solde()">
           <mat-option *ngFor="let money of moneys" [value]="money">
@@ -335,19 +336,16 @@
               <mat-tab label="Le propriétaire" style="height:max-content;overflow: hidden;">
                 <br>
                 <mat-slide-toggle
-                  color="primary"
                   [(ngModel)]="owner_can_sell">le propriétaire peut revendre
                 </mat-slide-toggle>
 
                 <br><br>
                 <mat-slide-toggle
-                  color="primary"
                   [(ngModel)]="owner_can_transfer">le propriétaire peut offrir
                 </mat-slide-toggle>
 
                 <br><br>
                 <mat-slide-toggle
-                  color="primary"
                   title="Interdire la vente directe implique d'avoir au moins un distributeur déclaré"
                   [(ngModel)]="direct_sell">Disponible en vente directe
                 </mat-slide-toggle>
@@ -479,15 +477,6 @@
 
 
             <br>
-            <small *ngIf="!opt_gift">Cout de fabrication: {{count*gift}} {{selected_money.label}} + frais de transactions</small>
-            <span *ngIf="count*gift>user.gas/1e18">(Solde insuffisant)</span>
-            <br><br>
-            <div *ngIf="show_preview" style="width: 100%;text-align: center;">
-              <app-nfts [nfts]="nfts_preview" [user]="user"
-                        height="fit-content"></app-nfts><br>
-              <small>Visualisation de votre NFT dans la place de marché</small>
-            </div>
-
             <div *ngIf="secret.length==0">
 
               <app-tuto [if]="elrond_standard" faq="compatibility"
@@ -495,11 +484,27 @@
 
               <mat-slide-toggle
                 color="primary"
-                title="Fabriquer un NFT au standard Elrond"
-                [(ngModel)]="elrond_standard">NFT compatible Elrond
+                title="Fabriquer un NFT au standard Elrond, cette option n'est disponible que si votre NFT le permet"
+                [(ngModel)]="elrond_standard">NFT visible dans le wallet Elrond
               </mat-slide-toggle>
               <br>
             </div>
+            <br>
+
+
+<!--            Preview du token -->
+            <div *ngIf="nfts_preview.length>0" style="width: 100%;text-align: center;">
+              <app-nfts [nfts]="nfts_preview"
+                        [art]="false"
+                        [with_actions]="false"
+                        [with_icon]="false"
+                        [user]="user">
+              </app-nfts>
+              <br>
+              <small>Visualisation de votre NFT dans la place de marché</small>
+            </div>
+
+
 
 
 
@@ -508,18 +513,33 @@
             <button mat-raised-button
                     mat-button class="app-button"
                     id="cmdShowPreview"
-                    (click)="showPreview()">
-              <span *ngIf="!show_preview">Preview</span>
-              <span *ngIf="show_preview">Cacher</span>
+                    (click)="create_preview()">
+              Prévisualiser
+            </button>
+
+            <button mat-raised-button
+                    mat-button class="app-button"
+                    id="cmdEvalPrice"
+                    title="Estimation du coût de fabrication (bientôt disponible)"
+                    [disabled]="true"
+                    (click)="make_token(true)">
+              <div class="bloc-bouton">Estimation<br>du coût</div>
             </button>
 
             <button mat-raised-button  color="primary"
                     mat-button class="app-button"
                     id="cmdMakeNFT"
                     [disabled]="title?.length==0 || count*gift>solde_user/1e18"
-                    (click)="make_token()">
+                    (click)="make_token(false)">
               Fabriquer !
             </button>
+
+            <br>
+            <div style="font-size: small;">
+              <span *ngIf="!opt_gift">Cout de fabrication: {{count*gift}} {{selected_money.label}} + frais de transactions</span>
+              <span *ngIf="count*gift>user.gas/1e18">(Solde insuffisant)</span>
+            </div>
+
 
           </mat-step>
         </mat-vertical-stepper>&nbsp;
