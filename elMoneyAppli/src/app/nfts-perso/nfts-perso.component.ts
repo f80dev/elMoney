@@ -72,32 +72,43 @@ export class NftsPersoComponent implements OnInit {
   }
 
 
+  //Récupération de la liste des NFTs possédés
+  //0=mes créations
+  //1=ceux que je posséde
+  //2=ceux que je distribue
   refresh(identifiers=[0,1,2],evt:any=null) {
     let param="";
     if(evt=="open")return;
-    if(evt=="burn" || evt=="transfer" || evt=="force" || evt=="update")param=""+now();
-    $$("Refresh de la liste des NFTs possédés/achetés");
-    for(let identifier of identifiers){
-      let filters=["0x0","0x0","0x0"];
-      filters[identifier]=this.user.addr;
-      this.message = "Chargement des tokens ...";
-      this.api._get("nfts/"+filters[0]+"/"+filters[1]+"/"+filters[2],param).subscribe((r: any) => {
-        this.message = "";
 
-        for(let i=0;i<r.length;i++){
-          r[i].isDealer=(identifier==0);
-          r[i].fullscreen=false;
-        }
-
-        this.nfts[identifier]=group_tokens(r,this.config.tags,(i)=>{
-          if(!this.filter || identifier!=2 || this.filter.key=="" || i[this.filter.key]==this.filter.value) {
-            return true;
-          }
-          return false;
-        });
-      });
+    if(evt=="burn" || evt=="transfer" || evt=="force" || evt=="update"){
+      $$("On force le rafraichissement (pas d'usage du cache)");
+      param=""+now();
     }
-    this.user.refresh_balance();
+
+    $$("Refresh de la liste des NFTs possédés/achetés");
+    setTimeout(()=>{
+      for(let identifier of identifiers){
+        let filters=["0x0","0x0","0x0"];
+        filters[identifier]=this.user.addr;
+        this.message = "Chargement des tokens ...";
+        this.api._get("nfts/"+filters[0]+"/"+filters[1]+"/"+filters[2],param).subscribe((r: any) => {
+          this.message = "";
+
+          for(let i=0;i<r.length;i++){
+            r[i].isDealer=(identifier==0);
+            r[i].fullscreen=false;
+          }
+
+          this.nfts[identifier]=group_tokens(r,this.config.tags,(i)=>{
+            if(!this.filter || identifier!=2 || this.filter.key=="" || i[this.filter.key]==this.filter.value) {
+              return true;
+            }
+            return false;
+          });
+        },(err)=>{showError(this,err)});
+      }
+      this.user.refresh_balance();
+    },500);
   }
 
   transfer(nft:any){
