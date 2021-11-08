@@ -328,11 +328,12 @@ def nfts(seller_filter="0x0",owner_filter="0x0",miner_filter="0x0"):
             uri["miner_name"]=_miner["pseudo"]
         rc.append(uri)
 
-    if seller_filter+owner_filter+miner_filter=="0x00x00x0":
-        addrs=dao.get_all_users("addr")
-        rc=rc+bc.get_tokens_standard(addrs)
-    else:
-        rc = rc + bc.get_tokens_standard([seller_filter.replace("0x0","")+owner_filter.replace("0x0","")+miner_filter.replace("0x0","")])
+    #TODO a optimiser avant de remettre en service
+    # if seller_filter+owner_filter+miner_filter=="0x00x00x0":
+    #     addrs=dao.get_all_users("addr")
+    #     rc=rc+bc.get_tokens_standard(addrs)
+    # else:
+    #     rc = rc + bc.get_tokens_standard([seller_filter.replace("0x0","")+owner_filter.replace("0x0","")+miner_filter.replace("0x0","")])
 
     format=request.args.get("format","json")
     if format=="json":
