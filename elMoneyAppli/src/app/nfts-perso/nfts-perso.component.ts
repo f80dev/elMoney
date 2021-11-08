@@ -134,4 +134,15 @@ export class NftsPersoComponent implements OnInit {
   open_store() {
     open("./assets/store.html?seller="+this.user.addr+"&server="+environment.domain_server+"&explorer="+this.config.server.explorer+"&network_name="+this.config.server.network,"store");
   }
+
+  onburn($event: any) {
+    $$("Effacement manuel des tokens");
+    for(let i of [0,1,2])
+      for(let t of this.nfts[i]){
+        if(t.token_id==$event){
+          let idx=this.nfts[i].indexOf(t);
+          this.nfts[i].splice(idx,1);
+        }
+      }
+  }
 }

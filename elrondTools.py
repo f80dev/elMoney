@@ -798,7 +798,7 @@ class ElrondNet:
                 d=self.environment.query_contract(_contract, function_name,arguments)
                 break
             except Exception as inst:
-                sleep(3)
+                sleep(1)
                 log("Essai "+str(i)+" Impossible d'executer "+function_name+"("+str(arguments)+") -> ")
                 log(str(inst.args))
 
@@ -1079,6 +1079,7 @@ class ElrondNet:
              +"@"+str_to_hex("canChangeOwner",False)+"@"+ str_to_hex("true",False)\
              +"@"+str_to_hex("canUpgrade",False)+"@"+str_to_hex("true",False)\
              +"@"+str_to_hex("canWipe",False)+"@"+ str_to_hex("true",False)
+
         t=self.send_transaction(user_from,Account(address="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"),user_from,50000000000000000,data)
 
         if t["status"]=="success" and len(t["smartContractResults"][0]["data"].split("@"))>2:
@@ -1308,25 +1309,26 @@ class ElrondNet:
                           )
         return tx
 
+
     def get_instant_access(self, _user:Account,delayInSec=60):
         private_key=_user.private_key_seed
         # TODO ajouter la durée limite et le cryptage
         return private_key
 
+
     def decrypt_json_keyfile(self, content):
         _content=json.loads(content)
 
 
-
-
-
-
-
-
-
-
-
-
+    def eval_gas(self, nb_address, nb_octet,extra=0,StorePerByte=50000):
+        """
+        Evaluation du gas nécéssaire
+        voir https://docs.elrond.com/developers/account-storage/#transaction-format
+        :param nb_address:
+        :param nb_octet:
+        :return:
+        """
+        return 300000 + nb_address * 16 * StorePerByte + nb_octet * StorePerByte + extra * StorePerByte
 
 
 

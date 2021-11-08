@@ -20,7 +20,6 @@ import {PromptComponent} from "../prompt/prompt.component";
 import {MatDialog} from "@angular/material/dialog";
 import {SelDealerComponent} from "../sel-dealer/sel-dealer.component";
 import {animate, state, style, transition, trigger} from "@angular/animations";
-import {UserService} from "../user.service";
 
 @Component({
   selector: 'app-nfts',
@@ -50,6 +49,7 @@ export class NftsComponent implements OnChanges {
   @Input("seller") seller:string="0x0000000000000000000000000000000000000000000000000000000000000000";
   @Output("refresh") onrefresh:EventEmitter<any>=new EventEmitter();
   @Output("buy") onbuy:EventEmitter<any>=new EventEmitter();
+  @Output("burn") onburn:EventEmitter<any>=new EventEmitter();
   @Output("transfer") ontransfer:EventEmitter<any>=new EventEmitter();
 
   constructor(
@@ -181,7 +181,7 @@ export class NftsComponent implements OnChanges {
           this.api._post("burn/" + nft.token_id + "/", "", this.user.pem).subscribe((r: any) => {
             nft.message = "";
             showMessage(this, "Votre NFT n'existe plus");
-            this.onrefresh.emit("burn");
+            this.onburn.emit(nft.token_id);
           },(err)=>{
             showError(this,err);
             nft.message="";

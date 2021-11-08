@@ -610,6 +610,14 @@ def buy_nft(token_id,price,seller:str,data:dict=None):
     return jsonify(rc)
 
 
+#http://localhost:6660/api/addresses/
+@app.route('/api/addresses/',methods=["GET"])
+def get_addresses():
+    rc=[]
+    for it in bc.query("addresses"):
+        rc.append(it.hex)
+    return jsonify({"content":rc})
+
 
 
 
@@ -735,10 +743,11 @@ def mint(count:str,data:dict=None):
             gasCost=bc.estimate(NETWORKS[bc.network_name]["nft"],"mint",arguments)
             return jsonify({"gas":gasCost})
         else:
+            gas=bc.eval_gas(2,20)*int(count)+bc.eval_gas(2,20+len(secret)+len(title)+len(desc),100)
             log("Construction d'un extended NFT")
             result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,
                            arguments=arguments,
-                           gas_limit=int(LIMIT_GAS*(1+int(count)/2)),
+                           gas_limit=gas,
                            value=value)
 
     if not result is None:
@@ -1263,14 +1272,14 @@ def new_account():
         log("Création du compte " + _a.address.bech32() + ". Demande de transfert de la monnaie par defaut")
         n_row, pem = dao.save_user(email, _a.address.bech32(), pem,shard=_infos["shard"])
         instant_access = app.config["DOMAIN_APPLI"] + "/?instant_access=" + str(pem,"utf8") + "&address=" + _a.address.bech32()
-        private = _a.private_key_seed
+        private = _a.secret_key
 
         filename=email.split("@")[0].replace(".","_")+".xpem"
         send_mail(open_html_file("new_account",{
             "dest":email,
             "instant_access":instant_access,
             "public_key":_a.address.bech32(),
-            "pem":_a.private_key_seed
+            "pem":_a.secret_key
         }),email,subject="Ouverture de votre compte",attach=pem,filename=filename)
 
 

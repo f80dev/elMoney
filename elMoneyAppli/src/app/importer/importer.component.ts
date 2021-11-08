@@ -20,7 +20,6 @@ import {MatChipInputEvent} from "@angular/material/chips";
 import {map, startWith} from "rxjs/operators";
 import {IpfsService} from "../ipfs.service";
 import {DatePipe, Location} from "@angular/common";
-import {stringify} from "@angular/compiler/src/util";
 
 export interface SellerProperties {
   address: string;
@@ -199,7 +198,6 @@ export class ImporterComponent implements OnInit {
       if(func_error)func_error();
       return;
     }
-
 
     let properties=eval_properties(this);
     this.message="Transfert des fichiers vers IPFS";
@@ -705,7 +703,7 @@ export class ImporterComponent implements OnInit {
                   this.ask_for_price("Prix unitaire du billet", (price) => {
                     this.ask_for_text("Combien de billets", "Indiquer le nombre de billets à fabriquer (maximum 30)", (num) => {
                       this.count = Number(num);
-                      if (this.count < 31)
+                      if (this.count < this.config.values.max_token)
                         this.ask_confirm(token.fee);
                       else {
                         showMessage(this, "Maximum 30 billets en une seule fois");
@@ -800,7 +798,6 @@ export class ImporterComponent implements OnInit {
             this.tokenizer(token.fee,(r)=>{
               let body={pem:this.user.pem,message:"",title:this.title,from:this.config.server.explorer+"/account/"+this.user.addr};
               this.message="Expédition au contractant";
-              debugger
               this.api._post("transfer_nft/"+r.ids[0]+"/"+email+"/","",body).subscribe(()=>{
                 this.message="";
                 return;
