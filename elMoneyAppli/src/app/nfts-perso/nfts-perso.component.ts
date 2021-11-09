@@ -85,6 +85,10 @@ export class NftsPersoComponent implements OnInit {
       param=""+now();
     }
 
+    if(evt=="burn"){
+      debugger
+    }
+
     $$("Refresh de la liste des NFTs possédés/achetés");
     setTimeout(()=>{
       for(let identifier of identifiers){

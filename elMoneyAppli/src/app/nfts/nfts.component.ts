@@ -118,7 +118,7 @@ export class NftsComponent implements OnChanges {
     if ((nft.properties & FIND_SECRET) > 0) {
       this.dialog.open(PromptComponent, {
         data: {
-          title:"Répondez pour gagner !",
+          title:nft.title.split("?")[0]+" ?",
           subtitle: 'Donner la réponse pour gagner (souvent en 1 seul mot ou un seul nombre)',
           question:"html:"+nft.description,
           onlyConfirm: false,
@@ -138,7 +138,7 @@ export class NftsComponent implements OnChanges {
     this.user.check_pem(()=>{
       showMessage(this,"Vous allez pouvoir accéder au contenu de votre NFT dans quelques instants");
       nft.message = "En cours d'ouverture";
-      this.api._post("open_nft/" + nft.token_id + "/", "", {pem:this.user.pem,response:reponse}).subscribe((r: any) => {
+      this.api._post("open_nft/" + nft.token_id + "/", "", {pem:this.user.pem,response:reponse,miner:nft.miner}).subscribe((r: any) => {
         nft.message = "";
         nft.open = r.response;
         if(nft.open.length==46)nft.open="https://ipfs.io/ipfs/"+nft.open;
@@ -148,7 +148,7 @@ export class NftsComponent implements OnChanges {
           nft.delay=15;
           nft.timer=setInterval(()=>{
             nft.delay=nft.delay-1;
-            nft.message="Notez ce message, Vous n'y aurez plus accès dans "+nft.delay+" secondes";
+            nft.message="Ce NFT s'auto-détruira dans "+nft.delay+" secondes";
             if(nft.delay<=0){
               clearInterval(nft.timer);
               this.onrefresh.emit("burn");
@@ -334,7 +334,7 @@ export class NftsComponent implements OnChanges {
         }}).afterClosed().subscribe((result:any) => {
         if (result) {
           nft.message="Transfert de votre réponse dans le NFT";
-          this.api._post("answer/"+nft.token_id+"/","",{pem:this.user.pem,resp:result}).subscribe(()=>{
+          this.api._post("answer/"+nft.token_id+"/","",{pem:this.user.pem,resp:result,miner:nft.miner}).subscribe(()=>{
             nft.message="";
             this.user.refresh_balance();
             showMessage(this,"Votre réponse est bien enregistrée, elle reste modifiable tant que vous rester propriétaire du NFT");

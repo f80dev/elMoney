@@ -962,6 +962,8 @@ class ElrondNet:
                 obj["message"]=""
 
                 rc.append(obj)
+        else:
+            log("Aucun token récupéré")
 
 
         #Tri de la liste

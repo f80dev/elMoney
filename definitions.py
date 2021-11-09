@@ -49,7 +49,7 @@ NETWORKS={
         "proxy":"https://testnet-gateway.elrond.com",
         "explorer":"https://testnet-explorer.elrond.com",
         "wallet":"httpRes://testnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqthmljnk6mzcjmst0d4dgyl5zkfpy3c6lqqesqrsmlr",
+        "nft":"erd1qqqqqqqqqqqqqpgq58pga697zqhpg8edpkqy3q6f3yt76e4uqqesrehhav",
         "shard":1
     },
 
@@ -63,7 +63,7 @@ NETWORKS={
         "proxy":"https://devnet-gateway.elrond.com",
         "explorer":"https://devnet-explorer.elrond.com",
         "wallet":"https://devnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqxetwhl4m70tlslvrm04a2fd2s8hyhcf6qqes88j092",
+        "nft":"erd1qqqqqqqqqqqqqpgqk42t075f7rrcqqdz3qme9pwz9dfwwccmqqesjjxaf5",
         "shard": 1
     },
 

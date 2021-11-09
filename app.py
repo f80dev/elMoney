@@ -310,7 +310,7 @@ def burn(token_id):
 
 
 
-#tag: get_tokens tokens all_tokens
+#tag: get_tokens tokens all_tokens get_nfts get_nft
 #http://localhost:6660/api/nfts/
 #http://localhost:6660/api/nfts/?format=json
 #http://localhost:6660/api/nfts/?format=csv
@@ -420,6 +420,7 @@ def open_nft(token_id:str,data:dict=None):
         rc="Impossible d'ouvrir le token"
 
     send(socketio,"refresh_account",addr,"")
+    send(socketio, "open_nft", data["miner"], "")
 
     return jsonify({"response":rc,"cost":tx["cost"]})
 
@@ -485,6 +486,8 @@ def answer(token_id:str,data:dict=None):
     arguments=[int(token_id),int(data["resp"])]
     _user=bc.get_elrond_user(data['pem'])
     tx = bc.execute(NETWORKS[bc.network_name]["nft"],_user,"answer",arguments)
+
+    send(socketio, "answer_nft", data["miner"], "")
 
     return jsonify(tx),200
 
