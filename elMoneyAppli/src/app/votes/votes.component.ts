@@ -5,6 +5,7 @@ import {Router} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ConfigService} from "../config.service";
 import {subscribe_socket} from "../tools";
+import {Socket} from "ngx-socket-io";
 
 @Component({
   selector: 'app-votes',
@@ -22,6 +23,7 @@ export class VotesComponent implements OnInit {
     public user:UserService,
     public router:Router,
     public toast:MatSnackBar,
+    public socket:Socket,
     public config:ConfigService,
   ) {
     subscribe_socket(this, "answer_nft", () => {

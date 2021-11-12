@@ -145,6 +145,8 @@ export class ImporterComponent implements OnInit {
   vote=false;
   secret_vote=false;
   instant_sell=true;
+  opt_unik: any=false;
+  opt_miner_can_burn=false;
 
   add(event: MatChipInputEvent): void {
     const input = event.input;
@@ -237,7 +239,8 @@ export class ImporterComponent implements OnInit {
         this.message = "Enregistrement dans la blockchain";
         window.scrollTo(0, 0);
         this.show_zone_upload = false;
-        this.api._post("mint/" + this.count, "simulate="+simulate, obj).subscribe((r: any) => {
+        if(this.count>20)showMessage(this,"Le délai de création de "+this.count+" NFTs peut être long");
+        this.api._post("mint/" + this.count, "simulate="+simulate, obj,240).subscribe((r: any) => {
           this.message = "";
           if(!simulate){
             $$("Enregistrement dans la blockchain");
@@ -253,12 +256,15 @@ export class ImporterComponent implements OnInit {
           } else {
             showMessage(this,"Cout estimé "+r.gas);
           }
-
         }, (err) => {
-          $$("!Erreur de création");
-          this.message = "";
-          showMessage(this, err.error);
-          if (func_error) func_error();
+          if(this.count<15){
+            $$("!Erreur de création");
+            this.message = "";
+            showMessage(this, err.error);
+            if (func_error) func_error();
+          } else {
+            showMessage(this,"Vos NFTs sont en cours de création, ils devraient bientôt être présent dans vos NFTs");
+          }
         });
       });
     });
@@ -616,6 +622,7 @@ export class ImporterComponent implements OnInit {
         this.ask_for_text("Récompense","De combien est la récompense pour la participation",(gift)=> {
           this.gift = gift;
           this.vote=true;
+          this.owner_can_transfer=false;
           this.secret_vote=false;
           if(token.tags)this.desc=this.desc+" "+token.tags;
           this.ask_for_text("Nombre de participants","",(count)=>{
@@ -703,10 +710,11 @@ export class ImporterComponent implements OnInit {
                   this.ask_for_price("Prix unitaire du billet", (price) => {
                     this.ask_for_text("Combien de billets", "Indiquer le nombre de billets à fabriquer (maximum 30)", (num) => {
                       this.count = Number(num);
+                      this.opt_miner_can_burn=true;
                       if (this.count < this.config.values.max_token)
                         this.ask_confirm(token.fee);
                       else {
-                        showMessage(this, "Maximum 30 billets en une seule fois");
+                        showMessage(this, "Maximum "+this.config.values.max_token+" billets en une seule fois");
                       }
                     }, "", "number", 30);
                   })

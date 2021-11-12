@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1635700482427,
+  "timestamp": 1636454621041,
   "index": "https://tokenforge.f80.fr/index.html",
   "assetGroups": [
     {
@@ -120,8 +120,8 @@
     "https://tokenforge.f80.fr/exif.js": "b5962aef35409d93f1ff55461045a6796e80343f",
     "https://tokenforge.f80.fr/favicon.ico": "c3bbe9dfa628852d8131849561b7fd52194f4d8d",
     "https://tokenforge.f80.fr/favicon.png": "9d07b4062b45b028a517877c4b51af7a330eab1a",
-    "https://tokenforge.f80.fr/index.html": "67fffa8fc997d863b33275d37298716072b1f10e",
-    "https://tokenforge.f80.fr/main.js": "7a3558cbfdb1a63821dbb3ff41baaafda756be49",
+    "https://tokenforge.f80.fr/index.html": "5c1d71f5dcea53a9bcb9ef31adef3d8b2fa20948",
+    "https://tokenforge.f80.fr/main.js": "91d533dbd666e328807ce5360ee45e3039e0840d",
     "https://tokenforge.f80.fr/manifest.webmanifest": "8291133aeacc475e061eb544514d2c1e8c02c576",
     "https://tokenforge.f80.fr/polyfills.js": "453f7b128025e50162bc473172e696efcc4406a4",
     "https://tokenforge.f80.fr/runtime.js": "ab96be6144efe7014af2256d2b4870bba47b9e45",

@@ -4,17 +4,19 @@ import {WebcamUtil} from "ngx-webcam";
 declare var EXIF: any;
 export const ADMIN_PASSWORD="hh4271";
 
-export const SECRET_VOTE      =0b0000010000000000;
-export const FOR_SALE         =0b0000001000000000;
-export const VOTE             =0b0000000100000000;
-export const RENT             =0b0000000010000000;
-export const TRANSPARENT      =0b0000000001000000;
-export const FORCE_OPEN       =0b0000000000100000;
-export const FIND_SECRET      =0b0000000000010000;
-export const SELF_DESTRUCTION =0b0000000000001000;
-export const DIRECT_SELL      =0b0000000000000100;
-export const CAN_RESELL       =0b0000000000000010;
-export const CAN_TRANSFERT    =0b0000000000000001;
+export const MINER_CAN_BURN   = 0b0001000000000000; //Chaque propriétaire ne peut acheter qu'un seul exemplaire
+export const UNIK             = 0b0000100000000000; //Chaque propriétaire ne peut acheter qu'un seul exemplaire
+export const SECRET_VOTE      = 0b0000010000000000;
+export const FOR_SALE         = 0b0000001000000000;
+export const VOTE             = 0b0000000100000000;
+export const RENT             = 0b0000000010000000;
+export const TRANSPARENT      = 0b0000000001000000;
+export const FORCE_OPEN       = 0b0000000000100000;
+export const FIND_SECRET      = 0b0000000000010000;
+export const SELF_DESTRUCTION = 0b0000000000001000;
+export const DIRECT_SELL      = 0b0000000000000100;
+export const CAN_RESELL       = 0b0000000000000010;
+export const CAN_TRANSFERT    = 0b0000000000000001;
 
 
 export function showError(vm:any,err:any=null){
@@ -284,7 +286,7 @@ export function subscribe_socket(vm:any,event_name:string,func=null){
       }
     });
   } else {
-    $$("Impossibilité d'installer la socket pour "+event_name);
+    $$("!Impossibilité d'installer la socket pour "+event_name);
   }
 }
 
@@ -1073,6 +1075,8 @@ export function extract_tags(tokens:any[]) {
 //Permet de faire le calcul du champs properties pour les NFT en focntion des options choisies
 export function eval_properties(vm:any): number {
   let properties:number=0;
+  if(vm.opt_miner_can_burn)properties=properties+MINER_CAN_BURN;
+  if(vm.opt_unik)properties=properties          +UNIK;
   if(vm.secret_vote)properties=properties       +SECRET_VOTE;
   if(vm.vote)properties=properties              +VOTE;
   if(vm.instant_sell)properties=properties      +FOR_SALE;

@@ -48,6 +48,7 @@
         <td style="width: 20px">
           <button mat-icon-button mat-raised-button class="icon-button"
                   title="Détruire le billet"
+                  *ngIf="nft.miner_can_burn"
                   (click)="burn(nft)">
             <mat-icon>delete</mat-icon>
           </button>

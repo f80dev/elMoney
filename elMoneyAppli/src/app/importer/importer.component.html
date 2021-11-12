@@ -463,14 +463,32 @@
             </button>
 
             <br>
-
             <mat-slide-toggle
-              color="primary"
-              *ngIf="count>1 && gift>0"
-              name="opt_gift"
-              [(ngModel)]="opt_gift">
-              N'attribuer la récompense qu'a un seul NFT sur les {{count}}(loterie)
-            </mat-slide-toggle>
+                color="primary"
+                name="opt_miner_canburn"
+                [(ngModel)]="opt_miner_can_burn">
+                Le créateur peut détruire le NFT
+              </mat-slide-toggle>
+            <br>
+
+            <div *ngIf="count>1">
+              <mat-slide-toggle
+                color="primary"
+                *ngIf="gift>0"
+                name="opt_gift"
+                [(ngModel)]="opt_gift">
+                N'attribuer la récompense qu'a un seul NFT sur les {{count}}(loterie)
+              </mat-slide-toggle><br>
+
+              <mat-slide-toggle
+                color="primary"
+                name="opt_unik"
+                [(ngModel)]="opt_unik">
+                Un seul NFT par personne
+              </mat-slide-toggle><br>
+
+            </div>
+
             <br>
 
             <mat-slide-toggle [(ngModel)]="instant_sell">Mettre en vente immédiatement</mat-slide-toggle>
@@ -492,7 +510,7 @@
             <br>
 
 
-<!--            Preview du token -->
+            <!--            Preview du token -->
             <div *ngIf="nfts_preview.length>0" style="width: 100%;text-align: center;">
               <app-nfts [nfts]="nfts_preview"
                         [art]="false"
@@ -503,10 +521,6 @@
               <br>
               <small>Visualisation de votre NFT dans la place de marché</small>
             </div>
-
-
-
-
 
             <br>
 

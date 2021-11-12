@@ -22,7 +22,7 @@ from dao import DAO
 from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, \
     MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, \
     MAIN_NAME, MAIN_DECIMALS, NETWORKS, ESDT_CONTRACT, LIMIT_GAS, ESDT_PRICE, IPFS_NODE_HOST, \
-    IPFS_NODE_PORT, ONE_WINNER, LONG_DELAY_TRANSACTION, SHORT_DELAY_TRANSACTION, FIND_SECRET
+    IPFS_NODE_PORT, ONE_WINNER, LONG_DELAY_TRANSACTION, SHORT_DELAY_TRANSACTION, FIND_SECRET, MAX_MINT_NFT
 from elrondTools import ElrondNet
 from giphy_search import ImageSearchEngine
 from ipfs import IPFS
@@ -614,13 +614,20 @@ def buy_nft(token_id,price,seller:str,data:dict=None):
     return jsonify(rc)
 
 
-#http://localhost:6660/api/addresses/
-@app.route('/api/addresses/',methods=["GET"])
-def get_addresses():
-    rc=[]
+#http://localhost:6660/api/ref_list/
+@app.route('/api/ref_list/',methods=["GET"])
+def ref_list():
+    rc=[[],[],[]]
     for it in bc.query("addresses"):
-        rc.append(it.hex)
-    return jsonify({"content":rc})
+        rc[0].append(it.hex)
+
+    for money in bc.query("ESDT_map"):
+        rc[1].append(str(base64.b64decode(money.base64),"utf8"))
+
+    for dealer in bc.query("getDealer"):
+        rc[2].append(dealer.hex)
+
+    return jsonify({"addresses":rc[0],"moneys":rc[1],"dealers":rc[2]})
 
 
 
@@ -668,12 +675,8 @@ def mint(count:str,data:dict=None):
     else:
         secret="0"
 
-
-
     if "tags" in data and len(data["tags"])>0:
         data["description"]=data["description"]+" "+data["tags"]
-
-
 
     if "file" in data and len(data["file"])>0 and secret=="0":
         if data["file"].startswith("."):
@@ -719,17 +722,9 @@ def mint(count:str,data:dict=None):
     else:
         money=str_to_hex("EGLD")
 
-    arguments = [int(count),
-                 "0x" + title.encode().hex(),
-                 "0x" + desc.encode().hex(),
-                 "0x" + secret,
-                 price, min_markup, max_markup,
-                 properties,
-                 miner_ratio,
-                 gift,int(data["opt_lot"]),
-                 money]
-    log("Minage du token "+str(data))
 
+
+    log("Minage du token "+str(data))
 
     if data["elrond_standard"]:
         log("Construction d'un NFT standard elrond")
@@ -743,16 +738,36 @@ def mint(count:str,data:dict=None):
                                         "state":hex(1)}
                                     ,price,count,res_visual)
     else:
-        if simulate:
-            gasCost=bc.estimate(NETWORKS[bc.network_name]["nft"],"mint",arguments)
-            return jsonify({"gas":gasCost})
-        else:
-            gas=bc.eval_gas(2,20)*int(count)+bc.eval_gas(2,20+len(secret)+len(title)+len(desc),100)
-            log("Construction d'un extended NFT")
-            result=bc.mint(NETWORKS[bc.network_name]["nft"],owner,
-                           arguments=arguments,
-                           gas_limit=gas,
-                           value=value)
+
+        nb_iterations = int(int(count) / MAX_MINT_NFT)
+        for i in range(nb_iterations+1):
+            size=MAX_MINT_NFT if i<nb_iterations else int(count) % MAX_MINT_NFT
+            if size>0:
+                arguments = [size,
+                             "0x" + title.encode().hex(),
+                             "0x" + desc.encode().hex(),
+                             "0x" + secret,
+                             price, min_markup, max_markup,
+                             properties,
+                             miner_ratio,
+                             gift, int(data["opt_lot"]),
+                             money]
+
+
+                if simulate:
+                    gasCost=bc.estimate(NETWORKS[bc.network_name]["nft"],"mint",arguments)
+                    return jsonify({"gas":gasCost})
+                else:
+                    gas=bc.eval_gas(200)*size+bc.eval_gas(2000+(len(secret)+len(title)+len(desc))*2)
+                    log("Construction d'un extended NFT")
+                    result=bc.mint(NETWORKS[bc.network_name]["nft"],
+                                   owner,
+                                   arguments=arguments,
+                                   gas_limit=gas,
+                                   value=value
+                                   )
+                    value=0 #l'ensemble des egold a été transférés dés la première fois
+
 
     if not result is None:
         if result["status"] == "fail" or not "smartContractResults" in result:

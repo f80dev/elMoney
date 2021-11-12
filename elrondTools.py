@@ -21,7 +21,7 @@ from requests_cache import CachedSession
 
 from Tools import log, base_alphabet_to_10, str_to_hex, hex_to_str, nbr_to_hex, translate, now, is_standard, returnError
 from definitions import LIMIT_GAS, ESDT_CONTRACT, NETWORKS, ESDT_PRICE, IPFS_NODE_PORT, IPFS_NODE_HOST, SECRET_KEY, \
-    DEFAULT_VISUAL, DEFAULT_VISUAL_SHOP, VOTE, FOR_SALE, SECRET_VOTE
+    DEFAULT_VISUAL, DEFAULT_VISUAL_SHOP, VOTE, FOR_SALE, SECRET_VOTE, UNIK, MINER_CAN_BURN
 from ipfs import IPFS
 
 
@@ -944,7 +944,9 @@ class ElrondNet:
                           "has_secret":has_secret,
                           "resp":resp,
                           "secret_vote": properties & SECRET_VOTE>0,
+                          "unik":properties & UNIK>0,
                           "vote":properties & VOTE>0,
+                          "miner_can_burn":properties & MINER_CAN_BURN  >0,
                           "for_sale":properties & FOR_SALE>0,
                           "min_markup":min_markup/100,"max_markup":max_markup/100,
                           "miner_ratio":miner_ratio/100,
@@ -1322,7 +1324,7 @@ class ElrondNet:
         _content=json.loads(content)
 
 
-    def eval_gas(self, nb_address, nb_octet,extra=0,StorePerByte=50000):
+    def eval_gas(self,  nb_octet,extra=0,StorePerByte=50000):
         """
         Evaluation du gas nécéssaire
         voir https://docs.elrond.com/developers/account-storage/#transaction-format
@@ -1330,7 +1332,7 @@ class ElrondNet:
         :param nb_octet:
         :return:
         """
-        return 300000 + nb_address * 16 * StorePerByte + nb_octet * StorePerByte + extra * StorePerByte
+        return 3000000 +  nb_octet * StorePerByte + extra * StorePerByte
 
 
 
