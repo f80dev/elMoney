@@ -758,7 +758,7 @@ def mint(count:str,data:dict=None):
                     gasCost=bc.estimate(NETWORKS[bc.network_name]["nft"],"mint",arguments)
                     return jsonify({"gas":gasCost})
                 else:
-                    gas=bc.eval_gas(200)*size+bc.eval_gas(2000+(len(secret)+len(title)+len(desc))*2)
+                    gas=bc.eval_gas(600)*size+bc.eval_gas(2000+(len(secret)+len(title)+len(desc))*2)
                     log("Construction d'un extended NFT")
                     result=bc.mint(NETWORKS[bc.network_name]["nft"],
                                    owner,
