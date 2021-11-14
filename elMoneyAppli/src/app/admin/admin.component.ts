@@ -26,9 +26,11 @@ export class AdminComponent implements OnInit {
 
 
   ngOnInit(): void {
-   this.user.check_pem(()=>{
-     if(!this.user.isAdmin())this.router.navigate(["store"]);
-   })
+    this.user.check_pem(()=>{
+      if(!this.user.isAdmin() && this.config.isProd()){
+        this.router.navigate(["store"]);
+      }
+    })
   }
 
 
@@ -99,4 +101,7 @@ export class AdminComponent implements OnInit {
     },this);
   }
 
+  ref_addresses() {
+     open(api("ref_list",""),"_blank");
+  }
 }

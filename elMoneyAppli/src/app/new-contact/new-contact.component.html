@@ -9,12 +9,6 @@
            (keypress)="add_contact($event)">
   </mat-form-field>
   <br>
-  <!--  <mat-form-field appearance="fill" class="app-field">-->
-  <!--      <mat-label>Pseudo</mat-label>-->
-  <!--      <input matInput type="text" max="50" [(ngModel)]="pseudo" (keypress)="add_contact($event)">-->
-  <!--    <mat-hint>Ajouter un pseudo, prénom, pour reconnaitre le profil dans vos contacts</mat-hint>-->
-  <!--   </mat-form-field>-->
-  <!--  <br><br>-->
 
 
   <div style="width: 100%;text-align: center" *ngIf="showScanner">
@@ -25,6 +19,8 @@
     </app-scanner>
     <br><br>
   </div>
+  <app-upload-file (uploaded)="onUpload($event)"></app-upload-file>
+
 
 </mat-dialog-content>
 

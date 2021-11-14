@@ -120,6 +120,17 @@
            [cdkCopyToClipboard]="config.server?.bank_addr">Rechargement alternatif</a>
       </mat-expansion-panel>
 
+      <mat-expansion-panel class="app-panel">
+        <mat-expansion-panel-header>Le smart contract</mat-expansion-panel-header>
+
+        <button mat-raised-button
+                mat-button class="app-button"
+                (click)="ref_addresses()">
+          <div class="bloc-bouton">Adresse<br>référencées</div>
+        </button>
+
+
+      </mat-expansion-panel>
 
     </mat-accordion>
 

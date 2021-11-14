@@ -61,4 +61,12 @@ export class NewContactComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  onUpload($event: any) {
+    let content=$event.file.split("base64,")[1];
+    //TODO a terminer
+    content=atob(content);
+    for(let email of content.split(",")){
+      debugger
+    }
+  }
 }

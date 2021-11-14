@@ -462,18 +462,15 @@
               +1
             </button>
 
-            <br>
+            <br><br>
             <mat-slide-toggle
-                color="primary"
                 name="opt_miner_canburn"
                 [(ngModel)]="opt_miner_can_burn">
                 Le créateur peut détruire le NFT
               </mat-slide-toggle>
-            <br>
 
             <div *ngIf="count>1">
               <mat-slide-toggle
-                color="primary"
                 *ngIf="gift>0"
                 name="opt_gift"
                 [(ngModel)]="opt_gift">

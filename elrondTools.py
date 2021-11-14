@@ -761,7 +761,7 @@ class ElrondNet:
         return result
 
 
-    def execute(self,_contract,_user,function,arguments=[],value:int=None,gas_limit=LIMIT_GAS,timeout=60,gas_price_factor=1,tokenName=""):
+    def execute(self,_contract,_user,function,arguments=[],value:int=None,gas_limit=LIMIT_GAS,timeout=60,gas_price_factor=1):
         if _user is None:return None
         if type(_contract) == str: _contract = SmartContract(_contract)
         if type(_user)==str:_user=Account(address=_user)
@@ -1059,7 +1059,7 @@ class ElrondNet:
         :return:
         """
         log("Minage avec "+str(arguments))
-        tx=self.execute(contract,user_from,"mint",arguments,gas_limit=gas_limit,gas_price_factor=factor,value=value)
+        tx=self.execute(contract,user_from,"mint",arguments,gas_limit=gas_limit,gas_price_factor=factor,value=value,timeout=600)
         return tx
 
 

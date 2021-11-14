@@ -49,7 +49,7 @@ NETWORKS={
         "proxy":"https://testnet-gateway.elrond.com",
         "explorer":"https://testnet-explorer.elrond.com",
         "wallet":"httpRes://testnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqvc7g7lm7nsyhffez52m88zlln0wgnhqgqqesvthqlf",
+        "nft":"erd1qqqqqqqqqqqqqpgqtuhxt0qvkzr46yzpuu8dkjmtmkd602lzqqeswmh38l",
         "shard":1
     },
 
@@ -63,7 +63,7 @@ NETWORKS={
         "proxy":"https://devnet-gateway.elrond.com",
         "explorer":"https://devnet-explorer.elrond.com",
         "wallet":"https://devnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqk42t075f7rrcqqdz3qme9pwz9dfwwccmqqesjjxaf5",
+        "nft":"erd1qqqqqqqqqqqqqpgqn3ck08hklg2cv8nzl0x2x8nlfpmxf54nqqeshg5rcc",
         "shard": 1
     },
 
@@ -110,7 +110,7 @@ DIRECT_SELL     = 0b0000000000000100
 CAN_RESELL      = 0b0000000000000010
 CAN_TRANSFERT   = 0b0000000000000001
 
-MAX_MINT_NFT=25
+MAX_MINT_NFT=20
 
 LONG_DELAY_TRANSACTION=34 #sec
 SHORT_DELAY_TRANSACTION=9
