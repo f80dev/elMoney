@@ -47,7 +47,7 @@ export class AuthentComponent implements OnInit {
 
   }
 
-  quit(result:any){
+  quit(result:any=null){
     if(this.savePrivateKey)localStorage.setItem('pem',result.pem);
     this.dialogRef.close(result);
   }
@@ -152,7 +152,8 @@ export class AuthentComponent implements OnInit {
       data:
         {
           title: "Connexion anonyme non conseillée",
-          question: "Avec une connexion anonyme, il est fortement conseillé d'enregistrer votre fichier de signature afin de pouvoir vous reconnecter depuis un autre terminal si besoin",
+          question: "html:<div style='padding-top:5px;line-height:80%;'>Avec une connexion anonyme, il est fortement conseillé d'enregistrer<br>votre fichier de signature afin de pouvoir vous reconnecter depuis un autre terminal si besoin</div>",
+          image: "./assets/img/anonymous.png",
           onlyConfirm:true,
           lbl_ok:"Confirmer",
           lbl_cancel:"Annuler"
@@ -162,6 +163,9 @@ export class AuthentComponent implements OnInit {
         this.savePrivateKey=true;
         this.user.email="anonymous";
         this.udpate_mail();
+      } else {
+        this.router.navigate(["store"]);
+        this.quit();
       }
     });
   }

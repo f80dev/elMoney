@@ -6,6 +6,10 @@
       {{data.question}}
     </p>
 
+    <img *ngIf="data.image?.length>0"
+         [src]="data.image"
+         style="float: left;max-width: 80px;max-height: 120px;">
+
     <div *ngIf="data.question?.length>0 && (data.question?.startsWith('http') || data.question?.startsWith('./'))">
       <iframe scrolling="auto" frameborder="0"
               style="background: none;"

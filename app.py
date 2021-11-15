@@ -110,7 +110,8 @@ def refund(dest:str):
     _dest=Account(dest)
     amount="%.0f" % NETWORKS[bc.network_name]["new_account"]
 
-    if bc.credit(bc.bank,_dest,amount):
+    tx=bc.credit(bc.bank,_dest,amount)
+    if tx["status"]=="success":
         account=bc._proxy.get_account_balance(_dest.address)
         return jsonify({"gas":account}),200
     else:
@@ -738,10 +739,11 @@ def mint(count:str,data:dict=None):
                                         "state":hex(1)}
                                     ,price,count,res_visual)
     else:
-
-        nb_iterations = int(int(count) / MAX_MINT_NFT)
-        for i in range(nb_iterations+1):
-            size=MAX_MINT_NFT if i<nb_iterations else int(count) % MAX_MINT_NFT
+        ref_token_id=0
+        count=int(count)
+        while count>0:
+            size=MAX_MINT_NFT if count>MAX_MINT_NFT else count
+            if ref_token_id==0: size=1
             if size>0:
                 arguments = [size,
                              "0x" + title.encode().hex(),
@@ -751,14 +753,14 @@ def mint(count:str,data:dict=None):
                              properties,
                              miner_ratio,
                              gift, int(data["opt_lot"]),
-                             money]
+                             money,ref_token_id]
 
 
                 if simulate:
                     gasCost=bc.estimate(NETWORKS[bc.network_name]["nft"],"mint",arguments)
                     return jsonify({"gas":gasCost})
                 else:
-                    gas=bc.eval_gas(600)*size+bc.eval_gas(2000+(len(secret)+len(title)+len(desc))*2)
+                    gas=bc.eval_gas(200)*size+bc.eval_gas(2000+(len(secret)+len(title)+len(desc))*2)
                     log("Construction d'un extended NFT")
                     result=bc.mint(NETWORKS[bc.network_name]["nft"],
                                    owner,
@@ -767,6 +769,10 @@ def mint(count:str,data:dict=None):
                                    value=value
                                    )
                     value=0 #l'ensemble des egold a été transférés dés la première fois
+
+                    if ref_token_id==0 and "first_token_id" in result:ref_token_id=result["first_token_id"]
+                count=count-size
+
 
 
     if not result is None:

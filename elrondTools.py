@@ -580,7 +580,8 @@ class ElrondNet:
         :param amount:
         :return:
         """
-        return self.send_transaction(_from,_to,self.bank,str(value),"refund")
+        tx=self.send_transaction(_from,_to,self.bank,str(value),"refund")
+        return tx
 
 
 
@@ -1060,6 +1061,11 @@ class ElrondNet:
         """
         log("Minage avec "+str(arguments))
         tx=self.execute(contract,user_from,"mint",arguments,gas_limit=gas_limit,gas_price_factor=factor,value=value,timeout=600)
+        if "smartContractResults" in tx:
+            s=tx["smartContractResults"][0]["data"]
+            if len(s.split("@"))>1:
+                tx["first_token_id"]=int(s.split("@")[2],16)-1
+                tx["last_token_id"] = tx["first_token_id"]+arguments[0]-1
         return tx
 
 

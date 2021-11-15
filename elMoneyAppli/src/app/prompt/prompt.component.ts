@@ -9,6 +9,7 @@ export interface DialogData {
   placeholder:string;
   onlyConfirm:boolean;
   min:number,
+  image:string,
   n_rows:number,
   max:number,
   emojis:boolean;
