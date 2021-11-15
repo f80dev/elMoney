@@ -244,8 +244,10 @@ export class ImporterComponent implements OnInit {
           this.message = "";
           if(!simulate){
             $$("Enregistrement dans la blockchain");
-            if (r) {
-              showMessage(this, "Fichier tokenisé pour " + r.cost + " xEgld");
+            if (r && r.results) {
+              let cost=0;
+              for(let t of r){cost=cost+t["cost"];}
+              showMessage(this, "Fichier tokenisé pour " + cost + " xEgld");
               setTimeout(()=>{
                 this.user.refresh_balance(() => {
                   this.router.navigate(["nfts-perso"], {queryParams: {index: 2}});

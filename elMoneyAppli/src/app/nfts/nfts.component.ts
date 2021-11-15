@@ -178,7 +178,7 @@ export class NftsComponent implements OnChanges {
         this.user.check_pem(()=>{
           nft.message = "En cours de destruction";
           this.burnState="burn";
-          this.api._post("burn/" + nft.token_id + "/", "", this.user.pem).subscribe((r: any) => {
+          this.api._post("burn/", "", {pem:this.user.pem,ids:[nft.token_id]}).subscribe((r: any) => {
             nft.message = "";
             showMessage(this, "Votre NFT n'existe plus");
             this.onburn.emit(nft.token_id);

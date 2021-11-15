@@ -76,7 +76,7 @@ export class ValidateComponent implements OnInit {
     this.user.check_pem(()=>{
       var index=this.validate_nfts.indexOf(nft);
       this.validate_nfts.splice(index,1);
-      this.api._post("burn/" + nft.token_id + "/", "", this.user.pem).subscribe((r: any) => {
+      this.api._post("burn/" , "", {pem:this.user.pem,ids:[nft.token_id]}).subscribe((r: any) => {
         showMessage(this, "NFT détruit");
       },(err)=>{
         showError(this,err);

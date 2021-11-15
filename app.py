@@ -295,10 +295,13 @@ def get_user(addrs:str):
 
 
 
-@app.route('/api/burn/<token_id>/',methods=["POST"])
-def burn(token_id):
-    log("Burn de "+str(token_id))
-    rc=bc.burn(NETWORKS[bc.network_name]["nft"],bc.get_elrond_user(request.data),token_id)
+@app.route('/api/burn/',methods=["POST"])
+def burn():
+    rc=bytearray()
+    for id in request.data["ids"]:
+        rc.append(id.to_bytes(4))
+
+    rc=bc.burn(bc.get_elrond_user(request.data["pem"]),rc)
 
     send(socketio,"refresh_nft",rc["sender"])
     send(socketio,"nft_store")
@@ -724,20 +727,24 @@ def mint(count:str,data:dict=None):
         money=str_to_hex("EGLD")
 
 
+    results=[]
+    tokenids=[]
 
     log("Minage du token "+str(data))
+
+
 
     if data["elrond_standard"]:
         log("Construction d'un NFT standard elrond")
         res_visual=res_visual.replace("%%","")
-        result=bc.mint_standard_nft(owner,title,
+        results.append(bc.mint_standard_nft(owner,title,
                                     {
                                         "description":desc.split("%%")[0],
                                         "money":money,
                                         "secret":secret,
                                         "properties":hex(properties),
                                         "state":hex(1)}
-                                    ,price,count,res_visual)
+                                    ,price,count,res_visual))
     else:
         ref_token_id=0
         count=int(count)
@@ -762,47 +769,42 @@ def mint(count:str,data:dict=None):
                 else:
                     gas=bc.eval_gas(200)*size+bc.eval_gas(2000+(len(secret)+len(title)+len(desc))*2)
                     log("Construction d'un extended NFT")
-                    result=bc.mint(NETWORKS[bc.network_name]["nft"],
-                                   owner,
-                                   arguments=arguments,
-                                   gas_limit=gas,
-                                   value=value
-                                   )
+                    result=bc.mint(owner,
+                                arguments=arguments,
+                                gas_limit=gas,
+                                value=value
+                            )
                     value=0 #l'ensemble des egold a été transférés dés la première fois
+                    tokenids=tokenids+list(range(result["first_token_id"],result["last_token_id"]+1))
 
-                    if ref_token_id==0 and "first_token_id" in result:ref_token_id=result["first_token_id"]
-                count=count-size
+                    if ref_token_id==0 and "first_token_id" in result:
+                        ref_token_id=result["first_token_id"]
+                        log("Le modele se trouve en " + str(ref_token_id))
+
+                    results.append(result)
+
+            count=count-size
 
 
+    if "dealers" in data and len(data["dealers"]) > 0:
+        log("Ajout des distributeurs")
+        for dealer in data["dealers"]:
+            i = 0
+            for tokenid in tokenids:
+                _dealer = Account(address=dealer["address"])
+                tx = bc.add_dealer(NETWORKS[bc.network_name]["nft"], data["pem"],
+                                   [tokenid, "0x" + _dealer.address.hex()])
+                i = i + 1
 
-    if not result is None:
-        if result["status"] == "fail" or not "smartContractResults" in result:
-            return returnError("Erreur de création du token")
-        else:
-            return_string=result["smartContractResults"][0]["data"]
-            if len(return_string.split("@"))>2:
-                last_new_id=int(return_string.split("@")[2],16)
-                tokenids=range(last_new_id-int(count),last_new_id)
+    for result in results:
+        if not result is None:
+            if result["status"] == "fail" or not "smartContractResults" in result:
+                log("Erreur de création du token")
 
-                #TODO: a optimiser pour pouvoir passer plusieurs distributeurs à plusieurs billet
-                if "dealers" in data and len(data["dealers"])>0:
-                    for dealer in data["dealers"]:
-                        i=0
-                        for tokenid in tokenids:
-                            _dealer=Account(address=dealer["address"])
-                            tx=bc.add_dealer(NETWORKS[bc.network_name]["nft"],data["pem"],[tokenid,"0x"+_dealer.address.hex()])
-                            i=i+1
+    send(socketio, "refresh_nft")
+    send(socketio, "refresh_balance", owner.address.bech32())
 
-                send(socketio, "refresh_nft")
-                send(socketio, "refresh_balance",owner.address.bech32())
-                result["ids"]=list(tokenids)
-            else:
-                return returnError(result["smartContractResults"][0]["returnMessage"])
-
-            return jsonify(result), 200
-    else:
-
-        return returnError()
+    return jsonify(results), 200
 
 
 

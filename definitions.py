@@ -41,7 +41,7 @@ IPFS_NODE_PORT=5001
 
 NETWORKS={
     "testnet":{
-        "identifier":"TFE-5b67ba",
+        "identifier":"TFE-5354a9",
         "new_account":float(0.2*1e18),
         "bank":"bank",
         "unity":"xEgld",
@@ -49,7 +49,7 @@ NETWORKS={
         "proxy":"https://testnet-gateway.elrond.com",
         "explorer":"https://testnet-explorer.elrond.com",
         "wallet":"httpRes://testnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqwk8q2zrskchnl8va7lll759h5gs5puh9qqes6hd6vx",
+        "nft":"erd1qqqqqqqqqqqqqpgqs26vwfld9txjwveuu6myuqdwhggkus22qqesm69q8j",
         "shard":1
     },
 
@@ -110,7 +110,7 @@ DIRECT_SELL     = 0b0000000000000100
 CAN_RESELL      = 0b0000000000000010
 CAN_TRANSFERT   = 0b0000000000000001
 
-MAX_MINT_NFT=20
+MAX_MINT_NFT=50
 
 LONG_DELAY_TRANSACTION=34 #sec
 SHORT_DELAY_TRANSACTION=9

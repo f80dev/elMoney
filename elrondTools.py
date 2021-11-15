@@ -1051,7 +1051,7 @@ class ElrondNet:
 
 
 
-    def mint(self, contract, user_from,arguments,gas_limit=LIMIT_GAS,value=0,factor=1):
+    def mint(self,  user_from,arguments,gas_limit=LIMIT_GAS,value=0,factor=1):
         """
         Fabriquer un NFT
         :param contract:
@@ -1060,12 +1060,16 @@ class ElrondNet:
         :return:
         """
         log("Minage avec "+str(arguments))
-        tx=self.execute(contract,user_from,"mint",arguments,gas_limit=gas_limit,gas_price_factor=factor,value=value,timeout=600)
+        tx=self.execute(NETWORKS[self.network_name]["nft"],user_from,"mint",arguments,gas_limit=gas_limit,gas_price_factor=factor,value=value,timeout=600)
         if "smartContractResults" in tx:
-            s=tx["smartContractResults"][0]["data"]
-            if len(s.split("@"))>1:
-                tx["first_token_id"]=int(s.split("@")[2],16)-1
-                tx["last_token_id"] = tx["first_token_id"]+arguments[0]-1
+            for result in tx["smartContractResults"]:
+                s=result["data"]
+                log("Analyse de "+s)
+                if len(s.split("@"))>1:
+                    if s.endswith("@"):s=s+"0"
+                    tx["first_token_id"]=int(s.split("@")[2],16)
+                    tx["last_token_id"] = tx["first_token_id"]+arguments[0]
+                    break
         return tx
 
 
@@ -1159,12 +1163,12 @@ class ElrondNet:
         return tr
 
 
-    def burn(self, contract,sender,token_id,quantity=1):
+    def burn(self, sender,token_id,quantity=1):
         if is_standard(token_id):
             data="ESDTNFTBurn@"+str_to_hex(token_id,False)+"@1@"+hex(quantity).replace("0x","")
             tr=self.send_transaction(sender,sender,sender,0,data)
         else:
-            tr = self.execute(contract,sender,
+            tr = self.execute(NETWORKS[self.network_name]["nft"],sender,
                                 function="burn",
                                 arguments=[int(token_id)]
                               )

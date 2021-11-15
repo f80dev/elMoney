@@ -479,7 +479,7 @@ content:
         miner_ratio: 0.1
         money: "EGLD"
         online: 1
-        count: 3
+        count: 35
 
       - file: ""
         pem: ""
