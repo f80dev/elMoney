@@ -1,0 +1,35 @@
+<div class="mainform" style="overflow: hidden;">
+  <div id="toolbar" class="toolbar-app"
+       style="position:absolute;display:block;padding:3px;width:fit-content;right:0px;top:0px;z-index:100;background-color: #424242;height:90px;vertical-align: middle;line-height: 90%;">
+    <mat-slider
+      title="Dispersion"
+      color="primary"
+      class="app-slider"
+      style="width: 30px;margin:0;padding:0"
+      [(ngModel)]="forceProperties.link.distance"
+      (valueChange)="updateForces()"
+      min="5" max="100">
+    </mat-slider>
+
+    <div *ngFor="let p of props" style="display: inline-block;margin:0px;padding: 0px;">
+      <mat-slider
+        [title]="p"
+        color="primary"
+        class="app-slider"
+        style="width: 30px;margin:0;padding:0"
+        [(ngModel)]="filter[p].value"
+        (valueChange)="updateForces()"
+        [min]="filter[p].min" [max]="filter[p].max" [step]="filter[p].step">
+      </mat-slider>
+    </div>
+
+    <br>
+    <div *ngIf="sel_node" style="display: inline-block;">
+      {{sel_node.label}} - {{sel_node.formation}} ({{sel_node.promo}})
+    </div>
+
+
+  </div>
+  <app-hourglass [message]="message"></app-hourglass>
+  <figure id="graph"></figure>
+</div>

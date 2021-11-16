@@ -27,6 +27,7 @@ from elrondTools import ElrondNet
 from giphy_search import ImageSearchEngine
 from ipfs import IPFS
 from secret import CRYPT_KEY_FOR_NFT
+from social import SocialGraph
 
 scheduler = BackgroundScheduler()
 
@@ -297,11 +298,11 @@ def get_user(addrs:str):
 
 @app.route('/api/burn/',methods=["POST"])
 def burn():
-    rc=bytearray()
-    for id in request.data["ids"]:
-        rc.append(id.to_bytes(4))
 
-    rc=bc.burn(bc.get_elrond_user(request.data["pem"]),rc)
+    data=json.loads(str(request.data,"utf8"))
+
+    for id in data["ids"]:
+        rc=bc.burn(bc.get_elrond_user(data["pem"]),id)
 
     send(socketio,"refresh_nft",rc["sender"])
     send(socketio,"nft_store")
@@ -814,6 +815,15 @@ def mint(count:str,data:dict=None):
 # def owner_of(contract,token):
 #     rc=bc.owner_of(token)
 #     return jsonify(rc),200
+
+
+@app.route('/api/graph/',methods=["GET"])
+def get_graph():
+    G = SocialGraph()
+    G.load(bc.getTransactionsByRest(NETWORKS[bc.network_name]["nft"]))
+    return jsonify(G.export("json"))
+
+
 
 
 #http://localhost:6660/api/transactions/erd1zez3nsz9jyeh0dca64377ra7xhnl4n2ll0tqskf7krnw0x5k3d2s5l6sf6

@@ -1170,7 +1170,7 @@ class ElrondNet:
         else:
             tr = self.execute(NETWORKS[self.network_name]["nft"],sender,
                                 function="burn",
-                                arguments=[int(token_id)]
+                                arguments=[token_id]
                               )
         return tr
 

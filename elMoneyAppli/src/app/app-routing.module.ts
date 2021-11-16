@@ -24,6 +24,7 @@ import {NftBuyComponent} from "./nft-buy/nft-buy.component";
 import {NgModule} from "@angular/core";
 import {ChartsComponent} from "./charts/charts.component";
 import {VotesComponent} from "./votes/votes.component";
+import {VisgraphComponent} from "./visgraph/visgraph.component";
 
 const routes: Routes = [
   { path: 'admin', component: AdminComponent},
@@ -37,6 +38,7 @@ const routes: Routes = [
   { path: 'validate', component: ValidateComponent},
   { path: 'nfts-perso', component: NftsPersoComponent},
   { path: 'importer', component: ImporterComponent},
+  { path: 'visgraph', component: VisgraphComponent},
   { path: 'miners', component: MinersComponent},
   { path: 'store', component: NftStoreComponent},
   { path: 'promo', component: PromoComponent},

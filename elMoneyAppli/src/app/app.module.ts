@@ -79,7 +79,7 @@ import {WalletconnectService} from "./walletconnect.service";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import { UnityComponent } from './unity/unity.component';
 import { ImageComponent } from './image/image.component';
-import {MatProgressBar, MatProgressBarModule} from "@angular/material/progress-bar";
+import {MatProgressBarModule} from "@angular/material/progress-bar";
 import { ChartsComponent } from './charts/charts.component';
 import { NftConfirmComponent } from './nft-confirm/nft-confirm.component';
 import { MinicontactsComponent } from './minicontacts/minicontacts.component';
@@ -88,6 +88,7 @@ import {ShareIconsModule} from "ngx-sharebuttons/icons";
 import {QRCodeModule} from "angularx-qrcode";
 import { VotesComponent } from './votes/votes.component';
 import {GoogleChartsModule} from "angular-google-charts";
+import {VisgraphComponent} from "./visgraph/visgraph.component";
 
 
 const config: SocketIoConfig = {
@@ -102,6 +103,7 @@ const config: SocketIoConfig = {
     HourglassComponent,
     FaqsComponent,
     TutoComponent,
+    VisgraphComponent,
     AboutComponent,
     PromptComponent,
     TransferComponent,
