@@ -21,20 +21,27 @@ class SocialGraph:
     def extract_subgraph(self):
         res=shortest_path(self.G)
 
-    def load(self,transactions):
+    def load(self,transactions,miners,dealers,contract):
         ids=[]
 
         for t in transactions:
             for p in [t["sender"],t["receiver"]]:
                 if p not in ids:
+                    visual="./assets/icons/person.png"
+                    if p in miners:visual="./assets/icons/miner.png"
+                    if p in dealers:visual="./assets/icons/miner.png"
+                    if p in contract:visual="./assets/icons/factory.png"
                     self.G.add_node(p,
-                                    label=p,
-                                    value=t["value"],
+                                    visual=visual,
+                                    label=p
                                     )
 
                 ids.append(p)
 
-            self.G.add_edge(t["sender"],t["receiver"])
+            self.G.add_edge(t["sender"],t["receiver"],
+                            ts=t["timestamp"],
+                            value=t["value"],
+                            action=t["function"])
 
 
         return len(self.G.nodes)
@@ -70,8 +77,12 @@ class SocialGraph:
                 nodes_with_attr.append(n[1])
 
             edges=[]
-            for edge in self.G.edges:
-                edges.append({"source":edge[0],"target":edge[1]})
+            for edge in list(self.G.edges.data()):
+                edges.append({
+                    "source":edge[0],
+                    "target":edge[1],
+                    "data":edge[2]
+                })
 
             rc={"graph":{"nodes":nodes_with_attr,"edges":edges},"edge_props":self.edge_prop}
             return rc

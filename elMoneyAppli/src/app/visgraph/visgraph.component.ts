@@ -3,6 +3,7 @@ import * as d3 from 'd3';
 import {ApiService} from "../api.service";
 import {Router} from "@angular/router";
 import {$$} from "../tools";
+import {UserService} from "../user.service";
 
 @Component({
   selector: 'app-visgraph',
@@ -48,7 +49,7 @@ export class VisgraphComponent implements OnInit {
     },
     link: {
       enabled: true,
-      distance: 30,
+      distance: 200,
       iterations: 1
     }
   };
@@ -62,10 +63,12 @@ export class VisgraphComponent implements OnInit {
   };
   message: string="";
   edge_props: any;
+  comment: string="";
 
   constructor(
     public api:ApiService,
-    public router:Router
+    public router:Router,
+    public user:UserService
   ) { }
 
 
@@ -82,6 +85,8 @@ export class VisgraphComponent implements OnInit {
 
 
 
+  //Des exemples: https://plnkr.co/edit/tOBZdHXVrvcAmh9aHlsl?p=preview&preview
+
   initializeForces(data,svg) {
     $$("Données traitées ",data);
     var link = svg
@@ -89,9 +94,11 @@ export class VisgraphComponent implements OnInit {
       .data(data.edges)
       .enter()
       .append("line")
-      .property("edgeid",(d) => {return d.id;})
       .on("click", (d)=>{this.sel_edge(d);})
-      .style("stroke", "#aaa")
+      .on("mouseenter",(d)=>{this.show_edge(d);})
+      .on("mouseleave",(d)=>{this.comment="";})
+      .style("stroke", "#d4d4d4")
+      .style("stroke-width", "3px")
 
     var nodeEnter = svg
       .selectAll("circle")
@@ -107,7 +114,7 @@ export class VisgraphComponent implements OnInit {
       .on("dblclick", (d)=>{this.sel(d);});
 
     var node = nodeEnter.append("svg:image")
-      .attr("xlink:href",  function(d) { return d.photo;})
+      .attr("xlink:href",  function(d) { return d.visual;})
       .attr("x", function(d) { return -25;})
       .attr("y", function(d) { return -25;})
       .attr("height", 50)
@@ -206,9 +213,11 @@ export class VisgraphComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.svg=this.createSvg();
-    this.message="Chargement du réseau";
-    this.refresh();
+    this.user.check_email(()=>{
+      this.svg=this.createSvg();
+      this.message="Chargement du réseau";
+      this.refresh();
+    },this.router);
   }
 
 
@@ -241,12 +250,16 @@ export class VisgraphComponent implements OnInit {
 
   refresh() {
     let filter="";
-    this.api._get("graph/","filter="+filter,120,"").subscribe((data:any)=>{
+    this.api._get("graph/","filter="+filter+"&miner="+this.user.addr,120,"").subscribe((data:any)=>{
       this.message="";
       this.data=data.graph;
       this.edge_props=data.edge_props;
       this.update_filter(data.graph);
       this.initializeForces(data.graph,this.svg);
     });
+  }
+
+  private show_edge(d: any) {
+    this.comment=d.currentTarget.__data__.data.action;
   }
 }

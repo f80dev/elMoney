@@ -1257,11 +1257,17 @@ class ElrondNet:
         """
         _c=SmartContract(address=addr)
         url=self._proxy.url+"/address/"+_c.address.bech32()+"/transactions"
-        rc=requests.get(url)
-        if rc.status_code==200:
-            rc=json.loads(rc.text)["data"]["transactions"]
+        result=requests.get(url)
+        if result.status_code==200:
+            rc=[]
+            l_t=json.loads(result.text)["data"]["transactions"]
+            for t in l_t:
+                if "data" in t:
+                    t["data_dec"]=str(base64.b64decode(t["data"]),"utf8")
+                    t["function"]=t["data_dec"].split("@")[0]
+                rc.append(t)
         else:
-            rc={"error":rc.status_code,"message":rc.text}
+            rc={"error":result.status_code,"message":result.text}
         return rc
 
 

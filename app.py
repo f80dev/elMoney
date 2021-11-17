@@ -820,7 +820,14 @@ def mint(count:str,data:dict=None):
 @app.route('/api/graph/',methods=["GET"])
 def get_graph():
     G = SocialGraph()
-    G.load(bc.getTransactionsByRest(NETWORKS[bc.network_name]["nft"]))
+
+    miner=request.args.get("miner")
+
+    transactions=[]
+    for t in bc.getTransactionsByRest(NETWORKS[bc.network_name]["nft"]):
+        transactions.append(t)
+
+    G.load(transactions,[miner],[],[NETWORKS[bc.network_name]["nft"]])
     return jsonify(G.export("json"))
 
 
