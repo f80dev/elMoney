@@ -1,6 +1,12 @@
 import base64
 from io import BytesIO
 
+try:
+    from PIL import Image
+except ImportError:
+    import Image
+import pytesseract
+
 import pandas as pd
 import json
 import ssl
@@ -540,11 +546,9 @@ def resend_pem(addr:str):
 #http://localhost:6660/api/test/
 @app.route('/api/test/',methods=["GET"])
 def test():
-    secret="monsecret"
-    for i in range(0,10):
-        result=hashlib.sha256(bytes(secret,"utf8")).hexdigest()
-        print(result)
-    return result
+    img=Image.open('test-european.jpg')
+    str=pytesseract.image_to_string(img,lang="fr")
+    return str
 
 
 
@@ -645,6 +649,46 @@ def deploy(count:str,data:dict=None):
     return jsonify(rc)
 
 
+
+@app.route('/api/mint_from_file/<ope>/',methods=["POST"])
+def mint_from_file(ope:str,data:dict=None):
+    if data is None:
+        data = json.loads(str(request.data, encoding="utf-8"))
+
+    if "base64" in data["content"]:
+        data["content"]=str(base64.b64decode(data["content"].split("base64,")[1]),"utf8")
+
+    format=request.args.get("filename","xlsx")
+
+    if format.endswith("yaml"):
+        rows=yaml.load(data["content"])["content"]
+
+    rc=[]
+    for row in rows:
+        body=dict()
+        for key in row.keys():
+            body[key]=row[key]
+
+        body["properties"]=bc.eval_properties(data["content"])
+        body["pem"]=data["pem"]
+
+        if ope=="mint":
+            result,status=mint(row["count"],body)
+        else:
+            status=200
+            result={"count":row["count"],"title":row["title"],"cost":bc.eval_gas(200)}
+
+        if status==200:
+            rc.append(result)
+
+
+
+    return jsonify(rc),200
+
+
+
+
+
 #http://localhost:6660/api/mint/
 @app.route('/api/mint/<count>/',methods=["POST"])
 def mint(count:str,data:dict=None):
@@ -664,7 +708,19 @@ def mint(count:str,data:dict=None):
     title = data["title"]
     log("Minage du NFT " + title)
 
-    if data["gift"] is None:data["gift"]=0
+    if not "gift" in data: data["gift"]=0
+    if not "secret" in data: data["secret"]=""
+    if not "price" in data:data["price"]=0
+    if not "max_markup" in data:data["max_markup"]=0
+    if not "min_markup" in data:data["min_markup"]=0
+    if not "fee" in data:data["fee"]=0
+    if not "miner_ratio" in data:data["miner_ratio"]=0
+    if not "price" in data:data["price"]=0
+    if not "opt_lot" in data:data["opt_lot"]=0
+    if not "money" in data:data["money"]="EGLD"
+    if not "elrond_standard" in data: data["elrond_standard"]=False
+
+
     simulate=(request.args.get("simulate")=="true")
 
     secret = data["secret"]
@@ -763,7 +819,6 @@ def mint(count:str,data:dict=None):
                              gift, int(data["opt_lot"]),
                              money,ref_token_id]
 
-
                 if simulate:
                     gasCost=bc.estimate(NETWORKS[bc.network_name]["nft"],"mint",arguments)
                     return jsonify({"gas":gasCost})
@@ -786,7 +841,6 @@ def mint(count:str,data:dict=None):
 
             count=count-size
 
-
     if "dealers" in data and len(data["dealers"]) > 0:
         log("Ajout des distributeurs")
         for dealer in data["dealers"]:
@@ -802,7 +856,7 @@ def mint(count:str,data:dict=None):
             if result["status"] == "fail" or not "smartContractResults" in result:
                 log("Erreur de création du token")
 
-    send(socketio, "refresh_nft")
+    send(socketio, "refresh_nft",owner.address.bech32())
     send(socketio, "refresh_balance", owner.address.bech32())
 
     return jsonify(results), 200

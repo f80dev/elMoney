@@ -464,10 +464,10 @@
 
             <br><br>
             <mat-slide-toggle
-                name="opt_miner_canburn"
-                [(ngModel)]="opt_miner_can_burn">
-                Le créateur peut détruire le NFT
-              </mat-slide-toggle>
+              name="opt_miner_canburn"
+              [(ngModel)]="opt_miner_can_burn">
+              Le créateur peut détruire le NFT
+            </mat-slide-toggle>
 
             <div *ngIf="count>1">
               <mat-slide-toggle
@@ -566,6 +566,36 @@
     <!--      <br>-->
 
     <!--    </mat-tab>-->
+
+    <mat-tab label="Fichiers" style="width: 100%;">
+      <br>
+      Créer vos NFTs à partir de fichier Excel, YAML, CSV
+      <br>
+      <app-upload-file [encode]="true" (uploaded)="onUpload($event)"></app-upload-file>
+
+      <br>
+      <table style="width: 90%;display: inline-block;text-align: center;" *ngIf="nfts_to_send.length>0">
+        <tr style="font-size: large;font-weight: bold;width: 100%;padding: 5px;">
+          <td>Quantité</td><td>Titre</td><td>Coût</td>
+        </tr>
+        <tr *ngFor="let row of nfts_to_send" style="width: 100%;padding: 5px;">
+          <td style="width: 20%;">{{row.count}}</td>
+          <td style="width: 60%">{{row.title}}</td>
+          <td style="width: 20%;">{{row.cost}}</td>
+        </tr>
+      </table>
+
+
+      <br>
+      <button mat-raised-button color="primary"
+              [disabled]="nfts_to_send.length==0"
+              mat-button class="app-button"
+              (click)="send_file()">
+        <div class="bloc-bouton">Lancer la<br>fabrication</div>
+      </button>
+
+    </mat-tab>
+
 
 
 

@@ -49,7 +49,7 @@ NETWORKS={
         "proxy":"https://testnet-gateway.elrond.com",
         "explorer":"https://testnet-explorer.elrond.com",
         "wallet":"httpRes://testnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqpxkkqxj8fyhkc3kgcdc8luphy4w85l04qqeshwkqgn",
+        "nft":"erd1qqqqqqqqqqqqqpgqfe8skz4vju88s0dcp07nty8fw060mm2gqqes3xgn8d",
         "shard":1
     },
 
@@ -63,7 +63,7 @@ NETWORKS={
         "proxy":"https://devnet-gateway.elrond.com",
         "explorer":"https://devnet-explorer.elrond.com",
         "wallet":"https://devnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgquyxnf5v43rlde6n7g3vm8yv4w476zq97qqesmurlck",
+        "nft":"erd1qqqqqqqqqqqqqpgq3t82hgqvkgdyktqc2mwucy744kgrekj0qqesq2wzfn",
         "shard": 1
     },
 
@@ -97,6 +97,7 @@ DB_SERVERS=dict(
 DEFAULT_VISUAL="/assets/img/anonymous.jpg"
 DEFAULT_VISUAL_SHOP="/assets/img/shop.png"
 
+FORCE_OPEN      = 0b0010000000000000
 MINER_CAN_BURN  = 0b0001000000000000
 UNIK            = 0b0000100000000000
 SECRET_VOTE     = 0b0000010000000000

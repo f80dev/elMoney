@@ -21,7 +21,8 @@ from requests_cache import CachedSession
 
 from Tools import log, base_alphabet_to_10, str_to_hex, hex_to_str, nbr_to_hex, translate, now, is_standard, returnError
 from definitions import LIMIT_GAS, ESDT_CONTRACT, NETWORKS, ESDT_PRICE, IPFS_NODE_PORT, IPFS_NODE_HOST, SECRET_KEY, \
-    DEFAULT_VISUAL, DEFAULT_VISUAL_SHOP, VOTE, FOR_SALE, SECRET_VOTE, UNIK, MINER_CAN_BURN
+    DEFAULT_VISUAL, DEFAULT_VISUAL_SHOP, VOTE, FOR_SALE, SECRET_VOTE, UNIK, MINER_CAN_BURN, CAN_TRANSFERT, CAN_RESELL, \
+    DIRECT_SELL, SELF_DESTRUCTION, RENT, FIND_SECRET, FORCE_OPEN
 from ipfs import IPFS
 
 
@@ -974,6 +975,22 @@ class ElrondNet:
         return rc
 
 
+    def eval_properties(self, vm):
+        properties=0
+        if "opt_miner_can_burn" in vm and vm["opt_miner_can_burn"]==1:properties=properties+MINER_CAN_BURN
+        if "opt_unik" in vm and vm["opt_unik"]==1:properties=properties          +UNIK
+        if "secret_vote" in vm and vm["secret_vote"]==1:properties=properties       +SECRET_VOTE
+        if "vote" in vm and vm["vote"]==1:properties=properties              +VOTE
+        if "instant_sell" in vm and vm["instant_sell"]==1:properties=properties      +FOR_SALE
+        if "owner_can_transfer" in vm and vm["owner_can_transfer"]==1:properties=properties+CAN_TRANSFERT
+        if "owner_can_sell" in vm and vm["owner_can_sell"]==1:properties=properties    +CAN_RESELL
+        if "direct_sell" in vm and vm["direct_sell"]==1:properties=properties       +DIRECT_SELL
+        if "self_destruction" in vm and vm["self_destruction"]==1:properties=properties  +SELF_DESTRUCTION
+        if "rent" in vm and vm["rent"]==1:properties=properties              +RENT
+        if "find_secret" in vm and vm["find_secret"]==1:properties=properties       +FIND_SECRET
+        if "opt_gift" in vm and vm["opt_gift"]==1:properties=properties          +FORCE_OPEN
+        return properties
+    
 
     def get_tokens_standard(self,addrs):
         rc=[]
@@ -1065,7 +1082,7 @@ class ElrondNet:
             for result in tx["smartContractResults"]:
                 s=result["data"]
                 log("Analyse de "+s)
-                if len(s.split("@"))>1:
+                if len(s.split("@"))>2:
                     if s.endswith("@"):s=s+"0"
                     tx["first_token_id"]=int(s.split("@")[2],16)
                     tx["last_token_id"] = tx["first_token_id"]+arguments[0]

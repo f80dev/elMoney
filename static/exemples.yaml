@@ -1,0 +1,14 @@
+version: 1.0
+content:
+  - count: 1
+    title: Ceci est un token simple
+    description: exemple d'une description
+
+  - count: 10
+    title: Avant première Des Illusions
+    description: Au Max Linder, rendez-vous 20h avec ce NFT
+    price: 0.01
+    secret: "Le mot de passe : Morue"
+    visual: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/film-projector_1f4fd-fe0f.png
+
+

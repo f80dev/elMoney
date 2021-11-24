@@ -88,6 +88,7 @@ export class ImporterComponent implements OnInit {
 
   @ViewChild('tagsInput') tagInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
+  file_to_send: { pem: string; filename:string,content: any };
 
   constructor(public api:ApiService,
               public user:UserService,
@@ -147,6 +148,7 @@ export class ImporterComponent implements OnInit {
   instant_sell=true;
   opt_unik: any=false;
   opt_miner_can_burn=false;
+  nfts_to_send: any[]=[];
 
   add(event: MatChipInputEvent): void {
     const input = event.input;
@@ -191,6 +193,7 @@ export class ImporterComponent implements OnInit {
     this.picture=_file.file;
     this.filename=_file.filename;
   }
+
 
 
   tokenizer(fee=0,func=null,func_error=null,simulate=false) {
@@ -908,5 +911,25 @@ export class ImporterComponent implements OnInit {
 
   is_html(desc: string) {
     return isHTML(desc);
+  }
+
+  onUpload($event: any) {
+    this.file_to_send={content:$event.file,filename:$event.filename,pem:this.user.pem};
+    this.api._post("mint_from_file/eval/","filename="+$event.filename,this.file_to_send).subscribe((r:any)=>{
+      this.nfts_to_send=r;
+
+    });
+  }
+
+  send_file() {
+    this.message="Fabrication des NFTs.";
+    setTimeout(()=>{
+      showMessage(this,"La fabrication de vos NFTs est en cours, cela peut durer plusieurs minutes. Ils apparaitront dans vos NFTs au fil du processus.")
+      this._location.back();
+    },500);
+    this.api._post("mint_from_file/mint/","filename="+this.file_to_send.filename,this.file_to_send,3600).subscribe(r=>{
+      this.nfts_to_send=[];
+      this.message="";
+    });
   }
 }
