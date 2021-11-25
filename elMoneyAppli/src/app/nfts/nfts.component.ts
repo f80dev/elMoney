@@ -3,7 +3,7 @@ import {
   $$,
   CAN_RESELL,
   CAN_TRANSFERT,
-  FIND_SECRET,
+  FIND_SECRET, MINER_CAN_BURN,
   removeHTML, RENT,
   SELF_DESTRUCTION,
   showError,
@@ -343,5 +343,10 @@ export class NftsComponent implements OnChanges {
       });
     },this);
 
+  }
+
+  can_burn(nft: any) {
+    let bc=(nft.properties & MINER_CAN_BURN);
+    return bc>0;
   }
 }

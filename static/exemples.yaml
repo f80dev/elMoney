@@ -1,14 +1,100 @@
+#notice d'utilisation
+#Ce fichier permet de construire automatiquement des NFT en masse
+
+#count : indique le nombre de NFT identique à miner
+#title: tire du NFT
+#description: texte libre d'accompagnement du NFT
+#price: prix de vente du NFT
+#secret: phrase secrete visible uniquement par le propriétaire du NFT
+#miner_ratio: par de la marge distributeur revenant au mineur
+#max_markup: marge maximum autorisée pour le revendeur
+#min_markup: marge minimum autorisée pour le revendeur
+#gift: gain attribué au propriétaire du NFT à l'ouverture
+
+#find_secret : 1=le propriétaire doit découvrir le secret
+#opt_lot: 1=le gain disponible pour le NFT n'est attribué qu'a un seul propriétaire
+#opt_miner_can_burn: 1=le mineur peut détruire le NFT (même s'il n'est pas le propriétaire)
+#opt_unik: 1=le propriétaire ne peut posséder qu'un exemplaire du NFT
+#secret_vote: 1=la transaction de vote est cryptée
+#owner_can_transfer: 1=le propriétaire peut transférer / offrir le NFT
+#owner_can_sell: 1=le propriétaire peut mettre en vente le NFT
+#direct_sell: 1=le NFT peut être en vente directe
+#instant_sell: 1=le NFT est mise en vente dès sa création
+#self_destruction: 1=le NFT s'autodétruit après son ouverture
+#rent: 1=le NFT retourne à son créateur après ouverture
+#tag: lister les htags du NFT
+
+#owner: adresses emails (il est possible de mettre plusieurs adresses séparées par une ,) ou elrond du propriétaire du token après sa fabrication
+#email_invite: adresse de l'email à envoyer pour les propriétaires
+
+
+
+
 version: 1.0
 content:
   - count: 1
     title: Ceci est un token simple
     description: exemple d'une description
+    direct_sell: 1
+    owner_can_sell: 1
+    to_mint: 0
 
-  - count: 10
-    title: Avant première Des Illusions
+  - count: 3
+    title: Avant première de james bond
     description: Au Max Linder, rendez-vous 20h avec ce NFT
     price: 0.01
     secret: "Le mot de passe : Morue"
-    visual: https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/285/film-projector_1f4fd-fe0f.png
+    visual: https://static.wikia.nocookie.net/filmguide/images/0/08/007.gif/revision/latest/scale-to-width-down/160?cb=20210509182025
+    find_secret: 0
+    owner: sophie.dudule@gmail.com
+    direct_sell: 1
+    instant_sell: 1
+    owner_can_sell: 1
+    to_mint: 0
+    tag: billet cinema
 
+
+  - count: 1
+    title: Acheter une photo
+    description: Acheter un titre musical
+    price: 0.01
+    file: https://drive.google.com/file/d/0B1XHEhVj9zBDakhWd1ZGQ1JHdDQ/view?usp=sharing&resourcekey=0-1Xm7qIxXX7ZR3UcFJnWQKg
+    direct_sell: 1
+    instant_sell: 1
+    owner_can_sell: 1
+    to_mint: 0
+    tag: photo
+
+  - count: 1
+    title: Les lapins
+    description: Acheter un lapin
+    price: 0.1
+    owner_can_transfer: 1
+    instant_sell: 1
+    visual: https://media2.giphy.com/media/h8xxRvDWFTpGAwSbfk/giphy-preview.webp?cid=5c5be08b1imtm0gfnru1lpo9vhd4w1on33xmzjngr7056si6&rid=giphy-preview.webp&ct=s
+    direct_sell: 1
+    to_mint: 0
+
+  - count: 3
+    title: Combien font 3x8 ? Gagnez 0.001 EGLD en trouvant la réponse
+    description: "<div style='text-align: left;'>Les propositions sont les suivantes:<br><ul style='text-align: left;'><li>Choix 1: <strong>3</strong></li><li>Choix 2: <strong>8</strong></li><li>Choix 3: <strong>24</strong></li><li>Choix 4: <strong>38</strong></li></ul></div> #jouer #jeu #qcm"
+    secret: 3
+    owner_can_transfer: 1
+    owner_can_sell: 1
+    instant_sell: 1
+    direct_sell: 1
+    find_secret: 1
+    gift: 0.001
+    to_mint: 0
+
+  - count: 15
+    title: Pour ou contre le nucléaire
+    description: "<div style='text-align: left;'>Les propositions sont les suivantes:<br><ul style='text-align: left;'><li>Choix 1 : <strong>Pour</strong></li><li>Choix 2 : <strong>Contre</strong></li><li>Choix 3 : <strong>NSP</strong></li></ul></div> #vote #sondage"
+    owner_can_sell: 1
+    instant_sell: 1
+    direct_sell: 1
+    gift: 0.01
+    vote: 1
+    tags: vote,sondage,nucléaire
+    to_mint: 1
 

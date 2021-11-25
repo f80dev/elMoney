@@ -335,6 +335,17 @@
               animationDuration="1000ms">
               <mat-tab label="Le propriétaire" style="height:max-content;overflow: hidden;">
                 <br>
+
+                <mat-form-field appearance="fill" class="app-field" style="max-width: 300px">
+                  <mat-label>Adresse du propriétaire</mat-label>
+                  <input matInput id="txtOwner" type="text"
+                         autocomplete="false"
+                         [(ngModel)]="owner_addr" [ngModelOptions]="{standalone: true}" (ngModelChange)="update_prices()">
+                  <mat-hint>Laisser vide si vous devez être le propriétaire à la création</mat-hint>
+                </mat-form-field>
+
+                <br>
+
                 <mat-slide-toggle
                   [(ngModel)]="owner_can_sell">le propriétaire peut revendre
                 </mat-slide-toggle>
@@ -537,6 +548,14 @@
               <div class="bloc-bouton">Estimation<br>du coût</div>
             </button>
 
+            <button mat-raised-button
+                    mat-button class="app-button"
+                    id="cmdToYAML"
+                    title="Copie le contenu du NFT dans le presse papier (pour intégration dans un fichier)"
+                    (click)="export_to_yaml()">
+              <div class="bloc-bouton">Copier dans<br>un fichier</div>
+            </button>
+
             <button mat-raised-button  color="primary"
                     mat-button class="app-button"
                     id="cmdMakeNFT"
@@ -567,15 +586,23 @@
 
     <!--    </mat-tab>-->
 
-    <mat-tab label="Fichiers" style="width: 100%;">
-      <br>
-      Créer vos NFTs à partir de fichier Excel, YAML, CSV
-      <br>
-      <app-upload-file [encode]="true" (uploaded)="onUpload($event)"></app-upload-file>
+    <mat-tab label="En masse" style="width: 100%;">
 
       <br>
-      <table style="width: 90%;display: inline-block;text-align: center;" *ngIf="nfts_to_send.length>0">
-        <tr style="font-size: large;font-weight: bold;width: 100%;padding: 5px;">
+      <div *ngIf="nfts_to_send.length==0">
+        Créer vos NFTs à partir de fichier Excel, YAML, CSV
+        <br>
+        <app-upload-file
+          [encode]="true"
+          (uploaded)="onUpload($event)">
+        </app-upload-file>
+      </div>
+
+
+      <table class="mat-elevation-z4"
+             style="padding: 10px;width: 90%;display: inline-block;text-align: center;margin:30px;"
+             *ngIf="nfts_to_send.length>0">
+        <tr style="font-size: large;width: 100%;padding: 5px;">
           <td>Quantité</td><td>Titre</td><td>Coût</td>
         </tr>
         <tr *ngFor="let row of nfts_to_send" style="width: 100%;padding: 5px;">
@@ -592,6 +619,13 @@
               mat-button class="app-button"
               (click)="send_file()">
         <div class="bloc-bouton">Lancer la<br>fabrication</div>
+      </button>
+      &nbsp;
+      <button mat-raised-button
+              *ngIf="nfts_to_send.length>0"
+              mat-button class="app-button"
+              (click)="nfts_to_send=[]">
+        Annuler
       </button>
 
     </mat-tab>

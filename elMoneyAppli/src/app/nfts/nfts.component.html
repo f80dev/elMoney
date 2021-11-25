@@ -129,8 +129,6 @@
           </button>
 
 
-
-
           <div *ngIf="nft.owner==user.addr" style="display: inline;">
 
             <button mat-icon-button
@@ -176,7 +174,7 @@
 
 
             <button mat-icon-button mat-flat-button class="icon-button"
-                    *ngIf="nft.owner==user.addr && (nft.has_secret==0 || nft.open?.length>0 || nft.miner==user.addr)"
+                    *ngIf="(nft.owner==user.addr && (nft.has_secret==0 || nft.open?.length>0 || nft.miner==user.addr)) || (nft.miner==user.addr && can_burn(nft))"
                     title="Détruire ce token"
                     (click)="burn(nft)">
               <mat-icon>delete</mat-icon>

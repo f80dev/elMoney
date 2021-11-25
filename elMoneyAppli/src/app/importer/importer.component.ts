@@ -20,6 +20,7 @@ import {MatChipInputEvent} from "@angular/material/chips";
 import {map, startWith} from "rxjs/operators";
 import {IpfsService} from "../ipfs.service";
 import {DatePipe, Location} from "@angular/common";
+import {ClipboardService} from "ngx-clipboard";
 
 export interface SellerProperties {
   address: string;
@@ -97,6 +98,7 @@ export class ImporterComponent implements OnInit {
               public _location:Location,
               public dialog:MatDialog,
               public toast:MatSnackBar,
+              public _clipboardService:ClipboardService,
               public datepipe:DatePipe,
               public router:Router) {
     this.filteredTags = this.tagCtrl.valueChanges.pipe(
@@ -149,6 +151,7 @@ export class ImporterComponent implements OnInit {
   opt_unik: any=false;
   opt_miner_can_burn=false;
   nfts_to_send: any[]=[];
+  owner_addr: string="";
 
   add(event: MatChipInputEvent): void {
     const input = event.input;
@@ -238,6 +241,8 @@ export class ImporterComponent implements OnInit {
         };
 
         $$("Création du NFT ", obj);
+
+        if(this.owner_addr.length>0)obj["owner"]=this.owner_addr;
 
         this.message = "Enregistrement dans la blockchain";
         window.scrollTo(0, 0);
@@ -921,15 +926,41 @@ export class ImporterComponent implements OnInit {
     });
   }
 
+
   send_file() {
     this.message="Fabrication des NFTs.";
-    setTimeout(()=>{
-      showMessage(this,"La fabrication de vos NFTs est en cours, cela peut durer plusieurs minutes. Ils apparaitront dans vos NFTs au fil du processus.")
-      this._location.back();
-    },500);
-    this.api._post("mint_from_file/mint/","filename="+this.file_to_send.filename,this.file_to_send,3600).subscribe(r=>{
+    this.api._post("mint_from_file/mint/","filename="+this.file_to_send.filename,this.file_to_send,20).subscribe(r=>{
       this.nfts_to_send=[];
       this.message="";
+    },(err)=>{
+      this.message="";
+      if(err.name=="TimeoutError"){
+        showMessage(this,"La fabrication de vos NFTs est en cours, cela peut durer plusieurs minutes. Ils apparaitront dans vos NFTs au fil du processus.")
+        this._location.back();
+      }
     });
   }
+
+  export_to_yaml(){
+    let file="count: "+this.count+"\ntitle: "+this.title+"\ndescription: \""+this.desc+"\"";
+    if(this.price>0)file=file+"\nprice: "+this.price;
+    if(this.secret.length>0)file=file+"\nsecret: "+this.secret;
+    if(this.owner_can_transfer)file=file+"\nowner_can_transfer: 1";
+    if(this.owner_can_sell)file=file+"\nowner_can_sell: 1";
+    if(this.instant_sell)file=file+"\ninstant_sell: 1";
+    if(this.visual.length>0)file=file+"\nvisual: "+this.visual;
+    if(this.direct_sell)file=file+"\ndirect_sell: 1";
+    if(this.gift>0)file=file+"\ngift: "+this.gift;
+    if(this.owner_addr.length>0)file=file+"\nowner: "+this.owner_addr;
+    if(this.vote)file=file+"\nvote: 1";
+    if(this.secret_vote)file=file+"\nsecret_vote: 1";
+    if(this.tags.length>0)file=file+"\ntags: "+this.tags;
+    if(this.self_destruction)file=file+"\nself_destruction: 1";
+    if(this.find_secret)file=file+"\nfind_secret: 1";
+
+    file=file+"\nto_mint: 1";
+    this._clipboardService.copy(file);
+    showMessage(this,"Le contenu est disponible dans le presse-papier");
+  }
+
 }

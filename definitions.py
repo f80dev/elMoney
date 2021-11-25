@@ -49,7 +49,7 @@ NETWORKS={
         "proxy":"https://testnet-gateway.elrond.com",
         "explorer":"https://testnet-explorer.elrond.com",
         "wallet":"httpRes://testnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqfe8skz4vju88s0dcp07nty8fw060mm2gqqes3xgn8d",
+        "nft":"erd1qqqqqqqqqqqqqpgqamxad2xvkw73j7pfsvkdyc59pdhxw4yvqqesm93dgt",
         "shard":1
     },
 
@@ -97,14 +97,15 @@ DB_SERVERS=dict(
 DEFAULT_VISUAL="/assets/img/anonymous.jpg"
 DEFAULT_VISUAL_SHOP="/assets/img/shop.png"
 
-FORCE_OPEN      = 0b0010000000000000
+ONE_WINNER      = 0b0010000000000000
 MINER_CAN_BURN  = 0b0001000000000000
 UNIK            = 0b0000100000000000
 SECRET_VOTE     = 0b0000010000000000
 FOR_SALE        = 0b0000001000000000
 VOTE            = 0b0000000100000000
 RENT            = 0b0000000010000000
-ONE_WINNER      = 0b0000000000100000
+TRANSPARENT     = 0b0000000001000000
+FORCE_OPEN      = 0b0000000000100000
 FIND_SECRET     = 0b0000000000010000
 SELF_DESTRUCTION= 0b0000000000001000
 DIRECT_SELL     = 0b0000000000000100

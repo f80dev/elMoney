@@ -24,7 +24,13 @@ class SocialGraph:
     def load(self,transactions,miners,dealers,contract):
         ids=[]
 
+        items=[]
         for t in transactions:
+            if "smartContractResults" in t:
+                for r in t["smartContractResults"]:
+                    items.append({"sender":t["sender"],"receiver":r["receiver"],"function":t["function"],"value":t["value"],"timestamp":t["timestamp"]})
+
+        for t in items:
             for p in [t["sender"],t["receiver"]]:
                 if p not in ids:
                     visual="./assets/icons/person.png"

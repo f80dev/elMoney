@@ -1082,7 +1082,7 @@ export function eval_properties(vm:any): number {
   if(vm.instant_sell)properties=properties      +FOR_SALE;
   if(vm.owner_can_transfer)properties=properties+CAN_TRANSFERT;
   if(vm.owner_can_sell)properties=properties    +CAN_RESELL;
-  if(vm.direct_sell)properties=properties       +DIRECT_SELL; //Le NFT est disponible en vente directe
+  if(vm.direct_sell)properties=properties       +DIRECT_SELL; //Le NFT accepte en vente directe
   if(vm.self_destruction)properties=properties  +SELF_DESTRUCTION; //Le token s'autodétruit après ouverture
   if(vm.rent)properties=properties              +RENT; //Le token s'autodétruit après ouverture
   if(vm.find_secret)properties=properties       +FIND_SECRET; //L'utilisateur doit fournir le secret dans l'open pour recevoir le cadeau

@@ -1,11 +1,11 @@
 import base64
 from io import BytesIO
 
-try:
-    from PIL import Image
-except ImportError:
-    import Image
-import pytesseract
+# try:
+#     from PIL import Image
+# except ImportError:
+#     import Image
+# import pytesseract
 
 import pandas as pd
 import json
@@ -28,7 +28,7 @@ from dao import DAO
 from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, \
     MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, \
     MAIN_NAME, MAIN_DECIMALS, NETWORKS, ESDT_CONTRACT, LIMIT_GAS, ESDT_PRICE, IPFS_NODE_HOST, \
-    IPFS_NODE_PORT, ONE_WINNER, LONG_DELAY_TRANSACTION, SHORT_DELAY_TRANSACTION, FIND_SECRET, MAX_MINT_NFT
+    IPFS_NODE_PORT, LONG_DELAY_TRANSACTION, SHORT_DELAY_TRANSACTION, FIND_SECRET, MAX_MINT_NFT, ONE_WINNER
 from elrondTools import ElrondNet
 from giphy_search import ImageSearchEngine
 from ipfs import IPFS
@@ -132,7 +132,7 @@ def convert_email_to_addr(dest:str,html_email:str):
     Ouvre un compte si besoin pour une adresse email
     :param dest: adresse email ou elrond du destinataire
     :param html_email: HTML file for the email
-    :return:
+    :return: l'utilisateur elrond et l'utilisateur version base de donnée
     """
     _u=None
     addr_dest = None
@@ -546,9 +546,9 @@ def resend_pem(addr:str):
 #http://localhost:6660/api/test/
 @app.route('/api/test/',methods=["GET"])
 def test():
-    img=Image.open('test-european.jpg')
-    str=pytesseract.image_to_string(img,lang="fr")
-    return str
+    #img=Image.open('test-european.jpg')
+    #str=pytesseract.image_to_string(img,lang="fr")
+    return ""
 
 
 
@@ -665,21 +665,19 @@ def mint_from_file(ope:str,data:dict=None):
 
     rc=[]
     for row in rows:
-        body=dict()
-        for key in row.keys():
-            body[key]=row[key]
+        if row["to_mint"]>0:
+            body=dict()
+            for key in row.keys():
+                body[key]=row[key]
 
-        body["properties"]=bc.eval_properties(data["content"])
-        body["pem"]=data["pem"]
+            body["properties"]=bc.eval_properties(row)
+            body["pem"]=data["pem"]
 
-        if ope=="mint":
-            result,status=mint(row["count"],body)
-        else:
-            status=200
-            result={"count":row["count"],"title":row["title"],"cost":bc.eval_gas(200)}
-
-        if status==200:
-            rc.append(result)
+            if ope=="mint":
+                result=mint(row["count"],body)
+                rc=rc+result.json
+            else:
+                rc.append({"count":row["count"],"title":row["title"],"cost":bc.eval_gas(200)})
 
 
 
@@ -716,14 +714,16 @@ def mint(count:str,data:dict=None):
     if not "fee" in data:data["fee"]=0
     if not "miner_ratio" in data:data["miner_ratio"]=0
     if not "price" in data:data["price"]=0
-    if not "opt_lot" in data:data["opt_lot"]=0
+    if not "opt_lot" in data:
+        data["opt_lot"]=0
+        data["one_owner"]=0
     if not "money" in data:data["money"]="EGLD"
     if not "elrond_standard" in data: data["elrond_standard"]=False
-
+    if not "find_secret" in data:data["find_secret"]=0
 
     simulate=(request.args.get("simulate")=="true")
 
-    secret = data["secret"]
+    secret = str(data["secret"])
     # TODO: ajouter ici un encodage du secret dont la clé est connu par le contrat
     if len(secret)>0:
         if data["find_secret"]:
@@ -751,9 +751,12 @@ def mint(count:str,data:dict=None):
     res_visual = ""
     if "visual" in data and len(data["visual"])>0:
         res_visual = "%%" + data["visual"]
-        if data["fullscreen"]:res_visual=res_visual.replace("%%","!!")
+        if "fullscreen" in data and data["fullscreen"]:res_visual=res_visual.replace("%%","!!")
 
-    owner = bc.get_elrond_user(data["pem"])
+    miner = bc.get_elrond_user(data["pem"])
+    owner = miner
+    if "owner" in data:
+        owner,_u=convert_email_to_addr(data["owner"],open_html_file("transfer_nft"))
 
     desc=data["description"]+res_visual
 
@@ -770,13 +773,12 @@ def mint(count:str,data:dict=None):
     money:str=data["money"]
 
     pay_count=int(count)
-    if data["properties"] & ONE_WINNER>0:
-        pay_count=1 #Nombre de payment
+    if data["properties"] & ONE_WINNER>0:pay_count=1 #Nombre de payment
 
     value=fee+pay_count*gift*1e16
     if not money.startswith("EGLD") and not simulate:
         log("Dans ce cas on sequestre vers le contrat le montant ESDT")
-        transac=bc.transferESDT(money,owner,bc.contract,pay_count*gift*1e16)
+        transac=bc.transferESDT(money,miner,bc.contract,pay_count*gift*1e16)
         if "error" in transac:return returnError()
         value=fee
         money="0x" + money.encode().hex()
@@ -789,12 +791,10 @@ def mint(count:str,data:dict=None):
 
     log("Minage du token "+str(data))
 
-
-
     if data["elrond_standard"]:
         log("Construction d'un NFT standard elrond")
         res_visual=res_visual.replace("%%","")
-        results.append(bc.mint_standard_nft(owner,title,
+        results.append(bc.mint_standard_nft(miner,title,
                                     {
                                         "description":desc.split("%%")[0],
                                         "money":money,
@@ -815,8 +815,9 @@ def mint(count:str,data:dict=None):
                              "0x" + secret,
                              price, min_markup, max_markup,
                              properties,
+                             "0x"+owner.address.hex(),
                              miner_ratio,
-                             gift, int(data["opt_lot"]),
+                             gift,
                              money,ref_token_id]
 
                 if simulate:
@@ -825,7 +826,7 @@ def mint(count:str,data:dict=None):
                 else:
                     gas=bc.eval_gas(200)*size+bc.eval_gas(2000+(len(secret)+len(title)+len(desc))*2)
                     log("Construction d'un extended NFT")
-                    result=bc.mint(owner,
+                    result=bc.mint(miner,
                                 arguments=arguments,
                                 gas_limit=gas,
                                 value=value
@@ -837,6 +838,7 @@ def mint(count:str,data:dict=None):
                         ref_token_id=result["first_token_id"]
                         log("Le modele se trouve en " + str(ref_token_id))
 
+                    result["data"]="" #On efface la data pour minimiser la donnée restitué
                     results.append(result)
 
             count=count-size
@@ -856,10 +858,12 @@ def mint(count:str,data:dict=None):
             if result["status"] == "fail" or not "smartContractResults" in result:
                 log("Erreur de création du token")
 
-    send(socketio, "refresh_nft",owner.address.bech32())
+    send(socketio, "refresh_nft",miner.address.bech32())
+    if miner!=owner:
+        send(socketio, "refresh_nft",owner.address.bech32())
     send(socketio, "refresh_balance", owner.address.bech32())
 
-    return jsonify(results), 200
+    return jsonify(results)
 
 
 
@@ -879,6 +883,7 @@ def get_graph():
 
     transactions=[]
     for t in bc.getTransactionsByRest(NETWORKS[bc.network_name]["nft"]):
+        t=bc.get_result(t)
         transactions.append(t)
 
     G.load(transactions,[miner],[],[NETWORKS[bc.network_name]["nft"]])
