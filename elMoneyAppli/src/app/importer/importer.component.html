@@ -42,6 +42,7 @@
   <mat-tab-group animationDuration="1000ms"
                  *ngIf="message?.length==0"
                  [selectedIndex]="selected_tab"
+                 (selectedIndexChange)="update_tab($event)"
                  mat-align-tabs="center">
 
     <mat-tab label="NFT express">

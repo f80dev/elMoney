@@ -1116,7 +1116,7 @@ export function group_tokens(tokens:any[],tags:any,func_validate:Function=null):
 
     let same_item = null;
     for (let i of nfts) {
-      if (i.title == item.title && i.description == item.description && i.miner == item.miner && i.price == item.price && i.properties == item.properties)
+      if (i.title == item.title && i.description == item.description && i.miner == item.miner && i.price == item.price)
         same_item = i;
     }
 

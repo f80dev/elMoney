@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ApiService} from "../api.service";
-import {showMessage, subscribe_socket, group_tokens, extract_tags} from "../tools";
+import {showMessage, subscribe_socket, group_tokens, extract_tags, $$} from "../tools";
 import {UserService} from "../user.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -131,6 +131,7 @@ export class NftStoreComponent implements OnInit {
     return group_tokens(nfts,this.config.tags,(item)=> {
       if(item.tags==null)item.tags="";
       if (!this.filter_id || this.filter_id == item.token_id) {
+        //TODO : item.properties >= 4 code a éclaircir
         if (item.for_sale && item.properties >= 4 && item.owner != this.user.addr) {
           if ((item.tags.lenght==0 || item.tags.indexOf(this.selected_tag)>-1) && (this.filter.length == 0 || item.search.toLowerCase().indexOf(this.filter.toLowerCase())) > -1){
             return true;
@@ -145,6 +146,7 @@ export class NftStoreComponent implements OnInit {
   refresh(withMessage = true) {
     if (withMessage) this.message = "Chargement des tokens ...";
     this.api._get("nfts/"+this.selected_dealer.address+"/").subscribe((r: any) => {
+      $$("!Récupération de "+r.length+" NFT");
       this.message = "";
       this.cache=r;
       this.nfts=this.apply_filter(r);

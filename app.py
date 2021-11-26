@@ -28,7 +28,7 @@ from dao import DAO
 from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, \
     MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, \
     MAIN_NAME, MAIN_DECIMALS, NETWORKS, ESDT_CONTRACT, LIMIT_GAS, ESDT_PRICE, IPFS_NODE_HOST, \
-    IPFS_NODE_PORT, LONG_DELAY_TRANSACTION, SHORT_DELAY_TRANSACTION, FIND_SECRET, MAX_MINT_NFT, ONE_WINNER
+    IPFS_NODE_PORT, LONG_DELAY_TRANSACTION, SHORT_DELAY_TRANSACTION, FIND_SECRET, MAX_MINT_NFT, ONE_WINNER, MAX_U64
 from elrondTools import ElrondNet
 from giphy_search import ImageSearchEngine
 from ipfs import IPFS
@@ -716,7 +716,7 @@ def mint(count:str,data:dict=None):
     if not "price" in data:data["price"]=0
     if not "opt_lot" in data:
         data["opt_lot"]=0
-        data["one_owner"]=0
+        data["one_winner"]=0
     if not "money" in data:data["money"]="EGLD"
     if not "elrond_standard" in data: data["elrond_standard"]=False
     if not "find_secret" in data:data["find_secret"]=0
@@ -803,11 +803,11 @@ def mint(count:str,data:dict=None):
                                         "state":hex(1)}
                                     ,price,count,res_visual))
     else:
-        ref_token_id=0
+        ref_token_id=MAX_U64
         count=int(count)
         while count>0:
             size=MAX_MINT_NFT if count>MAX_MINT_NFT else count
-            if ref_token_id==0: size=1
+            if ref_token_id==MAX_U64: size=1 #Si c'est le premier on le mint seul
             if size>0:
                 arguments = [size,
                              "0x" + title.encode().hex(),
@@ -831,10 +831,12 @@ def mint(count:str,data:dict=None):
                                 gas_limit=gas,
                                 value=value
                             )
-                    value=0 #l'ensemble des egold a été transférés dés la première fois
-                    tokenids=tokenids+list(range(result["first_token_id"],result["last_token_id"]+1))
+                    if result is None: return returnError("Echec de la transaction de minage")
 
-                    if ref_token_id==0 and "first_token_id" in result:
+                    value=0 #l'ensemble des egold a été transférés dés la première fois
+                    tokenids=tokenids+list(range(result["first_token_id"],result["last_token_id"]))
+
+                    if ref_token_id==MAX_U64 and "first_token_id" in result:
                         ref_token_id=result["first_token_id"]
                         log("Le modele se trouve en " + str(ref_token_id))
 

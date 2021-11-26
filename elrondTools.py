@@ -760,7 +760,7 @@ class ElrondNet:
     #     lst = self.query("tokenOwner",arguments=[token])
     #     return lst
 
-    # /nfts
+    # /nfts /get_nfts
     # récupération de l'ensemble des NFT issue du contrat
     def get_tokens(self, seller_filter="0x0", owner_filter="0x0", miner_filter="0x0"):
         rc = list()
@@ -1008,6 +1008,8 @@ class ElrondNet:
         rc = json.loads(r.text)
         return rc
 
+
+
     def mint(self, user_from, arguments, gas_limit=LIMIT_GAS, value=0, factor=1):
         """
         Fabriquer un NFT
@@ -1019,7 +1021,7 @@ class ElrondNet:
         log("Minage avec " + str(arguments))
         tx = self.execute(NETWORKS[self.network_name]["nft"], user_from, "mint", arguments, gas_limit=gas_limit,
                           gas_price_factor=factor, value=value, timeout=600)
-        if "smartContractResults" in tx:
+        if not tx is None and "smartContractResults" in tx:
             for result in tx["smartContractResults"]:
                 s = result["data"]
                 log("Analyse de " + s)
@@ -1029,6 +1031,8 @@ class ElrondNet:
                     tx["last_token_id"] = tx["first_token_id"] + arguments[0]
                     break
         return tx
+
+
 
     def mint_standard_nft(self, user_from, title, properties: dict, price=0, quantity=1, visual=""):
         """
@@ -1204,7 +1208,7 @@ class ElrondNet:
             rc = []
             l_t = json.loads(result.text)["data"]["transactions"]
             for t in l_t:
-                if "data" in t:
+                if "data" in t and not t["data"] is None:
                     t["data_dec"] = str(base64.b64decode(t["data"]), "utf8")
                     t["function"] = t["data_dec"].split("@")[0]
                 rc.append(t)

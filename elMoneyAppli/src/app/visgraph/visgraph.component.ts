@@ -250,6 +250,7 @@ export class VisgraphComponent implements OnInit {
 
   refresh() {
     let filter="";
+    this.message="Préparation du graphe";
     this.api._get("graph/","filter="+filter+"&miner="+this.user.addr,120,"").subscribe((data:any)=>{
       this.message="";
       this.data=data.graph;

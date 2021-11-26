@@ -41,7 +41,7 @@ IPFS_NODE_PORT=5001
 
 NETWORKS={
     "testnet":{
-        "identifier":"TFE-5354a9",
+        "identifier":"TFE-fad7ce",
         "new_account":float(0.2*1e18),
         "bank":"bank",
         "unity":"xEgld",
@@ -49,7 +49,7 @@ NETWORKS={
         "proxy":"https://testnet-gateway.elrond.com",
         "explorer":"https://testnet-explorer.elrond.com",
         "wallet":"httpRes://testnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqamxad2xvkw73j7pfsvkdyc59pdhxw4yvqqesm93dgt",
+        "nft":"erd1qqqqqqqqqqqqqpgqf8juvp58aaj2wkje52aa6adrm4hs4xu9qhyqlz82hs",
         "shard":1
     },
 
@@ -97,6 +97,7 @@ DB_SERVERS=dict(
 DEFAULT_VISUAL="/assets/img/anonymous.jpg"
 DEFAULT_VISUAL_SHOP="/assets/img/shop.png"
 
+IS_CLONE        = 0b0100000000000000
 ONE_WINNER      = 0b0010000000000000
 MINER_CAN_BURN  = 0b0001000000000000
 UNIK            = 0b0000100000000000
@@ -116,3 +117,4 @@ MAX_MINT_NFT=20
 
 LONG_DELAY_TRANSACTION=34 #sec
 SHORT_DELAY_TRANSACTION=9
+MAX_U64=4294967296

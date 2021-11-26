@@ -33,13 +33,15 @@
 version: 1.0
 content:
   - count: 1
-    title: Ceci est un token simple
+    title: test du secret v2
     description: exemple d'une description
     direct_sell: 1
+    instant_sell: 1
     owner_can_sell: 1
+    secret: monsecret
     to_mint: 0
 
-  - count: 3
+  - count: 30
     title: Avant première de james bond
     description: Au Max Linder, rendez-vous 20h avec ce NFT
     price: 0.01
@@ -54,9 +56,9 @@ content:
     tag: billet cinema
 
 
-  - count: 1
-    title: Acheter une photo
-    description: Acheter un titre musical
+  - count: 10
+    title: Macro Vélo
+    description: "Tirage en 10 exemplaires, Prise de vue Reflex EOS 600"
     price: 0.01
     file: https://drive.google.com/file/d/0B1XHEhVj9zBDakhWd1ZGQ1JHdDQ/view?usp=sharing&resourcekey=0-1Xm7qIxXX7ZR3UcFJnWQKg
     direct_sell: 1
@@ -75,7 +77,7 @@ content:
     direct_sell: 1
     to_mint: 0
 
-  - count: 3
+  - count: 1
     title: Combien font 3x8 ? Gagnez 0.001 EGLD en trouvant la réponse
     description: "<div style='text-align: left;'>Les propositions sont les suivantes:<br><ul style='text-align: left;'><li>Choix 1: <strong>3</strong></li><li>Choix 2: <strong>8</strong></li><li>Choix 3: <strong>24</strong></li><li>Choix 4: <strong>38</strong></li></ul></div> #jouer #jeu #qcm"
     secret: 3
@@ -87,13 +89,13 @@ content:
     gift: 0.001
     to_mint: 0
 
-  - count: 15
-    title: Pour ou contre le nucléaire
+  - count: 26
+    title: Pour ou contre le nucléaire v6
     description: "<div style='text-align: left;'>Les propositions sont les suivantes:<br><ul style='text-align: left;'><li>Choix 1 : <strong>Pour</strong></li><li>Choix 2 : <strong>Contre</strong></li><li>Choix 3 : <strong>NSP</strong></li></ul></div> #vote #sondage"
     owner_can_sell: 1
     instant_sell: 1
     direct_sell: 1
-    gift: 0.01
+    gift: 0.001
     vote: 1
     tags: vote,sondage,nucléaire
     to_mint: 1

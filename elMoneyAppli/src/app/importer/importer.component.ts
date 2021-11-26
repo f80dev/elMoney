@@ -4,7 +4,7 @@ import {ApiService} from "../api.service";
 import {UserService} from "../user.service";
 import {ImageSelectorComponent} from "../image-selector/image-selector.component";
 import {MatDialog} from "@angular/material/dialog";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ConfigService} from "../config.service";
 import {environment} from "../../environments/environment";
@@ -74,6 +74,21 @@ export class ImporterComponent implements OnInit {
   transparent:boolean=false; //si false, chaque billet contient le gift sinon un seul billet le contient
 
 
+  //Gestion des tags
+  solde_user: number;
+  extensions: string="*";
+  uploadProgress: number;
+  selected_tab = 0;
+  elrond_standard:boolean=false;
+  vote=false;
+  secret_vote=false;
+  instant_sell=true;
+  opt_unik: any=false;
+  opt_miner_can_burn=false;
+  nfts_to_send: any[]=[];
+  owner_addr: string="";
+
+
   //Money à utiliser pour la transaction du NFT
   selected_money: any={label:"eGld",identifier:"egld"};
   moneys: any[]=[];
@@ -98,6 +113,7 @@ export class ImporterComponent implements OnInit {
               public _location:Location,
               public dialog:MatDialog,
               public toast:MatSnackBar,
+              public routes:ActivatedRoute,
               public _clipboardService:ClipboardService,
               public datepipe:DatePipe,
               public router:Router) {
@@ -137,21 +153,11 @@ export class ImporterComponent implements OnInit {
     if(this.user.pseudo.length==0){
       showMessage(this,"Vous pouvez créer un NFT anonynement mais il est préférable de se donner un pseudo à minima");
     }
-  }
 
-  //Gestion des tags
-  solde_user: number;
-  extensions: string="*";
-  uploadProgress: number;
-  selected_tab = 0;
-  elrond_standard:boolean=false;
-  vote=false;
-  secret_vote=false;
-  instant_sell=true;
-  opt_unik: any=false;
-  opt_miner_can_burn=false;
-  nfts_to_send: any[]=[];
-  owner_addr: string="";
+    if(this.routes.snapshot.queryParamMap.has("tab")){
+      this.selected_tab=Number(this.routes.snapshot.queryParamMap.get("tab"));
+    }
+  }
 
   add(event: MatChipInputEvent): void {
     const input = event.input;
@@ -929,17 +935,20 @@ export class ImporterComponent implements OnInit {
 
   send_file() {
     this.message="Fabrication des NFTs.";
-    this.api._post("mint_from_file/mint/","filename="+this.file_to_send.filename,this.file_to_send,20).subscribe(r=>{
+    this.api._post("mint_from_file/mint/","filename="+this.file_to_send.filename,this.file_to_send,60).subscribe(r=>{
       this.nfts_to_send=[];
       this.message="";
     },(err)=>{
       this.message="";
       if(err.name=="TimeoutError"){
         showMessage(this,"La fabrication de vos NFTs est en cours, cela peut durer plusieurs minutes. Ils apparaitront dans vos NFTs au fil du processus.")
-        this._location.back();
+        this.router.navigate(["nfts-perso"],{queryParams:{index:2}});
       }
     });
   }
+
+
+
 
   export_to_yaml(){
     let file="count: "+this.count+"\ntitle: "+this.title+"\ndescription: \""+this.desc+"\"";
@@ -963,4 +972,7 @@ export class ImporterComponent implements OnInit {
     showMessage(this,"Le contenu est disponible dans le presse-papier");
   }
 
+  update_tab(evt) {
+    this._location.replaceState('./importer','tab='+evt)
+  }
 }
