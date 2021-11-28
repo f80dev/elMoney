@@ -27,6 +27,8 @@
 #owner: adresses emails (il est possible de mettre plusieurs adresses séparées par une ,) ou elrond du propriétaire du token après sa fabrication
 #email_invite: adresse de l'email à envoyer pour les propriétaires
 
+#to_mint : positionné à 1 permet de prendre en compte le NFT, 0 sinon
+
 
 
 
@@ -41,7 +43,19 @@ content:
     secret: monsecret
     to_mint: 0
 
-  - count: 30
+  - count: 100
+    title: Mon NFT pour vous
+    description: "Achetez mon NFT"
+    secret: monsecret
+    owner_can_transfer: 1
+    owner_can_sell: 1
+    instant_sell: 1
+    visual: https://media2.giphy.com/media/cjWTgRReY2PA1Sfh1i/giphy-preview.webp?cid=5c5be08bwdslk8675g4exm9e1vdfkqkjenqjicxfheqrjok5&rid=giphy-preview.webp&ct=s
+    direct_sell: 1
+    self_destruction: 1
+    to_mint: 1
+
+  - count: 15
     title: Avant première de james bond
     description: Au Max Linder, rendez-vous 20h avec ce NFT
     price: 0.01
@@ -77,7 +91,7 @@ content:
     direct_sell: 1
     to_mint: 0
 
-  - count: 1
+  - count: 12
     title: Combien font 3x8 ? Gagnez 0.001 EGLD en trouvant la réponse
     description: "<div style='text-align: left;'>Les propositions sont les suivantes:<br><ul style='text-align: left;'><li>Choix 1: <strong>3</strong></li><li>Choix 2: <strong>8</strong></li><li>Choix 3: <strong>24</strong></li><li>Choix 4: <strong>38</strong></li></ul></div> #jouer #jeu #qcm"
     secret: 3
@@ -98,5 +112,5 @@ content:
     gift: 0.001
     vote: 1
     tags: vote,sondage,nucléaire
-    to_mint: 1
+    to_mint: 0
 

@@ -2,6 +2,7 @@ import base64
 import json
 import logging
 import os
+import textwrap
 from datetime import datetime, timedelta
 from hashlib import md5
 
@@ -15,7 +16,7 @@ from erdpy.accounts import Account, AccountsRepository, Address
 from erdpy.contracts import SmartContract
 from erdpy.environments import TestnetEnvironment
 from erdpy.transactions import Transaction
-from erdpy.wallet import derive_keys, pem
+from erdpy.wallet import derive_keys, pem, generate_pair
 from erdpy.wallet.keyfile import load_from_key_file
 from requests_cache import CachedSession
 
@@ -662,6 +663,25 @@ class ElrondNet:
 
         return obj
 
+
+    def get_pem(self,secret_key: bytes, pubkey: bytes):
+        name = pubkey.hex()
+
+        header = f"-----BEGIN PRIVATE KEY for {name}-----"
+        footer = f"-----END PRIVATE KEY for {name}-----"
+
+        secret_key_hex = secret_key.hex()
+        pubkey_hex = pubkey.hex()
+        combined = secret_key_hex + pubkey_hex
+        combined_bytes = combined.encode()
+        key_base64 = base64.b64encode(combined_bytes).decode()
+
+        payload_lines = textwrap.wrap(key_base64, 64)
+        payload = "\n".join(payload_lines)
+        content = "\n".join([header, payload, footer])
+        return content
+
+
     def create_account(self, fund=0, name=None, email=None, seed_phrase=""):
         """
 
@@ -671,34 +691,20 @@ class ElrondNet:
         :return:
         """
         log("Création d'un nouveau compte")
-        pem = ""
+
 
         if len(seed_phrase) == 0:
-            if name is None:
-                name = "User" + str(datetime.now().timestamp() * 1000).split(".")[0]
-                # if not email is None:
-                #     name=email.split("@")[0].split(".")[0]
-
-            AccountsRepository("./PEM").generate_account(name)
-            for f in os.listdir("./PEM"):
-                if f.startswith(name):
-                    os.rename("./PEM/" + f, "./PEM/" + name + ".pem")
-                    filename = "./PEM/" + name + ".pem"
-
-                    with open(filename, "r") as myfile: data = myfile.readlines()
-                    pem = "".join(data).replace(name + ":", "")
-                    with open(filename, "w") as myfile:
-                        myfile.write(pem)
-                        myfile.close()
-
-                    break
-            _u = Account(pem_file=filename)
-
+            secret_key, pubkey = generate_pair()
+            address = Address(pubkey).bech32()
+            _u=Account(address=address)
+            _u.secret_key=secret_key.hex()
         else:
-            seed, pubkey = derive_keys(seed_phrase)
+            secret_key, pubkey = derive_keys(seed_phrase)
             address = Address(pubkey).bech32()
             _u = Account(address=address)
-            _u.private_key_seed = seed.hex()
+            _u.secret_key=secret_key.hex()
+
+
 
         if fund > 0:
             log("On transfere un peu d'eGold pour assurer les premiers transferts" + str(fund))
@@ -710,7 +716,10 @@ class ElrondNet:
             log("Enregistrement des infos le concernant")
             self.update_account(_u, {"email": email, "pseudo": email.split("@")[0]})
 
-        return _u, pem
+        return _u, self.get_pem(secret_key,pubkey)
+
+
+
 
     def estimate(self, contract_addr, function, arguments):
         result = self.tce._estimate_sc_call(contract_addr, function, arguments)
