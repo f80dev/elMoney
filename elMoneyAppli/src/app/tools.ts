@@ -4,10 +4,14 @@ import {WebcamUtil} from "ngx-webcam";
 declare var EXIF: any;
 export const ADMIN_PASSWORD="hh4271";
 
+
+export const IS_CLONE         = 0b00000001;
+
+export const FOR_SALE         = 0b0100000000000000;
+export const ONE_WINNER       = 0b0010000000000000;
 export const MINER_CAN_BURN   = 0b0001000000000000; //Chaque propriétaire ne peut acheter qu'un seul exemplaire
 export const UNIK             = 0b0000100000000000; //Chaque propriétaire ne peut acheter qu'un seul exemplaire
 export const SECRET_VOTE      = 0b0000010000000000;
-export const FOR_SALE         = 0b0000001000000000;
 export const VOTE             = 0b0000000100000000;
 export const RENT             = 0b0000000010000000;
 export const TRANSPARENT      = 0b0000000001000000;
@@ -1079,10 +1083,10 @@ export function eval_properties(vm:any): number {
   if(vm.opt_unik)properties=properties          +UNIK;
   if(vm.secret_vote)properties=properties       +SECRET_VOTE;
   if(vm.vote)properties=properties              +VOTE;
-  if(vm.instant_sell)properties=properties      +FOR_SALE;
   if(vm.owner_can_transfer)properties=properties+CAN_TRANSFERT;
   if(vm.owner_can_sell)properties=properties    +CAN_RESELL;
   if(vm.direct_sell)properties=properties       +DIRECT_SELL; //Le NFT accepte en vente directe
+  if(vm.instant_sell)properties=properties      +FOR_SALE; //Le NFT accepte en vente directe
   if(vm.self_destruction)properties=properties  +SELF_DESTRUCTION; //Le token s'autodétruit après ouverture
   if(vm.rent)properties=properties              +RENT; //Le token s'autodétruit après ouverture
   if(vm.find_secret)properties=properties       +FIND_SECRET; //L'utilisateur doit fournir le secret dans l'open pour recevoir le cadeau
@@ -1116,12 +1120,18 @@ export function group_tokens(tokens:any[],tags:any,func_validate:Function=null):
 
     let same_item = null;
     for (let i of nfts) {
-      if (i.title == item.title && i.description == item.description && i.miner == item.miner && i.price == item.price)
+      if (i.title == item.title && i.description == item.description && i.miner == item.miner && i.price == item.price && i.properties == item.properties){
         same_item = i;
+      }
     }
 
     if (same_item) {
       same_item.count = same_item.count + 1;
+      if(!same_item.hasOwnProperty("group")){
+        same_item.group=[same_item.token_id,item.token_id];
+      } else {
+        same_item.group.push(item.token_id);
+      }
     } else {
       item.count = 1;
       if (!func_validate || func_validate(item)){
@@ -1132,3 +1142,4 @@ export function group_tokens(tokens:any[],tags:any,func_validate:Function=null):
 
   return nfts;
 }
+

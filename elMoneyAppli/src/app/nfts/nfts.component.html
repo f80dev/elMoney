@@ -153,14 +153,14 @@
                     *ngIf="nft.for_sale && can_sell(nft.properties) && (nft.owner==user.addr || nft.miner==user.addr)"
                     title="Retirer de la vente"
                     class="icon-button"
-                    (click)="setstate(nft,1,'retirer de la vente')">
+                    (click)="setstate(nft,0,'retirer de la vente')">
               <mat-icon>remove_shopping_cart</mat-icon>
             </button>
 
             <button mat-icon-button mat-flat-button class="icon-button"
                     *ngIf="!nft.for_sale && (can_sell(nft.properties) || nft.miner==user.addr)"
                     title="Mettre en vente"
-                    (click)="setstate(nft,0,'mise en vente')">
+                    (click)="setstate(nft,1,'mise en vente')">
               <mat-icon>shopping_cart</mat-icon>
             </button>
 

@@ -43,7 +43,18 @@ content:
     secret: monsecret
     to_mint: 0
 
-  - count: 100
+  - count: 1
+    title: 2x3 ? Gagnez 0 EGLD en trouvant la réponse
+    description: "<div style='text-align: left;'>Les propositions sont les suivantes:<br><ul style='text-align: left;'><li>Choix 1 : <strong>1</strong></li><li>Choix 2 : <strong>2</strong></li><li>Choix 3 : <strong>3</strong></li><li>Choix 4 : <strong>4</strong></li><li>Choix 5 : <strong>5</strong></li><li>Choix 6 : <strong>6</strong></li></ul></div> #jouer #jeu #qcm"
+    secret: 6
+    owner_can_transfer: 1
+    owner_can_sell: 1
+    instant_sell: 1
+    direct_sell: 1
+    find_secret: 1
+    to_mint: 0
+
+  - count: 5
     title: Mon NFT pour vous
     description: "Achetez mon NFT"
     secret: monsecret

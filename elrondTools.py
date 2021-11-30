@@ -20,7 +20,8 @@ from erdpy.wallet import derive_keys, pem, generate_pair
 from erdpy.wallet.keyfile import load_from_key_file
 from requests_cache import CachedSession
 
-from Tools import log, base_alphabet_to_10, str_to_hex, hex_to_str, nbr_to_hex, translate, now, is_standard, returnError
+from Tools import log, base_alphabet_to_10, str_to_hex, hex_to_str, nbr_to_hex, translate, now, is_standard, \
+    returnError, list_to_vec
 from definitions import LIMIT_GAS, ESDT_CONTRACT, NETWORKS, ESDT_PRICE, IPFS_NODE_PORT, IPFS_NODE_HOST, SECRET_KEY, \
     DEFAULT_VISUAL, DEFAULT_VISUAL_SHOP, VOTE, FOR_SALE, SECRET_VOTE, UNIK, MINER_CAN_BURN, CAN_TRANSFERT, CAN_RESELL, \
     DIRECT_SELL, SELF_DESTRUCTION, RENT, FIND_SECRET, FORCE_OPEN, ONE_WINNER
@@ -824,6 +825,9 @@ class ElrondNet:
                 properties = int(tokens[index:index + 4], 16)
                 index = index + 4
 
+                status = int(tokens[index:index + 2], 16)
+                index = index + 2
+
                 resp = int(tokens[index:index + 2], 16)
                 index = index + 2
 
@@ -994,7 +998,7 @@ class ElrondNet:
                             "has_secret": int("secret" in prop),
                             "title": nft["name"],
                             "unity": "EGLD",
-                            "for_sale": int(prop["properties"] & FOR_SALE) > 0,
+                            "for_sale": int(prop["status"] & FOR_SALE) > 0,
                             "properties": int(prop["properties"], 16)
                         })
                         log("Ajout de " + str(rc))
@@ -1128,18 +1132,23 @@ class ElrondNet:
                           )
         return tr
 
-    def burn(self, sender, token_id, quantity=1):
-        if is_standard(token_id):
-            data = "ESDTNFTBurn@" + str_to_hex(token_id, False) + "@1@" + hex(quantity).replace("0x", "")
+
+    def burn(self, sender, token_ids, quantity=1):
+
+        if is_standard(token_ids):
+            data = "ESDTNFTBurn@" + str_to_hex(token_ids[0], False) + "@1@" + hex(quantity).replace("0x", "")
             tr = self.send_transaction(sender, sender, sender, 0, data)
         else:
+            ids=list_to_vec(token_ids)
             tr = self.execute(NETWORKS[self.network_name]["nft"], sender,
                               function="burn",
-                              arguments=[token_id]
+                              arguments=[ids],gas_limit=LIMIT_GAS*(1+len(token_ids)*0.2)
                               )
         return tr
 
-    def set_state(self, contract, pem_file, token_id, state):
+
+
+    def set_state(self, contract, pem_file, token_ids, state):
         """
         Mise en vente (to sale)
         :param contract:
@@ -1148,15 +1157,18 @@ class ElrondNet:
         :param state:
         :return:
         """
-        if not is_standard(token_id):
+        if not is_standard(token_ids):
+            ids=list_to_vec(token_ids)
             tx = self.execute(contract, pem_file,
                               function="setstate",
-                              arguments=[int(token_id), int(state)],
+                              arguments=[ids, int(state)],gas_limit=LIMIT_GAS*(1+len(token_ids)*0.2)
                               )
         else:
-            tx = self.nft_transfer(None, pem_file, token_id, self.bank)
+            tx = self.nft_transfer(None, pem_file, token_ids, self.bank)
 
         return tx
+
+
 
     # http://localhost:6660/api/validate/erd1lzlf9clpzvetunqdtrmnr3dq0jpqxuf64lzxa0lerd86lmrutuqszvmk5w/erd19e6gkufmeav2u4q6ltagarxeqag4d62maey8vunnfs52fk75jd8s390nfn/
     def validate(self, owner, miner):

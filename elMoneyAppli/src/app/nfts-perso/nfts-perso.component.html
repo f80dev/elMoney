@@ -1,7 +1,7 @@
 <div class="mainform">
 
   <mat-tab-group animationDuration="1000ms" mat-align-tabs="center"
-                 [selectedIndex]="selected.value">
+                 [selectedIndex]="selected.value" (selectedIndexChange)="tab_changed($event)">
 
     <mat-tab label="Les NFTs distribués" *ngIf="nfts[0]?.length>0" >
       <app-tuto label="Retrouvez ici tout les NFTs pour lesquels vous disposez d'un mandat de vente"></app-tuto>

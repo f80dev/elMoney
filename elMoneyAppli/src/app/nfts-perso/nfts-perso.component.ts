@@ -10,6 +10,7 @@ import {ConfigService} from "../config.service";
 import {MatDialog} from "@angular/material/dialog";
 import {environment} from "../../environments/environment";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {Location} from "@angular/common";
 import {animate, state, style, transition, trigger} from "@angular/animations";
 
 @Component({
@@ -34,6 +35,7 @@ export class NftsPersoComponent implements OnInit {
     public socket:Socket,
     public toast:MatSnackBar,
     public dialog:MatDialog,
+    public _location:Location,
     public router:Router,
     public user:UserService,
   ) {
@@ -148,5 +150,9 @@ export class NftsPersoComponent implements OnInit {
           this.nfts[i].splice(idx,1);
         }
       }
+  }
+
+  tab_changed($event: any) {
+    this._location.replaceState("nft-perso","index="+$event);
   }
 }

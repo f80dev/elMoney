@@ -28,7 +28,8 @@ from dao import DAO
 from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, \
     MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, \
     MAIN_NAME, MAIN_DECIMALS, NETWORKS, ESDT_CONTRACT, LIMIT_GAS, ESDT_PRICE, IPFS_NODE_HOST, \
-    IPFS_NODE_PORT, LONG_DELAY_TRANSACTION, SHORT_DELAY_TRANSACTION, FIND_SECRET, MAX_MINT_NFT, ONE_WINNER, MAX_U64
+    IPFS_NODE_PORT, LONG_DELAY_TRANSACTION, SHORT_DELAY_TRANSACTION, FIND_SECRET, MAX_MINT_NFT, ONE_WINNER, MAX_U64, \
+    FOR_SALE
 from elrondTools import ElrondNet
 from giphy_search import ImageSearchEngine
 from ipfs import IPFS
@@ -307,17 +308,19 @@ def burn():
 
     data=json.loads(str(request.data,"utf8"))
 
-    for id in data["ids"]:
-        rc=bc.burn(bc.get_elrond_user(data["pem"]),id)
+    rc=bc.burn(bc.get_elrond_user(data["pem"]),list(data["ids"].split(",")))
 
-    send(socketio,"refresh_nft",rc["sender"])
-    send(socketio,"nft_store")
+    if rc:
+        send(socketio,"refresh_nft",rc["sender"])
+        send(socketio,"nft_store")
 
     #TODO ajouter la notification du mineur
 
     #TODO: ajouter la destruction du fichier
 
-    return jsonify(rc)
+        return jsonify(rc)
+    else:
+        return returnError()
 
 
 
@@ -450,8 +453,8 @@ def update_nft(token_id:str,field_name:str,data:dict=None):
 
 
 
-@app.route('/api/state_nft/<token_id>/<state>/',methods=["POST"])
-def state_nft(token_id:str,state:str,data:dict=None):
+@app.route('/api/state_nft/<token_ids>/<state>/',methods=["POST"])
+def state_nft(token_ids:str,state:str,data:dict=None):
     """
     changement du statut en vente / pas en vente
     :param token_id:
@@ -462,10 +465,16 @@ def state_nft(token_id:str,state:str,data:dict=None):
     if data is None:
         data = json.loads(str(request.data, encoding="utf-8"))
 
-    tx = bc.set_state(NETWORKS[bc.network_name]["nft"], bc.get_elrond_user(data), token_id,state)
+    if "," in token_ids:
+        ids=[int(x) for x in token_ids.split(",")]
+    else:
+        ids=[int(token_ids)]
+
+    tx = bc.set_state(NETWORKS[bc.network_name]["nft"], bc.get_elrond_user(data), ids,state)
 
     send(socketio,"refresh_nft")
     return jsonify(tx),200
+
 
 
 @app.route('/api/votes/<addr>/',methods=["GET"])
@@ -626,7 +635,7 @@ def buy_nft(token_id,price,seller:str,data:dict=None):
 #http://localhost:6660/api/ref_list/
 @app.route('/api/ref_list/',methods=["GET"])
 def ref_list():
-    rc=[[],[],[]]
+    rc=[[],[],[],[]]
     for it in bc.query("addresses"):
         rc[0].append(it.hex)
 
@@ -636,7 +645,15 @@ def ref_list():
     for dealer in bc.query("getDealer"):
         rc[2].append(dealer.hex)
 
-    return jsonify({"addresses":rc[0],"moneys":rc[1],"dealers":rc[2]})
+    for token in bc.get_tokens():
+        rc[3].append(token)
+
+    return jsonify({
+        "addresses":rc[0],
+        "moneys":rc[1],
+        "dealers":rc[2],
+        "nfts":rc[3]
+    })
 
 
 
@@ -664,21 +681,25 @@ def mint_from_file(ope:str,data:dict=None):
         rows=yaml.load(data["content"])["content"]
 
     rc=[]
+    index=0
     for row in rows:
-        if row["to_mint"]>0:
-            body=dict()
-            for key in row.keys():
-                body[key]=row[key]
+        body=dict()
+        for key in row.keys():
+            body[key]=row[key]
 
-            body["properties"]=bc.eval_properties(row)
-            body["pem"]=data["pem"]
+        body["properties"]=bc.eval_properties(row)
+        body["pem"]=data["pem"]
 
-            if ope=="mint":
+        if ope=="mint":
+            #Execution du fichier
+            if index in data["to_mint"]:
                 result=mint(row["count"],body)
                 rc=rc+result.json
-            else:
-                rc.append({"count":row["count"],"title":row["title"],"cost":bc.eval_gas(200)})
+        else:
+            #Analyse du fichier
+            rc.append({"count":row["count"],"title":row["title"],"cost":bc.eval_gas(200),"to_mint":row["to_mint"],"index":index})
 
+        index=index+1
 
 
     return jsonify(rc),200
@@ -720,6 +741,7 @@ def mint(count:str,data:dict=None):
     if not "money" in data:data["money"]="EGLD"
     if not "elrond_standard" in data: data["elrond_standard"]=False
     if not "find_secret" in data:data["find_secret"]=0
+    if not "instant_sell" in data: data["instant_sell"]=1
 
     simulate=(request.args.get("simulate")=="true")
 
@@ -818,7 +840,8 @@ def mint(count:str,data:dict=None):
                              "0x"+owner.address.hex(),
                              miner_ratio,
                              gift,
-                             money,ref_token_id]
+                             money,
+                             ref_token_id]
 
                 if simulate:
                     gasCost=bc.estimate(NETWORKS[bc.network_name]["nft"],"mint",arguments)
@@ -831,7 +854,8 @@ def mint(count:str,data:dict=None):
                                 gas_limit=gas,
                                 value=value
                             )
-                    if result is None: return returnError("Echec de la transaction de minage")
+                    if result is None or not "first_token_id" in result:
+                        return returnError("Echec de la transaction de minage")
 
                     value=0 #l'ensemble des egold a été transférés dés la première fois
                     tokenids=tokenids+list(range(result["first_token_id"],result["last_token_id"]))

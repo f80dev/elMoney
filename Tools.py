@@ -94,8 +94,19 @@ def hex_to_str(number):
 
 
 def is_standard(id):
-    if type(id)==str and id.startswith("TFT"):return True
+    if type(id)==list and len(id)>0:
+        id=id[0]
+        if type(id)==str and id.startswith("TFT"):return True
     return False
+
+
+def list_to_vec(values: list,size=8):
+    rc=bytes()
+
+    for it in values:
+        rc=rc+int(it).to_bytes(size,byteorder="big")
+
+    return "0x"+rc.hex()
 
 
 def open_html_file(name:str,replace=dict(),domain_appli=DOMAIN_APPLI):

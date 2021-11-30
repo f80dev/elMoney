@@ -41,7 +41,7 @@ IPFS_NODE_PORT=5001
 
 NETWORKS={
     "testnet":{
-        "identifier":"TFE-fad7ce",
+        "identifier":"TFE-4da805",
         "new_account":float(0.2*1e18),
         "bank":"bank",
         "unity":"xEgld",
@@ -49,13 +49,13 @@ NETWORKS={
         "proxy":"https://testnet-gateway.elrond.com",
         "explorer":"https://testnet-explorer.elrond.com",
         "wallet":"httpRes://testnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgq6lcpsk9jlxxw4myuewlr23p3y6e8da6aqhyqf7gyfu",
+        "nft":"erd1qqqqqqqqqqqqqpgqmjaylunnmgt5ep973qgdwse5qk58zjyvqhyqmpy8nq",
         "shard":1
     },
 
     #erd1qqqqqqqqqqqqqpgqkwfvpkaf6vnn89508l0gdcx26vpu8eq5d8ssz3lhlf
     "devnet":{
-        "new_account":float(1*1e18),
+        "new_account":float(0.2*1e18),
         "bank":"bank",
         "unity":"xEgld",
         "identifier":"TFE-c7b9cd",
@@ -97,12 +97,14 @@ DB_SERVERS=dict(
 DEFAULT_VISUAL="/assets/img/anonymous.jpg"
 DEFAULT_VISUAL_SHOP="/assets/img/shop.png"
 
-IS_CLONE        = 0b0100000000000000
+
+IS_CLONE        = 0b00000001
+
+FOR_SALE        = 0b0100000000000000
 ONE_WINNER      = 0b0010000000000000
 MINER_CAN_BURN  = 0b0001000000000000
 UNIK            = 0b0000100000000000
 SECRET_VOTE     = 0b0000010000000000
-FOR_SALE        = 0b0000001000000000
 VOTE            = 0b0000000100000000
 RENT            = 0b0000000010000000
 TRANSPARENT     = 0b0000000001000000

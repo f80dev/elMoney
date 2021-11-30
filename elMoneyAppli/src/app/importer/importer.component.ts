@@ -234,6 +234,7 @@ export class ImporterComponent implements OnInit {
           description: this.desc,
           vote:this.vote,
           gift: this.gift,
+          instant_sell:this.instant_sell,
           fullscreen: false,
           find_secret: this.find_secret,
           max_markup: this.max_price,
@@ -264,7 +265,7 @@ export class ImporterComponent implements OnInit {
               showMessage(this, "Fichier tokenisé pour " + cost + " xEgld");
               setTimeout(()=>{
                 this.user.refresh_balance(() => {
-                  this.router.navigate(["nfts-perso"], {queryParams: {index: 2}});
+                  this.router.navigate(["nfts-perso"], {queryParams: {index: 1}});
                 });
                 if (func) func(r);
               },1500);
@@ -288,23 +289,25 @@ export class ImporterComponent implements OnInit {
 
 
   create_preview(){
-    this.nfts_preview=[
-      {
-        title:this.title,
-        properties:eval_properties(this),
-        description:this.desc,
-        secret:this.secret,
-        tags:this.tags.join(" "),
-        visual:this.visual,
-        miner:this.user.addr,
-        owner:this.user.addr,
-        state:0,
-        isDealer:false,
-        message:"",
-        price:this.price
-      }
-    ]
-    $$("Fabrication du NFT pour prévisualisation ",this.nfts_preview[0]);
+    if(this.nfts_preview.length==0){
+      this.nfts_preview=[
+        {
+          title: this.title,
+          properties: eval_properties(this),
+          description: this.desc,
+          secret: this.secret,
+          tags: this.tags.join(" "),
+          visual: this.visual,
+          miner: this.user.addr,
+          owner: this.user.addr,
+          state: 0,
+          isDealer: false,
+          message: "",
+          price: this.price
+        }
+      ];
+      $$("Fabrication du NFT pour prévisualisation ",this.nfts_preview[0]);
+    } else this.nfts_preview=[];
   }
 
 
@@ -610,17 +613,17 @@ export class ImporterComponent implements OnInit {
   create_options(func,title="Rédiger les réponses possible",func_abort=null){
     this.ask_for_text(title,"Saisisser les différentes options possible en les séparant par un retour à la ligne",(text_options)=> {
       if(text_options.length>0){
-      let options = [];
-      let i = 0;
-      for (let txt of text_options.split("\n")) {
-        if (txt.trim().length > 0) {
-          i++;
-          options.push("Choix " + i + " : <strong>" + txt.trim() + "</strong>");
+        let options = [];
+        let i = 0;
+        for (let txt of text_options.split("\n")) {
+          if (txt.trim().length > 0) {
+            i++;
+            options.push("Choix " + i + " : <strong>" + txt.trim() + "</strong>");
+          }
         }
-      }
-      let rc="<li>"+options.join("</li><li>")+"</li>";
-      rc="<div style='text-align: left;'>Les propositions sont les suivantes:<br><ul style='text-align: left;'>"+rc+"</ul></div>";
-      func(rc,options);
+        let rc="<li>"+options.join("</li><li>")+"</li>";
+        rc="<div style='text-align: left;'>Les propositions sont les suivantes:<br><ul style='text-align: left;'>"+rc+"</ul></div>";
+        func(rc,options);
       } else {
         if(!func_abort)func_abort();
       }
@@ -754,6 +757,7 @@ export class ImporterComponent implements OnInit {
                 this.visual="";
                 this.picture = visual.img;
                 this.title = title;
+                this.instant_sell=false;
                 this.desc = desc+" - "+new Date(dt).toLocaleDateString();
                 if (token.tags) this.desc = this.desc + " " + token.tags;
                 this.owner_can_sell = false;
@@ -771,7 +775,6 @@ export class ImporterComponent implements OnInit {
 
 
   quick_file($event: any,token:any,title="Ajouter un visuel",subtitle="Exemple: Manuel de fonctionnement de la TB-303",desc="Exemple: Ce manuel de fonctionnement couvre l'utilisation courante du synthétiseur") {
-    debugger
     this.picture=$event.file;
     this.filename=$event.filename;
     this.extensions="*";
@@ -916,9 +919,6 @@ export class ImporterComponent implements OnInit {
   }
 
 
-  cancelUpload() {
-
-  }
 
   is_html(desc: string) {
     return isHTML(desc);
@@ -928,12 +928,17 @@ export class ImporterComponent implements OnInit {
     this.file_to_send={content:$event.file,filename:$event.filename,pem:this.user.pem};
     this.api._post("mint_from_file/eval/","filename="+$event.filename,this.file_to_send).subscribe((r:any)=>{
       this.nfts_to_send=r;
-
     });
   }
 
 
   send_file() {
+    let keys=[];
+    for(let item of this.nfts_to_send){
+      if(item["to_mint"]==1)keys.push(item.index);
+    }
+    this.file_to_send["to_mint"]=keys;
+
     this.message="Fabrication des NFTs.";
     this.api._post("mint_from_file/mint/","filename="+this.file_to_send.filename,this.file_to_send,60).subscribe(r=>{
       this.nfts_to_send=[];

@@ -101,9 +101,13 @@ export class NftsComponent implements OnChanges {
 
 
   setstate(nft: any, new_state, message) {
+
+    let ids=nft.token_id;
+    if(nft.hasOwnProperty("group")) ids=nft.group.join(",")
+
     this.user.check_pem(()=>{
       nft.message = message;
-      this.api._post("state_nft/" + nft.token_id + "/" + new_state, "", {pem:this.user.pem}).subscribe((r: any) => {
+      this.api._post("state_nft/" + ids + "/" + new_state, "", {pem:this.user.pem}).subscribe((r: any) => {
         nft.message = "";
         let mes="Votre NFT n'est plus en vente";
         if(new_state==0)mes="Votre NFT est en vente"
@@ -166,6 +170,10 @@ export class NftsComponent implements OnChanges {
 
   burnState="normal";
   burn(nft: any) {
+
+    let ids=nft.token_id;
+    if(nft.hasOwnProperty("group")) ids=nft.group.join(",")
+
     this.dialog.open(PromptComponent, {
       data: {
         title: 'Confirmation',
@@ -178,7 +186,7 @@ export class NftsComponent implements OnChanges {
         this.user.check_pem(()=>{
           nft.message = "En cours de destruction";
           this.burnState="burn";
-          this.api._post("burn/", "", {pem:this.user.pem,ids:[nft.token_id]}).subscribe((r: any) => {
+          this.api._post("burn/", "", {pem:this.user.pem,ids:ids}).subscribe((r: any) => {
             nft.message = "";
             showMessage(this, "Votre NFT n'existe plus");
             this.onburn.emit(nft.token_id);
