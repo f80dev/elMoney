@@ -125,3 +125,15 @@ content:
     tags: vote,sondage,nucléaire
     to_mint: 0
 
+  - count: 3
+    title: les chats sauvages
+    description: "12 rue martel 75010 paris - 14/12/2021 à 20::00 #billets #concert"
+    price: 0.01
+    owner_can_transfer: 1
+    owner_can_sell: 1
+    transparent: 1
+    instant_sell: 1
+    visual: https://media0.giphy.com/media/4BJCvMoLPePq8/giphy-preview.webp?cid=5c5be08b4qpvzfmdpto4hyzdcwjtytnl26ntdsfi0p6km946&rid=giphy-preview.webp&ct=s
+    direct_sell: 1
+    to_mint: 1
+

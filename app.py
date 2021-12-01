@@ -776,6 +776,10 @@ def mint(count:str,data:dict=None):
         if "fullscreen" in data and data["fullscreen"]:res_visual=res_visual.replace("%%","!!")
 
     miner = bc.get_elrond_user(data["pem"])
+    if miner is None:
+        miner=bc.bank
+        log("Le minage se fait par la banque")
+
     owner = miner
     if "owner" in data:
         owner,_u=convert_email_to_addr(data["owner"],open_html_file("transfer_nft"))
@@ -797,12 +801,12 @@ def mint(count:str,data:dict=None):
     pay_count=int(count)
     if data["properties"] & ONE_WINNER>0:pay_count=1 #Nombre de payment
 
-    value=fee+pay_count*gift*1e16
+    value_by_token=fee+gift*1e16
     if not money.startswith("EGLD") and not simulate:
         log("Dans ce cas on sequestre vers le contrat le montant ESDT")
         transac=bc.transferESDT(money,miner,bc.contract,pay_count*gift*1e16)
         if "error" in transac:return returnError()
-        value=fee
+        value_by_token=fee
         money="0x" + money.encode().hex()
     else:
         money=str_to_hex("EGLD")
@@ -838,6 +842,7 @@ def mint(count:str,data:dict=None):
                              price, min_markup, max_markup,
                              properties,
                              "0x"+owner.address.hex(),
+                             "0x"+miner.address.hex(),
                              miner_ratio,
                              gift,
                              money,
@@ -849,15 +854,15 @@ def mint(count:str,data:dict=None):
                 else:
                     gas=bc.eval_gas(200)*size+bc.eval_gas(2000+(len(secret)+len(title)+len(desc))*2)
                     log("Construction d'un extended NFT")
-                    result=bc.mint(miner,
-                                arguments=arguments,
-                                gas_limit=gas,
-                                value=value
-                            )
+                    result=bc.mint(
+                        miner,
+                        arguments=arguments,
+                        gas_limit=gas,
+                        value=value_by_token*size
+                    )
                     if result is None or not "first_token_id" in result:
                         return returnError("Echec de la transaction de minage")
 
-                    value=0 #l'ensemble des egold a été transférés dés la première fois
                     tokenids=tokenids+list(range(result["first_token_id"],result["last_token_id"]))
 
                     if ref_token_id==MAX_U64 and "first_token_id" in result:

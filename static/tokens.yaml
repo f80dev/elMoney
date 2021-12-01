@@ -111,7 +111,7 @@ content:
            <br>
            Avant de pouvoir répondre le joueur doit avoir acheté la question
     "
-    fee: 0.001
+    fee: 0.0001
     tags: "#jouer #jeu #laquestion"
     transac: 0.0007
     production: true
@@ -137,7 +137,7 @@ content:
            <br>
            Avant de pouvoir répondre le joueur doit avoir acheté la question. Si l'auto destruction est activée, seul le premier acheteur pourra participer
     "
-    fee: 0.001
+    fee: 0.0001
     tags: "#jouer #jeu #qcm"
     transac: 0.0007
     production: true
@@ -160,7 +160,7 @@ content:
           <br>
            Ce fichier ne pourrat être télécharger que par l'acheteur
     "
-    fee: 0.002
+    fee: 0.0002
     tags: "#fichier #secret"
     transac: 0.0007
     production: true
@@ -207,7 +207,7 @@ content:
           Grâce à TokenForge vous pouvez établir une attestation de propriété et l'enregistrer dans la blockchain.<br>
           Elle devient ainsi infalsifiable
     "
-    fee: 0.002
+    fee: 0.0002
     tags: "#propriete #titre"
     transac: 0.0007
     production: false
@@ -285,7 +285,7 @@ content:
               <br>
                Seul l'acheteur pourra accèder au morceau.
         "
-    fee: 0.002
+    fee: 0.0002
     tags: "#music #audio #track"
     transac: 0.0007
     production: true
@@ -336,7 +336,7 @@ content:
 
       Grâce à TokenForge le lien est caché dans le NFT et visible uniquement du propriétaire / acheteur.
       "
-    fee: 0.002
+    fee: 0.0002
     tags: "#film #cinema"
     transac: 0.0007
     production: true
@@ -379,7 +379,7 @@ content:
     icon: lock
     nft_icon: "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/279/key_1f511.png"
     description: Vendre un mot de passe, un numéro de license, un code secret de coffre, un code promo
-    fee: 0.001
+    fee: 0.0001
     tags: "#secret"
     tuto: "
           TokenForge vous permet de vendre des secrets (code d'accès, mot de passe, adresse). <br><br>

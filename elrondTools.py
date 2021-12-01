@@ -24,7 +24,7 @@ from Tools import log, base_alphabet_to_10, str_to_hex, hex_to_str, nbr_to_hex, 
     returnError, list_to_vec
 from definitions import LIMIT_GAS, ESDT_CONTRACT, NETWORKS, ESDT_PRICE, IPFS_NODE_PORT, IPFS_NODE_HOST, SECRET_KEY, \
     DEFAULT_VISUAL, DEFAULT_VISUAL_SHOP, VOTE, FOR_SALE, SECRET_VOTE, UNIK, MINER_CAN_BURN, CAN_TRANSFERT, CAN_RESELL, \
-    DIRECT_SELL, SELF_DESTRUCTION, RENT, FIND_SECRET, FORCE_OPEN, ONE_WINNER
+    DIRECT_SELL, SELF_DESTRUCTION, RENT, FIND_SECRET, FORCE_OPEN, ONE_WINNER, TRANSPARENT
 from ipfs import IPFS
 
 
@@ -937,6 +937,7 @@ class ElrondNet:
         if "opt_unik" in vm and vm["opt_unik"] == 1: properties = properties + UNIK
         if "secret_vote" in vm and vm["secret_vote"] == 1: properties = properties + SECRET_VOTE
         if "one_winner" in vm and vm["one_winner"] == 1: properties = properties + ONE_WINNER
+        if "transparent" in vm and vm["transparent"] == 1: properties = properties + TRANSPARENT
         if "vote" in vm and vm["vote"] == 1: properties = properties + VOTE
         if "instant_sell" in vm and vm["instant_sell"] == 1: properties = properties + FOR_SALE
         if "owner_can_transfer" in vm and vm["owner_can_transfer"] == 1: properties = properties + CAN_TRANSFERT
