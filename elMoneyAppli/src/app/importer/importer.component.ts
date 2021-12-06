@@ -259,14 +259,15 @@ export class ImporterComponent implements OnInit {
           this.message = "";
           if(!simulate){
             $$("Enregistrement dans la blockchain");
-            if (r && r.results) {
+            if (r) {
               let cost=0;
               for(let t of r){cost=cost+t["cost"];}
               showMessage(this, "Fichier tokenisé pour " + cost + " xEgld");
               setTimeout(()=>{
+
                 this.user.refresh_balance(() => {
                   this.router.navigate(["nfts-perso"], {queryParams: {index: 1}});
-                });
+                },()=>{showError(this);});
                 if (func) func(r);
               },1500);
             }
@@ -348,10 +349,12 @@ export class ImporterComponent implements OnInit {
     });
   }
 
+
   update_prices() {
     if(this.max_price==0)this.max_price=this.price*0.2;
     if(this.min_price==0 && this.price>0)this.min_price=0;
   }
+
 
   open_store(elt:any) {
     open("./assets/store.html?seller="+elt.address+"&server="+environment.domain_server+"&explorer="+this.config.server.explorer,"store");
