@@ -26,8 +26,8 @@ class SocialGraph:
 
         items=[]
         for t in transactions:
-            if "smartContractResults" in t:
-                for r in t["smartContractResults"]:
+            if RESULT_SECTION in t:
+                for r in t[RESULT_SECTION]:
                     items.append({"sender":t["sender"],"receiver":r["receiver"],"function":t["function"],"value":t["value"],"timestamp":t["timestamp"]})
 
         for t in items:

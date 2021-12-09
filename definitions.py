@@ -41,16 +41,16 @@ IPFS_NODE_PORT=5001
 
 NETWORKS={
     "testnet":{
-        "identifier":"TFE-4da805",
+        "identifier":"TFE-c18181",
         "new_account":float(0.2*1e18),
         "bank":"bank",
         "unity":"xEgld",
         "faucet":"https://r3d4.fr/elrond/testnet/index.php",
         "proxy":"https://testnet-gateway.elrond.com",
         "explorer":"https://testnet-explorer.elrond.com",
-        "wallet":"httpRes://testnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqrhynjuqtaqgynqmyeaqlvtf0zt3y8pzrqhyqzfwyu7",
-        "shard":1
+        "wallet":"http://testnet-wallet.elrond.com",
+        "nft":"erd1qqqqqqqqqqqqqpgqcxnpcevrcwndkafqpq9mtz2wue2d9uaeqhyq4pw95p",
+        "shard":0
     },
 
     #erd1qqqqqqqqqqqqqpgqkwfvpkaf6vnn89508l0gdcx26vpu8eq5d8ssz3lhlf
@@ -58,12 +58,12 @@ NETWORKS={
         "new_account":float(0.2*1e18),
         "bank":"bank",
         "unity":"xEgld",
-        "identifier":"TFE-c7b9cd",
+        "identifier":"TFE-c18181",
         "faucet":"https://r3d4.fr/elrond/devnet/index.php",
         "proxy":"https://devnet-gateway.elrond.com",
         "explorer":"https://devnet-explorer.elrond.com",
         "wallet":"https://devnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgq3t82hgqvkgdyktqc2mwucy744kgrekj0qqesq2wzfn",
+        "nft":"erd1qqqqqqqqqqqqqpgqf8juvp58aaj2wkje52aa6adrm4hs4xu9qhyqlz82hs",
         "shard": 1
     },
 
@@ -115,7 +115,9 @@ DIRECT_SELL     = 0b0000000000000100
 CAN_RESELL      = 0b0000000000000010
 CAN_TRANSFERT   = 0b0000000000000001
 
-MAX_MINT_NFT=20
+MAX_MINT_NFT=50
+MAX_GAS_LIMIT=600000000
+RESULT_SECTION="results"
 
 LONG_DELAY_TRANSACTION=34 #sec
 SHORT_DELAY_TRANSACTION=9

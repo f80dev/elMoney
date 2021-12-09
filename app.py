@@ -18,6 +18,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 
 import yaml
 from erdpy.accounts import Account
+from erdpy.config import MAX_GAS_LIMIT
 from erdpy.contracts import SmartContract
 from flask import Response, request, jsonify, send_file
 from Tools import log, send_mail, open_html_file,  send, dictlist_to_csv, returnError,  str_to_hex, \
@@ -29,7 +30,7 @@ from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME
     MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, \
     MAIN_NAME, MAIN_DECIMALS, NETWORKS, ESDT_CONTRACT, LIMIT_GAS, ESDT_PRICE, IPFS_NODE_HOST, \
     IPFS_NODE_PORT, LONG_DELAY_TRANSACTION, SHORT_DELAY_TRANSACTION, FIND_SECRET, MAX_MINT_NFT, ONE_WINNER, MAX_U64, \
-    FOR_SALE
+    FOR_SALE, RESULT_SECTION
 from elrondTools import ElrondNet
 from giphy_search import ImageSearchEngine
 from ipfs import IPFS
@@ -119,7 +120,7 @@ def refund(dest:str):
     amount="%.0f" % NETWORKS[bc.network_name]["new_account"]
 
     tx=bc.credit(bc.bank,_dest,amount)
-    if tx["status"]=="success":
+    if tx is not None and tx["status"]=="success":
         account=bc._proxy.get_account_balance(_dest.address)
         return jsonify({"gas":account}),200
     else:
@@ -415,11 +416,11 @@ def open_nft(token_id:str,data:dict=None):
 
     tx = bc.nft_open(NETWORKS[bc.network_name]["nft"], _user, token_id,response)
 
-    if "smartContractResults" in tx:
-        if tx["status"]=="fail" or "returnMessage" in tx["smartContractResults"][0]:
-            rc=tx["smartContractResults"][0]["returnMessage"]
+    if RESULT_SECTION in tx:
+        if tx["status"]=="fail" or "returnMessage" in tx[RESULT_SECTION][0]:
+            rc=tx[RESULT_SECTION][0]["returnMessage"]
         else:
-            for t in tx["smartContractResults"]:
+            for t in tx[RESULT_SECTION]:
                 rc=t["data"]
                 if "@" in rc and not rc.startswith("ESDTTransfer"):
                     rc=rc.split("@")[2]
@@ -705,6 +706,111 @@ def mint_from_file(ope:str,data:dict=None):
     return jsonify(rc),200
 
 
+def prepare_data(data):
+    """
+    Prepare the data structure to be treat by the mint function
+    :param data:
+    :return:
+    """
+    log("Préparation des données de fabrication depuis " + str(data))
+
+    if not "title" in data: data["title"] = data["signature"]
+    if not "gift" in data: data["gift"] = 0
+    if not "secret" in data: data["secret"] = ""
+    if not "price" in data: data["price"] = 0
+    if not "max_markup" in data: data["max_markup"] = 0
+    if not "min_markup" in data: data["min_markup"] = 0
+    if not "fee" in data: data["fee"] = 0
+    if not "miner_ratio" in data: data["miner_ratio"] = 0
+    if not "price" in data: data["price"] = 0
+    if not "opt_lot" in data:
+        data["opt_lot"] = 0
+        data["one_winner"] = 0
+    if not "money" in data: data["money"] = "EGLD"
+    if not "elrond_standard" in data: data["elrond_standard"] = False
+    if not "find_secret" in data: data["find_secret"] = 0
+    if not "instant_sell" in data: data["instant_sell"] = 1
+
+    # TODO: ajouter ici un encodage du secret dont la clé est connu par le contrat
+    if len(data["secret"]) > 0:
+        if data["find_secret"]:
+            data["secret"] = sha256(bytes(data["secret"], "utf8")).hexdigest()
+        else:
+            if len(CRYPT_KEY_FOR_NFT) > 0:
+                data["secret"] = aes256.encrypt(data["secret"], CRYPT_KEY_FOR_NFT).hex()
+            else:
+                data["secret"] = data["secret"].encode().hex()
+    else:
+        data["secret"] = "0"
+
+
+    if not data["money"].startswith("EGLD") and not request.args.get("simulate") == "true":
+        log("Dans ce cas on sequestre vers le contrat le montant ESDT")
+        data["money"] = "0x" + data["money"].encode().hex()
+    else:
+        data["money"] = str_to_hex("EGLD")
+
+
+    if "tags" in data and len(data["tags"])>0:
+        data["description"]=data["description"]+" "+data["tags"]
+
+    if "file" in data and len(data["file"])>0 and data["secret"]=="0":
+        if data["file"].startswith("."):
+            f=open(data["file"],"rb")
+            data["file"]=client.add_file(f)
+            f.close()
+        data["secret"]=data["file"].encode().hex()
+
+
+    if type(data["price"]) == str:
+        data["price"] = float(data["price"].replace(",", "."))
+
+    data["fee"] = int(float(data["fee"]) * 1e18)
+    data["gift"] = int(float(data["gift"]) * 1e16)
+
+    res_visual = ""
+    if "visual" in data and len(data["visual"]) > 0:
+        res_visual = "%%" + data["visual"]
+        if "fullscreen" in data and data["fullscreen"]: res_visual = res_visual.replace("%%", "!!")
+    data["description"]=data["description"]+res_visual
+
+    return data
+
+
+
+def prepare_arguments(size,data,miner,owner):
+    """
+    Prepare les arguments pour le minage
+    :param size:
+    :param data:
+    :param miner:
+    :param owner:
+    :return:
+    """
+    desc = data["description"]
+    price = int(float(data["price"]) * 1e4)
+    max_markup = int(float(data["max_markup"]) * 100)
+    min_markup = int(float(data["min_markup"]) * 100)
+    properties = int(data["properties"])
+    miner_ratio = int(data["miner_ratio"] * 100)
+    if type(data["gift"]) == str: data["gift"] = data["gift"].replace(",", ".")
+    gift = int(float(data["gift"]) * 100)
+    money: str = data["money"]
+
+    if data["properties"] & ONE_WINNER > 0: pay_count = 1  #TODO implémenté le nombre de payment
+
+    rc=[size,
+        "0x" + data["title"].encode().hex(),
+        "0x" + desc.encode().hex(),
+        "0x" + data["secret"],
+        price, min_markup, max_markup,
+        properties,
+        "0x"+owner.address.hex(),"0x"+miner.address.hex(),
+        miner_ratio,
+        gift,
+        money
+        ]
+    return rc
 
 
 
@@ -717,162 +823,60 @@ def mint(count:str,data:dict=None):
     :param data:
     :return:
     """
+    if data is None:data=json.loads(str(request.data, encoding="utf-8"))
+    data = prepare_data(data)
 
-    if data is None:
-        data = str(request.data, encoding="utf-8")
-        log("Les données de fabrication sont " + data)
-        data = json.loads(data)
-
-    if not "title" in data: data["title"] = data["signature"]
-    title = data["title"]
-    log("Minage du NFT " + title)
-
-    if not "gift" in data: data["gift"]=0
-    if not "secret" in data: data["secret"]=""
-    if not "price" in data:data["price"]=0
-    if not "max_markup" in data:data["max_markup"]=0
-    if not "min_markup" in data:data["min_markup"]=0
-    if not "fee" in data:data["fee"]=0
-    if not "miner_ratio" in data:data["miner_ratio"]=0
-    if not "price" in data:data["price"]=0
-    if not "opt_lot" in data:
-        data["opt_lot"]=0
-        data["one_winner"]=0
-    if not "money" in data:data["money"]="EGLD"
-    if not "elrond_standard" in data: data["elrond_standard"]=False
-    if not "find_secret" in data:data["find_secret"]=0
-    if not "instant_sell" in data: data["instant_sell"]=1
-
-    simulate=(request.args.get("simulate")=="true")
-
-    secret = str(data["secret"])
-    # TODO: ajouter ici un encodage du secret dont la clé est connu par le contrat
-    if len(secret)>0:
-        if data["find_secret"]:
-            secret=sha256(bytes(secret,"utf8")).hexdigest()
-        else:
-            if len(CRYPT_KEY_FOR_NFT)>0:
-                secret = aes256.encrypt(secret, CRYPT_KEY_FOR_NFT).hex()
-            else:
-                secret=secret.encode().hex()
-    else:
-        secret="0"
-
-    if "tags" in data and len(data["tags"])>0:
-        data["description"]=data["description"]+" "+data["tags"]
-
-    if "file" in data and len(data["file"])>0 and secret=="0":
-        if data["file"].startswith("."):
-            f=open(data["file"],"rb")
-            data["file"]=client.add_file(f)
-            f.close()
-
-        secret=data["file"].encode().hex()
-
-
-    res_visual = ""
-    if "visual" in data and len(data["visual"])>0:
-        res_visual = "%%" + data["visual"]
-        if "fullscreen" in data and data["fullscreen"]:res_visual=res_visual.replace("%%","!!")
+    log("Minage du NFT " + data["title"]+" avec "+str(data))
 
     miner = bc.get_elrond_user(data["pem"])
     if miner is None:
         miner=bc.bank
         log("Le minage se fait par la banque")
 
+
     owner = miner
     if "owner" in data:
         owner,_u=convert_email_to_addr(data["owner"],open_html_file("transfer_nft"))
 
-    desc=data["description"]+res_visual
 
-    if type(data["price"]) == str: data["price"] = data["price"].replace(",", ".")
-    price = int(float(data["price"]) * 1e4)
-
-    max_markup=int(float(data["max_markup"]) * 100)
-    min_markup=int(float(data["min_markup"]) * 100)
-    properties=int(data["properties"])
-    miner_ratio=int(data["miner_ratio"]*100)
-    fee=int(float(data["fee"])*1e18)
-    if type(data["gift"])==str:data["gift"]=data["gift"].replace(",",".")
-    gift=int(float(data["gift"])*100)
-    money:str=data["money"]
-
-    pay_count=int(count)
-    if data["properties"] & ONE_WINNER>0:pay_count=1 #Nombre de payment
-
-    value_by_token=fee+gift*1e16
-    if not money.startswith("EGLD") and not simulate:
-        log("Dans ce cas on sequestre vers le contrat le montant ESDT")
-        transac=bc.transferESDT(money,miner,bc.contract,pay_count*gift*1e16)
-        if "error" in transac:return returnError()
-        value_by_token=fee
-        money="0x" + money.encode().hex()
-    else:
-        money=str_to_hex("EGLD")
-
+    if data["gift"]>0:
+        if "error" in bc.transferESDT(data["money"], miner, bc.contract, int(count) * data["gift"]):
+            return returnError()
 
     results=[]
     tokenids=[]
 
-    log("Minage du token "+str(data))
+    # if request.args.get("simulate") == "true":
+    #     gasCost = bc.estimate(NETWORKS[bc.network_name]["nft"], "mint", arguments)
+    #     return jsonify({"gas": gasCost})
 
     if data["elrond_standard"]:
         log("Construction d'un NFT standard elrond")
-        res_visual=res_visual.replace("%%","")
-        results.append(bc.mint_standard_nft(miner,title,
-                                    {
-                                        "description":desc.split("%%")[0],
-                                        "money":money,
-                                        "secret":secret,
-                                        "properties":hex(properties),
-                                        "state":hex(1)}
-                                    ,price,count,res_visual))
+        #res_visual=res_visual.replace("%%","")
+        # results.append(bc.mint_standard_nft(miner,data["title"],
+        #                             {
+        #                                 "description":desc.split("%%")[0],
+        #                                 "money":money,
+        #                                 "secret":data["secret"],
+        #                                 "properties":hex(properties),
+        #                                 "state":hex(1)}
+        #                             ,price,count,res_visual))
     else:
-        ref_token_id=MAX_U64
-        count=int(count)
-        while count>0:
-            size=MAX_MINT_NFT if count>MAX_MINT_NFT else count
-            if ref_token_id==MAX_U64: size=1 #Si c'est le premier on le mint seul
-            if size>0:
-                arguments = [size,
-                             "0x" + title.encode().hex(),
-                             "0x" + desc.encode().hex(),
-                             "0x" + secret,
-                             price, min_markup, max_markup,
-                             properties,
-                             "0x"+owner.address.hex(),
-                             "0x"+miner.address.hex(),
-                             miner_ratio,
-                             gift,
-                             money,
-                             ref_token_id]
+        result = bc.mint(
+            miner,
+            arguments=prepare_arguments(count, data, miner, owner),
+            value=(data["fee"] + data["gift"])
+        )
+        if result is None or not "ref_token_id" in result: return returnError("Echec de la transaction de minage")
+        ref_token_id = result["ref_token_id"]
 
-                if simulate:
-                    gasCost=bc.estimate(NETWORKS[bc.network_name]["nft"],"mint",arguments)
-                    return jsonify({"gas":gasCost})
-                else:
-                    gas=bc.eval_gas(200)*size+bc.eval_gas(2000+(len(secret)+len(title)+len(desc))*2)
-                    log("Construction d'un extended NFT")
-                    result=bc.mint(
-                        miner,
-                        arguments=arguments,
-                        gas_limit=gas,
-                        value=value_by_token*size
-                    )
-                    if result is None or not "first_token_id" in result:
-                        return returnError("Echec de la transaction de minage")
+        result["data"] = ""  # On efface la data pour minimiser la donnée restitué
+        results.append(result)
 
-                    tokenids=tokenids+list(range(result["first_token_id"],result["last_token_id"]))
+        tokenids=[ref_token_id]
+        if int(count)>1:
+            tokenids=bc.clone(miner,int(count)-1,owner,ref_token_id)
 
-                    if ref_token_id==MAX_U64 and "first_token_id" in result:
-                        ref_token_id=result["first_token_id"]
-                        log("Le modele se trouve en " + str(ref_token_id))
-
-                    result["data"]="" #On efface la data pour minimiser la donnée restitué
-                    results.append(result)
-
-            count=count-size
 
     if "dealers" in data and len(data["dealers"]) > 0:
         log("Ajout des distributeurs")
@@ -886,7 +890,7 @@ def mint(count:str,data:dict=None):
 
     for result in results:
         if not result is None:
-            if result["status"] == "fail" or not "smartContractResults" in result:
+            if result["status"] == "fail" or not RESULT_SECTION in result:
                 log("Erreur de création du token")
 
     send(socketio, "refresh_nft",miner.address.bech32())
@@ -1076,18 +1080,31 @@ def reload_accounts():
         if _user is None:
             if not dao.save_user("",_test.address.bech32(),"./PEM/"+acc,shard=_infos["shard"]):
                 log("Probleme de création de "+acc)
-
-    for acc in data["accounts"]:
-        log("Transfert de fond pour " + acc)
-        _test = Account(pem_file="./PEM/" + acc)
-        bc.transferESDT(idx=NETWORKS[bc.network_name]["identifier"],
-                            user_from=bc.bank,
-                            user_to=_test.address.bech32(),
-                            amount=data["amount"] * (5 ** 18)
-                            )
+            else:
+                log("Transfert de fond en Egld pour " + acc)
+                _test = Account(pem_file="./PEM/" + acc)
+                result=bc.credit(bc.bank,_test,int(data["egld"]*1e18))
+                if result is None:
+                    log("Impossible de créditer le compte, on supprime l'utilisateur de la base de données")
+                    dao.del_user(_test.address.bech32())
+                else:
+                    log("Transfert de fond en ESDT "+NETWORKS[bc.network_name]["identifier"]+" pour " + acc)
+                    bc.transferESDT(idx=NETWORKS[bc.network_name]["identifier"],
+                                        user_from=bc.bank,
+                                        user_to=_test.address.bech32(),
+                                        amount=data["amount"] * (5 ** 25)
+                                        )
 
     return jsonify({"message":"reloaded"})
 
+
+
+@app.route('/api/clone/<token_id>/',methods=["POST"])
+def clone(token_id:str):
+    data = prepare_data(json.loads(str(request.data, encoding="utf-8")))
+    _user = bc.get_elrond_user(data["pem"])
+    tokenids=bc.clone(_user,data["count"],_user,int(token_id))
+    return jsonify(tokenids),200
 
 
 

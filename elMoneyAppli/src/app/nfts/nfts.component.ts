@@ -357,4 +357,28 @@ export class NftsComponent implements OnChanges {
     let bc=(nft.properties & MINER_CAN_BURN);
     return bc>0;
   }
+
+  clone(nft: any) {
+    this.user.check_pem(()=>{
+      this.dialog.open(PromptComponent, {
+        data: {
+          title:"Combien de copie souhaitez vous fabriquer",
+          onlyConfirm: false,
+          type:"number",
+          min:1,
+          max:1000,
+          lbl_ok: 'Cloner',
+          lbl_cancel: 'Abandonner'
+        }}).afterClosed().subscribe((result:any) => {
+        if (result) {
+          nft.message="Clonage en cours";
+          this.api._post("clone/"+nft.token_id+"/","",{pem:this.user.pem,nb_copies:result}).subscribe(()=>{
+            nft.message="";
+            this.user.refresh_balance();
+            showMessage(this,"Clonage terminé");
+          },(err)=>{showError(this,err);})
+        }
+      });
+    },this);
+  }
 }

@@ -671,7 +671,7 @@ export class ImporterComponent implements OnInit {
           if(secret && secret<=options.length && secret>0){
             this.ask_for_text("Récompense","De combien est la récompense",(gift)=>{
               this.gift=gift;
-              this.title=this.title+" Gagnez "+gift+" "+this.selected_money.label+" en trouvant la réponse";
+              if(gift>0)this.title=this.title+" Gagnez "+gift+" "+this.selected_money.label+" en trouvant la réponse";
               this.ask_options([
                 {label:"<div class='bloc-bouton'>Le NFT s'autodétruit<br>après ouverture</div>",value:true,width:'200px'},
                 {label:"<div class='bloc-bouton'>Le NFT peut être ouvert<br>plusieurs fois</div>",value:false,width:'200px'}
@@ -777,16 +777,22 @@ export class ImporterComponent implements OnInit {
 
 
 
-  quick_file($event: any,token:any,title="Ajouter un visuel",subtitle="Exemple: Manuel de fonctionnement de la TB-303",desc="Exemple: Ce manuel de fonctionnement couvre l'utilisation courante du synthétiseur") {
+  quick_file( $event: any,token:any,
+              title="Ajouter un visuel",
+              subtitle="Exemple: Manuel de fonctionnement de la TB-303",
+              desc="Exemple: Ce manuel de fonctionnement couvre l'utilisation courante du synthétiseur",
+              titre_annonce="Titre de votre annonce",
+              titre_desc="Rédigez une courte phrase pour donner envie de l'acheter"
+  ) {
     this.picture=$event.file;
     this.filename=$event.filename;
     this.extensions="*";
 
     this.add_visual((visual)=>{
       if(!visual)showMessage(this,"Pas de visuel");
-      this.ask_for_text("Titre de votre annonce","",(title)=>{
+      this.ask_for_text(titre_annonce,"",(title)=>{
         if(title) {
-          this.ask_for_text("Description","Rédigez une courte phrase pour donner envie de l'acheter",(desc)=>{
+          this.ask_for_text("Description",titre_desc,(desc)=>{
             if(desc){
               this.ask_for_text("Nombre d'exemplaire","",(occ)=> {
                 if (Number(occ)>0) {
@@ -850,7 +856,12 @@ export class ImporterComponent implements OnInit {
 
 
   onupload($event: any) {
-    if(this.redirect==3)this.quick_file($event,this.tokens[4],"Ajouter la pochette du titre","Exemple: Karma Police","Exemple: Radiohead");
+    if(this.redirect==3)this.quick_file($event,this.tokens[4],
+      "Ajouter la pochette du titre",
+      "Exemple: Karma Police",
+      "Exemple: Radiohead",
+      "titre du morceau / de l'album",
+      "Liste des titres / Auteur");
     if(this.redirect==1)this.quick_file($event,this.tokens[3]);
     if(this.redirect==2)this.quick_contract($event,this.tokens[5]);
   }

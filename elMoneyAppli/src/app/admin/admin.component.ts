@@ -26,30 +26,37 @@ export class AdminComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.user.check_pem(()=>{
-      if(!this.user.isAdmin() && this.config.isProd()){
-        this.router.navigate(["store"]);
-      }
-    })
+    this.password=this.routes.snapshot.queryParamMap.get("password");
+    if(!this.password){
+      this.user.check_pem(()=>{
+        if(!this.user.isAdmin() && this.config.isProd()){
+          this.router.navigate(["store"]);
+        }
+      })
+    }
   }
 
 
   raz() {
     this.api._get("raz/"+this.password+"/").subscribe(()=>{
       showMessage(this,"Base effacée");
-      this.user.reset();
+      this.reload_test_accounts(()=>{
+        this.user.reset();
+      });
+
     });
   }
 
-  reload_test_accounts() {
+  reload_test_accounts(func) {
     this.message="Chargement des comptes";
-    let body={amount:10,accounts:[]};
+    let body={amount:10,egld:0.1,accounts:[]};
     for(let p of this.config.profils){
       body.accounts.push(p.value);
     }
     this.api._post("reload_accounts","",body).subscribe(()=>{
       showMessage(this,'Comptes rechargés');
       this.message="";
+      func();
     },(err)=>{showError(this,err);});
   }
 
@@ -102,6 +109,6 @@ export class AdminComponent implements OnInit {
   }
 
   ref_addresses() {
-     open(api("ref_list",""),"_blank");
+    open(api("ref_list",""),"_blank");
   }
 }

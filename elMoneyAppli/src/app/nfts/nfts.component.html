@@ -119,6 +119,14 @@
             <mat-icon>euro</mat-icon>
           </button>
 
+          <button mat-icon-button mat-flat-button
+                  title="Cloner un NFT"
+                  *ngIf="nft.miner==user.addr"
+                  class="icon-button"
+                  (click)="clone(nft)">
+            <mat-icon>content_copy</mat-icon>
+          </button>
+
 
           <button mat-icon-button mat-flat-button
                   title="En savoir plus sur le créateur de ce NFT"

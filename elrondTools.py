@@ -24,7 +24,8 @@ from Tools import log, base_alphabet_to_10, str_to_hex, hex_to_str, nbr_to_hex, 
     returnError, list_to_vec
 from definitions import LIMIT_GAS, ESDT_CONTRACT, NETWORKS, ESDT_PRICE, IPFS_NODE_PORT, IPFS_NODE_HOST, SECRET_KEY, \
     DEFAULT_VISUAL, DEFAULT_VISUAL_SHOP, VOTE, FOR_SALE, SECRET_VOTE, UNIK, MINER_CAN_BURN, CAN_TRANSFERT, CAN_RESELL, \
-    DIRECT_SELL, SELF_DESTRUCTION, RENT, FIND_SECRET, FORCE_OPEN, ONE_WINNER, TRANSPARENT
+    DIRECT_SELL, SELF_DESTRUCTION, RENT, FIND_SECRET, FORCE_OPEN, ONE_WINNER, TRANSPARENT, RESULT_SECTION, \
+    MAX_GAS_LIMIT, MAX_MINT_NFT
 from ipfs import IPFS
 
 
@@ -434,8 +435,8 @@ class ElrondNet:
         if t["status"] != "success":
             log("Echec de déploiement")
             message = t["status"]
-            if "smartContractResults" in t and "returnMessage" in t["smartContractResults"][0]: message = \
-            t["smartContractResults"][0]["returnMessage"]
+            if RESULT_SECTION in t and "returnMessage" in t[RESULT_SECTION][0]: message = \
+            t[RESULT_SECTION][0]["returnMessage"]
 
             return {"error": 600,
                     "message": message,
@@ -443,10 +444,10 @@ class ElrondNet:
                     "addr": user.address.bech32()
                     }
         else:
-            log("Déploiement du nouveau contrat réussi voir transaction " + self.getExplorer(t["blockHash"]))
+            log("Déploiement du nouveau contrat réussi voir transaction " + self.getExplorer(t["miniBlockHash"]))
             id = ""
-            if "smartContractResults" in t:
-                for result in t["smartContractResults"]:
+            if RESULT_SECTION in t:
+                for result in t[RESULT_SECTION]:
                     id = result["data"]
                     if id.startswith("ESDTTransfer"):
                         id = id.split("@")[1]
@@ -554,6 +555,8 @@ class ElrondNet:
         tx = self.send_transaction(_from, _to, self.bank, str(value), "refund")
         return tx
 
+
+
     def wait_transaction(self, tx, field="status", equal="", not_equal="", timeout=30, interval=4):
         """
         Attent qu'une transaction prenne un certain statut
@@ -577,13 +580,20 @@ class ElrondNet:
             timeout = timeout - interval
 
         rc["cost"] = 0
-        transaction_with_cost = self.getTransaction(tx)
-        if "fee" in transaction_with_cost:
-            rc["cost"] = float(transaction_with_cost["fee"]) / 1e18
+        rc = self.getTransaction(tx)
+        if "fee" in rc:
+            rc["cost"] = float(rc["fee"]) / 1e18
+            rc["usd_cost"] = rc["cost"]*rc["price"]
+
+        if RESULT_SECTION in rc:
+            for t in rc[RESULT_SECTION]:
+                if "data" in t:
+                    t["data"]=str(base64.b64decode(t["data"]),"utf8")
 
         log("Transaction executé " + str(rc))
         if timeout <= 0: log("Timeout de " + self.getExplorer(tx) + " " + field + " est a " + str(rc[field]))
         return rc
+
 
     def update_account(self, _sender, values: dict):
         """
@@ -624,6 +634,8 @@ class ElrondNet:
             return json.loads(rc.text)
         else:
             return None
+
+
 
     def get_account(self, addr, with_cache=True):
         """
@@ -749,6 +761,8 @@ class ElrondNet:
 
         tr = self.wait_transaction(tx, "status", not_equal="pending", timeout=timeout)
         return tr
+
+
 
     def query(self, function_name, arguments=None, isnumber=True, n_try=3):
         _contract = SmartContract(address=NETWORKS[self.network_name]["nft"])
@@ -1023,6 +1037,35 @@ class ElrondNet:
         return rc
 
 
+    def clone(self,miner,count:int,owner,ref_id:int):
+        """
+        Permet de cloner un NFT sur la base d'un NFT de reférence
+        :param miner:
+        :param count:
+        :param owner:
+        :param ref_id:
+        :return:
+        """
+        tokenids=[]
+        while count>0:
+            size=MAX_MINT_NFT if count>MAX_MINT_NFT else count
+            count=count-MAX_MINT_NFT
+            tx = self.execute(
+                NETWORKS[self.network_name]["nft"],
+                miner, "clone", [ref_id,size,"0x"+owner.address.hex()],
+                gas_limit=MAX_GAS_LIMIT,
+                gas_price_factor=1, value=0,
+                timeout=600
+            )
+            if not tx is None and "data" in tx[RESULT_SECTION][0]:
+                s=tx[RESULT_SECTION]
+                if len(s.split("@")) > 2:
+                    if s.endswith("@"): s = s + "0"
+                    first_token_id = int(s.split("@")[2], 16)
+                    tokenids = tokenids + list(range(first_token_id,first_token_id+size))
+
+        return tokenids
+
 
     def mint(self, user_from, arguments, gas_limit=LIMIT_GAS, value=0, factor=1):
         """
@@ -1035,14 +1078,13 @@ class ElrondNet:
         log("Minage avec " + str(arguments))
         tx = self.execute(NETWORKS[self.network_name]["nft"], user_from, "mint", arguments, gas_limit=gas_limit,
                           gas_price_factor=factor, value=value, timeout=600)
-        if not tx is None and "smartContractResults" in tx:
-            for result in tx["smartContractResults"]:
+        if not tx is None and RESULT_SECTION in tx:
+            for result in tx[RESULT_SECTION]:
                 s = result["data"]
                 log("Analyse de " + s)
                 if len(s.split("@")) > 2:
                     if s.endswith("@"): s = s + "0"
-                    tx["first_token_id"] = int(s.split("@")[2], 16)
-                    tx["last_token_id"] = tx["first_token_id"] + arguments[0]
+                    tx["ref_token_id"] = int(s.split("@")[2], 16)
                     break
         return tx
 
@@ -1072,8 +1114,8 @@ class ElrondNet:
                                   Account(address="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"),
                                   user_from, 50000000000000000, data)
 
-        if t["status"] == "success" and len(t["smartContractResults"][0]["data"].split("@")) > 2:
-            token_id = t["smartContractResults"][0]["data"].split("@")[2]
+        if t["status"] == "success" and len(t[RESULT_SECTION][0]["data"].split("@")) > 2:
+            token_id = t[RESULT_SECTION][0]["data"].split("@")[2]
             data = "setSpecialRole@" + token_id + "@" + user_from.address.hex() + "@45534454526f6c654e4654437265617465@45534454526f6c654e46544164645175616e74697479"
             t = self.send_transaction(user_from,
                                       Account(address="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"),
@@ -1105,9 +1147,7 @@ class ElrondNet:
         else:
             # https://docs.elrond.com/developers/esdt-tokens/
             data = "transferOwnership@" + str_to_hex(token_id, False) + "@" + _dest.address.hex()
-            tr = self.send_transaction(_owner,
-                                       SmartContract(
-                                           address="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"),
+            tr = self.send_transaction(_owner,SmartContract(address="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"),
                                        _owner, 0, data)
         return tr
 
