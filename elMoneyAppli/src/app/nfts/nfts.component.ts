@@ -376,7 +376,10 @@ export class NftsComponent implements OnChanges {
             nft.message="";
             this.user.refresh_balance();
             showMessage(this,"Clonage terminé");
-          },(err)=>{showError(this,err);})
+          },(err)=>{
+            nft.message="";
+            showError(this,err);
+          })
         }
       });
     },this);

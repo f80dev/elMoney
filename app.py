@@ -1101,9 +1101,9 @@ def reload_accounts():
 
 @app.route('/api/clone/<token_id>/',methods=["POST"])
 def clone(token_id:str):
-    data = prepare_data(json.loads(str(request.data, encoding="utf-8")))
+    data = json.loads(str(request.data, encoding="utf-8"))
     _user = bc.get_elrond_user(data["pem"])
-    tokenids=bc.clone(_user,data["count"],_user,int(token_id))
+    tokenids=bc.clone(_user,int(data["nb_copies"]),_user,int(token_id))
     return jsonify(tokenids),200
 
 
