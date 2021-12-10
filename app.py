@@ -778,7 +778,7 @@ def prepare_data(data):
 
 
 
-def prepare_arguments(size,data,miner,owner):
+def prepare_arguments(data,miner,owner):
     """
     Prepare les arguments pour le minage
     :param size:
@@ -799,7 +799,7 @@ def prepare_arguments(size,data,miner,owner):
 
     if data["properties"] & ONE_WINNER > 0: pay_count = 1  #TODO implémenté le nombre de payment
 
-    rc=[size,
+    rc=[
         "0x" + data["title"].encode().hex(),
         "0x" + desc.encode().hex(),
         "0x" + data["secret"],
@@ -864,7 +864,7 @@ def mint(count:str,data:dict=None):
     else:
         result = bc.mint(
             miner,
-            arguments=prepare_arguments(count, data, miner, owner),
+            arguments=prepare_arguments(data, miner, owner),
             value=(data["fee"] + data["gift"])
         )
         if result is None or not "ref_token_id" in result: return returnError("Echec de la transaction de minage")

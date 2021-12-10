@@ -695,9 +695,9 @@ class ElrondNet:
         return content
 
 
+
     def create_account(self, fund=0, name=None, email=None, seed_phrase=""):
         """
-
         :param fund:
         :param name:
         :param seed_phrase:
@@ -737,6 +737,8 @@ class ElrondNet:
     def estimate(self, contract_addr, function, arguments):
         result = self.tce._estimate_sc_call(contract_addr, function, arguments)
         return result
+
+
 
     def execute(self, _contract, _user, function, arguments=[], value: int = None, gas_limit=LIMIT_GAS, timeout=60,
                 gas_price_factor=1):
@@ -780,9 +782,8 @@ class ElrondNet:
         if len(d) == 1 and d[0] == '': d = []
         return d
 
-    # def owner_of(self,token):
-    #     lst = self.query("tokenOwner",arguments=[token])
-    #     return lst
+
+
 
     # /nfts /get_nfts
     # récupération de l'ensemble des NFT issue du contrat
@@ -863,6 +864,9 @@ class ElrondNet:
                 id = int(tokens[index:index + 16], 16)
                 index = index + 16
 
+                ref_token_id = int(tokens[index:index + 16], 16)
+                index = index + 16
+
                 title = ""
                 visual = ""
                 try:
@@ -926,6 +930,7 @@ class ElrondNet:
                             "min_markup": min_markup / 100, "max_markup": max_markup / 100,
                             "miner_ratio": miner_ratio / 100,
                             "miner": miner,
+                            "ref_token_id":ref_token_id,
                             "owner": owner_addr,
                             "visual": visual,
                             "unity": unity,
@@ -1057,12 +1062,14 @@ class ElrondNet:
                 gas_price_factor=1, value=0,
                 timeout=600
             )
-            if not tx is None and "data" in tx[RESULT_SECTION][0]:
-                s=tx[RESULT_SECTION]
+            if not tx is None and RESULT_SECTION in tx and "data" in tx[RESULT_SECTION][0]:
+                s=tx[RESULT_SECTION][0]["data"]
                 if len(s.split("@")) > 2:
                     if s.endswith("@"): s = s + "0"
                     first_token_id = int(s.split("@")[2], 16)
                     tokenids = tokenids + list(range(first_token_id,first_token_id+size))
+            else:
+                log("Défaillance du clonage sur "+str(tx))
 
         return tokenids
 

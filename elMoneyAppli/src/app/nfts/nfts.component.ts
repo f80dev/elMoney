@@ -372,7 +372,8 @@ export class NftsComponent implements OnChanges {
         }}).afterClosed().subscribe((result:any) => {
         if (result) {
           nft.message="Clonage en cours";
-          this.api._post("clone/"+nft.token_id+"/","",{pem:this.user.pem,nb_copies:result}).subscribe(()=>{
+          debugger
+          this.api._post("clone/"+nft.ref_token_id+"/","",{pem:this.user.pem,nb_copies:result}).subscribe(()=>{
             nft.message="";
             this.user.refresh_balance();
             showMessage(this,"Clonage terminé");

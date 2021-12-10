@@ -49,7 +49,7 @@ NETWORKS={
         "proxy":"https://testnet-gateway.elrond.com",
         "explorer":"https://testnet-explorer.elrond.com",
         "wallet":"http://testnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqau3gclp52ryhqjvewvczynkypn3u7fmqqhyq6v5y2q",
+        "nft":"erd1qqqqqqqqqqqqqpgqf8juvp58aaj2wkje52aa6adrm4hs4xu9qhyqlz82hs",
         "shard":0
     },
 
