@@ -186,7 +186,7 @@ export class NftsComponent implements OnChanges {
         this.user.check_pem(()=>{
           nft.message = "En cours de destruction";
           this.burnState="burn";
-          this.api._post("burn/", "", {pem:this.user.pem,ids:ids}).subscribe((r: any) => {
+          this.api._post("burn/"+nft.network+"/", "", {pem:this.user.pem,ids:ids}).subscribe((r: any) => {
             nft.message = "";
             showMessage(this, "Votre NFT n'existe plus");
             this.onburn.emit(nft.token_id);
@@ -372,8 +372,7 @@ export class NftsComponent implements OnChanges {
         }}).afterClosed().subscribe((result:any) => {
         if (result) {
           nft.message="Clonage en cours";
-          debugger
-          this.api._post("clone/"+nft.ref_token_id+"/","",{pem:this.user.pem,nb_copies:result}).subscribe(()=>{
+          this.api._post("clone/"+nft.ref_token_id+"/"+nft.network+"/","",{pem:this.user.pem,nb_copies:result}).subscribe(()=>{
             nft.message="";
             this.user.refresh_balance();
             showMessage(this,"Clonage terminé");

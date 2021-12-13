@@ -937,7 +937,8 @@ class ElrondNet:
                             "premium": premium,
                             "identifier": identifier,
                             "fullscreen": False,
-                            "properties": properties
+                            "properties": properties,
+                            "network":"elrond"
                             })
 
                 obj["message"] = ""
@@ -1074,6 +1075,7 @@ class ElrondNet:
         return tokenids
 
 
+
     def mint(self, user_from, arguments, gas_limit=LIMIT_GAS, value=0, factor=1):
         """
         Fabriquer un NFT
@@ -1192,7 +1194,7 @@ class ElrondNet:
                               function="burn",
                               arguments=[ids],gas_limit=LIMIT_GAS*(1+len(token_ids)*0.2)
                               )
-        return tr
+        return {"owner":tr["sender"]}
 
 
 

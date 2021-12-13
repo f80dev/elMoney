@@ -350,7 +350,7 @@
 
                 <br>
                 <mat-slide-toggle title="Dans ce cas, le propriétaire peut remettre le NFT sur les places de marché"
-                  [(ngModel)]="owner_can_sell">le propriétaire peut revendre
+                                  [(ngModel)]="owner_can_sell">le propriétaire peut revendre
                 </mat-slide-toggle>
 
                 <br><br>
@@ -522,6 +522,16 @@
             </div>
             <br>
 
+            <mat-form-field *ngIf="!show_zone_upload" appearance="fill"
+                            style="max-width:200px;margin-top: 10px;">
+              <mat-label>Blockchaine cible</mat-label>
+              <mat-select [(ngModel)]="selected_bl" name="dest_bl">
+                <mat-option [value]="'elrond'">Elrond</mat-option>
+                <mat-option [value]="'db'">Interne</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+
 
             <!--            Preview du token -->
             <div *ngIf="nfts_preview.length>0" style="width: 100%;text-align: center;">
@@ -591,6 +601,7 @@
     <!--      <br>-->
 
     <!--    </mat-tab>-->
+
 
     <mat-tab label="En masse" style="width: 100%;text-align: center;">
 

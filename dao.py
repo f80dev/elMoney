@@ -8,7 +8,7 @@ from AesEverywhere import aes256
 from AesEverywhere.aes256 import encrypt
 
 from Tools import log
-from definitions import DB_SERVERS, SECRET_KEY
+from definitions import DB_SERVERS, SECRET_KEY, UNIK, VOTE, MINER_CAN_BURN, FOR_SALE, RESULT_SECTION
 
 
 class DAO:
@@ -82,12 +82,6 @@ class DAO:
         pass
 
 
-    def add_nft(self, contract,owner):
-        return self.db["nfts"].replace_one(filter={"contract": contract}, replacement={"contract":contract,"owner":owner}, upsert=True)
-
-    def get_nfts(self):
-        return self.db["nfts"].find()
-
     def get_nftcontract_by_owner(self,addr):
         return self.db["nfts"].find_one({"owner":addr})
 
@@ -118,6 +112,77 @@ class DAO:
             return [_u[field] for _u in self.db["users"].find()]
         else:
             return list(self.db["users"].find())
+
+
+    def mint(self, nft,miner):
+        if "pem" in nft:del nft["pem"]
+        if "_id" in nft:del nft["_id"]
+        token_id=self.db["nfts"].count()
+        nft["token_id"]=token_id
+        if not "ref_token_id" in nft:nft["ref_token_id"]=token_id
+
+        nft["miner"]=miner
+        self.db["nfts"].insert_one(nft)
+        return {"ref_token_id":nft["ref_token_id"],"data":"","status":"success",RESULT_SECTION:[],"cost":0}
+
+
+
+    def get_nfts(self,seller,owner,miner):
+        rc=[]
+        filter=""
+        if seller!="0x0":filter={"dealer":seller}
+        if owner!="0x0":filter={"owner":owner}
+        if miner!="0x0":filter={"miner":miner}
+
+        if filter=="":
+            nft_col=self.db["nfts"].find()
+        else:
+            nft_col=self.db["nfts"].find(filter)
+
+        for t in nft_col:
+            obj = t
+            properties=t["properties"]
+            obj["unik"]=properties & UNIK > 0
+            obj["vote"]=properties & VOTE > 0
+            obj["miner_can_burn"] = properties & MINER_CAN_BURN > 0
+            obj["for_sale"]=properties & FOR_SALE >0
+            obj["min_markup"]=t["min_markup"] / 100
+            obj["max_markup"]=t["max_markup"] / 100
+            obj["miner_ratio"]=t["miner_ratio"] / 100
+            obj["tags"]=" ".join(t["tags"])
+            obj["network"]="db"
+            obj["for_sale"]=True
+            del obj["_id"]
+            rc.append(obj)
+
+        return rc
+
+
+    def get_nft(self,id):
+        return self.db["nfts"].find_one({"token_id":id})
+
+    def clone(self,count, ref_token_id):
+        rc=[]
+        _ref=self.get_nft(ref_token_id)
+        _ref["ref_token_id"]=ref_token_id
+        for i in range(count):
+            rc.append(self.mint(_ref,_ref["miner"]))
+        return rc
+
+    def burn(self, ids):
+        owner=""
+        for id in ids:
+            if len(owner)==0:
+                owner=self.db["nfts"].find_one({"token_id":id})["owner"]
+            self.db["nfts"].delete_one({"token_id":id})
+
+        return {"owner":owner}
+
+    def raz_nft(self):
+        self.db["nfts"].drop()
+        return True
+
+
 
 
 

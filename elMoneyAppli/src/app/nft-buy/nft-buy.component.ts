@@ -48,6 +48,7 @@ export class NftBuyComponent implements OnInit {
       if(identifier=="0" || identifier=="")identifier="EGLD";
 
       if(this.nft.price>0){
+
         if(this.nft.unity=="eGld"){
           if (!this.user.moneys.hasOwnProperty(identifier) || this.nft.price > Number(this.user.moneys[identifier].balance)/ 1e18 ) {
 
@@ -63,13 +64,25 @@ export class NftBuyComponent implements OnInit {
       }
 
       this.message = "Achat en cours";
-      let price = this.nft.price;
 
       let body=this.nft;
       body["pem"]=this.user.pem;
       body["identifier"]=this.nft.identifier;
 
-      this.api._post("buy_nft/" + this.nft.token_id + "/" + price + "/" + this.seller.address, "", body).subscribe((r: any) => {
+      if(this.nft.network=="db"){
+        this.nft.network="elrond"
+        this.api._post("mint/1/","",body).subscribe((r:any)=>{
+          body.token_id=r.token_id;
+          this.buy_nft(body);
+        })
+      } else {
+        this.buy_nft(body);
+      }
+    },this);
+  }
+
+  buy_nft(body){
+    this.api._post("buy_nft/" + this.nft.token_id + "/" + body.price + "/" + this.seller.address+"/"+this.nft.network+"/", "", body).subscribe((r: any) => {
         this.message = "";
         if(r.status=="success"){
           showMessage(this, "Achat réalisé. Prix unitaire + frais de service (" + r.cost + " eGld)");
@@ -82,7 +95,6 @@ export class NftBuyComponent implements OnInit {
         this.message = "";
         showMessage(this, "Achat annulé");
       });
-    },this);
   }
 
   cancel() {

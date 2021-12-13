@@ -111,4 +111,8 @@ export class AdminComponent implements OnInit {
   ref_addresses() {
     open(api("ref_list",""),"_blank");
   }
+
+  raz_nft_db() {
+    this.api._get('raznftdb/'+this.password+"/","").subscribe(()=>{});
+  }
 }

@@ -304,15 +304,23 @@ def get_user(addrs:str):
 
 
 
-@app.route('/api/burn/',methods=["POST"])
-def burn():
+@app.route('/api/burn/<network>/',methods=["POST"])
+def burn(network:str):
 
     data=json.loads(str(request.data,"utf8"))
+    _user=bc.get_elrond_user(data["pem"])
+    if type(data["ids"])==int:
+        ids=[data["ids"]]
+    else:
+        ids=list(data["ids"].split(","))
 
-    rc=bc.burn(bc.get_elrond_user(data["pem"]),list(data["ids"].split(",")))
+    if network=="db":
+        rc=dao.burn(ids)
+    else:
+        rc=bc.burn(_user,ids)
 
     if rc:
-        send(socketio,"refresh_nft",rc["sender"])
+        send(socketio,"refresh_nft",rc["owner"])
         send(socketio,"nft_store")
 
     #TODO ajouter la notification du mineur
@@ -337,8 +345,17 @@ def burn():
 def nfts(seller_filter="0x0",owner_filter="0x0",miner_filter="0x0"):
     rc=[]
 
+    for t in dao.get_nfts(seller_filter,owner_filter,miner_filter):
+        rc.append(t)
+
+    cache=dict()
     for uri in bc.get_tokens(seller_filter,owner_filter,miner_filter):
-        _miner = bc.get_account(uri["miner"])
+        if uri["miner"] in cache:
+            _miner=cache[uri["miner"]]
+        else:
+            _miner = bc.get_account(uri["miner"])
+            cache[uri["miner"]]=_miner
+
         if "pseudo" in _miner:
             uri["miner_name"]=_miner["pseudo"]
         rc.append(uri)
@@ -599,8 +616,8 @@ def transfer_nft(token_id,dest):
 
 
 
-@app.route('/api/buy_nft/<token_id>/<price>/<seller>/',methods=["POST"])
-def buy_nft(token_id,price,seller:str,data:dict=None):
+@app.route('/api/buy_nft/<token_id>/<price>/<seller>/<network>/',methods=["POST"])
+def buy_nft(token_id,price,seller:str,network:str,data:dict=None):
     if data is None:
         data = json.loads(str(request.data, encoding="utf-8"))
 
@@ -828,11 +845,15 @@ def mint(count:str,data:dict=None):
 
     log("Minage du NFT " + data["title"]+" avec "+str(data))
 
-    miner = bc.get_elrond_user(data["pem"])
-    if miner is None:
+    if "miner" in data:
         miner=bc.bank
-        log("Le minage se fait par la banque")
-
+    else:
+        miner = bc.get_elrond_user(data["pem"])
+        if miner is None:
+            miner=bc.bank
+            log("Le minage se fait par la banque")
+        else:
+            data["miner"]=miner.address.bech32()
 
     owner = miner
     if "owner" in data:
@@ -862,12 +883,18 @@ def mint(count:str,data:dict=None):
         #                                 "state":hex(1)}
         #                             ,price,count,res_visual))
     else:
-        result = bc.mint(
-            miner,
-            arguments=prepare_arguments(data, miner, owner),
-            value=(data["fee"] + data["gift"])
-        )
-        if result is None or not "ref_token_id" in result: return returnError("Echec de la transaction de minage")
+        args=prepare_arguments(data, miner, owner)
+        if data["network"]=="elrond":
+            result = bc.mint(
+                miner,
+                arguments=args,
+                value=(data["fee"] + data["gift"])
+            )
+            if result is None or not "ref_token_id" in result: return returnError("Echec de la transaction de minage")
+
+        if data["network"]=="db":
+            result=dao.mint(nft=data,miner=miner.address.bech32())
+
         ref_token_id = result["ref_token_id"]
 
         result["data"] = ""  # On efface la data pour minimiser la donnée restitué
@@ -1099,11 +1126,16 @@ def reload_accounts():
 
 
 
-@app.route('/api/clone/<token_id>/',methods=["POST"])
-def clone(token_id:str):
+@app.route('/api/clone/<token_id>/<network>/',methods=["POST"])
+def clone(token_id:str,network:str):
     data = json.loads(str(request.data, encoding="utf-8"))
     _user = bc.get_elrond_user(data["pem"])
-    tokenids=bc.clone(_user,int(data["nb_copies"]),_user,int(token_id))
+    if network=="db":
+        tokenids=dao.clone(int(data["nb_copies"]),int(token_id))
+    else:
+        tokenids=bc.clone(_user,int(data["nb_copies"]),_user,int(token_id))
+
+    send(socketio,"refresh_nft",_user.address.bech32())
     return jsonify(tokenids),200
 
 
@@ -1487,6 +1519,14 @@ def raz(password:str):
     if password!="hh4271":return "Password incorrect",501
     if dao.raz(bc._proxy.url):
         init_default_money(bc,dao)
+    return jsonify({"message":"Effacement terminé"}),200
+
+
+@app.route('/api/raznftdb/<password>/')
+def raznftdb(password:str):
+    log("Demande d'effacement de la base")
+    if password!="hh4271":return "Password incorrect",501
+    dao.raz_nft()
     return jsonify({"message":"Effacement terminé"}),200
 
 

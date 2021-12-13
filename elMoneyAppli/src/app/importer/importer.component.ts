@@ -105,6 +105,7 @@ export class ImporterComponent implements OnInit {
   @ViewChild('tagsInput') tagInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
   file_to_send: { pem: string; filename:string,content: any };
+  selected_bl="elrond";
 
   constructor(public api:ApiService,
               public user:UserService,
@@ -244,17 +245,20 @@ export class ImporterComponent implements OnInit {
           opt_lot: Number(this.opt_gift),
           direct_sell: this.direct_sell,
           miner_ratio: this.miner_ratio,
-          money: this.selected_money.identifier
+          money: this.selected_money.identifier,
+          dest:this.selected_bl
         };
-
-        $$("Création du NFT ", obj);
-
         if(this.owner_addr.length>0)obj["owner"]=this.owner_addr;
+
+        showMessage(this,"Création du NFT");
 
         this.message = "Enregistrement dans la blockchain";
         window.scrollTo(0, 0);
         this.show_zone_upload = false;
+
+
         if(this.count>20)showMessage(this,"Le délai de création de "+this.count+" NFTs peut être long");
+
         this.api._post("mint/" + this.count, "simulate="+simulate, obj,240).subscribe((r: any) => {
           this.message = "";
           if(!simulate){
