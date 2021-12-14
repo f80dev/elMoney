@@ -246,7 +246,7 @@ export class ImporterComponent implements OnInit {
           direct_sell: this.direct_sell,
           miner_ratio: this.miner_ratio,
           money: this.selected_money.identifier,
-          dest:this.selected_bl
+          network:this.selected_bl
         };
         if(this.owner_addr.length>0)obj["owner"]=this.owner_addr;
 

@@ -71,8 +71,8 @@ export class NftBuyComponent implements OnInit {
 
       if(this.nft.network=="db"){
         this.nft.network="elrond"
-        this.api._post("mint/1/","",body).subscribe((r:any)=>{
-          body.token_id=r.token_id;
+        this.api._post("mint/1/","",body).subscribe((results:any)=>{
+          body.token_id=results[0].token_id;
           this.buy_nft(body);
         })
       } else {

@@ -618,8 +618,7 @@ def transfer_nft(token_id,dest):
 
 @app.route('/api/buy_nft/<token_id>/<price>/<seller>/<network>/',methods=["POST"])
 def buy_nft(token_id,price,seller:str,network:str,data:dict=None):
-    if data is None:
-        data = json.loads(str(request.data, encoding="utf-8"))
+    if data is None:data = json.loads(str(request.data, encoding="utf-8"))
 
     if seller == "0x0":
         seller = "0x0000000000000000000000000000000000000000000000000000000000000000"
@@ -647,6 +646,7 @@ def buy_nft(token_id,price,seller:str,network:str,data:dict=None):
         send(socketio,"refresh_nft")
         send(socketio,"refresh_balance",rc["sender"])
         send(socketio, "refresh_balance", rc["receiver"])
+
     return jsonify(rc)
 
 
@@ -761,12 +761,6 @@ def prepare_data(data):
         data["secret"] = "0"
 
 
-    if not data["money"].startswith("EGLD") and not request.args.get("simulate") == "true":
-        log("Dans ce cas on sequestre vers le contrat le montant ESDT")
-        data["money"] = "0x" + data["money"].encode().hex()
-    else:
-        data["money"] = str_to_hex("EGLD")
-
 
     if "tags" in data and len(data["tags"])>0:
         data["description"]=data["description"]+" "+data["tags"]
@@ -812,7 +806,12 @@ def prepare_arguments(data,miner,owner):
     miner_ratio = int(data["miner_ratio"] * 100)
     if type(data["gift"]) == str: data["gift"] = data["gift"].replace(",", ".")
     gift = int(float(data["gift"]) * 100)
-    money: str = data["money"]
+
+    if not data["money"].startswith("EGLD") and not request.args.get("simulate") == "true":
+        log("Dans ce cas on sequestre vers le contrat le montant ESDT")
+        money = "0x" + data["money"].encode().hex()
+    else:
+        money = str_to_hex("EGLD")
 
     if data["properties"] & ONE_WINNER > 0: pay_count = 1  #TODO implémenté le nombre de payment
 
@@ -890,19 +889,19 @@ def mint(count:str,data:dict=None):
                 arguments=args,
                 value=(data["fee"] + data["gift"])
             )
-            if result is None or not "ref_token_id" in result: return returnError("Echec de la transaction de minage")
+            if result is None or not "token_id" in result: return returnError("Echec de la transaction de minage")
 
         if data["network"]=="db":
             result=dao.mint(nft=data,miner=miner.address.bech32())
 
-        ref_token_id = result["ref_token_id"]
+        token_id = result["token_id"]
 
         result["data"] = ""  # On efface la data pour minimiser la donnée restitué
         results.append(result)
 
-        tokenids=[ref_token_id]
+        tokenids=[token_id]
         if int(count)>1:
-            tokenids=bc.clone(miner,int(count)-1,owner,ref_token_id)
+            tokenids=bc.clone(miner,int(count)-1,owner,token_id)
 
 
     if "dealers" in data and len(data["dealers"]) > 0:

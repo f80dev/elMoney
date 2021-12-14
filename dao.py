@@ -64,7 +64,6 @@ class DAO:
         return self.db["moneys"].find_one(filter={"unity":unity,"proxy":proxy})
 
 
-
     def get_moneys(self, addr,proxy):
         rc=list(self.db["moneys"].find(filter={"public": True,"proxy":proxy}))
         return rc

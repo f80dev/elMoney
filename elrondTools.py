@@ -1093,7 +1093,7 @@ class ElrondNet:
                 log("Analyse de " + s)
                 if len(s.split("@")) > 2:
                     if s.endswith("@"): s = s + "0"
-                    tx["ref_token_id"] = int(s.split("@")[2], 16)
+                    tx["token_id"] = int(s.split("@")[2], 16)
                     break
         return tx
 
