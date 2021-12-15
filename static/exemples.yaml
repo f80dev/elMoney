@@ -64,20 +64,22 @@ content:
     visual: https://media2.giphy.com/media/cjWTgRReY2PA1Sfh1i/giphy-preview.webp?cid=5c5be08bwdslk8675g4exm9e1vdfkqkjenqjicxfheqrjok5&rid=giphy-preview.webp&ct=s
     direct_sell: 1
     self_destruction: 1
-    to_mint: 1
+    to_mint: 0
 
-  - count: 15
+  - count: 1500
     title: Avant première de james bond
     description: Au Max Linder, rendez-vous 20h avec ce NFT
     price: 0.01
-    secret: "Le mot de passe : Morue"
-    visual: https://static.wikia.nocookie.net/filmguide/images/0/08/007.gif/revision/latest/scale-to-width-down/160?cb=20210509182025
+    secret: "Le mot de passe : bond"
+    visual: "https://media4.giphy.com/media/S3zofRbw9c8o2fJd14/giphy-preview.webp?cid=5c5be08b2txxir97gmkd9lgwpqoxg6d04toq4yhdqu85xedd&rid=giphy-preview.webp&ct=s"
     find_secret: 0
-    owner: sophie.dudule@gmail.com
+    transparent: 1
+    owner: erd13x29rvmp4qlgn4emgztd8jgvyzdj0p6vn37tqxas3v9mfhq4dy7shalqrx
     direct_sell: 1
     instant_sell: 1
     owner_can_sell: 1
-    to_mint: 0
+    to_mint: 1
+    network: db
     tag: billet cinema
 
 
@@ -135,5 +137,5 @@ content:
     instant_sell: 1
     visual: https://media0.giphy.com/media/4BJCvMoLPePq8/giphy-preview.webp?cid=5c5be08b4qpvzfmdpto4hyzdcwjtytnl26ntdsfi0p6km946&rid=giphy-preview.webp&ct=s
     direct_sell: 1
-    to_mint: 1
+    to_mint: 0
 

@@ -58,7 +58,7 @@ RUN pip3 -v install requests-cache
 RUN pip3 -v install multiaddr
 RUN pip3 -v install networkx
 #RUN pip3 -v install py7zr
-
+RUN pip3 -v install PassportEye
 
 
 WORKDIR /

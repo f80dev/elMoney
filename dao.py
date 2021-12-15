@@ -2,12 +2,13 @@
 Interface avec la base de données
 """
 import base64
+from copy import copy
 from datetime import datetime
 import pymongo
 from AesEverywhere import aes256
 from AesEverywhere.aes256 import encrypt
 
-from Tools import log
+from Tools import log, extract_tags
 from definitions import DB_SERVERS, SECRET_KEY, UNIK, VOTE, MINER_CAN_BURN, FOR_SALE, RESULT_SECTION, CAN_RESELL
 
 
@@ -139,16 +140,20 @@ class DAO:
             nft_col=self.db["nfts"].find(filter)
 
         for t in nft_col:
-            obj = t
+            obj = copy(t)
             properties=t["properties"]
+            if "%%" in t["description"]:
+                obj["description"]=t["description"].split("%%")[0]
+                obj["visual"]=t["description"].split("%%")[1]
             obj["unik"]=properties & UNIK > 0
             obj["vote"]=properties & VOTE > 0
+            obj["tags"],obj["description"]=extract_tags(t["description"])
+            obj["unity"]=t["money"].split("-")[0]
             obj["miner_can_burn"] = properties & MINER_CAN_BURN > 0
             obj["for_sale"]=properties & FOR_SALE >0
             obj["min_markup"]=t["min_markup"] / 100
             obj["max_markup"]=t["max_markup"] / 100
             obj["miner_ratio"]=t["miner_ratio"] / 100
-            obj["tags"]=" ".join(t["tags"])
             obj["network"]="db"
             del obj["_id"]
             rc.append(obj)
@@ -158,6 +163,7 @@ class DAO:
 
     def get_nft(self,id):
         return self.db["nfts"].find_one({"token_id":id})
+
 
     def clone(self,count, ref_token_id):
         _ref=self.get_nft(ref_token_id)

@@ -74,6 +74,20 @@ def str_to_hex(letters,zerox=True):
         return rc
 
 
+def extract_tags(desc):
+    tags=[]
+    if "#" in desc:
+        i = 0
+        for tag in desc.split("#"):
+            if i > 0:
+                _t = "#" + tag.split(" ")[0]
+                tags.append(_t)
+                desc = desc.replace(_t, " ")
+            i = i + 1
+    return " ".join(tags),desc
+
+
+
 def nbr_to_hex(number,zerox=True):
     rc=hex(number)
     if len(rc) % 2 ==1:rc=rc.replace("0x","0x0")

@@ -355,7 +355,7 @@ def burn(network:str):
 @app.route('/api/nfts/<seller_filter>/',methods=["GET"])
 @app.route('/api/nfts/<seller_filter>/<owner_filter>/',methods=["GET"])
 @app.route('/api/nfts/<seller_filter>/<owner_filter>/<miner_filter>/',methods=["GET"])
-@cache.cached(timeout=30)
+@cache.cached(timeout=10)
 def nfts(seller_filter="0x0",owner_filter="0x0",miner_filter="0x0"):
     rc=[]
 
@@ -592,9 +592,7 @@ def resend_pem(addr:str):
 #http://localhost:6660/api/test/
 @app.route('/api/test/',methods=["GET"])
 def test():
-    #img=Image.open('test-european.jpg')
-    #str=pytesseract.image_to_string(img,lang="fr")
-    return ""
+    pass
 
 
 
@@ -761,6 +759,7 @@ def prepare_data(data):
     if not "gift" in data: data["gift"] = 0
     if not "secret" in data: data["secret"] = ""
     if not "price" in data: data["price"] = 0
+    if not "network" in data: data["network"] = "elrond"
     if not "max_markup" in data: data["max_markup"] = 0
     if not "min_markup" in data: data["min_markup"] = 0
     if not "fee" in data: data["fee"] = 0

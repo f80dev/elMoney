@@ -21,7 +21,7 @@ from erdpy.wallet.keyfile import load_from_key_file
 from requests_cache import CachedSession
 
 from Tools import log, base_alphabet_to_10, str_to_hex, hex_to_str, nbr_to_hex, translate, now, is_standard, \
-    returnError, list_to_vec
+    returnError, list_to_vec, extract_tags
 from definitions import LIMIT_GAS, ESDT_CONTRACT, NETWORKS, ESDT_PRICE, IPFS_NODE_PORT, IPFS_NODE_HOST, SECRET_KEY, \
     DEFAULT_VISUAL, DEFAULT_VISUAL_SHOP, VOTE, FOR_SALE, SECRET_VOTE, UNIK, MINER_CAN_BURN, CAN_TRANSFERT, CAN_RESELL, \
     DIRECT_SELL, SELF_DESTRUCTION, RENT, FIND_SECRET, FORCE_OPEN, ONE_WINNER, TRANSPARENT, RESULT_SECTION, \
@@ -37,6 +37,8 @@ def toFiat(crypto, fiat=8):
     :return:
     """
     return (int(crypto) / 1e18) * fiat
+
+
 
 
 class ElrondNet:
@@ -897,20 +899,8 @@ class ElrondNet:
                 title = translate(title, _d)
                 desc = translate(desc, _d)
 
-                unity = identifier.split("-")[0]
-                if money_len == 0 or unity == "0": unity = "EGLD"
-
                 # extraction des tags
-                tags = []
-                if "#" in desc:
-                    i = 0
-                    for tag in desc.split("#"):
-                        if i > 0:
-                            _t = "#" + tag.split(" ")[0]
-                            tags.append(_t)
-                            desc = desc.replace(_t, " ")
-                        i = i + 1
-
+                tags,desc = extract_tags(desc)
                 desc = desc.strip()
 
                 premium = (len(visual) > 0 and len(desc) > 10 and len(title) > 5)
@@ -934,7 +924,7 @@ class ElrondNet:
                             "ref_token_id":ref_token_id,
                             "owner": owner_addr,
                             "visual": visual,
-                            "unity": unity,
+                            "unity": "EGLD" if money_len == 0 else identifier.split("-")[0],
                             "premium": premium,
                             "identifier": identifier,
                             "fullscreen": False,
