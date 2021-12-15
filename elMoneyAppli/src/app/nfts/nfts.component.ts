@@ -107,7 +107,8 @@ export class NftsComponent implements OnChanges {
 
     this.user.check_pem(()=>{
       nft.message = message;
-      this.api._post("state_nft/" + ids + "/" + new_state, "", {pem:this.user.pem}).subscribe((r: any) => {
+      debugger
+      this.api._post("state_nft/" + ids + "/" + new_state+"/"+nft.network+"/", "", {pem:this.user.pem}).subscribe((r: any) => {
         nft.message = "";
         let mes="Votre NFT n'est plus en vente";
         if(new_state==0)mes="Votre NFT est en vente"
@@ -383,5 +384,20 @@ export class NftsComponent implements OnChanges {
         }
       });
     },this);
+  }
+
+  mint(nft: any) {
+    let body=nft;
+    body["pem"]=this.user.pem;
+    if(nft.network=="db") {
+      nft.network = "elrond"
+      nft.message="Minage en cours";
+      this.api._post("mint/1/", "", body).subscribe((results: any) => {
+        nft.message="";
+        this.api._delete("delete_nft_from_db/" + nft.token_id).subscribe(() => {
+          this.onrefresh.emit("mint");
+        });
+      })
+    }
   }
 }

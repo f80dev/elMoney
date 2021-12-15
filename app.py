@@ -18,12 +18,13 @@ from apscheduler.schedulers.background import BackgroundScheduler
 
 import yaml
 from erdpy.accounts import Account
-from erdpy.config import MAX_GAS_LIMIT
+
 from erdpy.contracts import SmartContract
 from flask import Response, request, jsonify, send_file
 from Tools import log, send_mail, open_html_file,  send, dictlist_to_csv, returnError,  str_to_hex, \
     is_standard, hex_to_str
 from apiTools import create_app
+
 
 from dao import DAO
 from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, \
@@ -38,6 +39,18 @@ from secret import CRYPT_KEY_FOR_NFT
 from social import SocialGraph
 
 scheduler = BackgroundScheduler()
+
+
+#Configuration du journal
+import logging
+logging.getLogger('werkzeug').setLevel(logging.ERROR)
+logging.getLogger('apscheduler.scheduler').setLevel(logging.ERROR)
+logging.getLogger('engineio.server').setLevel(logging.ERROR)
+logging.getLogger('urllib3.connectionpool').setLevel(logging.ERROR)
+logging.getLogger('flask_caching.backends.simplecache').setLevel(logging.ERROR)
+logging.getLogger('environments').setLevel(logging.ERROR)
+
+
 
 def init_default_money(bc,dao):
     """
@@ -245,6 +258,7 @@ def check_account(addr:str):
     log("Vérification du compte "+addr)
     _a=bc.get_account(addr,with_cache=False)
     if not _a is None:
+        log("Le compte "+_a["addr"]+" n'est pas dans la base de données")
         _aa=dao.get_user(_a["addr"])
         if not _aa is None:
             return jsonify(_a)
@@ -471,8 +485,8 @@ def update_nft(token_id:str,field_name:str,data:dict=None):
 
 
 
-@app.route('/api/state_nft/<token_ids>/<state>/',methods=["POST"])
-def state_nft(token_ids:str,state:str,data:dict=None):
+@app.route('/api/state_nft/<token_ids>/<state>/<network>/',methods=["POST"])
+def state_nft(token_ids:str,state:str,network:str,data:dict=None):
     """
     changement du statut en vente / pas en vente
     :param token_id:
@@ -488,7 +502,12 @@ def state_nft(token_ids:str,state:str,data:dict=None):
     else:
         ids=[int(token_ids)]
 
-    tx = bc.set_state(NETWORKS[bc.network_name]["nft"], bc.get_elrond_user(data), ids,state)
+    _owner=bc.get_elrond_user(data)
+    if network=="elrond":
+        tx = bc.set_state(NETWORKS[bc.network_name]["nft"], _owner, ids,state)
+
+    if network=="db":
+        tx=dao.set_state(owner=_owner.address.bech32(),token_ids=ids,state=state)
 
     send(socketio,"refresh_nft")
     return jsonify(tx),200
@@ -613,6 +632,13 @@ def transfer_nft(token_id,dest):
     if not rc is None:
         send(socketio,"refresh_nft",rc["receiver"])
     return jsonify(rc)
+
+
+@app.route('/api/delete_nft_from_db/<token_id>/',methods=["DELETE"])
+def delete_nft_from_db(token_id):
+    rows=dao.del_nft(int(token_id))
+    if rows.deleted_count==1:
+        return jsonify({"message":"NFT remove"})
 
 
 
@@ -890,19 +916,16 @@ def mint(count:str,data:dict=None):
                 value=(data["fee"] + data["gift"])
             )
             if result is None or not "token_id" in result: return returnError("Echec de la transaction de minage")
+            tokenids = bc.clone(miner, int(count) - 1, owner, result["token_id"])
 
         if data["network"]=="db":
             result=dao.mint(nft=data,miner=miner.address.bech32())
+            tokenids=dao.clone(int(count) - 1,result["token_id"])
 
-        token_id = result["token_id"]
+        tokenids=[result["token_id"]]+tokenids
 
         result["data"] = ""  # On efface la data pour minimiser la donnée restitué
         results.append(result)
-
-        tokenids=[token_id]
-        if int(count)>1:
-            tokenids=bc.clone(miner,int(count)-1,owner,token_id)
-
 
     if "dealers" in data and len(data["dealers"]) > 0:
         log("Ajout des distributeurs")
@@ -1109,7 +1132,8 @@ def reload_accounts():
             else:
                 log("Transfert de fond en Egld pour " + acc)
                 _test = Account(pem_file="./PEM/" + acc)
-                result=bc.credit(bc.bank,_test,int(data["egld"]*1e18))
+                if bc.getMoneys(_test)["EGLD"]["solde"]<float(data["egld"]):
+                    result=bc.credit(bc.bank,_test,int(data["egld"]*1e18))
                 if result is None:
                     log("Impossible de créditer le compte, on supprime l'utilisateur de la base de données")
                     dao.del_user(_test.address.bech32())
@@ -1561,5 +1585,4 @@ if __name__ == '__main__':
             socketio.run(app,host="0.0.0.0",  port=_port,debug=False, ssl_context=context)
         else:
             socketio.run(app,host="0.0.0.0",  port=_port,debug=False)
-
 

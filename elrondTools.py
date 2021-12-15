@@ -788,6 +788,7 @@ class ElrondNet:
     # /nfts /get_nfts
     # récupération de l'ensemble des NFT issue du contrat
     def get_tokens(self, seller_filter="0x0", owner_filter="0x0", miner_filter="0x0"):
+        log("Recherche des NFT pour seller="+seller_filter+" owner="+owner_filter+" miner="+miner_filter)
         rc = list()
         max_id = 0
 

@@ -146,7 +146,7 @@ export class NftStoreComponent implements OnInit {
   refresh(withMessage = true) {
     if (withMessage) this.message = "Chargement des tokens ...";
     this.api._get("nfts/"+this.selected_dealer.address+"/").subscribe((r: any) => {
-      $$("!Récupération de "+r.length+" NFT");
+      $$("Récupération de "+r.length+" NFT");
       this.message = "";
       this.cache=r;
       this.nfts=this.apply_filter(r);

@@ -82,7 +82,7 @@ export class NftsPersoComponent implements OnInit {
     let param="";
     if(evt=="open")return;
 
-    if(evt=="burn" || evt=="transfer" || evt=="force" || evt=="update"){
+    if(evt=="burn" || evt=="transfer" || evt=="force" || evt=="update" || evt=="mint"){
       $$("On force le rafraichissement (pas d'usage du cache)");
       param=""+now();
     }
@@ -91,30 +91,29 @@ export class NftsPersoComponent implements OnInit {
       debugger
     }
 
-    $$("Refresh de la liste des NFTs possédés/achetés");
-    setTimeout(()=>{
-      for(let identifier of identifiers){
-        let filters=["0x0","0x0","0x0"];
-        filters[identifier]=this.user.addr;
-        this.message = "Chargement des tokens ...";
-        this.api._get("nfts/"+filters[0]+"/"+filters[1]+"/"+filters[2],param).subscribe((r: any) => {
-          this.message = "";
+    $$("Refresh de la liste des NFTs pour les onglets "+identifiers);
+    for(let identifier of identifiers){
+      let filters=["0x0","0x0","0x0"];
+      filters[identifier]=this.user.addr;
+      this.message = "Chargement des tokens ...";
+      this.api._get("nfts/"+filters[0]+"/"+filters[1]+"/"+filters[2],param).subscribe((r: any) => {
+        this.message = "";
 
-          for(let i=0;i<r.length;i++){
-            r[i].isDealer=(identifier==0);
-            r[i].fullscreen=false;
+        for(let i=0;i<r.length;i++){
+          r[i].isDealer=(identifier==0);
+          r[i].fullscreen=false;
+        }
+
+        this.nfts[identifier]=group_tokens(r,this.config.tags,(i)=>{
+          if(!this.filter || identifier!=2 || this.filter.key=="" || i[this.filter.key]==this.filter.value) {
+            return true;
           }
+          return false;
+        });
+      },(err)=>{showError(this,err)});
+    }
+    this.user.refresh_balance();
 
-          this.nfts[identifier]=group_tokens(r,this.config.tags,(i)=>{
-            if(!this.filter || identifier!=2 || this.filter.key=="" || i[this.filter.key]==this.filter.value) {
-              return true;
-            }
-            return false;
-          });
-        },(err)=>{showError(this,err)});
-      }
-      this.user.refresh_balance();
-    },500);
   }
 
   transfer(nft:any){
@@ -142,6 +141,7 @@ export class NftsPersoComponent implements OnInit {
   }
 
   onburn($event: any) {
+    debugger
     $$("Effacement manuel des tokens");
     for(let i of [0,1,2])
       for(let t of this.nfts[i]){

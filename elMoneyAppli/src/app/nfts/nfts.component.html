@@ -121,7 +121,7 @@
 
           <button mat-icon-button mat-flat-button
                   title="Cloner un NFT"
-                  *ngIf="nft.miner==user.addr"
+                  *ngIf="nft.miner==user.addr && nft.owner==user.addr"
                   class="icon-button"
                   (click)="clone(nft)">
             <mat-icon>content_copy</mat-icon>
@@ -175,9 +175,16 @@
             <button mat-icon-button mat-flat-button class="icon-button"
                     title="Offrir ce token (il ne doit pas être en vente)"
                     [disabled]="nft.for_sale"
-                    *ngIf="nft.owner==user.addr && (can_transfer(nft.properties) || nft.miner==user.addr)"
+                    *ngIf="nft.network!='db' && nft.owner==user.addr && (can_transfer(nft.properties) || nft.miner==user.addr)"
                     (click)="transfer(nft)">
               <mat-icon>redeem</mat-icon>
+            </button>
+
+            <button mat-icon-button mat-flat-button class="icon-button"
+                    title="Miner le token"
+                    *ngIf="nft.network=='db' && nft.miner==user.addr"
+                    (click)="mint(nft)">
+              <mat-icon>build</mat-icon>
             </button>
 
 

@@ -8,7 +8,7 @@ from AesEverywhere import aes256
 from AesEverywhere.aes256 import encrypt
 
 from Tools import log
-from definitions import DB_SERVERS, SECRET_KEY, UNIK, VOTE, MINER_CAN_BURN, FOR_SALE, RESULT_SECTION
+from definitions import DB_SERVERS, SECRET_KEY, UNIK, VOTE, MINER_CAN_BURN, FOR_SALE, RESULT_SECTION, CAN_RESELL
 
 
 class DAO:
@@ -122,7 +122,7 @@ class DAO:
 
         nft["miner"]=miner
         self.db["nfts"].insert_one(nft)
-        return {"ref_token_id":nft["ref_token_id"],"data":"","status":"success",RESULT_SECTION:[],"cost":0}
+        return {"token_id":token_id,"ref_token_id":nft["ref_token_id"],"data":"","status":"success",RESULT_SECTION:[],"cost":0}
 
 
 
@@ -150,7 +150,6 @@ class DAO:
             obj["miner_ratio"]=t["miner_ratio"] / 100
             obj["tags"]=" ".join(t["tags"])
             obj["network"]="db"
-            obj["for_sale"]=True
             del obj["_id"]
             rc.append(obj)
 
@@ -161,14 +160,17 @@ class DAO:
         return self.db["nfts"].find_one({"token_id":id})
 
     def clone(self,count, ref_token_id):
-        rc=[]
         _ref=self.get_nft(ref_token_id)
+        log("Clonage du NFT " + str(_ref) + " a " + str(count) + " exemplaires")
+
         _ref["ref_token_id"]=ref_token_id
+        rc=[]
         for i in range(count):
             rc.append(self.mint(_ref,_ref["miner"]))
         return rc
 
     def burn(self, ids):
+        log("Demande de destruction de "+",".join(ids))
         owner=""
         for id in ids:
             if len(owner)==0:
@@ -178,8 +180,28 @@ class DAO:
         return {"owner":owner}
 
     def raz_nft(self):
+        log("Effacement de l'ensemble des NFTs stockés en base")
         self.db["nfts"].drop()
         return True
+
+    def del_nft(self, token_id):
+        return self.db["nfts"].delete_one({"token_id":token_id})
+
+    def invert(self,b):
+        return int(bin(b).replace('1', '2').replace('0', '1').replace('2', '0').replace("1b","0b"),2)
+
+    def set_state(self, owner, token_ids, state):
+        for id in token_ids:
+            _token=self.get_nft(id)
+            prop=_token["properties"]
+            if _token["owner"]==owner and prop & CAN_RESELL>0:
+                if state=="0":
+                    prop=prop & self.invert(FOR_SALE)
+                else:
+                    prop=prop | FOR_SALE
+                self.db["nfts"].update_one({"token_id":id},{"$set":{"properties":prop}},False)
+        return {"state":"success","cost":0}
+
 
 
 
