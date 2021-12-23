@@ -207,7 +207,8 @@ export class SettingsComponent implements OnInit,OnDestroy {
       width: '90vw', height: 'fit-container', data:
         {
           title:"Identité",
-          subtitle:"Une photo d'identité ou d'un document officiel",
+          square: false,
+          subtitle:"Photographiez votre passeport",
           checkCode: true,
           width: "200px",
           height: "300px",
@@ -219,6 +220,9 @@ export class SettingsComponent implements OnInit,OnDestroy {
       if (result) {
         $$("Update identity");
         this.user.identity=result.img;
+        this.api._post(environment.idcardserver,"",{img:result.img}).subscribe((infos:any)=>{
+          debugger
+        })
         this.mustSave=true;
       }
     });

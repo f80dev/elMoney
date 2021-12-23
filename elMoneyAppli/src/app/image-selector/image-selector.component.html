@@ -102,9 +102,10 @@
   <div style="width: 100%;text-align: center;">
     <div *ngIf="imageBase64"
          style="display: inline-block;width:80%;max-width: 500px;">
+<!--   https://www.npmjs.com/package/ngx-image-cropper   -->
       <image-cropper
         [imageBase64]="imageBase64"
-        [maintainAspectRatio]="true"
+        [maintainAspectRatio]="data.square"
         [aspectRatio]="ratio"
         [resizeToWidth]="400"
         format="png"

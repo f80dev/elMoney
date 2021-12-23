@@ -644,6 +644,15 @@ def delete_nft_from_db(token_id):
 def buy_nft(token_id,price,seller:str,network:str,data:dict=None):
     if data is None:data = json.loads(str(request.data, encoding="utf-8"))
 
+    if network=="db":
+        tokenid=data["token_id"]
+        data["network"]="elrond"
+        result=mint(1,data)
+        if len(result.json)==0:return returnError("Probleme technique")
+        dao.del_nft(tokenid)
+        token_id=result.json[0]["token_id"]
+
+
     if seller == "0x0":
         seller = "0x0000000000000000000000000000000000000000000000000000000000000000"
         if is_standard(data["token_id"]):
@@ -814,7 +823,7 @@ def prepare_data(data):
 
 
 
-def prepare_arguments(data,miner,owner):
+def prepare_arguments(data,owner):
     """
     Prepare les arguments pour le minage
     :param size:
@@ -840,13 +849,15 @@ def prepare_arguments(data,miner,owner):
 
     if data["properties"] & ONE_WINNER > 0: pay_count = 1  #TODO implémenté le nombre de payment
 
+    miner=Account(address=data["miner"])
     rc=[
         "0x" + data["title"].encode().hex(),
         "0x" + desc.encode().hex(),
         "0x" + data["secret"],
         price, min_markup, max_markup,
         properties,
-        "0x"+owner.address.hex(),"0x"+miner.address.hex(),
+        "0x"+owner.address.hex(),
+        "0x"+miner.address.hex(),
         miner_ratio,
         gift,
         money
@@ -869,20 +880,19 @@ def mint(count:str,data:dict=None):
 
     log("Minage du NFT " + data["title"]+" avec "+str(data))
 
-    if "miner" in data:
-        miner=bc.bank
-    else:
-        miner = bc.get_elrond_user(data["pem"])
-        if miner is None:
-            miner=bc.bank
-            log("Le minage se fait par la banque")
-        else:
-            data["miner"]=miner.address.bech32()
+    #Préparation du mineur
+    miner = bc.get_elrond_user(data["pem"])
+    if miner is None:
+        miner = bc.bank
+        log("Le minage se fait par la banque")
 
+    if not "miner" in data:
+        data["miner"]=miner.address.bech32()
+
+    #Preparation du propriétaire
     owner = miner
     if "owner" in data:
         owner,_u=convert_email_to_addr(data["owner"],open_html_file("transfer_nft"))
-
 
     if data["gift"]>0:
         if "error" in bc.transferESDT(data["money"], miner, bc.contract, int(count) * data["gift"]):
@@ -907,7 +917,7 @@ def mint(count:str,data:dict=None):
         #                                 "state":hex(1)}
         #                             ,price,count,res_visual))
     else:
-        args=prepare_arguments(data, miner, owner)
+        args=prepare_arguments(data,  owner)
         if data["network"]=="elrond":
             result = bc.mint(
                 miner,

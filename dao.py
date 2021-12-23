@@ -117,13 +117,16 @@ class DAO:
     def mint(self, nft,miner):
         if "pem" in nft:del nft["pem"]
         if "_id" in nft:del nft["_id"]
-        token_id=self.db["nfts"].count()
-        nft["token_id"]=token_id
-        if not "ref_token_id" in nft:nft["ref_token_id"]=token_id
+        last_token=self.db["nfts"].find_one(sort=[("token_id", pymongo.DESCENDING)])
+        if last_token:
+            nft["token_id"]=last_token["token_id"]+1
+        else:
+            nft["token_id"] =0
+        if not "ref_token_id" in nft:nft["ref_token_id"]=nft["token_id"]
 
         nft["miner"]=miner
         self.db["nfts"].insert_one(nft)
-        return {"token_id":token_id,"ref_token_id":nft["ref_token_id"],"data":"","status":"success",RESULT_SECTION:[],"cost":0}
+        return {"token_id":nft["token_id"],"ref_token_id":nft["ref_token_id"],"data":"","status":"success",RESULT_SECTION:[],"cost":0}
 
 
 
@@ -179,6 +182,7 @@ class DAO:
         log("Demande de destruction de "+",".join(ids))
         owner=""
         for id in ids:
+            id=int(id)
             if len(owner)==0:
                 owner=self.db["nfts"].find_one({"token_id":id})["owner"]
             self.db["nfts"].delete_one({"token_id":id})

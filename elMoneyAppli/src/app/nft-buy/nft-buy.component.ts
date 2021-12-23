@@ -3,7 +3,7 @@ import {ApiService} from "../api.service";
 import {Location} from "@angular/common";
 import {ActivatedRoute, Router} from "@angular/router";
 import {UserService} from "../user.service";
-import {showMessage} from "../tools";
+import {$$, showMessage} from "../tools";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
@@ -37,6 +37,11 @@ export class NftBuyComponent implements OnInit {
     this.api._get("users/"+this.nft.miner+"/","").subscribe((data:any)=>{this.miner=data[0];});
     this.user.check_pem(()=>{
       if(this.nft.price==0) this.buy();
+      if(this.nft.price>this.user.moneys[this.nft.unity].solde){
+        showMessage(this,"Vous n'avez pas suffisament de "+this.nft.unity+" sur votre compte, je vous redirige vers le rechargement ?",6000,()=>{
+          this.router.navigate(["refund"]);
+        });
+      }
     },this,"L'achat nécessite une signature",()=>{this.router.navigate(["store"])});
   }
 
@@ -69,17 +74,20 @@ export class NftBuyComponent implements OnInit {
       body["pem"]=this.user.pem;
       body["identifier"]=this.nft.identifier;
 
-      if(this.nft.network=="db"){
-        this.nft.network="elrond"
-        this.api._post("mint/1/","",body).subscribe((results:any)=>{
-          this.api._delete("delete_nft_from_db/"+this.nft.token_id).subscribe(()=>{
-            body.token_id=results[0].token_id;
-            this.buy_nft(body);
-          });
-        })
-      } else {
+      // if(this.nft.network=="db"){
+      //   $$("Le NFT doit être d'abord miné")
+      //   this.nft.network="elrond"
+      //   this.api._post("mint/1/","",body).subscribe((results:any)=>{
+      //     $$("Puis supprimer de la base de données");
+      //     this.api._delete("delete_nft_from_db/"+this.nft.token_id).subscribe(()=>{
+      //       $$("Puis transférer à l'acheteur "+this.nft.owner);
+      //       body.token_id=results[0].token_id;
+      //       this.buy_nft(body);
+      //     });
+      //   })
+      // } else {
         this.buy_nft(body);
-      }
+      // }
     },this);
   }
 

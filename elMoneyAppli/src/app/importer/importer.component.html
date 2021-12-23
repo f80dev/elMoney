@@ -214,7 +214,7 @@
 
           <mat-step >
             <app-tuto *ngIf="idx_tab==1" label="Après fabrication, les NFTs sont présentés sur une place de marché ou ils peuvent être achetés par les autres utilisateurs de TOKENFORGE"></app-tuto>
-            <form>
+
               <ng-template matStepLabel>Présentation sur la place de marché</ng-template>
 
               <mat-form-field appearance="fill" class="app-field">
@@ -326,8 +326,14 @@
                       (click)="inc_price(0.1)">
                 +0,1
               </button>
+              <br><br>
+              <mat-slide-toggle
+                color="primary"
+                title="Le NFT n'est pas miné immédiatement, il est miné par l'acheteur"
+                [(ngModel)]="nft_on_db">
+                Reporter la fabrication du NFT à l'achat
+              </mat-slide-toggle>
 
-            </form>
           </mat-step>
           <mat-step>
             <app-tuto *ngIf="idx_tab==2"
@@ -522,14 +528,6 @@
             </div>
             <br>
 
-            <mat-form-field *ngIf="!show_zone_upload" appearance="fill"
-                            style="max-width:200px;margin-top: 10px;">
-              <mat-label>Blockchaine cible</mat-label>
-              <mat-select [(ngModel)]="selected_bl" name="dest_bl">
-                <mat-option [value]="'elrond'">Elrond</mat-option>
-                <mat-option [value]="'db'">Interne</mat-option>
-              </mat-select>
-            </mat-form-field>
 
 
 

@@ -43,8 +43,8 @@ export class ImporterComponent implements OnInit {
   gift:number=0;
   secret: string="";
   price: number=0;
-  title: string="Mon NFT pour vous";
-  desc: string="Achetez mon NFT";
+  title: string="Mon super NFT";
+  desc: string="miné par "+this.user.pseudo;
   cost=0;
   filename: string="";
   reseller: any=false;
@@ -73,6 +73,7 @@ export class ImporterComponent implements OnInit {
   opt_gift:boolean=false; //si false, chaque billet contient le gift sinon un seul billet le contient
   transparent:boolean=false; //si false, chaque billet contient le gift sinon un seul billet le contient
 
+  nft_on_db=true;
 
   //Gestion des tags
   solde_user: number;
@@ -105,7 +106,8 @@ export class ImporterComponent implements OnInit {
   @ViewChild('tagsInput') tagInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
   file_to_send: { pem: string; filename:string,content: any };
-  selected_bl="elrond";
+
+
 
   constructor(public api:ApiService,
               public user:UserService,
@@ -218,6 +220,7 @@ export class ImporterComponent implements OnInit {
     this.message="Transfert des fichiers vers IPFS";
     this.ipfs.add(this.visual,this,(cid_visual)=>{
       this.ipfs.add(this.picture,this,(cid_picture)=> {
+        debugger
         let obj = {
           pem: this.user.pem,
           owner: this.user.addr,
@@ -246,8 +249,9 @@ export class ImporterComponent implements OnInit {
           direct_sell: this.direct_sell,
           miner_ratio: this.miner_ratio,
           money: this.selected_money.identifier,
-          network:this.selected_bl
+          network:this.nft_on_db ? "db" : "elrond"
         };
+
         if(this.owner_addr.length>0)obj["owner"]=this.owner_addr;
 
         showMessage(this,"Création du NFT");

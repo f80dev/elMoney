@@ -4,6 +4,7 @@ import { version } from "../../package.json";
 export const environment = {
   production: false,
   domain_server: "https://server.f80.fr:7777",
+  idcardserver:"http://server.f80.fr:2222/api/upload/",
   config_file: "config",
   domain_appli: "https://tf.f80.fr",
   appVersion: "1.0.1",
