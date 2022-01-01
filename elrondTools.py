@@ -21,11 +21,11 @@ from erdpy.wallet.keyfile import load_from_key_file
 from requests_cache import CachedSession
 
 from Tools import log, base_alphabet_to_10, str_to_hex, hex_to_str, nbr_to_hex, translate, now, is_standard, \
-    returnError, list_to_vec, extract_tags
+    returnError, list_to_vec, extract_tags, find_url
 from definitions import LIMIT_GAS, ESDT_CONTRACT, NETWORKS, ESDT_PRICE, IPFS_NODE_PORT, IPFS_NODE_HOST, SECRET_KEY, \
     DEFAULT_VISUAL, DEFAULT_VISUAL_SHOP, VOTE, FOR_SALE, SECRET_VOTE, UNIK, MINER_CAN_BURN, CAN_TRANSFERT, CAN_RESELL, \
     DIRECT_SELL, SELF_DESTRUCTION, RENT, FIND_SECRET, FORCE_OPEN, ONE_WINNER, TRANSPARENT, RESULT_SECTION, \
-    MAX_GAS_LIMIT, MAX_MINT_NFT
+    MAX_GAS_LIMIT, MAX_MINT_NFT, ID_REQUIRED
 from ipfs import IPFS
 
 
@@ -881,10 +881,7 @@ class ElrondNet:
                     fullscreen = ("!!" in desc)
                     desc = desc.replace("!!", "%%")
                     if "%%" in desc:
-                        if len(desc.split("%%")[1]) == 46:
-                            visual = "https://ipfs.io/ipfs/" + desc.split("%%")[1]
-                        else:
-                            visual = desc.split("%%")[1]
+                        visual=find_url(desc.split("%%")[1])
                         desc = desc.split("%%")[0]
                 except:
                     log(tokens[index:index + title_len] + " n'est pas une chaine de caractères")
@@ -946,6 +943,7 @@ class ElrondNet:
         if "opt_miner_can_burn" in vm and vm["opt_miner_can_burn"] == 1: properties = properties + MINER_CAN_BURN
         if "opt_unik" in vm and vm["opt_unik"] == 1: properties = properties + UNIK
         if "secret_vote" in vm and vm["secret_vote"] == 1: properties = properties + SECRET_VOTE
+        if "id_required" in vm and vm["id_required"] == 1: properties = properties + ID_REQUIRED
         if "one_winner" in vm and vm["one_winner"] == 1: properties = properties + ONE_WINNER
         if "transparent" in vm and vm["transparent"] == 1: properties = properties + TRANSPARENT
         if "vote" in vm and vm["vote"] == 1: properties = properties + VOTE

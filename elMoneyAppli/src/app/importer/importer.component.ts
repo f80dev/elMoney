@@ -74,6 +74,7 @@ export class ImporterComponent implements OnInit {
   transparent:boolean=false; //si false, chaque billet contient le gift sinon un seul billet le contient
 
   nft_on_db=true;
+  id_required=false;
 
   //Gestion des tags
   solde_user: number;
@@ -522,9 +523,9 @@ export class ImporterComponent implements OnInit {
         this.filename=result.file.name;
         this.file_format=result.file.type;
       }
-      this.ask_for_text("Titre","Donner un titre à votre NFC",(title)=>{
+      this.ask_for_text("Titre","Donner un titre à votre NFT",(title)=>{
         if(title && title.length>0){
-          this.ask_for_text("Présentation","Rédigez une présentation rapide de votre photo pour la marketplace",(legende)=>{
+          this.ask_for_text("Présentation","Rédigez une présentation rapide de votre photo pour la place de marché",(legende)=>{
             if(legende==null)legende="";
             this.title=title;
             this.desc=legende;

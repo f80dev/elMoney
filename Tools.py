@@ -87,6 +87,16 @@ def extract_tags(desc):
     return " ".join(tags),desc
 
 
+def find_url(url:str):
+    if url.startswith("http"):return url
+
+    if len(url) == 46:
+        url = "https://ipfs.io/ipfs/" + url
+    else:
+        url=DOMAIN_APPLI+"/"+url
+
+    return url
+
 
 def nbr_to_hex(number,zerox=True):
     rc=hex(number)

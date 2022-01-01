@@ -38,6 +38,7 @@ export class UserService {
   public_email: string="";
   transaction_delay=0;
   shard: any=0;
+  authent=0;
 
 
   constructor(public api:ApiService,

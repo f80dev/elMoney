@@ -49,7 +49,7 @@ NETWORKS={
         "proxy":"https://testnet-gateway.elrond.com",
         "explorer":"https://testnet-explorer.elrond.com",
         "wallet":"http://testnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqgv2cyczhw97cfn7j5n8q0y26g63wpwmdqhyqgqgunt",
+        "nft":"erd1qqqqqqqqqqqqqpgqss0ulmy5v7xt75dekgxqlspmjwk26y0fqhyq9l59ys",
         "shard":0
     },
 
@@ -100,6 +100,7 @@ DEFAULT_VISUAL_SHOP="/assets/img/shop.png"
 
 IS_CLONE        = 0b00000001
 
+ID_REQUIRED     = 0b1000000000000000
 FOR_SALE        = 0b0100000000000000
 ONE_WINNER      = 0b0010000000000000
 MINER_CAN_BURN  = 0b0001000000000000

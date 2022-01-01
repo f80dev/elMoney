@@ -8,7 +8,7 @@ import pymongo
 from AesEverywhere import aes256
 from AesEverywhere.aes256 import encrypt
 
-from Tools import log, extract_tags
+from Tools import log, extract_tags, find_url
 from definitions import DB_SERVERS, SECRET_KEY, UNIK, VOTE, MINER_CAN_BURN, FOR_SALE, RESULT_SECTION, CAN_RESELL
 
 
@@ -147,10 +147,10 @@ class DAO:
             properties=t["properties"]
             if "%%" in t["description"]:
                 obj["description"]=t["description"].split("%%")[0]
-                obj["visual"]=t["description"].split("%%")[1]
+                obj["visual"]=find_url(t["description"].split("%%")[1])
             obj["unik"]=properties & UNIK > 0
             obj["vote"]=properties & VOTE > 0
-            obj["tags"],obj["description"]=extract_tags(t["description"])
+            obj["tags"],obj["description"]=extract_tags(obj["description"])
             obj["unity"]=t["money"].split("-")[0]
             obj["miner_can_burn"] = properties & MINER_CAN_BURN > 0
             obj["for_sale"]=properties & FOR_SALE >0

@@ -3,7 +3,7 @@ import {ApiService} from "../api.service";
 import {Location} from "@angular/common";
 import {ActivatedRoute, Router} from "@angular/router";
 import {UserService} from "../user.service";
-import {$$, showMessage} from "../tools";
+import {$$, ID_REQUIRED, showMessage} from "../tools";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
@@ -51,6 +51,11 @@ export class NftBuyComponent implements OnInit {
     this.user.check_pem(()=>{
       let identifier=this.nft.identifier;
       if(identifier=="0" || identifier=="")identifier="EGLD";
+
+      if(this.nft.properties && ID_REQUIRED > 0 && this.user.authent==0){
+        showMessage(this,"Ce type de NFT exige une authentification forte de l'acheteur");
+        this._location.back();
+      }
 
       if(this.nft.price>0){
 

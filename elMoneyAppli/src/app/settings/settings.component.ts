@@ -220,9 +220,13 @@ export class SettingsComponent implements OnInit,OnDestroy {
       if (result) {
         $$("Update identity");
         this.user.identity=result.img;
+        this.message="Controle du document";
         this.api._post(environment.idcardserver,"",{img:result.img}).subscribe((infos:any)=>{
-          debugger
-        })
+          this.message="";
+          if(infos){
+            this.user.authent=1;
+          }
+        },(err)=>{showError(this,err);})
         this.mustSave=true;
       }
     });

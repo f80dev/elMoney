@@ -7,6 +7,7 @@ export const ADMIN_PASSWORD="hh4271";
 
 export const IS_CLONE         = 0b00000001;
 
+export const ID_REQUIRED      = 0b1000000000000000;
 export const FOR_SALE         = 0b0100000000000000;
 export const ONE_WINNER       = 0b0010000000000000;
 export const MINER_CAN_BURN   = 0b0001000000000000; //Chaque propriétaire ne peut acheter qu'un seul exemplaire
@@ -1082,6 +1083,7 @@ export function eval_properties(vm:any): number {
   if(vm.opt_miner_can_burn)properties=properties+MINER_CAN_BURN;
   if(vm.opt_unik)properties=properties          +UNIK;
   if(vm.secret_vote)properties=properties       +SECRET_VOTE;
+  if(vm.id_required)properties=properties       +ID_REQUIRED;
   if(vm.vote)properties=properties              +VOTE;
   if(vm.owner_can_transfer)properties=properties+CAN_TRANSFERT;
   if(vm.owner_can_sell)properties=properties    +CAN_RESELL;

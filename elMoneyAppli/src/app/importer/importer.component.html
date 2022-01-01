@@ -333,6 +333,13 @@
                 [(ngModel)]="nft_on_db">
                 Reporter la fabrication du NFT à l'achat
               </mat-slide-toggle>
+            <br>
+            <mat-slide-toggle
+                color="primary"
+                title="Exiger une pièce d'identité pour l'acheteur"
+                [(ngModel)]="id_required">
+                Identification formelle du propriétaire
+              </mat-slide-toggle>
 
           </mat-step>
           <mat-step>
