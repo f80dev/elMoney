@@ -52,7 +52,7 @@ export class NftBuyComponent implements OnInit {
       let identifier=this.nft.identifier;
       if(identifier=="0" || identifier=="")identifier="EGLD";
 
-      if(this.nft.properties && ID_REQUIRED > 0 && this.user.authent==0){
+      if(this.nft.id_required && this.user.authent==0){
         showMessage(this,"Ce type de NFT exige une identification forte de l'acheteur",10000,()=>{
           this.router.navigate(["settings"],{queryParams:{section:2}})
         },"S'authentifier");

@@ -217,6 +217,11 @@ export class ImporterComponent implements OnInit {
       return;
     }
 
+    if(this.gift>0){
+      $$("Lorsqu'il y a de l'argent on ne peut pas décaller la fabrication du NFT");
+      this.nft_on_db=false;
+    }
+
     let properties=eval_properties(this);
     this.message="Transfert des fichiers vers IPFS";
     this.ipfs.add(this.visual,this,(cid_visual)=>{

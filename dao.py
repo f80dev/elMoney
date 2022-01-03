@@ -9,7 +9,8 @@ from AesEverywhere import aes256
 from AesEverywhere.aes256 import encrypt
 
 from Tools import log, extract_tags, find_url
-from definitions import DB_SERVERS, SECRET_KEY, UNIK, VOTE, MINER_CAN_BURN, FOR_SALE, RESULT_SECTION, CAN_RESELL
+from definitions import DB_SERVERS, SECRET_KEY, UNIK, VOTE, MINER_CAN_BURN, FOR_SALE, RESULT_SECTION, CAN_RESELL, \
+    ID_REQUIRED
 
 
 class DAO:
@@ -154,7 +155,9 @@ class DAO:
             obj["unity"]=t["money"].split("-")[0]
             obj["miner_can_burn"] = properties & MINER_CAN_BURN > 0
             obj["for_sale"]=properties & FOR_SALE >0
+            obj["id_required"]=properties & ID_REQUIRED > 0
             obj["min_markup"]=t["min_markup"] / 100
+
             obj["max_markup"]=t["max_markup"] / 100
             obj["miner_ratio"]=t["miner_ratio"] / 100
             obj["network"]="db"

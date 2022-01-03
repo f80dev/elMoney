@@ -581,8 +581,9 @@ class ElrondNet:
             if len(not_equal) > 0 and rc[field] != not_equal: break
             timeout = timeout - interval
 
-        rc["cost"] = 0
         rc = self.getTransaction(tx)
+        rc["cost"] = 0
+        if "txHash" in rc:rc["blockHash"]=rc["txHash"]
         if "fee" in rc:
             rc["cost"] = float(rc["fee"]) / 1e18
             rc["usd_cost"] = rc["cost"]*rc["price"]
@@ -911,6 +912,7 @@ class ElrondNet:
                             "resp": resp,
                             "secret_vote": properties & SECRET_VOTE > 0,
                             "unik": properties & UNIK > 0,
+                            "id_required": properties & ID_REQUIRED>0,
                             "vote": properties & VOTE > 0,
                             "miner_can_burn": properties & MINER_CAN_BURN > 0,
                             "for_sale": properties & FOR_SALE > 0,
@@ -1073,8 +1075,13 @@ class ElrondNet:
         :return:
         """
         log("Minage avec " + str(arguments))
-        tx = self.execute(NETWORKS[self.network_name]["nft"], user_from, "mint", arguments, gas_limit=gas_limit,
-                          gas_price_factor=factor, value=value, timeout=600)
+        tx = self.execute(NETWORKS[self.network_name]["nft"],
+                          user_from,
+                          "mint", arguments,
+                          gas_limit=gas_limit,
+                          gas_price_factor=factor,
+                          value=value,
+                          timeout=600)
         if not tx is None and RESULT_SECTION in tx:
             for result in tx[RESULT_SECTION]:
                 s = result["data"]

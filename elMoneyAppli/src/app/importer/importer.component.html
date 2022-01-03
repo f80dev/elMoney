@@ -328,6 +328,7 @@
               </button>
               <br><br>
               <mat-slide-toggle
+                *ngIf="gift==0"
                 color="primary"
                 title="Le NFT n'est pas miné immédiatement, il est miné par l'acheteur"
                 [(ngModel)]="nft_on_db">

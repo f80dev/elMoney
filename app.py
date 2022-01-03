@@ -813,7 +813,7 @@ def prepare_data(data):
         data["price"] = float(data["price"].replace(",", "."))
 
     data["fee"] = int(float(data["fee"]) * 1e18)
-    data["gift"] = int(float(data["gift"]) * 1e16)
+    data["value"] = int(float(data["gift"]) * 1e16)
 
     res_visual = ""
     if "visual" in data and len(data["visual"]) > 0:
@@ -897,7 +897,7 @@ def mint(count:str,data:dict=None):
         owner,_u=convert_email_to_addr(data["owner"],open_html_file("transfer_nft"))
 
     if data["gift"]>0:
-        if "error" in bc.transferESDT(data["money"], miner, bc.contract, int(count) * data["gift"]):
+        if "error" in bc.transferESDT(data["money"], miner, bc.contract, int(count) * data["value"]):
             return returnError()
 
     results=[]
@@ -924,7 +924,7 @@ def mint(count:str,data:dict=None):
             result = bc.mint(
                 miner,
                 arguments=args,
-                value=(data["fee"] + data["gift"])
+                value=data["value"]
             )
             if result is None or not "token_id" in result: return returnError("Echec de la transaction de minage")
             tokenids = bc.clone(miner, int(count) - 1, owner, result["token_id"])
