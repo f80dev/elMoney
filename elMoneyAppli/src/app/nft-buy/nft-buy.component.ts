@@ -53,8 +53,11 @@ export class NftBuyComponent implements OnInit {
       if(identifier=="0" || identifier=="")identifier="EGLD";
 
       if(this.nft.properties && ID_REQUIRED > 0 && this.user.authent==0){
-        showMessage(this,"Ce type de NFT exige une authentification forte de l'acheteur");
+        showMessage(this,"Ce type de NFT exige une identification forte de l'acheteur",10000,()=>{
+          this.router.navigate(["settings"],{queryParams:{section:2}})
+        },"S'authentifier");
         this._location.back();
+        return;
       }
 
       if(this.nft.price>0){
@@ -62,7 +65,7 @@ export class NftBuyComponent implements OnInit {
         if(this.nft.unity=="eGld"){
           if (!this.user.moneys.hasOwnProperty(identifier) || this.nft.price > Number(this.user.moneys[identifier].balance)/ 1e18 ) {
 
-            showMessage(this, "Votre solde est insuffisant (prix + frais de transaction)", 5000, () => {
+            showMessage(this, "Votre solde est insuffisant (prix + frais de transaction)", 50000, () => {
               if(this.nft.identifier.startsWith("EGLD"))
                 this.router.navigate(["faucet"]);
               else

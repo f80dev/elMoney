@@ -216,19 +216,29 @@
       </mat-expansion-panel>
 
 
+
       <!--    Securité -->
       <mat-expansion-panel class="app-panel" style="text-align: center;max-width: 500px" [expanded]="open_section==3">
         <mat-expansion-panel-header>Sécurité</mat-expansion-panel-header>
 
-        <div style="font-size: small;" *ngIf="user.identity?.length>0">Sécurisation de l'identité</div>
+        <div style="font-size: small;" *ngIf="user.identity?.length>0">
+          Sécurisation de l'identité
+          <span *ngIf="user.authent==1">&nbsp;(documents officiels)</span>
+          <br>
+        </div>
+
 
         <app-tuto label="Si le NFT est un billet d'entrée il est possible qu'une vérification supplémentaire d'identité soit nécéssaire. Téléverser ici un document permettant de vous identifier clairement : passeport, photo d'identité, carte d'identité">
         </app-tuto>
 
-        <img *ngIf="user.identity?.length>0" [src]="user.identity"
+        <div *ngIf="user.identity?.length>0">
+          <img  [src]="user.identity"
              title="Mettre a jour l'identité"
              style="width: 200px;cursor: pointer;"
              (click)="update_identity()">
+          <br>
+        </div>
+
 
         <button mat-raised-button mat-button
                 class="app-button"
@@ -288,8 +298,7 @@
 
 
     <div *ngIf="message?.length==0">
-      <br><br>
-
+      <br>
       <br>
       <a routerLink="/transactions">Voir mes transactions</a>
 

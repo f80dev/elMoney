@@ -169,6 +169,17 @@ content:
       </p>
     "
 
+  - index: authent
+    title: Qu'est-ce qu'une authentification forte
+    order: 1
+    format: html
+    content: "
+      <p>
+      Certain NFT nécéssite que l'acheteur est associé son wallet à son identité par l'intermédiaire d'un passeport ou carte d'identité.
+      Cela permet de sécurisé notamment les billets de spéctacles.
+      </p>
+    "
+
 
   - index: receive
     title: Comment recevoir des NFTs, des fonds dans les monnaies disponibles, des eGolds ?

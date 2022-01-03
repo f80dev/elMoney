@@ -9,6 +9,7 @@ import {PromptComponent} from "./prompt/prompt.component";
 import {PrivateComponent} from "./private/private.component";
 import {AuthentComponent} from "./authent/authent.component";
 import {Location} from "@angular/common";
+import {stringify} from "@angular/compiler/src/util";
 
 @Injectable({
   providedIn: 'root'
@@ -80,7 +81,8 @@ export class UserService {
         email:this.email,
         public_email:this.public_email,
         shop_website:this.shop_website,
-        pem:this.pem
+        pem:this.pem,
+        authent:this.authent.toString(),
       };
 
       this.api._post("users/","",body).subscribe((id:any)=>{
@@ -172,6 +174,7 @@ export class UserService {
       this.email=body.email || "";
       this.website=body.website || "";
       this.shop_visual=body.shop_visual || "";
+      this.authent=body.authent || 0;
 
       if(this.selected_money.length==0)this.selected_money=this.api.identifier;
       //this.refresh_balance(func,func_error);

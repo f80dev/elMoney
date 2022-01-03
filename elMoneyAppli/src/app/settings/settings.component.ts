@@ -223,8 +223,11 @@ export class SettingsComponent implements OnInit,OnDestroy {
         this.message="Controle du document";
         this.api._post(environment.idcardserver,"",{img:result.img}).subscribe((infos:any)=>{
           this.message="";
-          if(infos){
+          if(infos && infos.hasOwnProperty("number") && infos["number"].length>0){
+            $$("Le compte est authentifié");
             this.user.authent=1;
+          } else {
+            this.user.authent=0;
           }
         },(err)=>{showError(this,err);})
         this.mustSave=true;

@@ -311,6 +311,8 @@ def get_user(addrs:str):
                 data["transaction_delay"]=LONG_DELAY_TRANSACTION
                 if data["shard"]==NETWORKS[bc.network_name]["shard"]:data["transaction_delay"]=SHORT_DELAY_TRANSACTION
 
+            if "authent" in data: data["authent"]=int(data["authent"])
+
             #TODO mettre ici un delay en fonction du shard
             rc.append(data)
 

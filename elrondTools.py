@@ -621,7 +621,7 @@ class ElrondNet:
         for k in values.keys():
             key = str_to_hex(k, False)
             value = str_to_hex(values[k], False)
-            if len(value) > 2 or key == "contacts":
+            if len(value) > 1 or key == "contacts":
                 data = data + "@" + key + "@" + value
                 required_gas = required_gas + persist_per_byte * (len(value) + len(key)) + store_per_byte * len(value)
 
