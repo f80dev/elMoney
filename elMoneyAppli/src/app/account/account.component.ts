@@ -10,6 +10,7 @@ export class AccountComponent implements OnChanges {
   @Input("money") money: any;
   @Input("decimals") decimals: number=2;
   @Input("fontsize") fontsize: any;
+  @Input("unit_fontsize") unit_fontsize="2em";
   @Output('change') onchange: EventEmitter<any>=new EventEmitter();
   _format: string="1.0-2";
 

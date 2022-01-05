@@ -1,4 +1,8 @@
 <small>{{label}}</small><br>
 <span [ngStyle]="{fontSize: fontsize}">
   {{money?.solde | number:_format}}
-</span>&nbsp;{{money?.unity}}
+</span>&nbsp;
+
+<span [ngStyle]="{fontSize: unit_fontsize}">
+  {{money?.unity}}
+</span>

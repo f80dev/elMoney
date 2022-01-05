@@ -90,6 +90,7 @@
               {{_max | number:'1.0-5'}}&nbsp;
               <span style="font-size: small;">{{user.moneys[user.selected_money].unity.toUpperCase()}}</span>
             </td>
+
           </tr></table>
 
       </div>
@@ -128,6 +129,7 @@
                [decimals]="3"
                (change)="update_account()">
   </app-account>
+  <mat-icon style="font-size: medium;cursor: pointer" (click)="router.navigate(['moneys'])">currency_exchange</mat-icon>
   <br>
 
 

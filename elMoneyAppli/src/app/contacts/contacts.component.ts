@@ -34,8 +34,8 @@ export class ContactsComponent implements OnInit {
 
 
   add_contact($event: any) {
-    debugger
     if($event.keyCode==13){
+      debugger
       this.message="Ajout du contact";
       this.user.add_contact(this.email,(r:any)=>{
         this.user.load_contacts(()=>{

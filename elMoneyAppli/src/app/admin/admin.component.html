@@ -2,14 +2,14 @@
 
   <mat-form-field appearance="fill" class="app-field"
                   style="max-width: 150px" cdkFocusInitial
-                  *ngIf="password!='hh4271'">
+                  *ngIf="password!='hh4271' && !islocal()">
     <mat-label>Admin password</mat-label>
     <input matInput type="text" maxlength="6" [(ngModel)]="password">
   </mat-form-field>
 
 
   <app-hourglass [message]="message"></app-hourglass>
-  <div *ngIf="password=='hh4271'">
+  <div *ngIf="password=='hh4271' || islocal()">
 
 
     <mat-accordion style="width:96%;display: inline-block;" *ngIf="message?.length==0">
@@ -73,6 +73,7 @@
         </button>
         <button mat-raised-button
                 mat-button class="app-button"
+                title="Crédite les comptes de test en eGold et en ESDT"
                 (click)="reload_test_accounts()">
           <div class="bloc-bouton">Init des comptes<br>de tests</div>
         </button>

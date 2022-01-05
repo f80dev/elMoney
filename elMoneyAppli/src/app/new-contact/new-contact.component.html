@@ -4,7 +4,9 @@
   <app-tuto label="Si votre destinataire, désigné par son mail, n'a pas de wallet Elrond, TokenForge lui en créé automatiquement un puis lui envoie toutes les infos nécéssaires pour s'y connecter et récupérer son NFT"></app-tuto>
   <mat-form-field appearance="fill" class="app-field">
     <mat-label>Mail ou adresse Elrond du destinataire</mat-label>
-    <input matInput type="text" max="50" [(ngModel)]="email"
+    <input matInput type="text"
+           max="50"
+           [(ngModel)]="email"
            (ngModelChange)="refresh_pseudo($event)"
            (keypress)="add_contact($event)">
   </mat-form-field>
@@ -19,15 +21,21 @@
     </app-scanner>
     <br><br>
   </div>
-  <app-upload-file (uploaded)="onUpload($event)"></app-upload-file>
+
 
 
 </mat-dialog-content>
 
 <mat-dialog-actions style="text-align: right;width:100%;">
 
+  <app-upload-file label="Envois multiple"
+                   comment="Sélectionner un fichier contenant la liste des destinataires (adresses mails ou elrond)"
+                   (uploaded)="onUpload($event)">
+  </app-upload-file>
+
     <button mat-raised-button
             mat-button class="app-button"
+            [disabled]="email?.length<5 || (email.indexOf('@')==-1 && email.indexOf('erd')!=0)"
             (click)="_close(true)">
       Envoyer
     </button>

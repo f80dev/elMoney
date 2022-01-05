@@ -81,10 +81,11 @@ export class MainComponent implements OnInit {
 
 
   transfer(dest:any){
+    debugger
     let value=this.hand;
     let unity=this.user.moneys[this.user.selected_money].unity;
     let question='Vous souhaitez envoyer '+value+" "+unity+" à "+dest.pseudo+" ("+dest.email+") ?";
-    if(!dest.pseudo)question="Envoyer "+value+" "+unity+" à "+dest.addr;
+    if(!dest.hasOwnProperty('pseudo'))question="Envoyer "+value+" "+unity+" à "+dest.addr;
 
     this.user.check_pem(()=>{
       this.dialog.open(PromptComponent, {

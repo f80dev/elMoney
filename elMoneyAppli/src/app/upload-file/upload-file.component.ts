@@ -15,6 +15,7 @@ export class UploadFileComponent implements OnInit {
   @Input("filter") filter:any={};
   @Input("send_file") send_file:boolean=false;
   @Input("label") label:string="Sélectionner un fichier";
+  @Input("comment") comment:string="";
   @Input("encode") encode=true;
   @Input("maxsize") maxsize:number=10000000000000;
   @Input("show_cancel") show_cancel:boolean=false;

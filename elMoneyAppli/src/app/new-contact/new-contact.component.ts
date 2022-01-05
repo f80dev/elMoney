@@ -36,7 +36,7 @@ export class NewContactComponent implements OnInit {
           this.dialogRef.close(r);
         },(err)=>{showError(this,err);});
       } else {
-        this.dialogRef.close({email:this.email});
+        this.dialogRef.close({email:this.email,addr:this.email});
       }
     } else {
       this.dialogRef.close();

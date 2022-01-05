@@ -1,5 +1,4 @@
 <ng-content></ng-content>
-<br>
 <app-hourglass [message]="message"></app-hourglass>
 
   <input #csvInput [hidden]="true"
@@ -9,6 +8,7 @@
 
   <button mat-raised-button
           mat-button class="app-button"
+          [title]="comment"
           (click)="csvInput.click()">
     {{label}}
   </button>

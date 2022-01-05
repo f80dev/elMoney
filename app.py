@@ -813,7 +813,7 @@ def prepare_data(data):
         data["price"] = float(data["price"].replace(",", "."))
 
     data["fee"] = int(float(data["fee"]) * 1e18)
-    data["value"] = int(float(data["gift"]) * 1e16)
+    data["value"] = int(float(data["gift"]) * 1e18)
 
     res_visual = ""
     if "visual" in data and len(data["visual"]) > 0:
@@ -1131,6 +1131,7 @@ def upload_file():
 
 @app.route('/api/reload_accounts/',methods=["POST"])
 def reload_accounts():
+    rc=[]
     data = json.loads(str(request.data, encoding="utf-8"))
     for acc in data["accounts"]:
         log("Traitement de "+acc)
@@ -1143,20 +1144,25 @@ def reload_accounts():
             else:
                 log("Transfert de fond en Egld pour " + acc)
                 _test = Account(pem_file="./PEM/" + acc)
-                if bc.getMoneys(_test)["EGLD"]["solde"]<float(data["egld"]):
-                    result=bc.credit(bc.bank,_test,int(data["egld"]*1e18))
-                if result is None:
-                    log("Impossible de créditer le compte, on supprime l'utilisateur de la base de données")
-                    dao.del_user(_test.address.bech32())
-                else:
-                    log("Transfert de fond en ESDT "+NETWORKS[bc.network_name]["identifier"]+" pour " + acc)
-                    bc.transferESDT(idx=NETWORKS[bc.network_name]["identifier"],
-                                        user_from=bc.bank,
-                                        user_to=_test.address.bech32(),
-                                        amount=data["amount"] * (5 ** 25)
-                                        )
 
-    return jsonify({"message":"reloaded"})
+        right=True
+        if bc.getMoneys(_test)["EGLD"]["solde"]<float(data["egld"]):
+            result=bc.credit(bc.bank,_test,int(data["egld"]*1e18))
+            if result is None:
+                log("Impossible de créditer le compte, on supprime l'utilisateur de la base de données")
+                dao.del_user(_test.address.bech32())
+                right=False
+
+        if right:
+            log("Transfert de fond en ESDT "+NETWORKS[bc.network_name]["identifier"]+" pour " + acc)
+            bc.transferESDT(idx=NETWORKS[bc.network_name]["identifier"],
+                                user_from=bc.bank,
+                                user_to=_test.address.bech32(),
+                                amount=data["amount"] * (10 ** 25)
+                                )
+            rc.append(acc)
+
+    return jsonify({"message":"reloaded","account":rc})
 
 
 

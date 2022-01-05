@@ -47,7 +47,7 @@ export class AdminComponent implements OnInit {
     });
   }
 
-  reload_test_accounts(func) {
+  reload_test_accounts(func=null) {
     this.message="Chargement des comptes";
     let body={amount:10,egld:0.1,accounts:[]};
     for(let p of this.config.profils){
@@ -56,7 +56,7 @@ export class AdminComponent implements OnInit {
     this.api._post("reload_accounts","",body).subscribe(()=>{
       showMessage(this,'Comptes rechargés');
       this.message="";
-      func();
+      if(func)func();
     },(err)=>{showError(this,err);});
   }
 
@@ -114,5 +114,9 @@ export class AdminComponent implements OnInit {
 
   raz_nft_db() {
     this.api._get('raznftdb/'+this.password+"/","").subscribe(()=>{});
+  }
+
+  islocal() {
+    return !this.config.isProd();
   }
 }
