@@ -348,6 +348,45 @@ def burn(network:str):
         return returnError()
 
 
+#http://localhost:6660/api/info_server/
+@app.route('/api/info_server/',methods=["GET"])
+def info_server():
+    vecs=[t.hex for t in bc.query("tokens_map")]
+    tokens=[]
+    for v in vecs:
+        tokens.append({
+            "price":int(v[0:8], 16),
+            "desc":int(v[8:24], 16),
+            "secret":int(v[24:40], 16),
+            "collection": int(v[40:56], 16),
+            "gift": int(v[56:60], 16),
+            "resp": int(v[60:62], 16),
+
+            "min_markup": int(v[62:66], 16),
+            "max_markup": int(v[66:70], 16),
+        })
+
+
+    rc={
+        "SC_address":NETWORKS[bc.network_name]["nft"],
+        "network":bc.network_name,
+        "decoded tokens":bc.get_tokens(),
+        "standard_tokens":bc.query("tokens", arguments=[0,0,0], n_try=1),
+        "tokens_smart":tokens,
+        "tokens":vecs,
+        "nb_tokens":len(tokens),
+        "addresses":[addr.hex for addr in bc.query("addresses")],
+        "strings":[str(base64.b64decode(s.base64), "utf8") for s in bc.query("strs")[1:]],
+        "ESDTs":[x.hex for x in bc.query("ESDT_map")]
+    }
+    if False:
+        rc["dealer_count"]=bc.query("dealerCount")[0].number
+        rc["dealers"]=bc.query("dealer", [0])
+
+    return jsonify(rc)
+
+
+
 
 #tag: get_tokens tokens all_tokens get_nfts get_nft
 #http://localhost:6660/api/nfts/
@@ -767,7 +806,7 @@ def prepare_data(data):
     log("Préparation des données de fabrication depuis " + str(data))
 
     if not "title" in data: data["title"] = data["signature"]
-    if not "gift" in data: data["gift"] = 0
+    if not "gift" in data or data["gift"] is None: data["gift"] = 0
     if not "secret" in data: data["secret"] = ""
     if not "price" in data: data["price"] = 0
     if not "network" in data: data["network"] = "elrond"
@@ -815,6 +854,7 @@ def prepare_data(data):
     data["fee"] = int(float(data["fee"]) * 1e18)
     data["value"] = int(float(data["gift"]) * 1e18)
 
+
     res_visual = ""
     if "visual" in data and len(data["visual"]) > 0:
         res_visual = "%%" + data["visual"]
@@ -825,7 +865,7 @@ def prepare_data(data):
 
 
 
-def prepare_arguments(data,owner):
+def prepare_arguments(data,owner,count=1):
     """
     Prepare les arguments pour le minage
     :param size:
@@ -834,7 +874,7 @@ def prepare_arguments(data,owner):
     :param owner:
     :return:
     """
-    desc = data["description"]
+
     price = int(float(data["price"]) * 1e4)
     max_markup = int(float(data["max_markup"]) * 100)
     min_markup = int(float(data["min_markup"]) * 100)
@@ -852,9 +892,9 @@ def prepare_arguments(data,owner):
     if data["properties"] & ONE_WINNER > 0: pay_count = 1  #TODO implémenté le nombre de payment
 
     miner=Account(address=data["miner"])
-    rc=[
-        "0x" + data["title"].encode().hex(),
-        "0x" + desc.encode().hex(),
+    rc=[count,
+        "0x" + data["collection"].encode().hex(),
+        "0x" + (data["title"]+"%%"+data["description"]).encode().hex(),
         "0x" + data["secret"],
         price, min_markup, max_markup,
         properties,
@@ -919,15 +959,15 @@ def mint(count:str,data:dict=None):
         #                                 "state":hex(1)}
         #                             ,price,count,res_visual))
     else:
-        args=prepare_arguments(data,  owner)
+        args=prepare_arguments(data,  owner,count=int(count))
         if data["network"]=="elrond":
             result = bc.mint(
                 miner,
                 arguments=args,
                 value=data["value"]
             )
-            if result is None or not "token_id" in result: return returnError("Echec de la transaction de minage")
-            tokenids = bc.clone(miner, int(count) - 1, owner, result["token_id"])
+            if result is None or not "token_id" in result:
+                return returnError("Echec de la transaction de minage")
 
         if data["network"]=="db":
             result=dao.mint(nft=data,miner=miner.address.bech32())

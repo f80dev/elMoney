@@ -113,7 +113,6 @@ export class NftsPersoComponent implements OnInit {
       },(err)=>{showError(this,err)});
     }
     this.user.refresh_balance();
-
   }
 
   transfer(nft:any){

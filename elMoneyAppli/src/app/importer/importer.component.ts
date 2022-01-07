@@ -38,7 +38,7 @@ export class ImporterComponent implements OnInit {
 
   picture:string="";
   visual:string=""
-
+  collection:string="";
   count: number=1;
   gift:number=0;
   secret: string="";
@@ -107,6 +107,7 @@ export class ImporterComponent implements OnInit {
   @ViewChild('tagsInput') tagInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
   file_to_send: { pem: string; filename:string,content: any };
+
 
 
 
@@ -226,7 +227,6 @@ export class ImporterComponent implements OnInit {
     this.message="Transfert des fichiers vers IPFS";
     this.ipfs.add(this.visual,this,(cid_visual)=>{
       this.ipfs.add(this.picture,this,(cid_picture)=> {
-        debugger
         let obj = {
           pem: this.user.pem,
           owner: this.user.addr,
@@ -234,7 +234,8 @@ export class ImporterComponent implements OnInit {
           visual: cid_visual,
           filename: this.filename,
           format: this.file_format,
-          signature: this.title,
+          title: this.title,
+          collection: this.collection,
           secret: this.secret,
           price: this.price,
           elrond_standard:this.elrond_standard,
@@ -266,7 +267,6 @@ export class ImporterComponent implements OnInit {
         window.scrollTo(0, 0);
         this.show_zone_upload = false;
 
-
         if(this.count>20)showMessage(this,"Le délai de création de "+this.count+" NFTs peut être long");
 
         this.api._post("mint/" + this.count, "simulate="+simulate, obj,240).subscribe((r: any) => {
@@ -278,7 +278,6 @@ export class ImporterComponent implements OnInit {
               for(let t of r){cost=cost+t["cost"];}
               showMessage(this, "Fichier tokenisé pour " + cost + " xEgld");
               setTimeout(()=>{
-
                 this.user.refresh_balance(() => {
                   this.router.navigate(["nfts-perso"], {queryParams: {index: 1}});
                 },()=>{showError(this);});

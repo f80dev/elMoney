@@ -218,6 +218,17 @@
               <ng-template matStepLabel>Présentation sur la place de marché</ng-template>
 
               <mat-form-field appearance="fill" class="app-field">
+                <mat-label>Collection / Série du NFT</mat-label>
+                <input matInput type="text" maxlength="200"
+                       id="txtCollection"
+                       [(ngModel)]="collection" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=2">
+                <mat-hint *ngIf="focus_idx==2">Donner un nom à la collection a laquelle appartient votre NFT</mat-hint>
+                <mat-icon *ngIf="collection?.length>0" matSuffix style="cursor: pointer" (click)="collection=''">cancel</mat-icon>
+              </mat-form-field>
+              <br>
+
+
+              <mat-form-field appearance="fill" class="app-field">
                 <mat-label>Intitulé du NFT</mat-label>
                 <input matInput type="text" maxlength="200"
                        id="txtTitle"

@@ -768,7 +768,7 @@ class ElrondNet:
 
 
 
-    def query(self, function_name, arguments=None, isnumber=True, n_try=3):
+    def query(self, function_name, arguments=None, n_try=3):
         _contract = SmartContract(address=NETWORKS[self.network_name]["nft"])
 
         d = None
@@ -785,6 +785,123 @@ class ElrondNet:
         return d
 
 
+    def vec_to_token(self,tokens):
+        index=0
+
+        index = index + 8
+        log("Traitement à partir de " + tokens[index:])
+
+        collection_len = int(tokens[index:index + 8], 16) * 2
+        index = index + 8
+
+        desc_len = int(tokens[index:index + 8], 16) * 2
+        index = index + 8
+
+        money_len = int(tokens[index:index + 8], 16) * 2
+        index = index + 8
+
+        price = int(tokens[index:index + 8], 16) / 1e4
+        index = index + 8
+
+        identifier = str(bytearray.fromhex(tokens[index:index + money_len]), "utf-8")
+        index = index + money_len
+
+        _u = SmartContract(address=tokens[index:index + 64])
+        owner_addr = _u.address.bech32()
+        index = index + 64
+
+        has_secret = int(tokens[index:index + 2], 16)
+        index = index + 2
+
+        properties = int(tokens[index:index + 4], 16)
+        index = index + 4
+
+        status = int(tokens[index:index + 2], 16)
+        index = index + 2
+
+        resp = int(tokens[index:index + 2], 16)
+        index = index + 2
+
+        min_markup = int(tokens[index:index + 4], 16)
+        index = index + 4
+
+        max_markup = int(tokens[index:index + 4], 16)
+        index = index + 4
+
+        markup = int(tokens[index:index + 4], 16)
+        index = index + 4
+
+        miner_ratio = int(tokens[index:index + 4], 16)
+        index = index + 4
+
+        miner = Account(address=tokens[index:index + 64]).address.bech32()
+        index = index + 64
+
+        id = int(tokens[index:index + 16], 16)
+        index = index + 16
+
+        ref_token_id = int(tokens[index:index + 16], 16)
+        index = index + 16
+
+        title = ""
+        visual = ""
+        try:
+            collection: str = str(bytearray.fromhex(tokens[index:index + collection_len]), "utf-8")
+            index = index + collection_len
+
+            desc: str = str(bytearray.fromhex(tokens[index:index + desc_len]), "utf-8")
+            index = index + desc_len
+
+            fullscreen = ("!!" in desc)
+            desc = desc.replace("!!", "%%")
+            if "%%" in desc:
+                visual = find_url(desc.split("%%")[1])
+                desc = desc.split("%%")[0]
+        except:
+            log(tokens[index:index+desc_len] + " n'est pas une chaine de caractères")
+
+        # extraction des tags
+        tags, desc = extract_tags(desc)
+        desc = desc.strip()
+        if "%%" in desc:
+            title=desc.split("%%")[0]
+            desc=desc.split("%%")[1]
+        else:
+            title=""
+
+        premium = (len(visual) > 0 and len(desc) > 10 and len(title) > 5)
+        obj = dict({"token_id": id,
+                    "title": title,
+                    "tags": " ".join(tags),
+                    "description": desc,
+                    "price": price,
+                    "markup": markup / 100,
+                    "has_secret": has_secret,
+                    "resp": resp,
+                    "collection":collection,
+                    "secret_vote": properties & SECRET_VOTE > 0,
+                    "unik": properties & UNIK > 0,
+                    "id_required": properties & ID_REQUIRED > 0,
+                    "vote": properties & VOTE > 0,
+                    "miner_can_burn": properties & MINER_CAN_BURN > 0,
+                    "for_sale": properties & FOR_SALE > 0,
+                    "min_markup": min_markup / 100, "max_markup": max_markup / 100,
+                    "miner_ratio": miner_ratio / 100,
+                    "miner": miner,
+                    "ref_token_id": ref_token_id,
+                    "owner": owner_addr,
+                    "visual": visual,
+                    "unity": "EGLD" if money_len == 0 else identifier.split("-")[0],
+                    "premium": premium,
+                    "identifier": identifier,
+                    "fullscreen": False,
+                    "properties": properties,
+                    "network": "elrond"
+                    })
+
+        obj["message"] = ""
+        return obj
+
 
 
     # /nfts /get_nfts
@@ -792,7 +909,6 @@ class ElrondNet:
     def get_tokens(self, seller_filter="0x0", owner_filter="0x0", miner_filter="0x0"):
         log("Recherche des NFT pour seller="+seller_filter+" owner="+owner_filter+" miner="+miner_filter)
         rc = list()
-        max_id = 0
 
         if owner_filter == "0x0":
             owner_filter = "0x0000000000000000000000000000000000000000000000000000000000000000"
@@ -810,127 +926,27 @@ class ElrondNet:
             miner_filter = "0x" + str(Account(address=miner_filter).address.hex())
 
         # On récupére les extended NFT
-        tokens = self.query("tokens", arguments=[seller_filter, owner_filter, miner_filter], isnumber=True, n_try=1)
+        tokens = self.query("tokens", arguments=[seller_filter, owner_filter, miner_filter], n_try=1)
         if not tokens is None and len(tokens) > 0 and tokens[0] != "":
             tokens = tokens[0].hex
             index = 0
 
+            max_id = 0
+
             while len(tokens) - index > 112:
-                index = index + 8
-                log("Traitement à partir de " + tokens[index:])
-                title_len = int(tokens[index:index + 8], 16) * 2
-                index = index + 8
+                obj=self.vec_to_token(tokens[index:index+112])
 
-                desc_len = int(tokens[index:index + 8], 16) * 2
-                index = index + 8
-
-                money_len = int(tokens[index:index + 8], 16) * 2
-                index = index + 8
-
-                price = int(tokens[index:index + 8], 16) / 1e4
-                index = index + 8
-
-                identifier = str(bytearray.fromhex(tokens[index:index + money_len]), "utf-8")
-                index = index + money_len
-
-                _u = SmartContract(address=tokens[index:index + 64])
-                owner_addr = _u.address.bech32()
-                index = index + 64
-
-                has_secret = int(tokens[index:index + 2], 16)
-                index = index + 2
-
-                properties = int(tokens[index:index + 4], 16)
-                index = index + 4
-
-                status = int(tokens[index:index + 2], 16)
-                index = index + 2
-
-                resp = int(tokens[index:index + 2], 16)
-                index = index + 2
-
-                min_markup = int(tokens[index:index + 4], 16)
-                index = index + 4
-
-                max_markup = int(tokens[index:index + 4], 16)
-                index = index + 4
-
-                markup = int(tokens[index:index + 4], 16)
-                index = index + 4
-
-                miner_ratio = int(tokens[index:index + 4], 16)
-                index = index + 4
-
-                miner = Account(address=tokens[index:index + 64]).address.bech32()
-                index = index + 64
-
-                id = int(tokens[index:index + 16], 16)
-                index = index + 16
-
-                ref_token_id = int(tokens[index:index + 16], 16)
-                index = index + 16
-
-                title = ""
-                visual = ""
-                try:
-                    title: str = str(bytearray.fromhex(tokens[index:index + title_len]), "utf-8")
-                    index = index + title_len
-
-                    desc: str = str(bytearray.fromhex(tokens[index:index + desc_len]), "utf-8")
-                    index = index + desc_len
-
-                    fullscreen = ("!!" in desc)
-                    desc = desc.replace("!!", "%%")
-                    if "%%" in desc:
-                        visual=find_url(desc.split("%%")[1])
-                        desc = desc.split("%%")[0]
-                except:
-                    log(tokens[index:index + title_len] + " n'est pas une chaine de caractères")
-
-                _d = {
-                    "owner": owner_addr,
-                    "miner": miner_filter,
-                    "price": str(price),
-                    "token": str(id),
+                #Remplacement des champs types
+                _dictionnary = {
+                    "owner": obj["owner"],
+                    "miner": obj["miner"],
+                    "price": str(obj["price"]),
+                    "token": str(obj["token_id"]),
                 }
-                title = translate(title, _d)
-                desc = translate(desc, _d)
+                title = translate(title, _dictionnary)
+                desc = translate(desc, _dictionnary)
 
-                # extraction des tags
-                tags,desc = extract_tags(desc)
-                desc = desc.strip()
-
-                premium = (len(visual) > 0 and len(desc) > 10 and len(title) > 5)
-                if id > max_id: max_id = id
-                obj = dict({"token_id": id,
-                            "title": title,
-                            "tags": " ".join(tags),
-                            "description": desc,
-                            "price": price,
-                            "markup": markup / 100,
-                            "has_secret": has_secret,
-                            "resp": resp,
-                            "secret_vote": properties & SECRET_VOTE > 0,
-                            "unik": properties & UNIK > 0,
-                            "id_required": properties & ID_REQUIRED>0,
-                            "vote": properties & VOTE > 0,
-                            "miner_can_burn": properties & MINER_CAN_BURN > 0,
-                            "for_sale": properties & FOR_SALE > 0,
-                            "min_markup": min_markup / 100, "max_markup": max_markup / 100,
-                            "miner_ratio": miner_ratio / 100,
-                            "miner": miner,
-                            "ref_token_id":ref_token_id,
-                            "owner": owner_addr,
-                            "visual": visual,
-                            "unity": "EGLD" if money_len == 0 else identifier.split("-")[0],
-                            "premium": premium,
-                            "identifier": identifier,
-                            "fullscreen": False,
-                            "properties": properties,
-                            "network":"elrond"
-                            })
-
-                obj["message"] = ""
+                if obj["token_id"] > max_id: max_id = obj["token_id"]
 
                 rc.append(obj)
         else:
@@ -1017,6 +1033,7 @@ class ElrondNet:
                 log("Problème de lecture de " + url)
 
         return rc
+
 
     def evalprice(self, sender_addr, receiver_addr, value=0, data="exemplededata"):
         body = {
@@ -1362,3 +1379,8 @@ class ElrondNet:
         rc=self._proxy.get_transaction(transac["hash"],with_results=True)
         rc["function"]=transac["function"]
         return rc
+
+    def to_string(self, vec:str,start=0):
+        end=vec[start+1:].index("000000")
+        rc=str(bytearray.fromhex(vec[start:end+1]), "utf-8")
+        return {"text":rc,"offset":len(rc)*2}
