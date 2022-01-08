@@ -182,7 +182,7 @@ class DAO:
         return rc
 
     def burn(self, ids):
-        log("Demande de destruction de "+",".join(ids))
+        log("Demande de destruction de "+",".join(str(ids)))
         owner=""
         for id in ids:
             id=int(id)

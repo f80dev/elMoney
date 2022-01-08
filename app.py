@@ -364,6 +364,17 @@ def info_server():
 
             "min_markup": int(v[62:66], 16),
             "max_markup": int(v[66:70], 16),
+
+            "owner": int(v[70:78], 16),
+            "miner": int(v[78:86], 16),
+
+            "properties":bin(int(v[86:90], 16)),
+            "miner_ratio":int(v[90:94], 16),
+
+            "money":int(v[94:98], 16),
+            "status":int(v[98:100], 16),
+
+            "dealers": int(v[100:102], 16),
         })
 
 
@@ -893,7 +904,7 @@ def prepare_arguments(data,owner,count=1):
 
     miner=Account(address=data["miner"])
     rc=[count,
-        "0x" + data["collection"].encode().hex(),
+        "0x" + (data["collection"].encode().hex() if len(data["collection"])>0 else "0"),
         "0x" + (data["title"]+"%%"+data["description"]).encode().hex(),
         "0x" + data["secret"],
         price, min_markup, max_markup,

@@ -109,110 +109,7 @@
 
 
         <mat-vertical-stepper (selectionChange)="update_idx($event)" [linear]="false" style="width:90%;display: inline-block;max-width:700px;text-align: left;background: none;">
-          <mat-step>
-
-            <app-tuto *ngIf="idx_tab==0"
-                      label="TOKENFORGE permet de cacher un secret dans le NFT. Celui-ci ne peut être vue que par le propriétaire du NFT. Par exemple vous pouvez cacher un mot de passe, un lien youtube, un fichier"></app-tuto>
-
-            <form>
-              <ng-template matStepLabel>Embarquer dans le NFT</ng-template>
-              <div *ngIf="!elrond_standard">
-                <table>
-                  <tr>
-                    <td>
-                      <app-upload-file
-                        *ngIf="!filename || filename.length==0"
-                        [send_file]="true"
-                        [maxsize]="config.values.max_file_size"
-                        (uploaded)="_import($event,0,'Commençons par charger le fichier dans le NFT')">
-                        {{prompt}}
-                      </app-upload-file>
-                    </td>
-                    <td *ngIf="filename?.length>0">
-                      '{{filename}}' <span style="color: lightgrey">est embarqué dans votre NFT</span>&nbsp;
-                    </td>
-                    <td *ngIf="filename?.length>0">
-                      <mat-icon style="cursor: pointer" (click)="filename=''">delete</mat-icon>
-                    </td>
-                  </tr>
-                </table>
-
-
-
-                <div style="margin: 10px" *ngIf="filename?.length==0">ou</div>
-
-
-                <mat-form-field appearance="fill" class="app-field" *ngIf="filename?.length==0">
-                  <mat-label>Une phrase secrete</mat-label>
-                  <input matInput type="text" (focusin)="focus_idx=1"
-                         id="txtSecret"
-                         maxlength="200" [(ngModel)]="secret" [ngModelOptions]="{standalone: true}">
-                  <mat-hint *ngIf="focus_idx==1">un mot de passe, une adresse internet qui ne sera accessible qu'au propriétaire</mat-hint>
-                </mat-form-field>
-                <br>
-
-                <div *ngIf="(secret && secret.length>0) || filename?.length>0" style="margin-bottom: 15px">
-                  <mat-slide-toggle color="primary"
-                                    *ngIf="!rent"
-                                    [(ngModel)]="self_destruction" [ngModelOptions]="{standalone: true}">Auto-destruction après ouverture
-                  </mat-slide-toggle>
-                  <br>
-
-                  <mat-slide-toggle color="primary" *ngIf="!self_destruction"
-                                    [(ngModel)]="rent" [ngModelOptions]="{standalone: true}">Retour au créateur après ouverture
-                  </mat-slide-toggle>
-                </div>
-
-
-
-                <mat-form-field appearance="fill" class="app-field" style="width: 200px;">
-                  <mat-label>Récompense à l'ouverture</mat-label>
-                  <input matInput type="number"
-                         id="txtGift"
-                         (focusin)="focus_idx=1.5" step="0.1" min="0" [max]="user.gas/1e18" [(ngModel)]="gift"
-                         [ngModelOptions]="{standalone: true}">
-                  <mat-hint *ngIf="focus_idx==1.5">Le propriétaire recoit la somme que vous avez placée dans le NFT à son ouverture</mat-hint>
-                </mat-form-field>
-
-                <mat-form-field appearance="fill" style="max-width:100px">
-                  <mat-label>Monnaie</mat-label>
-                  <mat-select [(ngModel)]="selected_money" name="money" (ngModelChange)="update_user_solde()">
-                    <mat-option *ngFor="let money of moneys" [value]="money">
-                      {{money?.label}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-
-                <br><br>
-                <mat-slide-toggle [(ngModel)]="vote"
-                                  [ngModelOptions]="{standalone: true}">Le propriétaire peut écrire dans le NFT (exemple: bulletin de vote)
-                </mat-slide-toggle>
-                <br>
-                <mat-slide-toggle [(ngModel)]="secret_vote" *ngIf="vote"
-                                  [ngModelOptions]="{standalone: true}">Réponse / Vote secret
-                </mat-slide-toggle>
-
-
-              </div>
-            </form>
-
-            <br>
-
-            <div *ngIf="gift>0">
-              <mat-slide-toggle
-                color="primary"
-                *ngIf="secret.length>0"
-                [(ngModel)]="find_secret">Trouver le secret pour avoir la récompense
-              </mat-slide-toggle>
-            </div>
-
-
-
-
-
-          </mat-step>
-
-          <mat-step >
+           <mat-step >
             <app-tuto *ngIf="idx_tab==1" label="Après fabrication, les NFTs sont présentés sur une place de marché ou ils peuvent être achetés par les autres utilisateurs de TOKENFORGE"></app-tuto>
 
               <ng-template matStepLabel>Présentation sur la place de marché</ng-template>
@@ -354,6 +251,110 @@
               </mat-slide-toggle>
 
           </mat-step>
+          <mat-step>
+
+            <app-tuto *ngIf="idx_tab==0"
+                      label="TOKENFORGE permet de cacher un secret dans le NFT. Celui-ci ne peut être vue que par le propriétaire du NFT. Par exemple vous pouvez cacher un mot de passe, un lien youtube, un fichier"></app-tuto>
+
+            <form>
+              <ng-template matStepLabel>Embarquer dans le NFT</ng-template>
+              <div *ngIf="!elrond_standard">
+                <table>
+                  <tr>
+                    <td>
+                      <app-upload-file
+                        *ngIf="!filename || filename.length==0"
+                        [send_file]="true"
+                        [maxsize]="config.values.max_file_size"
+                        (uploaded)="_import($event,0,'Commençons par charger le fichier dans le NFT')">
+                        {{prompt}}
+                      </app-upload-file>
+                    </td>
+                    <td *ngIf="filename?.length>0">
+                      '{{filename}}' <span style="color: lightgrey">est embarqué dans votre NFT</span>&nbsp;
+                    </td>
+                    <td *ngIf="filename?.length>0">
+                      <mat-icon style="cursor: pointer" (click)="filename=''">delete</mat-icon>
+                    </td>
+                  </tr>
+                </table>
+
+
+
+                <div style="margin: 10px" *ngIf="filename?.length==0">ou</div>
+
+
+                <mat-form-field appearance="fill" class="app-field" *ngIf="filename?.length==0">
+                  <mat-label>Une phrase secrete</mat-label>
+                  <input matInput type="text" (focusin)="focus_idx=1"
+                         id="txtSecret"
+                         maxlength="200" [(ngModel)]="secret" [ngModelOptions]="{standalone: true}">
+                  <mat-hint *ngIf="focus_idx==1">un mot de passe, une adresse internet qui ne sera accessible qu'au propriétaire</mat-hint>
+                </mat-form-field>
+                <br>
+
+                <div *ngIf="(secret && secret.length>0) || filename?.length>0" style="margin-bottom: 15px">
+                  <mat-slide-toggle color="primary"
+                                    *ngIf="!rent"
+                                    [(ngModel)]="self_destruction" [ngModelOptions]="{standalone: true}">Auto-destruction après ouverture
+                  </mat-slide-toggle>
+                  <br>
+
+                  <mat-slide-toggle color="primary" *ngIf="!self_destruction"
+                                    [(ngModel)]="rent" [ngModelOptions]="{standalone: true}">Retour au créateur après ouverture
+                  </mat-slide-toggle>
+                </div>
+
+
+
+                <mat-form-field appearance="fill" class="app-field" style="width: 200px;">
+                  <mat-label>Récompense à l'ouverture</mat-label>
+                  <input matInput type="number"
+                         id="txtGift"
+                         (focusin)="focus_idx=1.5" step="0.1" min="0" [max]="user.gas/1e18" [(ngModel)]="gift"
+                         [ngModelOptions]="{standalone: true}">
+                  <mat-hint *ngIf="focus_idx==1.5">Le propriétaire recoit la somme que vous avez placée dans le NFT à son ouverture</mat-hint>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" style="max-width:100px">
+                  <mat-label>Monnaie</mat-label>
+                  <mat-select [(ngModel)]="selected_money" name="money" (ngModelChange)="update_user_solde()">
+                    <mat-option *ngFor="let money of moneys" [value]="money">
+                      {{money?.label}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <br><br>
+                <mat-slide-toggle [(ngModel)]="vote"
+                                  [ngModelOptions]="{standalone: true}">Le propriétaire peut écrire dans le NFT (exemple: bulletin de vote)
+                </mat-slide-toggle>
+                <br>
+                <mat-slide-toggle [(ngModel)]="secret_vote" *ngIf="vote"
+                                  [ngModelOptions]="{standalone: true}">Réponse / Vote secret
+                </mat-slide-toggle>
+
+
+              </div>
+            </form>
+
+            <br>
+
+            <div *ngIf="gift>0">
+              <mat-slide-toggle
+                color="primary"
+                *ngIf="secret.length>0"
+                [(ngModel)]="find_secret">Trouver le secret pour avoir la récompense
+              </mat-slide-toggle>
+            </div>
+
+
+
+
+
+          </mat-step>
+
+
           <mat-step>
             <app-tuto *ngIf="idx_tab==2"
                       label="La vente des NFTs peut être déléguée à des revendeurs qui peuvent prendre une commission suivant les limites fixées par le créateur du NFT."></app-tuto>

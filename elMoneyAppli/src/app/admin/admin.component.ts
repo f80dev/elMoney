@@ -117,6 +117,10 @@ export class AdminComponent implements OnInit {
   }
 
   islocal() {
-    return !this.config.isProd();
+    if(!this.config.isProd()){
+      this.password="hh4271";
+      return true;
+    }
+    return false;
   }
 }
