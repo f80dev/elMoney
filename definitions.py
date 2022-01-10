@@ -49,7 +49,7 @@ NETWORKS={
         "proxy":"https://testnet-gateway.elrond.com",
         "explorer":"https://testnet-explorer.elrond.com",
         "wallet":"http://testnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqsmjexpdsjllak4d6qnf36qnc88a4a6rjqhyqggun0u",
+        "nft":"erd1qqqqqqqqqqqqqpgqhru5p5y6385nz4q94ew0nrs8w2lyt4cfqhyqw6hzvd",
         "shard":0
     },
 
@@ -58,12 +58,12 @@ NETWORKS={
         "new_account":float(0.2*1e18),
         "bank":"bank",
         "unity":"xEgld",
-        "identifier":"TFE-c18181",
+        "identifier":"TFE-d1f00b",
         "faucet":"https://r3d4.fr/elrond/devnet/index.php",
         "proxy":"https://devnet-gateway.elrond.com",
         "explorer":"https://devnet-explorer.elrond.com",
         "wallet":"https://devnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgq6lcpsk9jlxxw4myuewlr23p3y6e8da6aqhyqf7gyfu",
+        "nft":"erd1qqqqqqqqqqqqqpgqhjq0s99vp8fe0styu97sz9de8qr3xjvuqhyq7n9jep",
         "shard": 1
     },
 
@@ -117,9 +117,10 @@ CAN_RESELL      = 0b0000000000000010
 CAN_TRANSFERT   = 0b0000000000000001
 
 MAX_MINT_NFT=50
-MAX_GAS_LIMIT=600000000
+MAX_GAS_LIMIT=900000000
 RESULT_SECTION="results"
 
 LONG_DELAY_TRANSACTION=34 #sec
 SHORT_DELAY_TRANSACTION=9
 MAX_U64=4294967296
+ZERO_ADDR="0x"+"0"*32

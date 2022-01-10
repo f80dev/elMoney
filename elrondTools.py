@@ -785,17 +785,14 @@ class ElrondNet:
         return d
 
 
-    def vec_to_token(self,tokens):
-        index=0
-
-        index = index + 8
+    def vec_to_token(self,tokens,index):
         log("Traitement à partir de " + tokens[index:])
 
-        collection_len = int(tokens[index:index + 8], 16) * 2
-        index = index + 8
+        collection_len = int(tokens[index:index + 4], 16) * 2
+        index = index + 4
 
-        desc_len = int(tokens[index:index + 8], 16) * 2
-        index = index + 8
+        desc_len = int(tokens[index:index + 4], 16) * 2
+        index = index + 4
 
         money_len = int(tokens[index:index + 8], 16) * 2
         index = index + 8
@@ -900,7 +897,7 @@ class ElrondNet:
                     })
 
         obj["message"] = ""
-        return obj
+        return obj,index
 
 
 
@@ -909,32 +906,35 @@ class ElrondNet:
     def get_tokens(self, seller_filter="0x0", owner_filter="0x0", miner_filter="0x0"):
         log("Recherche des NFT pour seller="+seller_filter+" owner="+owner_filter+" miner="+miner_filter)
         rc = list()
+        zero="0x0000000000000000000000000000000000000000000000000000000000000000"
 
         if owner_filter == "0x0":
-            owner_filter = "0x0000000000000000000000000000000000000000000000000000000000000000"
+            owner_filter = zero
         else:
             owner_filter = "0x" + str(Account(address=owner_filter).address.hex())
 
         if seller_filter == "0x0":
-            seller_filter = "0x0000000000000000000000000000000000000000000000000000000000000000"
+            seller_filter = zero
         else:
             seller_filter = "0x" + str(Account(address=seller_filter).address.hex())
 
         if miner_filter == "0x0":
-            miner_filter = "0x0000000000000000000000000000000000000000000000000000000000000000"
+            miner_filter = zero
         else:
             miner_filter = "0x" + str(Account(address=miner_filter).address.hex())
 
         # On récupére les extended NFT
-        tokens = self.query("tokens", arguments=[seller_filter, owner_filter, miner_filter], n_try=1)
+        tokens = self.query("tokens", arguments=[seller_filter, owner_filter, miner_filter,100,0], n_try=1)
+
         if not tokens is None and len(tokens) > 0 and tokens[0] != "":
+            log("Analyse de "+str(base64.b64decode(tokens[0].base64)))
             tokens = tokens[0].hex
             index = 0
 
             max_id = 0
 
             while len(tokens) - index > 112:
-                obj=self.vec_to_token(tokens[index:index+112])
+                obj,index=self.vec_to_token(tokens,index)
 
                 #Remplacement des champs types
                 _dictionnary = {
@@ -955,6 +955,7 @@ class ElrondNet:
         # Tri de la liste
         rc = sorted(rc, key=lambda i: i["token_id"] if i["token_id"] == int else 0, reverse=True)
         return rc
+
 
     def eval_properties(self, vm):
         properties = 0

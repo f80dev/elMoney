@@ -44,7 +44,7 @@ export class ImporterComponent implements OnInit {
   secret: string="";
   price: number=0;
   title: string="Mon super NFT";
-  desc: string="miné par "+this.user.pseudo;
+  desc: string="mint by "+this.user.pseudo;
   cost=0;
   filename: string="";
   reseller: any=false;
@@ -73,7 +73,7 @@ export class ImporterComponent implements OnInit {
   opt_gift:boolean=false; //si false, chaque billet contient le gift sinon un seul billet le contient
   transparent:boolean=false; //si false, chaque billet contient le gift sinon un seul billet le contient
 
-  nft_on_db=true;
+  nft_on_db=false;
   id_required=false;
 
   //Gestion des tags

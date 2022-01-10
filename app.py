@@ -31,7 +31,7 @@ from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME
     MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, \
     MAIN_NAME, MAIN_DECIMALS, NETWORKS, ESDT_CONTRACT, LIMIT_GAS, ESDT_PRICE, IPFS_NODE_HOST, \
     IPFS_NODE_PORT, LONG_DELAY_TRANSACTION, SHORT_DELAY_TRANSACTION, FIND_SECRET, MAX_MINT_NFT, ONE_WINNER, MAX_U64, \
-    FOR_SALE, RESULT_SECTION
+    FOR_SALE, RESULT_SECTION, ZERO_ADDR
 from elrondTools import ElrondNet
 from giphy_search import ImageSearchEngine
 from ipfs import IPFS
@@ -377,17 +377,21 @@ def info_server():
             "dealers": int(v[100:102], 16),
         })
 
+    zero_addr="0x0000000000000000000000000000000000000000000000000000000000000000"
+    result=bc.query("get_str",[1])
 
     rc={
         "SC_address":NETWORKS[bc.network_name]["nft"],
+        "SC_address_hex": Account(address=NETWORKS[bc.network_name]["nft"]).address.hex(),
         "network":bc.network_name,
-        "decoded tokens":bc.get_tokens(),
-        "standard_tokens":bc.query("tokens", arguments=[0,0,0], n_try=1),
+        "raw_token":[x.hex for x in bc.query("tokens", arguments=[zero_addr,zero_addr,zero_addr], n_try=1)],
+        #"smart_token":bc.get_tokens(),
         "tokens_smart":tokens,
         "tokens":vecs,
         "nb_tokens":len(tokens),
         "addresses":[addr.hex for addr in bc.query("addresses")],
-        "strings":[str(base64.b64decode(s.base64), "utf8") for s in bc.query("strs")[1:]],
+        "strings":[str(base64.b64decode(s.base64), "utf8") for s in bc.query("strs")],
+        "get_str":str(result),
         "ESDTs":[x.hex for x in bc.query("ESDT_map")]
     }
     if False:
