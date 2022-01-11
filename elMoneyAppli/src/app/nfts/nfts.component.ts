@@ -33,7 +33,7 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
     ])
   ]
 })
-export class NftsComponent implements OnChanges {
+export class NftsComponent {
 
   @Input("user") user:any;
   @Input("art") art:boolean=true;
@@ -64,30 +64,12 @@ export class NftsComponent implements OnChanges {
 
 
 
-  ngOnChanges(): void {
-    // if(this.nfts){
-    //   for(let nft of this.nfts){
-    //     nft.visibility='visible';
-    //     if(this.filter.length>0){
-    //       for(let k of Object.keys(this.filter)){
-    //       if(nft[k] && typeof nft[k]=="string" && nft[k].indexOf(this.filter[k])==-1){
-    //         nft.visibility='hidden';
-    //         break;
-    //       }
-    //     }
-    //     }
-    //
-    //   }
-    // }
-  }
-
-
   share(nft){
     this.router.navigate(["promo"],{queryParams:{
         url:environment.domain_appli+"/?filter="+nft.token_id,
         visual:nft.visual,
         tags:nft.tags,
-        body:removeHTML(nft.description),
+        body:removeHTML(nft.desc),
         title:nft.title,
         premium:nft.premium
       }});
@@ -125,7 +107,7 @@ export class NftsComponent implements OnChanges {
         data: {
           title:nft.title.split("?")[0]+" ?",
           subtitle: 'Donner la réponse pour gagner (souvent en 1 seul mot ou un seul nombre)',
-          question:"html:"+nft.description,
+          question:"html:"+nft.desc,
           onlyConfirm: false,
           lbl_ok: 'Répondre',
           lbl_cancel: 'Abandonner'
@@ -367,14 +349,16 @@ export class NftsComponent implements OnChanges {
           onlyConfirm: false,
           type:"number",
           min:1,
+          result: nft.count,
           max:1000,
           lbl_ok: 'Cloner',
           lbl_cancel: 'Abandonner'
         }}).afterClosed().subscribe((result:any) => {
         if (result) {
           nft.message="Clonage en cours";
-          this.api._post("clone/"+nft.ref_token_id+"/"+nft.network+"/","",{pem:this.user.pem,nb_copies:result}).subscribe(()=>{
+          this.api._post("clone/"+nft.token_id+"/"+nft.network+"/","",{pem:this.user.pem,nb_copies:result}).subscribe(()=>{
             nft.message="";
+            this.onrefresh.emit("clone");
             this.user.refresh_balance();
             showMessage(this,"Clonage terminé");
           },(err)=>{

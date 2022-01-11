@@ -3,7 +3,7 @@
 <!--  Version gallerie d'art-->
   <div *ngIf="!art" class="wrap-list">
     <mat-card class="app-card mat-elevation-z16"
-              [title]="nft.title+' '+nft.description"
+              [title]="nft.title+' '+nft.desc"
               [ngStyle]="{margin:'15px','min-height':'150px','max-width':max_w,width:'90%','margin-bottom':'5px',padding:'7px','color':'white'}"
               *ngFor="let nft of nfts | filter: ['search',filter]">
 
@@ -28,7 +28,7 @@
 
       </mat-card-header>
 
-      <mat-card-content [title]="nft.title+' - '+nft.description"
+      <mat-card-content [title]="nft.title+' - '+nft.desc"
                         [ngStyle]="{'min-height':'fit-content',width:'95%',height:_h,'text-align':'center',margin:'5px','margin-bottom':'37px',overflow:'hidden'}">
 
 
@@ -55,7 +55,7 @@
 
         <div
           style="width:90%;margin:5%;line-height: 95%;font-size: small;text-align: center;">
-          <div [innerHTML]="nft.description | safe" (dblclick)="edit_field(nft,'description')"></div><br>
+          <div [innerHTML]="nft.desc | safe" (dblclick)="edit_field(nft,'description')"></div><br>
           <div style="font-size: x-small;color:lightgrey;margin-top: 3px;">{{nft.tags}}</div>
         </div>
 
@@ -228,10 +228,10 @@
           <div class="flip-card-back">
             <div class="tag">
               <div style="width:95%;font-size:2em;text-justify: inter-word;font-weight: lighter;margin-bottom: 2px;color:black;line-height: 90%;">{{nft?.title}}</div>
-              <p style="font-size: small;" *ngIf="nft.description.indexOf('<br>')==-1">{{nft.description}}</p>
+              <p style="font-size: small;" *ngIf="nft.desc.indexOf('<br>')==-1">{{nft.desc}}</p>
               <div style="display: inline-block;font-size: small;height: fit-content;"
-                   *ngIf="nft.description.indexOf('<br>')>-1"
-                   [innerHTML]="nft.description"></div>
+                   *ngIf="nft.desc.indexOf('<br>')>-1"
+                   [innerHTML]="nft.desc"></div>
               <br>
               <p style="cursor: pointer;"
                  *ngIf="nft?.miner_name?.length>0"

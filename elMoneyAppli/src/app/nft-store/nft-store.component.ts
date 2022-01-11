@@ -143,9 +143,9 @@ export class NftStoreComponent implements OnInit {
   }
 
 
-  refresh(withMessage = true) {
+  refresh(withMessage = true,limit=2500,offset=0) {
     if (withMessage) this.message = "Chargement des tokens ...";
-    this.api._get("nfts/"+this.selected_dealer.address+"/").subscribe((r: any) => {
+    this.api._get("nfts/"+this.selected_dealer.address+"/","limit=1000&offset=0").subscribe((r: any) => {
       $$("Récupération de "+r.length+" NFT");
       this.message = "";
       this.cache=r;
@@ -154,7 +154,7 @@ export class NftStoreComponent implements OnInit {
         setTimeout(()=>{
           this.filter_id=null;
           this.location.replaceState(".");
-          this.refresh();
+          this.refresh(true,5000);
         },5000);
       }
       if(this.selected_tag.length==0)this.tags=extract_tags(this.nfts);

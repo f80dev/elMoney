@@ -930,10 +930,9 @@ export class ImporterComponent implements OnInit {
   }
 
   make_token(bSimulate=false) {
-    if(this.tags && this.tags.length>0)
-      for(let tag of this.tags)
-        if(tag)this.desc=" "+this.desc.trim()+"#"+tag;
-
+    // if(this.tags && this.tags.length>0)
+    //   for(let tag of this.tags)
+    //     if(tag)this.desc=" "+this.desc.trim()+"#"+tag;
     this.tokenizer(0,null,null,bSimulate);
   }
 

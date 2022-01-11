@@ -390,7 +390,7 @@ def info_server():
         "tokens":vecs,
         "nb_tokens":len(tokens),
         "addresses":[addr.hex for addr in bc.query("addresses")],
-        "strings":[str(base64.b64decode(s.base64), "utf8") for s in bc.query("strs")],
+        #"strings":[str(base64.b64decode(s.base64), "utf8") for s in bc.query("strs")],
         "get_str":str(result),
         "ESDTs":[x.hex for x in bc.query("ESDT_map")]
     }
@@ -419,7 +419,7 @@ def nfts(seller_filter="0x0",owner_filter="0x0",miner_filter="0x0"):
         rc.append(t)
 
     cache=dict()
-    for uri in bc.get_tokens(seller_filter,owner_filter,miner_filter):
+    for uri in bc.get_tokens(seller_filter,owner_filter,miner_filter,request.args.get("limit",100),request.args.get("offset",0)):
         if uri["miner"] in cache:
             _miner=cache[uri["miner"]]
         else:
@@ -827,6 +827,7 @@ def prepare_data(data):
     if not "network" in data: data["network"] = "elrond"
     if not "max_markup" in data: data["max_markup"] = 0
     if not "min_markup" in data: data["min_markup"] = 0
+    if not "collection" in data: data["collection"] = ""
     if not "fee" in data: data["fee"] = 0
     if not "miner_ratio" in data: data["miner_ratio"] = 0
     if not "price" in data: data["price"] = 0
@@ -839,6 +840,7 @@ def prepare_data(data):
     if not "instant_sell" in data: data["instant_sell"] = 1
 
     # TODO: ajouter ici un encodage du secret dont la clé est connu par le contrat
+    data["secret"]=str(data["secret"])
     if len(data["secret"]) > 0:
         if data["find_secret"]:
             data["secret"] = sha256(bytes(data["secret"], "utf8")).hexdigest()
@@ -850,11 +852,6 @@ def prepare_data(data):
     else:
         data["secret"] = "0"
 
-
-
-    if "tags" in data and len(data["tags"])>0:
-        data["description"]=data["description"]+" "+data["tags"]
-
     if "file" in data and len(data["file"])>0 and data["secret"]=="0":
         if data["file"].startswith("."):
             f=open(data["file"],"rb")
@@ -862,19 +859,16 @@ def prepare_data(data):
             f.close()
         data["secret"]=data["file"].encode().hex()
 
-
     if type(data["price"]) == str:
         data["price"] = float(data["price"].replace(",", "."))
 
     data["fee"] = int(float(data["fee"]) * 1e18)
     data["value"] = int(float(data["gift"]) * 1e18)
 
-
     res_visual = ""
     if "visual" in data and len(data["visual"]) > 0:
         res_visual = "%%" + data["visual"]
         if "fullscreen" in data and data["fullscreen"]: res_visual = res_visual.replace("%%", "!!")
-    data["description"]=data["description"]+res_visual
 
     return data
 
@@ -907,14 +901,20 @@ def prepare_arguments(data,owner,count=1):
     if data["properties"] & ONE_WINNER > 0: pay_count = 1  #TODO implémenté le nombre de payment
 
     miner=Account(address=data["miner"])
+    desc={"desc":data["description"]}
+    if "title" in data:desc["title"]=data["title"]
+    if "visual" in data:desc["visual"]=data["visual"]
+    if "tags" in data:desc["tags"]=data["tags"]
+
+    description=json.dumps(desc)
     rc=[count,
         "0x" + (data["collection"].encode().hex() if len(data["collection"])>0 else "0"),
-        "0x" + (data["title"]+"%%"+data["description"]).encode().hex(),
+        "0x" + str(description).encode().hex(),
         "0x" + data["secret"],
         price, min_markup, max_markup,
         properties,
-        "0x"+owner.address.hex(),
-        "0x"+miner.address.hex(),
+        "0x" + owner.address.hex(),
+        "0x" + miner.address.hex(),
         miner_ratio,
         gift,
         money
@@ -951,7 +951,7 @@ def mint(count:str,data:dict=None):
     if "owner" in data:
         owner,_u=convert_email_to_addr(data["owner"],open_html_file("transfer_nft"))
 
-    if data["gift"]>0:
+    if float(data["gift"])>0 and data["money"]!="EGLD":
         if "error" in bc.transferESDT(data["money"], miner, bc.contract, int(count) * data["value"]):
             return returnError()
 

@@ -438,7 +438,7 @@ class ElrondNet:
             log("Echec de déploiement")
             message = t["status"]
             if RESULT_SECTION in t and "returnMessage" in t[RESULT_SECTION][0]: message = \
-            t[RESULT_SECTION][0]["returnMessage"]
+                t[RESULT_SECTION][0]["returnMessage"]
 
             return {"error": 600,
                     "message": message,
@@ -786,7 +786,8 @@ class ElrondNet:
 
 
     def vec_to_token(self,tokens,index):
-        log("Traitement à partir de " + tokens[index:])
+        index = index + 8 #justification ?
+        #log("Traitement à partir de " + tokens[index:])
 
         collection_len = int(tokens[index:index + 4], 16) * 2
         index = index + 4
@@ -840,61 +841,61 @@ class ElrondNet:
         ref_token_id = int(tokens[index:index + 16], 16)
         index = index + 16
 
-        title = ""
-        visual = ""
+        desc=""
+        collection=""
         try:
             collection: str = str(bytearray.fromhex(tokens[index:index + collection_len]), "utf-8")
             index = index + collection_len
 
             desc: str = str(bytearray.fromhex(tokens[index:index + desc_len]), "utf-8")
             index = index + desc_len
-
-            fullscreen = ("!!" in desc)
-            desc = desc.replace("!!", "%%")
-            if "%%" in desc:
-                visual = find_url(desc.split("%%")[1])
-                desc = desc.split("%%")[0]
         except:
             log(tokens[index:index+desc_len] + " n'est pas une chaine de caractères")
 
-        # extraction des tags
-        tags, desc = extract_tags(desc)
-        desc = desc.strip()
-        if "%%" in desc:
-            title=desc.split("%%")[0]
-            desc=desc.split("%%")[1]
-        else:
-            title=""
+        obj = dict({
+            "token_id": id,
+            "title": "",
+            "tags": "",
+            "description": "",
+            "price": price,
+            "markup": markup / 100,
+            "has_secret": has_secret,
+            "resp": resp,
+            "collection":collection,
+            "secret_vote": properties & SECRET_VOTE > 0,
+            "unik": properties & UNIK > 0,
+            "id_required": properties & ID_REQUIRED > 0,
+            "vote": properties & VOTE > 0,
+            "miner_can_burn": properties & MINER_CAN_BURN > 0,
+            "for_sale": properties & FOR_SALE > 0,
+            "min_markup": min_markup / 100, "max_markup": max_markup / 100,
+            "miner_ratio": miner_ratio / 100,
+            "miner": miner,
+            "ref_token_id": ref_token_id,
+            "owner": owner_addr,
+            "visual": "",
+            "unity": "EGLD" if money_len == 0 else identifier.split("-")[0],
+            "identifier": identifier,
+            "fullscreen": False,
+            "properties": properties,
+            "network": "elrond"
+        })
 
-        premium = (len(visual) > 0 and len(desc) > 10 and len(title) > 5)
-        obj = dict({"token_id": id,
-                    "title": title,
-                    "tags": " ".join(tags),
-                    "description": desc,
-                    "price": price,
-                    "markup": markup / 100,
-                    "has_secret": has_secret,
-                    "resp": resp,
-                    "collection":collection,
-                    "secret_vote": properties & SECRET_VOTE > 0,
-                    "unik": properties & UNIK > 0,
-                    "id_required": properties & ID_REQUIRED > 0,
-                    "vote": properties & VOTE > 0,
-                    "miner_can_burn": properties & MINER_CAN_BURN > 0,
-                    "for_sale": properties & FOR_SALE > 0,
-                    "min_markup": min_markup / 100, "max_markup": max_markup / 100,
-                    "miner_ratio": miner_ratio / 100,
-                    "miner": miner,
-                    "ref_token_id": ref_token_id,
-                    "owner": owner_addr,
-                    "visual": visual,
-                    "unity": "EGLD" if money_len == 0 else identifier.split("-")[0],
-                    "premium": premium,
-                    "identifier": identifier,
-                    "fullscreen": False,
-                    "properties": properties,
-                    "network": "elrond"
-                    })
+        if desc.startswith("{"):
+            props:dict = json.loads(desc)
+            for k in props.keys():
+                obj[k]=props[k]
+        else:
+            if "%%" in desc:
+                obj["desc"]=desc.split("%%")[1]
+                obj["title"]=desc.split("%%")[0]
+
+        if "visual" in obj and len(obj["visual"])==46:
+            obj["visual"]="https://ipfs.io/ipfs/"+obj["visual"]
+
+        # extraction des tags
+        obj["tags"], obj["desc"] = extract_tags(obj["desc"])
+        obj["premium"] = (len(obj["visual"]) > 0 and len(obj["desc"]) > 10 and len(obj["title"]) > 5)
 
         obj["message"] = ""
         return obj,index
@@ -903,7 +904,7 @@ class ElrondNet:
 
     # /nfts /get_nfts
     # récupération de l'ensemble des NFT issue du contrat
-    def get_tokens(self, seller_filter="0x0", owner_filter="0x0", miner_filter="0x0"):
+    def get_tokens(self, seller_filter="0x0", owner_filter="0x0", miner_filter="0x0",limit=100,offset=0):
         log("Recherche des NFT pour seller="+seller_filter+" owner="+owner_filter+" miner="+miner_filter)
         rc = list()
         zero="0x0000000000000000000000000000000000000000000000000000000000000000"
@@ -924,8 +925,7 @@ class ElrondNet:
             miner_filter = "0x" + str(Account(address=miner_filter).address.hex())
 
         # On récupére les extended NFT
-        tokens = self.query("tokens", arguments=[seller_filter, owner_filter, miner_filter,100,0], n_try=1)
-
+        tokens = self.query("tokens", arguments=[seller_filter, owner_filter, miner_filter,int(limit),int(offset)], n_try=1)
         if not tokens is None and len(tokens) > 0 and tokens[0] != "":
             log("Analyse de "+str(base64.b64decode(tokens[0].base64)))
             tokens = tokens[0].hex
@@ -943,8 +943,8 @@ class ElrondNet:
                     "price": str(obj["price"]),
                     "token": str(obj["token_id"]),
                 }
-                title = translate(title, _dictionnary)
-                desc = translate(desc, _dictionnary)
+                obj["title"] = translate(obj["title"], _dictionnary)
+                obj["desc"] = translate(obj["desc"], _dictionnary)
 
                 if obj["token_id"] > max_id: max_id = obj["token_id"]
 

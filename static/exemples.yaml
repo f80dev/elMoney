@@ -78,7 +78,7 @@ content:
     direct_sell: 1
     instant_sell: 1
     owner_can_sell: 1
-    to_mint: 1
+    to_mint: 0
     network: db
     tag: billet cinema
 
@@ -139,3 +139,14 @@ content:
     direct_sell: 1
     to_mint: 0
 
+  - count: 1
+    title: 3x4 ? Gagnez 0.1 EGLD en trouvant la réponse
+    description: "<div style='text-align: left;'>Les propositions sont les suivantes:<br><ul style='text-align: left;'><li>Choix 1 : <strong>1</strong></li><li>Choix 2 : <strong>2</strong></li><li>Choix 3 : <strong>12</strong></li><li>Choix 4 : <strong>21</strong></li></ul></div> #jouer #jeu #qcm"
+    secret: 3
+    owner_can_transfer: 1
+    owner_can_sell: 1
+    instant_sell: 1
+    direct_sell: 1
+    gift: 0.1
+    find_secret: 1
+    to_mint: 1

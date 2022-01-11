@@ -61,7 +61,6 @@ export class NftBuyComponent implements OnInit {
       }
 
       if(this.nft.price>0){
-
         if(this.nft.unity=="eGld"){
           if (!this.user.moneys.hasOwnProperty(identifier) || this.nft.price > Number(this.user.moneys[identifier].balance)/ 1e18 ) {
 

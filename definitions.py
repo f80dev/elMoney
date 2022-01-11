@@ -31,7 +31,7 @@ UNSPLASH_API_KEY="jULgaq6gGPDmyKi24nJO1Ta5SgdVpT38PjGBiu4snu4"
 ESDT_CONTRACT="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
 ESDT_PRICE=5e16
 
-LIMIT_GAS=60000000
+LIMIT_GAS=200000000
 
 #IPFS_NODE="http://207.180.198.227:5001" Server main
 #IPFS_NODE="http://161.97.75.165:5001"
@@ -49,7 +49,7 @@ NETWORKS={
         "proxy":"https://testnet-gateway.elrond.com",
         "explorer":"https://testnet-explorer.elrond.com",
         "wallet":"http://testnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqhru5p5y6385nz4q94ew0nrs8w2lyt4cfqhyqw6hzvd",
+        "nft":"",
         "shard":0
     },
 
@@ -63,7 +63,7 @@ NETWORKS={
         "proxy":"https://devnet-gateway.elrond.com",
         "explorer":"https://devnet-explorer.elrond.com",
         "wallet":"https://devnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqhjq0s99vp8fe0styu97sz9de8qr3xjvuqhyq7n9jep",
+        "nft":"erd1qqqqqqqqqqqqqpgqjgfkayc2ntsk9xhmzvzz30wu3k4vqr55qhyqhgy459",
         "shard": 1
     },
 
@@ -117,7 +117,7 @@ CAN_RESELL      = 0b0000000000000010
 CAN_TRANSFERT   = 0b0000000000000001
 
 MAX_MINT_NFT=50
-MAX_GAS_LIMIT=900000000
+MAX_GAS_LIMIT=600000000
 RESULT_SECTION="results"
 
 LONG_DELAY_TRANSACTION=34 #sec

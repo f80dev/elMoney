@@ -79,12 +79,12 @@ export class NftsPersoComponent implements OnInit {
   //1=ceux que je posséde
   //2=ceux que je distribue
   refresh(identifiers=[0,1,2],evt:any=null) {
-    let param="";
+    let param="limit=2000&offset=0";
     if(evt=="open")return;
 
-    if(evt=="burn" || evt=="transfer" || evt=="force" || evt=="update" || evt=="mint"){
+    if(evt=="burn" || evt=="transfer" || evt=="force" || evt=="update" || evt=="mint" || evt=="clone"){
       $$("On force le rafraichissement (pas d'usage du cache)");
-      param=""+now();
+      param=param+"&time="+now();
     }
 
     if(evt=="burn"){
