@@ -1099,16 +1099,14 @@ export function eval_properties(vm:any): number {
 }
 
 
-
-//Regroupement des tokens et affectation de l'icon en fonction du tag
-export function group_tokens(tokens:any[],tags:any,func_validate:Function=null):any {
-  let nfts = [];
+export function set_icon(tokens:any[],tags:any): any {
+  //Affectation de l'icon du token en fonction du tag
+  let rc=[];
   for (let item of tokens) {
     item.message = "";
     item.search = item.title + " " + item.price + " " + item.description+" "+item.collection;
     item.open = "";
 
-    //Affectation de l'icon du token en fonction du tag
     item.icon="/assets/icons/gift.png";
     if(item.hasOwnProperty("tags")){
       for(let tag of item.tags.split(" ")){
@@ -1119,6 +1117,16 @@ export function group_tokens(tokens:any[],tags:any,func_validate:Function=null):
         }
       }
     }
+    rc.push(item);
+  }
+  return rc;
+}
+
+
+//Regroupement des tokens et affectation de l'icon en fonction du tag
+export function group_tokens(tokens:any[],func_validate:Function=null):any {
+  let nfts = [];
+  for (let item of tokens) {
 
     let same_item = null;
     for (let i of nfts) {

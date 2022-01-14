@@ -504,7 +504,7 @@ def open_nft(token_id:str,data:dict=None):
     tx = bc.nft_open(NETWORKS[bc.network_name]["nft"], _user, token_id,response)
 
     if RESULT_SECTION in tx:
-        if tx["status"]=="fail" or "returnMessage" in tx[RESULT_SECTION][0]:
+        if tx["status"]=="fail":
             rc=tx[RESULT_SECTION][0]["returnMessage"]
         else:
             for t in tx[RESULT_SECTION]:
@@ -849,8 +849,6 @@ def prepare_data(data):
                 data["secret"] = aes256.encrypt(data["secret"], CRYPT_KEY_FOR_NFT).hex()
             else:
                 data["secret"] = data["secret"].encode().hex()
-    else:
-        data["secret"] = "0"
 
     if "file" in data and len(data["file"])>0 and data["secret"]=="0":
         if data["file"].startswith("."):
@@ -865,10 +863,15 @@ def prepare_data(data):
     data["fee"] = int(float(data["fee"]) * 1e18)
     data["value"] = int(float(data["gift"]) * 1e18)
 
-    res_visual = ""
     if "visual" in data and len(data["visual"]) > 0:
         res_visual = "%%" + data["visual"]
         if "fullscreen" in data and data["fullscreen"]: res_visual = res_visual.replace("%%", "!!")
+
+    _d = {"desc": data["desc"]}
+    if "title" in data: _d["title"] = data["title"]
+    if "visual" in data: _d["visual"] = data["visual"]
+    if "tags" in data: _d["tags"] = data["tags"]
+    data["desc"]=_d
 
     return data
 
@@ -901,16 +904,12 @@ def prepare_arguments(data,owner,count=1):
     if data["properties"] & ONE_WINNER > 0: pay_count = 1  #TODO implémenté le nombre de payment
 
     miner=Account(address=data["miner"])
-    desc={"desc":data["description"]}
-    if "title" in data:desc["title"]=data["title"]
-    if "visual" in data:desc["visual"]=data["visual"]
-    if "tags" in data:desc["tags"]=data["tags"]
 
-    description=json.dumps(desc)
+    description=json.dumps(data["desc"])
     rc=[count,
         "0x" + (data["collection"].encode().hex() if len(data["collection"])>0 else "0"),
         "0x" + str(description).encode().hex(),
-        "0x" + data["secret"],
+        "0x" + "0" if len(data["secret"])==0 else data["secret"],
         price, min_markup, max_markup,
         properties,
         "0x" + owner.address.hex(),

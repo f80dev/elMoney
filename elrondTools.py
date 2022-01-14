@@ -856,7 +856,7 @@ class ElrondNet:
             "token_id": id,
             "title": "",
             "tags": "",
-            "description": "",
+            "desc": "",
             "price": price,
             "markup": markup / 100,
             "has_secret": has_secret,

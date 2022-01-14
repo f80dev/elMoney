@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {ApiService} from "../api.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {UserService} from "../user.service";
-import {group_tokens, showMessage} from "../tools";
+import {group_tokens, set_icon, showMessage} from "../tools";
 import {ConfigService} from "../config.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
@@ -37,7 +37,8 @@ export class PublicMinerComponent implements OnInit {
   refresh(){
     let addr=this.routes.snapshot.queryParamMap.get("miner");
     this.api._get("nfts/0x0/0x0/"+addr+"/").subscribe((r: any) => {
-      this.nfts=group_tokens(r,this.config.tags);
+      r=set_icon(r,this.config.tags);
+      this.nfts=group_tokens(r);
     });
   }
 

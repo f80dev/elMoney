@@ -242,7 +242,7 @@ export class ImporterComponent implements OnInit {
           fee: fee,
           rent: this.rent,
           tags: this.tags,
-          description: this.desc,
+          desc: this.desc,
           vote:this.vote,
           gift: this.gift,
           instant_sell:this.instant_sell,
@@ -308,7 +308,7 @@ export class ImporterComponent implements OnInit {
         {
           title: this.title,
           properties: eval_properties(this),
-          description: this.desc,
+          desc: this.desc,
           secret: this.secret,
           tags: this.tags.join(" "),
           visual: this.visual,
@@ -943,7 +943,6 @@ export class ImporterComponent implements OnInit {
   update_user_solde() {
     this.solde_user=Number(this.user.moneys[this.selected_money.identifier].balance);
   }
-
 
 
   is_html(desc: string) {

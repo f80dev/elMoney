@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {UserService} from "../user.service";
 import {ApiService} from "../api.service";
-import {$$, group_tokens, now, showError, showMessage, subscribe_socket} from "../tools";
+import {$$, group_tokens, now, set_icon, showError, showMessage, subscribe_socket} from "../tools";
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormControl} from "@angular/forms";
 import {Socket, SocketIoModule} from "ngx-socket-io";
@@ -104,12 +104,16 @@ export class NftsPersoComponent implements OnInit {
           r[i].fullscreen=false;
         }
 
-        this.nfts[identifier]=group_tokens(r,this.config.tags,(i)=>{
-          if(!this.filter || identifier!=2 || this.filter.key=="" || i[this.filter.key]==this.filter.value) {
-            return true;
-          }
-          return false;
-        });
+        r=set_icon(r,this.config.tags);
+        if(identifier!=1){
+          this.nfts[identifier]=group_tokens(r,(i)=>{
+            if(!this.filter || identifier!=2 || this.filter.key=="" || i[this.filter.key]==this.filter.value) {
+              return true;
+            }
+            return false;
+          });
+        } else this.nfts[identifier]=r;
+
       },(err)=>{showError(this,err)});
     }
     this.user.refresh_balance();

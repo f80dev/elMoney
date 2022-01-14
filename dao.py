@@ -4,6 +4,8 @@ Interface avec la base de données
 import base64
 from copy import copy
 from datetime import datetime
+from json import loads
+
 import pymongo
 from AesEverywhere import aes256
 from AesEverywhere.aes256 import encrypt
@@ -115,7 +117,7 @@ class DAO:
             return list(self.db["users"].find())
 
 
-    def mint(self, nft,miner):
+    def mint(self,nft,miner):
         if "pem" in nft:del nft["pem"]
         if "_id" in nft:del nft["_id"]
         last_token=self.db["nfts"].find_one(sort=[("token_id", pymongo.DESCENDING)])
@@ -146,12 +148,16 @@ class DAO:
         for t in nft_col:
             obj = copy(t)
             properties=t["properties"]
-            if "%%" in t["description"]:
-                obj["description"]=t["description"].split("%%")[0]
-                obj["visual"]=find_url(t["description"].split("%%")[1])
+
+            _desc=t["desc"]
+            obj["desc"]=_desc["desc"]
+            obj["title"]=_desc["title"]
+            if "visual" in _desc: obj["visual"]=_desc["visual"]
+            if "tags" in _desc: obj["tags"] = " ".join(_desc["tags"])
+
             obj["unik"]=properties & UNIK > 0
             obj["vote"]=properties & VOTE > 0
-            obj["tags"],obj["description"]=extract_tags(obj["description"])
+
             obj["unity"]=t["money"].split("-")[0]
             obj["miner_can_burn"] = properties & MINER_CAN_BURN > 0
             obj["for_sale"]=properties & FOR_SALE >0
