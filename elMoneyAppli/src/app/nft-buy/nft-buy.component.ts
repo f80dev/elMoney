@@ -99,7 +99,7 @@ export class NftBuyComponent implements OnInit {
   }
 
   buy_nft(body){
-    this.api._post("buy_nft/" + this.nft.token_id + "/" + body.price + "/" + this.seller.address+"/"+this.nft.network+"/", "", body).subscribe((r: any) => {
+    this.api._post("buy_nft/" + this.nft.token_id + "/" + body.price + "/" + this.seller.address+"/"+this.nft.network+"/", "", body,600).subscribe((r: any) => {
         this.message = "";
         if(r.status=="success"){
           showMessage(this, "Achat réalisé. Prix unitaire + frais de service (" + r.cost + " eGld)");

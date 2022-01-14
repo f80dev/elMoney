@@ -704,7 +704,9 @@ def buy_nft(token_id,price,seller:str,network:str,data:dict=None):
         tokenid=data["token_id"]
         data["network"]="elrond"
         result=mint(1,data)
-        if len(result.json)==0:return returnError("Probleme technique")
+        if type(result)==tuple:
+            return returnError("Probleme technique")
+
         dao.del_nft(tokenid)
         token_id=result.json[0]["token_id"]
 
@@ -850,7 +852,7 @@ def prepare_data(data):
             else:
                 data["secret"] = data["secret"].encode().hex()
 
-    if "file" in data and len(data["file"])>0 and data["secret"]=="0":
+    if "file" in data and len(data["file"])>0 and len(data["secret"])==0:
         if data["file"].startswith("."):
             f=open(data["file"],"rb")
             data["file"]=client.add_file(f)
@@ -909,7 +911,7 @@ def prepare_arguments(data,owner,count=1):
     rc=[count,
         "0x" + (data["collection"].encode().hex() if len(data["collection"])>0 else "0"),
         "0x" + str(description).encode().hex(),
-        "0x" + "0" if len(data["secret"])==0 else data["secret"],
+        "0x" + ("0" if len(data["secret"])==0 else data["secret"]),
         price, min_markup, max_markup,
         properties,
         "0x" + owner.address.hex(),
