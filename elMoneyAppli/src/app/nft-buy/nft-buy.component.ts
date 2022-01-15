@@ -111,6 +111,7 @@ export class NftBuyComponent implements OnInit {
       }, () => {
         this.message = "";
         showMessage(this, "Achat annulé");
+        this._location.back();
       });
   }
 
