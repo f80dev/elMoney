@@ -3,8 +3,9 @@
 #prepare: export ipfs_staging=/root/ipfs/staging & export ipfs_data=/root/ipfs/data &
 #update:docker rm -f ipfs_host && docker pull f80hub/ipfs-elrond:latest
 #run  : docker run -d --name ipfs_host -v $ipfs_staging:/export -v $ipfs_data:/data/ipfs -p 4001:4001 -p 127.0.0.1:8080:8080 -p 127.0.0.1:5001:5001 f80hub/ipfs-elrond:latest
+#debug  : docker run -ti --name ipfs_host -v $ipfs_staging:/export -v $ipfs_data:/data/ipfs -p 4001:4001 -p 127.0.0.1:8080:8080 -p 127.0.0.1:5001:5001 f80hub/ipfs-elrond:latest
 
-FROM ipfs/go-ipfs
+FROM ipfs/go-ipfs:latest
 
 EXPOSE 5001
 EXPOSE 4001

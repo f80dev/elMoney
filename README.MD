@@ -48,6 +48,7 @@ firewall-cmd --zone=public --add-port=5001/tcp
 firewall-cmd --zone=public --add-port=4001/tcp
 firewall-cmd --zone=public --add-port=8080/tcp
 </pre>
+
 ###Configuration des répertoires
 <pre>
 mkdir /root/ipfs

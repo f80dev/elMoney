@@ -380,6 +380,15 @@ def info_server():
     zero_addr="0x0000000000000000000000000000000000000000000000000000000000000000"
     result=bc.query("get_str",[1])
 
+    strings=[]
+    for s in bc.query("strs"):
+        try:
+            strings.append(str(base64.b64decode(s.base64), "utf8"))
+        except:
+            strings.append("chaine invalide")
+
+
+
     rc={
         "SC_address":NETWORKS[bc.network_name]["nft"],
         "SC_address_hex": Account(address=NETWORKS[bc.network_name]["nft"]).address.hex(),
@@ -390,10 +399,12 @@ def info_server():
         "tokens":vecs,
         "nb_tokens":len(tokens),
         "addresses":[addr.hex for addr in bc.query("addresses")],
-        #"strings":[str(base64.b64decode(s.base64), "utf8") for s in bc.query("strs")],
+        "strings":strings,
         "get_str":str(result),
         "ESDTs":[x.hex for x in bc.query("ESDT_map")]
     }
+
+
     if False:
         rc["dealer_count"]=bc.query("dealerCount")[0].number
         rc["dealers"]=bc.query("dealer", [0])
