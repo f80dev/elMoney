@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {$$, eval_properties, isHTML, showError, showMessage} from "../tools";
+import {$$, eval_properties, isHTML, now, showError, showMessage} from "../tools";
 import {ApiService} from "../api.service";
 import {UserService} from "../user.service";
 import {ImageSelectorComponent} from "../image-selector/image-selector.component";
@@ -107,6 +107,7 @@ export class ImporterComponent implements OnInit {
   @ViewChild('tagsInput') tagInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
   file_to_send: { pem: string; filename:string,content: any };
+  required_tokens: any[]=[];
 
 
 
@@ -129,7 +130,6 @@ export class ImporterComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     this.user.check_pem(()=>{
       localStorage.setItem("last_screen","importer");
       this.api._get("moneys/"+this.user.addr).subscribe((r:any)=>{
@@ -139,6 +139,14 @@ export class ImporterComponent implements OnInit {
           }
         }
         this.selected_money=this.moneys[0];
+        if(this.routes.snapshot.queryParamMap.has("token")){
+          for(let tk of this.tokens){
+            if(tk.index==this.routes.snapshot.queryParamMap.get("token")){
+              this.open_wizard(tk);
+              this._location.replaceState(".");
+            }
+          }
+        }
       });
     },this,"La création d'un NFT requiert votre signature",()=>{
       this._location.back();
@@ -223,6 +231,10 @@ export class ImporterComponent implements OnInit {
       this.nft_on_db=false;
     }
 
+    let required_token_ids=[];
+    for(let t of this.required_tokens)
+      required_token_ids.push(t.token_id);
+
     let properties=eval_properties(this);
     this.message="Transfert des fichiers vers IPFS";
     this.ipfs.add(this.visual,this,(cid_visual)=>{
@@ -256,6 +268,7 @@ export class ImporterComponent implements OnInit {
           direct_sell: this.direct_sell,
           miner_ratio: this.miner_ratio,
           money: this.selected_money.identifier,
+          required_tokens:required_token_ids,
           network:this.nft_on_db ? "db" : "elrond"
         };
 
@@ -728,19 +741,48 @@ export class ImporterComponent implements OnInit {
     },"Visuel de vos billets de participation");
   }
 
-
-
-  quick_tickets($event:any,token:any){
+  //http://localhost:4200/importer?token=member_card
+  quick_card(token:any,title="Titre de la carte / du club ?"){
     this.add_visual((visual:any)=>{
       if(visual){
-        this.ask_for_text("Titre de votre évenement","",(title)=> {
+        this.ask_for_text(title,"",(title)=> {
+          if (title) {
+            this.ask_for_text("Nom du club","",(club_name)=> {
+              this.ask_for_text("Durée de validité (en jours)","",(duration_validity)=> {
+                let dtExpiration=this.datepipe.transform(now(Number(duration_validity)*3600*24),"dd/MM/yyyy");
+                this.title=club_name+" - "+title;
+                this.tags=token.tags;
+                this.ask_for_price("Prix unitaire de la carte", (price) => {
+                  this.ask_for_text("Combien de cartes fabriquer", "", (num) => {
+                    this.count = Number(num);
+                    this.opt_miner_can_burn=true;
+                    if (this.count < this.config.values.max_token)
+                      this.ask_confirm(token.fee);
+                    else {
+                      showMessage(this, "Maximum "+this.config.values.max_token+" billets en une seule fois");
+                    }
+                  }, "", "number", 30);
+                })
+              },"","number")
+            },"","string",0,"Elrond Fan")
+          }
+        },"Exemple: Carte de membre","string",0,"Carte de membre");
+      } else this.cancel_wizard();
+    },"Visuel de la carte",200,200,true,false);
+  }
+
+
+  quick_tickets(token:any,title="Titre de votre évenement"){
+    this.add_visual((visual:any)=>{
+      if(visual){
+        this.ask_for_text(title,"",(title)=> {
           if (title) {
             this.ask_for_text("Adresse","Indiquer l'adresse",(lieu)=> {
               this.ask_for_text("La date","Quel jour à lieu votre événement",(dt)=> {
                 this.ask_for_text("Heure","Indiquer L'heure",(hr)=> {
                   this.desc =lieu +" - "+ this.datepipe.transform(dt,"dd/MM/yyyy") +" à "+hr;
                   this.title = title;
-                  this.secret = "@id";
+                  this.secret = "@id@";
                   if (token.tags) this.desc = this.desc + " " + token.tags;
                   this.ask_for_price("Prix unitaire du billet", (price) => {
                     this.ask_for_text("Combien de billets", "Indiquer le nombre de billets à fabriquer (maximum 30)", (num) => {
@@ -897,7 +939,8 @@ export class ImporterComponent implements OnInit {
     if(token.index=="game")this.quick_game(token);
     if(token.index=="qcm")this.quick_qcm(token);
     if(token.index=="life_events")this.quick_lifeevents(token);
-    if(token.index=="tickets")this.quick_tickets('Téléverser le visuel de votre invitation',token);
+    if(token.index=="tickets")this.quick_tickets(token);
+    if(token.index=="member_card")this.quick_card(token);
     if(token.index=="loterie")this.quick_loterie(token);
     if(token.index=="propriete")this.quick_propriete(token);
     if(token.index=="vote")this.quick_vote(token);
@@ -1004,5 +1047,32 @@ export class ImporterComponent implements OnInit {
 
   update_tab(evt) {
     this._location.replaceState('./importer','tab='+evt)
+  }
+
+  add_required_token() {
+    this.api._get("nfts", "").subscribe((nfts: any) => {
+      let options=[];
+      for(let t of nfts){
+        options.push({value:t,label:t.title});
+      }
+      if(options.length>0){
+        this.dialog.open(PromptComponent,{width: 'auto',data:
+            {
+              title: "Selectionner le NFT requis pour l'achat",
+              type:"list",
+              question: "NFT sélectionné",
+              options:options,
+              onlyConfirm:false,
+              lbl_ok:"Ok",
+              lbl_cancel:"Annuler"
+            }
+        }).afterClosed().subscribe((result) => {
+            if (result) this.required_tokens.push(result);
+          }
+        );
+      } else {
+        showMessage(this,"Aucun NFT ne peut être utilisé comme référence");
+      }
+    })
   }
 }

@@ -25,7 +25,7 @@ from Tools import log, base_alphabet_to_10, str_to_hex, hex_to_str, nbr_to_hex, 
 from definitions import LIMIT_GAS, ESDT_CONTRACT, NETWORKS, ESDT_PRICE, IPFS_NODE_PORT, IPFS_NODE_HOST, SECRET_KEY, \
     DEFAULT_VISUAL, DEFAULT_VISUAL_SHOP, VOTE, FOR_SALE, SECRET_VOTE, UNIK, MINER_CAN_BURN, CAN_TRANSFERT, CAN_RESELL, \
     DIRECT_SELL, SELF_DESTRUCTION, RENT, FIND_SECRET, FORCE_OPEN, ONE_WINNER, TRANSPARENT, RESULT_SECTION, \
-    MAX_GAS_LIMIT, MAX_MINT_NFT, ID_REQUIRED
+    MAX_GAS_LIMIT, MAX_MINT_NFT, ID_REQUIRED, ZERO_ADDR
 from ipfs import IPFS
 
 
@@ -907,20 +907,19 @@ class ElrondNet:
     def get_tokens(self, seller_filter="0x0", owner_filter="0x0", miner_filter="0x0",limit=100,offset=0):
         log("Recherche des NFT pour seller="+seller_filter+" owner="+owner_filter+" miner="+miner_filter)
         rc = list()
-        zero="0x0000000000000000000000000000000000000000000000000000000000000000"
 
         if owner_filter == "0x0":
-            owner_filter = zero
+            owner_filter = ZERO_ADDR
         else:
             owner_filter = "0x" + str(Account(address=owner_filter).address.hex())
 
         if seller_filter == "0x0":
-            seller_filter = zero
+            seller_filter = ZERO_ADDR
         else:
             seller_filter = "0x" + str(Account(address=seller_filter).address.hex())
 
         if miner_filter == "0x0":
-            miner_filter = zero
+            miner_filter = ZERO_ADDR
         else:
             miner_filter = "0x" + str(Account(address=miner_filter).address.hex())
 

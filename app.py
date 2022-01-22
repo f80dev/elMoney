@@ -361,10 +361,8 @@ def info_server():
             "collection": int(v[40:56], 16),
             "gift": int(v[56:60], 16),
             "resp": int(v[60:62], 16),
-
             "min_markup": int(v[62:66], 16),
             "max_markup": int(v[66:70], 16),
-
             "owner": int(v[70:78], 16),
             "miner": int(v[78:86], 16),
 
@@ -377,7 +375,6 @@ def info_server():
             "dealers": int(v[100:102], 16),
         })
 
-    zero_addr="0x0000000000000000000000000000000000000000000000000000000000000000"
     result=bc.query("get_str",[1])
 
     strings=[]
@@ -393,7 +390,7 @@ def info_server():
         "SC_address":NETWORKS[bc.network_name]["nft"],
         "SC_address_hex": Account(address=NETWORKS[bc.network_name]["nft"]).address.hex(),
         "network":bc.network_name,
-        "raw_token":[x.hex for x in bc.query("tokens", arguments=[zero_addr,zero_addr,zero_addr], n_try=1)],
+        "raw_token":[x.hex for x in bc.query("tokens", arguments=[ZERO_ADDR,ZERO_ADDR,ZERO_ADDR], n_try=1)],
         #"smart_token":bc.get_tokens(),
         "tokens_smart":tokens,
         "tokens":vecs,
@@ -404,10 +401,8 @@ def info_server():
         "ESDTs":[x.hex for x in bc.query("ESDT_map")]
     }
 
-
-    if False:
-        rc["dealer_count"]=bc.query("dealerCount")[0].number
-        rc["dealers"]=bc.query("dealer", [0])
+    rc["addr_zero"]=[addr.hex for addr in bc.query("get_idx_addresses",[ZERO_ADDR])]
+    rc["dealers"]=bc.query("dealer", [ZERO_ADDR])
 
     return jsonify(rc)
 
@@ -841,6 +836,7 @@ def prepare_data(data):
     if not "max_markup" in data: data["max_markup"] = 0
     if not "min_markup" in data: data["min_markup"] = 0
     if not "collection" in data: data["collection"] = ""
+    if not "required_tokens" in data: data["required_tokens"]=[]
     if not "fee" in data: data["fee"] = 0
     if not "miner_ratio" in data: data["miner_ratio"] = 0
     if not "price" in data: data["price"] = 0
@@ -922,6 +918,7 @@ def prepare_arguments(data,owner,count=1):
     rc=[count,
         "0x" + (data["collection"].encode().hex() if len(data["collection"])>0 else "0"),
         "0x" + str(description).encode().hex(),
+        0 if len(data["required_tokens"])==0 else data["required_tokens"][0],
         "0x" + ("0" if len(data["secret"])==0 else data["secret"]),
         price, min_markup, max_markup,
         properties,

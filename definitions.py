@@ -63,7 +63,7 @@ NETWORKS={
         "proxy":"https://devnet-gateway.elrond.com",
         "explorer":"https://devnet-explorer.elrond.com",
         "wallet":"https://devnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqjtvgvd0tn5gn527c4w6tj5vtfgyx7rd8u7hsmh270d",
+        "nft":"erd1qqqqqqqqqqqqqpgq8kxzshhqfwcahzhht9tcd4t57nxhg44mu7hse35uaf",
         "shard": 1
     },
 
@@ -123,4 +123,5 @@ RESULT_SECTION="results"
 LONG_DELAY_TRANSACTION=34 #sec
 SHORT_DELAY_TRANSACTION=9
 MAX_U64=4294967296
-ZERO_ADDR="0x"+"0"*32
+ZERO_ADDR="0x"+"0"*64
+

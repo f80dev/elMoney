@@ -201,8 +201,8 @@ export function isToday(d){
 
 
 
-export function now(){
-  return new Date().getTime();
+export function now(offsetInSec=0){
+  return new Date().getTime()+offsetInSec*1000;
 }
 
 

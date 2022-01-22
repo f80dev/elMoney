@@ -426,6 +426,31 @@ content:
         count: 3
 
 
+  - index: member_card
+    title: "Carte de<br>membre"
+    icon: groups
+    nft_icon: "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/google/313/identification-card_1faaa.png"
+    description: Carte d'accés à un club
+    fee: 0.002
+    tuto: "
+          Grâce à TokenForge vous pouvez fabriquer des cartes de membre <br><br>
+          Pour cela, Il suffit<br>
+          <ul>
+            <li>d'un visuel associé à la carte,</li>
+            <li>de fixer un prix pour la carte,</li>
+            <li>de déterminer le nombre de carte à créer,</li>
+          </ul>
+          <br>
+
+          <p>Une option de TokenForge vous permet de contrôler la possession de la carte. </p>
+          "
+    transac: 0.0007
+    tags: "#club #member"
+    help: Présenter votre wallet à l'entrée de l'événement pour contrôle du billet
+    production: true
+
+
+
   - index: tickets
     title: Billeterie
     icon: label

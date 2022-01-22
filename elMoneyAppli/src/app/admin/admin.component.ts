@@ -123,4 +123,8 @@ export class AdminComponent implements OnInit {
     }
     return false;
   }
+
+  info_server() {
+    open(api("info_server",""),"_blank");
+  }
 }
