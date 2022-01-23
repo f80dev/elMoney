@@ -363,10 +363,12 @@
             <span *ngIf="required_tokens.length==0">Aucun NFT requis</span>
             <div *ngIf="required_tokens.length>0">
               NFT nécéssaire pour aquérir ce NFT: <br>
-              <table>
+              <table style="border-spacing: 3px;">
               <tr *ngFor="let t of required_tokens">
-                <td>{{t.title}}</td>
-                <td>{{t.description}}</td>
+                <td>-</td>
+                <td>{{t.title}}&nbsp;&nbsp;&nbsp;</td>
+                <td>{{t.desc}}</td>
+                <td><mat-icon style="cursor: pointer;" (click)="remove_required_token(t)">delete</mat-icon></td>
               </tr>
             </table>
             </div>

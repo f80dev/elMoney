@@ -149,7 +149,11 @@ class DAO:
             obj = copy(t)
             properties=t["properties"]
 
-            _desc=t["desc"]
+            if not "desc" in t:t["desc"]=""
+            if type(t["desc"])==dict:
+                _desc=t["desc"]
+            else:
+                _desc=dict({"desc":t["desc"],"title":""})
             obj["desc"]=_desc["desc"]
             obj["title"]=_desc["title"]
             if "visual" in _desc: obj["visual"]=_desc["visual"]

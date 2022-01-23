@@ -1075,4 +1075,9 @@ export class ImporterComponent implements OnInit {
       }
     })
   }
+
+  remove_required_token(t: any) {
+    let i=this.required_tokens.indexOf(t);
+    if(i>-1)this.required_tokens.splice(i,1);
+  }
 }
