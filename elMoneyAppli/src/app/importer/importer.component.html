@@ -353,16 +353,9 @@
           <mat-step>
             <ng-template matStepLabel>Pre-requis à l'achat</ng-template>
             <!--            Liste des token requis-->
-            <button mat-button mat-raised-button
-                    id="cmdAddRequiredToken"
-                    class="app-button"
-                    (click)="add_required_token()">
-              <div class="bloc-bouton">Ajouter des<br>NFTs requis</div>
-            </button>
-            <br><br>
             <span *ngIf="required_tokens.length==0">Aucun NFT requis</span>
             <div *ngIf="required_tokens.length>0">
-              NFT nécéssaire pour aquérir ce NFT: <br>
+              NFTs nécéssaires pour l'aquérir: <br>
               <table style="border-spacing: 3px;">
               <tr *ngFor="let t of required_tokens">
                 <td>-</td>
@@ -372,6 +365,16 @@
               </tr>
             </table>
             </div>
+            <br>
+            <button mat-button mat-raised-button
+                    id="cmdAddRequiredToken"
+                    class="app-button"
+                    (click)="add_required_token()">
+              <mat-icon>add_circle</mat-icon>&nbsp;
+              <div class="bloc-bouton">Ajouter des<br>NFTs requis</div>
+            </button>
+
+
 
           </mat-step>
 

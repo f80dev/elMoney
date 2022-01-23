@@ -35,7 +35,6 @@ export class PromptComponent implements OnInit {
   _min: number;
   _max: number;
 
-
   constructor(
     public dialogRef_prompt: MatDialogRef<PromptComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData)
@@ -52,6 +51,7 @@ export class PromptComponent implements OnInit {
     if(data.hasOwnProperty("type"))this._type=data.type;
     if(!data.result)data.result="";
     if(!data.n_rows)data.n_rows=4;
+    if(this._type=="string" || this._type=="str")this._type="text";
   }
 
   onNoClick(): void {

@@ -747,11 +747,11 @@ export class ImporterComponent implements OnInit {
       if(visual){
         this.ask_for_text(title,"",(title)=> {
           if (title) {
+            this.title=title;
             this.ask_for_text("Nom du club","",(club_name)=> {
               this.ask_for_text("Durée de validité (en jours)","",(duration_validity)=> {
                 let dtExpiration=this.datepipe.transform(now(Number(duration_validity)*3600*24),"dd/MM/yyyy");
-                this.title=club_name+" - "+title;
-                this.tags=token.tags;
+                this.desc=club_name;
                 this.ask_for_price("Prix unitaire de la carte", (price) => {
                   this.ask_for_text("Combien de cartes fabriquer", "", (num) => {
                     this.count = Number(num);
@@ -763,12 +763,12 @@ export class ImporterComponent implements OnInit {
                     }
                   }, "", "number", 30);
                 })
-              },"","number")
+              },"","number",0,365)
             },"","string",0,"Elrond Fan")
           }
         },"Exemple: Carte de membre","string",0,"Carte de membre");
       } else this.cancel_wizard();
-    },"Visuel de la carte",200,200,true,false);
+    },"Visuel associé à la carte",200,200,true,false);
   }
 
 
@@ -929,6 +929,7 @@ export class ImporterComponent implements OnInit {
 
 
   open_wizard(token:any){
+    this._location.replaceState(".","tab=0&token="+token.index);
     if(token.index=="photo")this.quick_photo(token,"Sélectionner la photo","Sélectionnez une partie de la photo pour présenter le NFT sur la place de marché",null,null,false);
     if(token.index=="pow")this.quick_pow(token,300,300);
     if(token.index=="music")this.show_fileupload(3,'Téléverser le fichier musical',token,"audio/*");
