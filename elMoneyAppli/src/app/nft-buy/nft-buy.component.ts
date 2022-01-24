@@ -106,7 +106,12 @@ export class NftBuyComponent implements OnInit {
           this.user.refresh_balance(() => {});
           this.router.navigate(['nfts-perso'],{queryParams:{index:0},replaceUrl:true})
         } else {
-          showMessage(this,"Achat annulé : "+r.receipt.data);
+          debugger
+          if(r.results && r.results.length>0){
+            showMessage(this,"Achat annulé. "+r.results[0].returnMessage);
+          } else {
+            showMessage(this,"Problème technique, achat annulé");
+          }
         }
       }, () => {
         this.message = "";
