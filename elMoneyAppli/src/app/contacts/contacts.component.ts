@@ -35,10 +35,9 @@ export class ContactsComponent implements OnInit {
 
   add_contact($event: any) {
     if($event.keyCode==13){
-      debugger
       this.message="Ajout du contact";
       this.user.add_contact(this.email,(r:any)=>{
-        this.user.load_contacts(()=>{
+        this.user.load_contacts((r:any)=>{
           this.message="";
           this.email="";
         });
@@ -46,7 +45,9 @@ export class ContactsComponent implements OnInit {
         if(this.routes.snapshot.queryParamMap.has("onlyNew")){
           this.user.last_contact=$event.currentTarget["value"];
         }
-      },(err)=>{showError(this,err)});
+      },(err)=>{
+        showError(this,err);
+      });
 
     }
   }
@@ -54,11 +55,7 @@ export class ContactsComponent implements OnInit {
 
   del_contact(contact: any) {
     this.message="Suppression du contact";
-    this.user.contacts_addr=this.user.contacts_addr.filter(x=>x!=contact.addr);
-    this.user.save_user(()=>{
-      this.user.load_contacts();
-      this.message="";
-    });
+    this.user.del_contact(contact);
   }
 
   onflash_event($event: any) {

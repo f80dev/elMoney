@@ -149,12 +149,9 @@ def convert_email_to_addr(dest:str,html_email:str):
     :param html_email: HTML file for the email
     :return: l'utilisateur elrond et l'utilisateur version base de donnée
     """
-    _u=None
     addr_dest = None
     if "@" in dest:
         log("L'adresse est une adresse mail, on cherche dans les corespondances")
-        _u = dao.get_user(dest)
-        if not _u is None: addr_dest = _u["addr"]
     else:
         addr_dest = dest
 
@@ -195,7 +192,9 @@ def transfer(idx:str,dest:str,amount:str,unity:str):
 
     _from=bc.get_elrond_user(request.data)
     if not _u is None:
-        dao.add_contact(_from.address.bech32(),_dest.address.bech32())
+        _user=bc.add_contact(_from,_dest.address.bech32())
+
+
 
     log("Appel du smartcontract")
     rc=bc.transferESDT(idx,_from,_dest.address.bech32(),int(amount)*(10**18))
@@ -258,10 +257,7 @@ def check_account(addr:str):
     log("Vérification du compte "+addr)
     _a=bc.get_account(addr,with_cache=False)
     if not _a is None:
-        log("Le compte "+_a["addr"]+" n'est pas dans la base de données")
-        _aa=dao.get_user(_a["addr"])
-        if not _aa is None:
-            return jsonify(_a)
+        return jsonify(_a)
 
     return returnError("Compte incorrect")
 
@@ -279,28 +275,8 @@ def get_user(addrs:str):
     rc=[]
     if addrs != "anonymous" and len(addrs) > 0:
         for addr in addrs.split(","):
-            _user = dao.get_user(addr)
-            contacts = []
-            if not _user is None:
-                addr=_user["addr"]
-                if "contacts" in _user:contacts = _user["contacts"]
-
-            if _user is None and "@" in addr:break
-
             data = bc.get_account(addr,False)
             if not data is None and not "error" in data:
-                data["contacts"] = contacts
-                if not _user is None and "shard" in _user:
-                    data["shard"]=_user["shard"]
-                else:
-                    data["shard"]=2
-
-                if not "email" in data:
-                    if _user is None:
-                        data["email"] = ""
-                    else:
-                        data["email"] = _user["email"]
-
                 if "visual" in data and len(data["visual"])==46:data["visual"]="https://ipfs.io/ipfs/"+data["visual"]
                 if "identity" in data and len(data["identity"]) == 46: data["identity"] = "https://ipfs.io/ipfs/" + data["identity"]
                 if "shop_visual" in data and len(data["shop_visual"])==46:data["shop_visual"]="https://ipfs.io/ipfs/"+data["shop_visual"]
@@ -628,9 +604,9 @@ def resend_pem(addr:str):
     :param addr:
     :return:
     """
-    _user=dao.get_user(addr)
-    _user_elrond=bc.get_account(_user["addr"])
-    if _user and "pem" in _user and len(_user["pem"])>0:
+    pem=dao.get_pem(addr)
+    _user_elrond=bc.get_account(addr)
+    if pem:
         instant_access =app.config["DOMAIN_APPLI"]  + "/?instant_access=" + str(_user["pem"],"utf8")+"&address="+_user["addr"]
         key_filename="macle.xpem"
         if "pseudo" in _user_elrond:
@@ -686,7 +662,7 @@ def transfer_nft(token_id,dest):
         "message":data["message"]
         })
     )
-    dao.add_contact(_from.address.bech32(),_dest.address.bech32())
+    bc.add_contact(_from,_dest.address.bech32())
 
     rc=bc.nft_transfer(NETWORKS[bc.network_name]["nft"], _from, token_id, _dest)
     if not rc is None:
@@ -1195,19 +1171,23 @@ def upload_file():
 
 @app.route('/api/reload_accounts/',methods=["POST"])
 def reload_accounts():
+    """
+    Rechargement des comptes de test
+    :return:
+    """
     rc=[]
     data = json.loads(str(request.data, encoding="utf-8"))
     for acc in data["accounts"]:
         log("Traitement de "+acc)
         _test=Account(pem_file="./PEM/"+acc)
-        _user=dao.get_user(_test.address.bech32())
+        # _user=dao.get_user(_test.address.bech32())
         _infos=bc.get_shard(_test.address.bech32())
-        if _user is None:
-            if not dao.save_user("",_test.address.bech32(),"./PEM/"+acc,shard=_infos["shard"]):
-                log("Probleme de création de "+acc)
-            else:
-                log("Transfert de fond en Egld pour " + acc)
-                _test = Account(pem_file="./PEM/" + acc)
+        # if _user is None:
+        #     if not dao.save_user("",_test.address.bech32(),"./PEM/"+acc,shard=_infos["shard"]):
+        #         log("Probleme de création de "+acc)
+        #     else:
+        #         log("Transfert de fond en Egld pour " + acc)
+        #         _test = Account(pem_file="./PEM/" + acc)
 
         right=True
         if bc.getMoneys(_test)["EGLD"]["solde"]<float(data["egld"]):
@@ -1293,8 +1273,8 @@ def get_dealers(addr:str="0x0"):
 
 @app.route('/api/ask_ref/<addr_from>/<addr_to>/',methods=["GET"])
 def ask_ref(addr_from:str,addr_to:str):
-    _dealer=dao.get_user(addr_to)
-    _creator=dao.get_user(addr_from)
+    _dealer=bc.get_elrond_user(addr_to)
+    _creator=bc.get_elrond_user(addr_from)
 
     website=DOMAIN_APPLI+"/miner?addr="+_creator["addr"]
     if "website" in _creator:website=_creator["website"]
@@ -1469,17 +1449,18 @@ def del_user(addr:str):
 
 @app.route('/api/contacts/<addr>/',methods=["GET"])
 def get_contacts(addr:str):
-    rows=dao.get_friends(addr)
+    rows=bc.get_account(addr)
     rc = []
-    for row in rows:
-        rc.append({"firstname": row[2], "email": row[1],"address":row[0]})
+    for row in rows["contacts"].split(","):
+        _info=bc.get_account(row)
+        rc.append({"pseudo": _info["pseudo"], "addr":_info["addr"]})
     return jsonify(rc)
 
 
 
 
 @app.route('/api/money/<idx>/',methods=['DELETE'])
-def del_contracts(idx:str):
+def del_money(idx:str):
     dao.del_contract(idx,bc._proxy.url)
     return jsonify({"message":"monnaie dé"})
 
@@ -1489,25 +1470,26 @@ def del_contracts(idx:str):
 @app.route('/api/find_contact/<email>/')
 @cache.cached(timeout=3600)
 def find_contact(email:str):
-    contact=dao.get_user(email)
+    contact=bc.get_elrond_user(email)
     return jsonify(contact),201
 
 
 
-@app.route('/api/contacts/<owner>/',methods=["POST"])
-def add_contact(owner:str):
+@app.route('/api/contacts/',methods=["POST"])
+def add_contact():
     _data=json.loads(str(request.data,"utf-8"))
-    _contact=dao.get_user(_data["email"])
-    if _contact is None:
-        if "@" in _data["email"]:
-            _contact,pem=bc.create_account(fund=NETWORKS[bc.network_name]["new_account"],email=_data["email"])
-            _infos = bc.get_shard(_contact.address.bech32())
-            dao.save_user(_data["email"],_contact.address.bech32(),pem,shard=_infos["shard"])
-        else:
-            return jsonify({"addr":_data["email"],"email":_data["email"]})
 
-    if not _contact is None:
-        _owner=dao.add_contact(owner,_contact["addr"])
+    if "@" in _data["email"]:
+        _contact,pem=bc.create_account(fund=NETWORKS[bc.network_name]["new_account"],email=_data["email"])
+        _infos = bc.get_shard(_contact.address.bech32())
+        addr_to_add=_contact.address.bech32()
+    else:
+        addr_to_add=_data["email"]
+
+    _u=bc.get_elrond_user(_data)
+    bc.add_contact(_u, addr_to_add)
+    return jsonify({"addr":_data["email"],"email":_data["email"]})
+
 
 
     #on fait le choix de ne pas enregistrer les contacts dans la blockchain
@@ -1551,7 +1533,7 @@ def getyaml(name):
 @app.route('/api/new_account/')
 def new_account():
     email=request.args.get("email")
-    _user=dao.get_user(email)
+    _user=bc.get_elrond_user(email)
     if _user is None:
         _a,pem=bc.create_account(NETWORKS[bc.network_name]["new_account"],email=email)
         _infos=bc.get_shard(_a.address.bech32())

@@ -16,7 +16,7 @@ import {stringify} from "@angular/compiler/src/util";
 })
 export class UserService {
   public contacts:any[]=[];
-  contacts_addr:string[]=[""];
+
   email:string="";
   addr:string="";
   pem:string="";
@@ -65,10 +65,14 @@ export class UserService {
 
 
   save_user(func=null,func_error=null){
+    let contacts_addr=[];
+    for(let c of this.contacts)
+      contacts_addr.push(c["addr"])
+
     if(this.pem){
       let body={
         addr:this.addr,
-        contacts:this.contacts_addr,
+        contacts:contacts_addr,
         description:this.description,
         pseudo:this.pseudo,
         visual:this.visual,
@@ -130,8 +134,7 @@ export class UserService {
 
 
   add_contact(email:string,func:Function=null,func_error) {
-    this.api._post("contacts/"+this.addr+"/","",{email:email,pem:this.pem}).subscribe((r:any)=>{
-      this.contacts_addr=r;
+    this.api._post("contacts/","",{email:email,pem:this.pem,addr:this.addr}).subscribe((r:any)=>{
       if(func)func(r);
     },func_error);
   }
@@ -139,13 +142,8 @@ export class UserService {
 
 
   del_contact(email: any,func=null) {
-    if(this.contacts && this.contacts.length>0){
-      for(let c of this.contacts){
-        if(c.email==email)
-          this.contacts.splice(this.contacts.indexOf(c),1);
-      }
-      this.save_user(func);
-    }
+    this.contacts.splice(this.contacts.indexOf(email),1);
+    this.save_user();
   }
 
 
@@ -159,7 +157,8 @@ export class UserService {
     this.api._get("users/"+this.addr).subscribe((body:any)=>{
       $$("Récupération de ",body);
       body=body[0];
-      this.contacts_addr=body.contacts || [];
+      debugger
+      //this.contacts_addr=body.contacts || [];
       this.pseudo=body.pseudo || "";
       this.visual=body.visual || "";
       this.transaction_delay=body.transaction_delay || 35;
@@ -353,9 +352,8 @@ export class UserService {
     return (this.pseudo.length>0 && this.public_email.length>0);
   }
 
-  load_contacts(func=null) {
-    if(this.contacts_addr.length>0){
-      this.api._get("users/"+this.contacts_addr+"/","").subscribe((r:any)=>{
+  load_contacts(func=null,func_error=null) {
+      this.api._get("contacts/"+this.addr+"/","").subscribe((r:any)=>{
         this.contacts=[];
         for(let c of r){
           this.contacts.push({
@@ -363,13 +361,13 @@ export class UserService {
             addr:c.addr,
             selected:false,
             icon:"person",
-            email:c.email,
             color:"white"
           })
         }
         if(func)func(this.contacts);
+      },(err)=>{
+        if(func_error)func_error(err);
       });
-    }
   }
 
   ckeck_account(f_err:Function) {

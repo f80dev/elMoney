@@ -79,7 +79,7 @@ class ElrondNet:
 
         log("Initialisation terminée")
 
-    def get_elrond_user(self, data):
+    def get_elrond_user(self, data,with_contact=False):
         """
         Fabrique ou recupere un pemfile
         :param data:
@@ -608,8 +608,12 @@ class ElrondNet:
         if "pem" in values: del values["pem"]
         log("Enregistrement de l'utilisateur " + str(values))
 
-        if "contacts" in values and type(values["contacts"]) == str:
-            values["contacts"] = ",".join(list(set(values["contacts"].split(","))))
+        if "contacts" in values:
+            if type(values["contacts"]) == str:
+                values["contacts"] = ",".join(list(set(values["contacts"].split(","))))
+            else:
+                values["contacts"] = ",".join(list(set(values["contacts"])))
+
         if "shop_visual" in values and values["shop_visual"] == DEFAULT_VISUAL_SHOP: del values["shop_visual"]
         if "visual" in values and values["visual"] == DEFAULT_VISUAL: del values["visual"]
 
@@ -661,7 +665,12 @@ class ElrondNet:
         else:
             req = requests.get(url)
 
+
         obj = dict({"addr": addr, "hex_addr": _a.address.hex()})
+
+        # Ajouter la recherher de shard
+        obj["shard"] = 1
+
 
         if req.status_code == 200:
             rc = dict(json.loads(req.text)["data"]["pairs"])
@@ -1384,3 +1393,12 @@ class ElrondNet:
         end=vec[start+1:].index("000000")
         rc=str(bytearray.fromhex(vec[start:end+1]), "utf-8")
         return {"text":rc,"offset":len(rc)*2}
+
+    def add_contact(self, _u, addr_contact_to_add):
+        _infos=self.get_account(_u.address.bech32())
+        if not "contacts" in _infos or len(_infos["contacts"])==0:
+            _infos["contacts"]=addr_contact_to_add
+        else:
+            _infos["contacts"]=_infos["contacts"]+","+addr_contact_to_add
+        return self.update_account(_u,_infos)
+

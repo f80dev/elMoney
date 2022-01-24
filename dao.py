@@ -23,15 +23,15 @@ class DAO:
         self.db: pymongo.mongo_client = pymongo.MongoClient(DB_SERVERS[domain])[dbname]
 
 
-    def add_contact(self, owner_addr, contact_addr):
-        _user=self.get_user(owner_addr)
-        if not _user is None:
-            if not "contacts" in _user:_user["contacts"]=[]
-            if contact_addr not in _user["contacts"]:
-                _user["contacts"].append(contact_addr)
-                self.db["users"].update_one(filter={"addr": _user["addr"]},update={"$set":{"contacts":_user["contacts"]}})
-
-        return _user
+    # def add_contact(self, owner_addr, contact_addr):
+    #     _user=self.get_user(owner_addr)
+    #     if not _user is None:
+    #         if not "contacts" in _user:_user["contacts"]=[]
+    #         if contact_addr not in _user["contacts"]:
+    #             _user["contacts"].append(contact_addr)
+    #             self.db["users"].update_one(filter={"addr": _user["addr"]},update={"$set":{"contacts":_user["contacts"]}})
+    #
+    #     return _user
 
 
     def add_money(self,idx:str,unity:str,nbDecimals:int,owner:str,_public:bool,transferable:bool,url="",proxy=""):
@@ -89,11 +89,11 @@ class DAO:
         return self.db["nfts"].find_one({"owner":addr})
 
 
-    def save_user(self, email, addr,pem="",contacts=[],shard=0):
+    def save_pem(self, addr,pem=""):
         #TODO: ajouter le cryptage de l'email
         if not pem.endswith(".pem"):
             pem=base64.b64encode(aes256.encrypt(pem,SECRET_KEY))
-        body={'email':email.lower(),'addr':addr,"pem":pem,"contacts":contacts,"shard":shard}
+        body={'addr':addr,"pem":pem}
         rc = self.db["users"].replace_one(filter={"addr": addr}, replacement=body, upsert=True)
         return rc.modified_count>0 or (rc.upserted_id is not None),pem
 
@@ -224,6 +224,13 @@ class DAO:
                     prop=prop | FOR_SALE
                 self.db["nfts"].update_one({"token_id":id},{"$set":{"properties":prop}},False)
         return {"state":"success","cost":0}
+
+
+    def get_pem(self, addr):
+        _user=self.db["users"].find_one(filter={"addr": addr})
+        return _user["pem"]
+
+
 
 
 
