@@ -21,6 +21,7 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
 export class NftsPersoComponent implements OnInit {
   message: string="";
   nfts: any[][]=[[],[]];
+  group_token=false;
   selected:any = new FormControl(0);
   filters: any[]=[
     {label:"Aucun filtre",filter:{key:"",value:""}},
@@ -78,6 +79,8 @@ export class NftsPersoComponent implements OnInit {
   //0=mes créations
   //1=ceux que je posséde
   //2=ceux que je distribue
+
+
   refresh(identifiers=[0,1,2],evt:any=null) {
     let param="limit=2000&offset=0";
     if(evt=="open")return;
@@ -105,7 +108,7 @@ export class NftsPersoComponent implements OnInit {
         }
 
         r=set_icon(r,this.config.tags);
-        if(identifier!=1){
+        if(identifier!=1 || this.group_token){
           this.nfts[identifier]=group_tokens(r,(i)=>{
             if(!this.filter || identifier!=2 || this.filter.key=="" || i[this.filter.key]==this.filter.value) {
               return true;

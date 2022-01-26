@@ -109,148 +109,149 @@
 
 
         <mat-vertical-stepper (selectionChange)="update_idx($event)" [linear]="false" style="width:90%;display: inline-block;max-width:700px;text-align: left;background: none;">
-           <mat-step >
+          <mat-step >
             <app-tuto *ngIf="idx_tab==1" label="Après fabrication, les NFTs sont présentés sur une place de marché ou ils peuvent être achetés par les autres utilisateurs de TOKENFORGE"></app-tuto>
 
-              <ng-template matStepLabel>Présentation sur la place de marché</ng-template>
+            <ng-template matStepLabel>Présentation sur la place de marché</ng-template>
 
-              <mat-form-field appearance="fill" class="app-field">
-                <mat-label>Collection / Série du NFT</mat-label>
-                <input matInput type="text" maxlength="200"
-                       id="txtCollection"
-                       [(ngModel)]="collection" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=2">
-                <mat-hint *ngIf="focus_idx==2">Donner un nom à la collection a laquelle appartient votre NFT</mat-hint>
-                <mat-icon *ngIf="collection?.length>0" matSuffix style="cursor: pointer" (click)="collection=''">cancel</mat-icon>
-              </mat-form-field>
-              <br>
-
-
-              <mat-form-field appearance="fill" class="app-field">
-                <mat-label>Intitulé du NFT</mat-label>
-                <input matInput type="text" maxlength="200"
-                       id="txtTitle"
-                       [(ngModel)]="title" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=2">
-                <mat-hint *ngIf="focus_idx==2">Une accroche choc et courte pour présenter votre NFT sur la place de marché</mat-hint>
-                <mat-icon *ngIf="title?.length>0" matSuffix style="cursor: pointer" (click)="title=''">cancel</mat-icon>
-              </mat-form-field>
-
-              <br>
-
-              <div *ngIf="visual?.length>0"  style="text-align: right;width:50%;">
-                <app-image [border]="false"
-                           [src]="visual"
-                           maxwidth="150px">
-                </app-image>
-              </div>
-              <br>
-
-              <table><tr>
-                <td>
-                  <button mat-raised-button
-                          mat-button class="app-button"
-                          (click)="add_visual()">
-
-                    <div class="bloc-bouton">
-                      <span *ngIf="visual?.length>0">Modifier le</span>
-                      <span *ngIf="visual?.length==0">Ajouter un</span>
-                      <br>
-                      visuel
-                    </div>
-                  </button>
-                </td>
-              </tr></table>
+            <mat-form-field appearance="fill" class="app-field">
+              <mat-label>Collection / Série du NFT</mat-label>
+              <input matInput type="text" maxlength="200"
+                     id="txtCollection"
+                     [(ngModel)]="collection" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=2">
+              <mat-hint *ngIf="focus_idx==2">Donner un nom à la collection a laquelle appartient votre NFT</mat-hint>
+              <mat-icon *ngIf="collection?.length>0" matSuffix style="cursor: pointer" (click)="collection=''">cancel</mat-icon>
+            </mat-form-field>
+            <br>
 
 
-              <br>
+            <mat-form-field appearance="fill" class="app-field">
+              <mat-label>Intitulé du NFT</mat-label>
+              <input matInput type="text" maxlength="200"
+                     id="txtTitle"
+                     [(ngModel)]="title" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=2">
+              <mat-hint *ngIf="focus_idx==2">Une accroche choc et courte pour présenter votre NFT sur la place de marché</mat-hint>
+              <mat-icon *ngIf="title?.length>0" matSuffix style="cursor: pointer" (click)="title=''">cancel</mat-icon>
+            </mat-form-field>
 
-              <div *ngIf="is_html(desc)" [innerHTML]="desc | safe"
-                   style="display: inline-block;margin:10px;" class="mat-elevation-z4"></div>
+            <br>
 
-              <mat-form-field appearance="fill" class="app-field">
-                <mat-label>Description du NFT</mat-label>
-                <input matInput type="text" maxlength="200"
-                       id="txtDescription"
-                       [(ngModel)]="desc" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=2.5">
-                <mat-hint *ngIf="focus_idx==2.5">Présentez / commentez votre NFT en quelques mots</mat-hint>
-                <mat-icon *ngIf="desc?.length>0" matSuffix style="cursor: pointer"  (click)="desc=''">cancel</mat-icon>
-              </mat-form-field>
+            <div *ngIf="visual?.length>0"  style="text-align: right;width:50%;">
+              <app-image [border]="false"
+                         [src]="visual"
+                         maxwidth="150px">
+              </app-image>
+            </div>
+            <br>
 
-              <br>
+            <table><tr>
+              <td>
+                <button mat-raised-button
+                        mat-button class="app-button"
+                        (click)="add_visual()">
 
-
-              <!--              Tags-->
-              <mat-form-field class="app-field" appearance="fill" >
-                <mat-label>Tags</mat-label>
-                <mat-chip-list #chipList aria-label="Selection des tags">
-                  <mat-chip
-                    *ngFor="let tag of tags"
-                    [selectable]="selectable"
-                    [removable]="true"
-                    (removed)="remove(tag)">
-                    <small>{{tag}}</small>
-                    <mat-icon matChipRemove>cancel</mat-icon>
-                  </mat-chip>
-                  <input
-                    #tagsInput
-                    [matAutocomplete]="auto"
-                    [matChipInputFor]="chipList"
-                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                    (matChipInputTokenEnd)="add($event)">
-                </mat-chip-list>
-                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-                  <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
-                    {{tag}}
-                  </mat-option>
-                </mat-autocomplete>
-                <mat-hint>Attaché quelques htag à votre NFT</mat-hint>
-              </mat-form-field>
+                  <div class="bloc-bouton">
+                    <span *ngIf="visual?.length>0">Modifier le</span>
+                    <span *ngIf="visual?.length==0">Ajouter un</span>
+                    <br>
+                    visuel
+                  </div>
+                </button>
+              </td>
+            </tr></table>
 
 
+            <br>
 
-              <br><br>
+            <div *ngIf="is_html(desc)" [innerHTML]="desc | safe"
+                 style="display: inline-block;margin:10px;" class="mat-elevation-z4"></div>
+
+            <mat-form-field appearance="fill" class="app-field">
+              <mat-label>Description du NFT</mat-label>
+              <input matInput type="text" maxlength="200"
+                     id="txtDescription"
+                     [(ngModel)]="desc" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=2.5">
+              <mat-hint *ngIf="focus_idx==2.5">Présentez / commentez votre NFT en quelques mots</mat-hint>
+              <mat-icon *ngIf="desc?.length>0" matSuffix style="cursor: pointer"  (click)="desc=''">cancel</mat-icon>
+            </mat-form-field>
+
+            <br>
 
 
-              <mat-form-field appearance="fill" class="app-field" id="formPrice" style="max-width: 120px">
-                <mat-label>Prix de vente</mat-label>
-                <input matInput id="txtPrice" type="number"
-                       min="0" step="0.1" autocomplete="false"
-                       [(ngModel)]="price" [ngModelOptions]="{standalone: true}" (ngModelChange)="update_prices()">
-              </mat-form-field>
+            <!--              Tags-->
+            <mat-form-field class="app-field" appearance="fill" >
+              <mat-label>Tags</mat-label>
+              <mat-chip-list #chipList aria-label="Selection des tags">
+                <mat-chip
+                  *ngFor="let tag of tags"
+                  [selectable]="selectable"
+                  [removable]="true"
+                  (removed)="remove(tag)">
+                  <small>{{tag}}</small>
+                  <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+                <input
+                  #tagsInput
+                  [matAutocomplete]="auto"
+                  [matChipInputFor]="chipList"
+                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                  (matChipInputTokenEnd)="add($event)">
+              </mat-chip-list>
+              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
+                  {{tag}}
+                </mat-option>
+              </mat-autocomplete>
+              <mat-hint>Attaché quelques htag à votre NFT</mat-hint>
+            </mat-form-field>
 
-              &nbsp;
-              <mat-form-field appearance="fill" style="max-width:100px">
-                <mat-label>Monnaie</mat-label>
-                <mat-select [(ngModel)]="selected_money" name="money" (ngModelChange)="update_user_solde()">
-                  <mat-option *ngFor="let money of moneys" [value]="money">
-                    {{money?.label}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
 
-              <button mat-raised-button
-                      id="cmdDefaultPrice"
-                      mat-button class="small-button"
-                      style="max-width: 0px"
-                      (click)="inc_price(0.1)">
-                +0,1
-              </button>
-              <br><br>
-              <mat-slide-toggle
-                *ngIf="gift==0"
-                color="primary"
-                title="Le NFT n'est pas miné immédiatement, il est miné par l'acheteur"
-                [(ngModel)]="nft_on_db">
-                Reporter la fabrication du NFT à l'achat
-              </mat-slide-toggle>
+
+            <br><br>
+
+
+            <mat-form-field appearance="fill" class="app-field" id="formPrice" style="max-width: 120px">
+              <mat-label>Prix de vente</mat-label>
+              <input matInput id="txtPrice" type="number"
+                     min="0" step="0.1" autocomplete="false"
+                     [(ngModel)]="price" [ngModelOptions]="{standalone: true}" (ngModelChange)="update_prices()">
+            </mat-form-field>
+
+            &nbsp;
+            <mat-form-field appearance="fill" style="max-width:100px">
+              <mat-label>Monnaie</mat-label>
+              <mat-select [(ngModel)]="selected_money" name="money" (ngModelChange)="update_user_solde()">
+                <mat-option *ngFor="let money of moneys" [value]="money">
+                  {{money?.label}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <button mat-raised-button
+                    id="cmdDefaultPrice"
+                    mat-button class="small-button"
+                    style="max-width: 0px"
+                    (click)="inc_price(0.1)">
+              +0,1
+            </button>
+            <br><br>
+            <mat-slide-toggle
+              *ngIf="gift==0"
+              color="primary"
+              title="Le NFT n'est pas miné immédiatement, il est miné par l'acheteur"
+              [(ngModel)]="nft_on_db">
+              Reporter la fabrication du NFT à l'achat
+            </mat-slide-toggle>
             <br>
             <mat-slide-toggle
-                color="primary"
-                title="Exiger une pièce d'identité pour l'acheteur"
-                [(ngModel)]="id_required">
-                Identification formelle du propriétaire
-              </mat-slide-toggle>
+              color="primary"
+              title="Exiger une pièce d'identité pour l'acheteur"
+              [(ngModel)]="id_required">
+              Identification formelle du propriétaire
+            </mat-slide-toggle>
 
           </mat-step>
+
           <mat-step>
 
             <app-tuto *ngIf="idx_tab==0"
@@ -258,7 +259,7 @@
 
             <form>
               <ng-template matStepLabel>Embarquer dans le NFT</ng-template>
-              <div *ngIf="!elrond_standard">
+
                 <table>
                   <tr>
                     <td>
@@ -335,7 +336,7 @@
                 </mat-slide-toggle>
 
 
-              </div>
+
             </form>
 
             <br>
@@ -350,20 +351,20 @@
 
           </mat-step>
 
-          <mat-step>
-            <ng-template matStepLabel>Pre-requis à l'achat</ng-template>
+          <mat-step *ngIf="!elrond_standard">
+            <ng-template matStepLabel>Pré-requis à l'achat</ng-template>
             <!--            Liste des token requis-->
             <span *ngIf="required_tokens.length==0">Aucun NFT requis</span>
             <div *ngIf="required_tokens.length>0">
               NFTs nécéssaires pour l'aquérir: <br>
               <table style="border-spacing: 3px;">
-              <tr *ngFor="let t of required_tokens">
-                <td>-</td>
-                <td>{{t.title}}&nbsp;&nbsp;&nbsp;</td>
-                <td>{{t.desc}}</td>
-                <td><mat-icon style="cursor: pointer;" (click)="remove_required_token(t)">delete</mat-icon></td>
-              </tr>
-            </table>
+                <tr *ngFor="let t of required_tokens">
+                  <td>-</td>
+                  <td>{{t.title}}&nbsp;&nbsp;&nbsp;</td>
+                  <td>{{t.desc}}</td>
+                  <td><mat-icon style="cursor: pointer;" (click)="remove_required_token(t)">delete</mat-icon></td>
+                </tr>
+              </table>
             </div>
             <br>
             <button mat-button mat-raised-button

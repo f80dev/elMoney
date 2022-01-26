@@ -1120,7 +1120,7 @@ class ElrondNet:
 
 
 
-    def mint_standard_nft(self, user_from, title, properties: dict, price=0, quantity=1, visual=""):
+    def mint_standard_nft(self, user_from, title, properties: dict, price=0, quantity=1, royalties=0,visual=""):
         """
         Fabriquer un NFT au standard elrond
         https://docs.elrond.com/developers/nft-tokens/
@@ -1134,11 +1134,15 @@ class ElrondNet:
         tokenTicker = "TFT"
         hash = hex(int(now() * 1000)).upper().replace("0X", "")
 
-        data = "issueSemiFungible@" + str_to_hex(tokenName, False) + "@" \
-               + str_to_hex(tokenTicker, False) \
-               + "@" + str_to_hex("canChangeOwner", False) + "@" + str_to_hex("true", False) \
-               + "@" + str_to_hex("canUpgrade", False) + "@" + str_to_hex("true", False) \
-               + "@" + str_to_hex("canWipe", False) + "@" + str_to_hex("true", False)
+        data = "issueNonFungible" \
+                + "@" + str_to_hex(tokenName, False) \
+                + "@" + str_to_hex(tokenTicker, False) \
+                + "@" + str_to_hex("canChangeOwner", False) \
+                + "@" + str_to_hex("true", False) \
+                + "@" + str_to_hex("canUpgrade", False) \
+                + "@" + str_to_hex("true", False) \
+                + "@" + str_to_hex("canWipe", False) \
+                + "@" + str_to_hex("true", False)
 
         t = self.send_transaction(user_from,
                                   Account(address="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"),
@@ -1146,16 +1150,21 @@ class ElrondNet:
 
         if t["status"] == "success" and len(t[RESULT_SECTION][0]["data"].split("@")) > 2:
             token_id = t[RESULT_SECTION][0]["data"].split("@")[2]
-            data = "setSpecialRole@" + token_id + "@" + user_from.address.hex() + "@45534454526f6c654e4654437265617465@45534454526f6c654e46544164645175616e74697479"
+            data = "setSpecialRole@" + token_id + "@" + user_from.address.hex() \
+                    + "@" + str_to_hex("ESDTRoleNFTCreate",False) \
+                    + "@" + str_to_hex("ESDTRoleNFTBurn", False)
+
             t = self.send_transaction(user_from,
-                                      Account(address="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"),
-                                      user_from, 0,
-                                      data)
+                              Account(address="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"),
+                              user_from, 0, data)
 
             if t["status"] == "success":
-                data = "ESDTNFTCreate@" + token_id + "@" + hex(int(quantity)).replace("0x", "") + "@" + str_to_hex(
-                    title, False)
-                data = data + "@" + str_to_hex(price, False) + "@" + str_to_hex(hash, False) + "@"
+                data = "ESDTNFTCreate@" + token_id \
+                       + "@" + hex(int(quantity)).replace("0x", "") \
+                       + "@" + str_to_hex(title, False) \
+                       + "@" + hex(int(royalties)).replace("0x", "")
+
+                data = data +  "@" + str_to_hex(hash, False) + "@"
                 for k in properties.keys():
                     if k != "title":
                         data = data + str_to_hex(k + ":" + properties[k] + ",", False)
@@ -1167,6 +1176,7 @@ class ElrondNet:
                 return t
 
         return returnError("Impossible de créer le NFT")
+
 
     def nft_transfer(self, contract, _owner, token_id, _dest):
         if not is_standard(token_id):

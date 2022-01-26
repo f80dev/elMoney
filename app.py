@@ -947,15 +947,15 @@ def mint(count:str,data:dict=None):
 
     if data["elrond_standard"]:
         log("Construction d'un NFT standard elrond")
-        #res_visual=res_visual.replace("%%","")
-        # results.append(bc.mint_standard_nft(miner,data["title"],
-        #                             {
-        #                                 "description":desc.split("%%")[0],
-        #                                 "money":money,
-        #                                 "secret":data["secret"],
-        #                                 "properties":hex(properties),
-        #                                 "state":hex(1)}
-        #                             ,price,count,res_visual))
+        bc.mint_standard_nft(miner,
+                             data["desc"]["title"],
+                             {
+                                "description":data["desc"]["desc"],
+                                "secret":data["secret"],
+                                "properties":hex(data["properties"]),
+                                "state":hex(1)
+                             },
+                             count)
     else:
         args=prepare_arguments(data,  owner,count=int(count))
         if data["network"]=="elrond":
