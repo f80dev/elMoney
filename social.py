@@ -3,6 +3,9 @@
 import networkx as nx
 from networkx import shortest_path
 
+from definitions import RESULT_SECTION
+
+
 class SocialGraph:
 
     def __init__(self):

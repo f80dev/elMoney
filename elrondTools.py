@@ -86,6 +86,7 @@ class ElrondNet:
         :return:
         """
         rc = None
+        if data=="anonymous": return None
         if type(data) == dict and "pem" in data: data = data["pem"]
         if type(data) != str: data = str(data, "utf8")
 

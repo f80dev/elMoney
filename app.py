@@ -1537,7 +1537,7 @@ def new_account():
         _infos=bc.get_shard(_a.address.bech32())
 
         log("Création du compte " + _a.address.bech32() + ". Demande de transfert de la monnaie par defaut")
-        n_row, pem = dao.save_user(email, _a.address.bech32(), pem,shard=_infos["shard"])
+        n_row, pem = dao.save_pem(_a.address.bech32(), pem)
         instant_access = app.config["DOMAIN_APPLI"] + "/?instant_access=" + str(pem,"utf8") + "&address=" + _a.address.bech32()
         private = _a.secret_key
 

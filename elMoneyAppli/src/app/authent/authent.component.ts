@@ -152,7 +152,7 @@ export class AuthentComponent implements OnInit {
       data:
         {
           title: "Connexion anonyme non conseillée",
-          question: "html:<div style='padding-top:5px;line-height:80%;'>Avec une connexion anonyme, il est fortement conseillé d'enregistrer<br>votre fichier de signature afin de pouvoir vous reconnecter depuis un autre terminal si besoin</div>",
+          question: "html:<div style='padding-top:5px;line-height:80%;'>Attention, en cas de connexion anonyme il est fortement conseiller<br>de sauvegarder votre clé privée afin de pouvoir vous reconnecter depuis un autre terminal si besoin</div>",
           image: "./assets/img/anonymous.png",
           onlyConfirm:true,
           lbl_ok:"Confirmer",

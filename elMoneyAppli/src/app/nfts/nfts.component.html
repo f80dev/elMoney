@@ -61,7 +61,7 @@
 
 
         <div *ngIf="nft.open?.length>0">
-          <a *ngIf="nft.open.startsWith('http')" [href]="nft.open" target="_blank">Ouvrir le fichier</a>
+          <a *ngIf="nft.open.startsWith('http')" [href]="nft.open" target="_blank">Voir le fichier</a>
           <span style="font-size: large" *ngIf="!nft.open.startsWith('http')">{{nft.open}}</span>
           <br>
           <br>
