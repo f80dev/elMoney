@@ -23,7 +23,7 @@
         <br>
         <app-tuto [if]="nfts[1].length>0" label="Les NFT achetés peuvent être remis en vente, détruit, ouvert s'ils contiennent un secret ou directement offer"></app-tuto>
 
-        <mat-slide-toggle *ngIf="nfts[1]?.length>10"
+        <mat-slide-toggle
                         title="Regroupement des NFT identiques"
                         [(ngModel)]="group_token" (change)="refresh([1])"
                         style="line-height: 90%;font-size: small;">Regrouper les NFTs identiques

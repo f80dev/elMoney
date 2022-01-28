@@ -53,7 +53,7 @@ export class SettingsComponent implements OnInit,OnDestroy {
           this.user.reset(true);
         })
       }
-    },3000);
+    },1000);
 
 
     this.user.check_pem(()=>{

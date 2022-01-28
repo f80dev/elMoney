@@ -28,7 +28,7 @@
 
     <mat-form-field *ngIf="!data.onlyConfirm && !data.options" style="width: 95%;color: white">
 
-      <div *ngIf="_type=='text' || _type=='number'">
+      <div *ngIf="_type!='memo'">
         <input id="txtPrompt" [type]="_type"
                [max]="_max" [min]="_min"
                matInput

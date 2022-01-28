@@ -63,7 +63,7 @@ NETWORKS={
         "proxy":"https://devnet-gateway.elrond.com",
         "explorer":"https://devnet-explorer.elrond.com",
         "wallet":"https://devnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqwwq86ulllw63zkast0y03ptx4v7spn4gu7hs5tve3k",
+        "nft":"erd1qqqqqqqqqqqqqpgqtsu8urqshlq6du4lf03gmhzqy3k0h47eu7hs9hj7zw",
         "shard": 1
     },
 
@@ -116,7 +116,7 @@ DIRECT_SELL     = 0b0000000000000100
 CAN_RESELL      = 0b0000000000000010
 CAN_TRANSFERT   = 0b0000000000000001
 
-MAX_MINT_NFT=50
+MAX_MINT_NFT=30
 MAX_GAS_LIMIT=600000000
 RESULT_SECTION="results"
 

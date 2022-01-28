@@ -957,15 +957,18 @@ def mint(count:str,data:dict=None):
                              },
                              count)
     else:
-        args=prepare_arguments(data,  owner,count=int(count))
         if data["network"]=="elrond":
-            result = bc.mint(
-                miner,
-                arguments=args,
-                value=data["value"]
-            )
-            if result is None or not "token_id" in result:
-                return returnError("Echec de la transaction de minage")
+            count=int(count)
+            while count>0:
+                args = prepare_arguments(data, owner, count=min(MAX_MINT_NFT,count))
+                result = bc.mint(
+                    miner,
+                    arguments=args,
+                    value=data["value"]
+                )
+                if result is None or not "token_id" in result:
+                    return returnError("Echec de la transaction de minage")
+                count=count-MAX_MINT_NFT
 
         if data["network"]=="db":
             result=dao.mint(nft=data,miner=miner.address.bech32())

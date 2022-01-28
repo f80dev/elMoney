@@ -1240,11 +1240,13 @@ class ElrondNet:
         :return:
         """
         if not is_standard(token_ids):
-            ids=list_to_vec(token_ids)
-            tx = self.execute(contract, pem_file,
-                              function="setstate",
-                              arguments=[ids, int(state)],gas_limit=LIMIT_GAS*(1+len(token_ids)*0.2)
-                              )
+            for i in range(0,len(token_ids),MAX_MINT_NFT*2):
+                ids=list_to_vec(token_ids[i:min(i+MAX_MINT_NFT*2,len(token_ids))])
+                tx = self.execute(contract, pem_file,
+                                  function="setstate",
+                                  arguments=[ids, int(state)],
+                                  gas_limit=MAX_GAS_LIMIT
+                                  )
         else:
             tx = self.nft_transfer(None, pem_file, token_ids, self.bank)
 
