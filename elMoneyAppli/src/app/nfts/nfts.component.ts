@@ -243,7 +243,7 @@ export class NftsComponent {
             pem:this.user.pem
           };
           nft.message="Ajout du distributeur en cours";
-
+          debugger
           this.api._post("add_dealer/"+nft.token_id+"/","",obj).subscribe((r:any)=>{
             nft.message="";
             if(r.status!="fail"){

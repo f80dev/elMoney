@@ -17,7 +17,9 @@
     </mat-icon>
     &nbsp;
 
-    <span *ngIf="user?.pseudo?.length>0">
+    <span *ngIf="user?.pseudo?.length>0" ngxClipboard (click)="copy_addr()"
+          [cdkCopyToClipboard]="user.addr"
+          style="cursor: pointer">
       <small [title]="user.addr">{{user?.pseudo}}</small>
     </span>
     <span *ngIf="!user?.addr">Non connecté</span>

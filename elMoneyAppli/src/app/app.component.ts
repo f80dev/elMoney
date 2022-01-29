@@ -140,4 +140,7 @@ export class AppComponent implements OnInit,OnDestroy {
     },5000);
   }
 
+  copy_addr() {
+    showMessage(this,"Adresse "+this.user.addr.substr(0,10)+"... copiée");
+  }
 }

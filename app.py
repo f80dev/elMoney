@@ -21,8 +21,8 @@ from erdpy.accounts import Account
 
 from erdpy.contracts import SmartContract
 from flask import Response, request, jsonify, send_file
-from Tools import log, send_mail, open_html_file,  send, dictlist_to_csv, returnError,  str_to_hex, \
-    is_standard, hex_to_str
+from Tools import log, send_mail, open_html_file, send, dictlist_to_csv, returnError, str_to_hex, \
+    is_standard, hex_to_str, list_to_vec
 from apiTools import create_app
 
 
@@ -982,12 +982,9 @@ def mint(count:str,data:dict=None):
     if "dealers" in data and len(data["dealers"]) > 0:
         log("Ajout des distributeurs")
         for dealer in data["dealers"]:
-            i = 0
-            for tokenid in tokenids:
-                _dealer = Account(address=dealer["address"])
-                tx = bc.add_dealer(NETWORKS[bc.network_name]["nft"], data["pem"],
-                                   [tokenid, "0x" + _dealer.address.hex()])
-                i = i + 1
+            _dealer = Account(address=dealer["address"])
+            tx = bc.add_dealer(NETWORKS[bc.network_name]["nft"], data["pem"],
+                               [list_to_vec(tokenids), "0x" + _dealer.address.hex()])
 
     for result in results:
         if not result is None:
@@ -1240,14 +1237,14 @@ def new_dealer(data:dict=None):
 
 
 
-@app.route('/api/add_dealer/<token_id>/',methods=["POST"])
-def add_dealer(token_id:str,data:dict=None):
+@app.route('/api/add_dealer/<token_ids>/',methods=["POST"])
+def add_dealer(token_ids:str,data:dict=None):
     if data is None:
         data = json.loads(str(request.data, encoding="utf-8"))
 
     for dealer in data["dealers"]:
         _dealer = Account(address=dealer["address"])
-        arguments = [int(token_id), "0x" + _dealer.address.hex()]
+        arguments = [list_to_vec(token_ids.split(",")), "0x" + _dealer.address.hex()]
         tx = bc.add_dealer(NETWORKS[bc.network_name]["nft"], bc.get_elrond_user(data["pem"]), arguments)
 
     return jsonify(tx), 200
