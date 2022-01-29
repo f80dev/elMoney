@@ -366,7 +366,7 @@ def info_server():
         "SC_address_hex": Account(address=NETWORKS[bc.network_name]["nft"]).address.hex(),
         "network":bc.network_name,
         "raw_token":[x.hex for x in bc.query("tokens", arguments=[ZERO_ADDR,ZERO_ADDR,ZERO_ADDR], n_try=1)],
-        #"smart_token":bc.get_tokens(),
+        "smart_token":bc.get_tokens(),
         "tokens_smart":tokens,
         "tokens":vecs,
         "nb_tokens":len(tokens),
@@ -377,7 +377,8 @@ def info_server():
     }
 
     rc["addr_zero"]=[addr.hex for addr in bc.query("get_idx_addresses",[ZERO_ADDR])]
-    rc["dealers"]=bc.query("dealer", [ZERO_ADDR])
+    rc["raw_dealers"]=[addr.hex for addr in bc.query("dealers", [ZERO_ADDR])]
+    rc["dealers"] = bc.dealers()
 
     return jsonify(rc)
 
@@ -1261,7 +1262,7 @@ def get_miners(seller:str):
 #http://localhost:6660/api/dealers/
 @app.route('/api/dealers/',methods=["GET"])
 @app.route('/api/dealers/<addr>/',methods=["GET"])
-def get_dealers(addr:str="0x0"):
+def get_dealers(addr:str=ZERO_ADDR):
     rc=[]
     for dealer in bc.dealers(addr):
         _dealer=bc.get_account(dealer["address"]) | dealer

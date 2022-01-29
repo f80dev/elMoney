@@ -1337,11 +1337,11 @@ class ElrondNet:
                 i = i + 64
         return rc
 
-    def dealers(self, miner_filter: str = "0x0"):
-        if miner_filter != "0x0":
+    def dealers(self, miner_filter: str = ZERO_ADDR):
+        if miner_filter != ZERO_ADDR:
             miner_filter = "0x" + Account(address=miner_filter).address.hex()
         else:
-            miner_filter = "0x0000000000000000000000000000000000000000000000000000000000000000"
+            miner_filter = ZERO_ADDR
 
         tx = self.query("dealers", [miner_filter])
         rc = []
