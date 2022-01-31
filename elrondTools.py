@@ -1210,7 +1210,8 @@ class ElrondNet:
         tr = self.execute(contract, pem_file,
                           function="open",
                           arguments=[int(token_id), "0x" + response],
-                          value=0, gas_limit=LIMIT_GAS / 2
+                          value=0,
+                          gas_limit=LIMIT_GAS / 2
                           )
         return tr
 
@@ -1337,9 +1338,11 @@ class ElrondNet:
                 i = i + 64
         return rc
 
+
+
     def dealers(self, miner_filter: str = ZERO_ADDR):
         if miner_filter != ZERO_ADDR:
-            miner_filter = "0x" + Account(address=miner_filter).address.hex()
+            miner_filter = "0x"+Account(address=miner_filter).address.hex()
         else:
             miner_filter = ZERO_ADDR
 
@@ -1365,6 +1368,8 @@ class ElrondNet:
                 i = i + 66
 
         return rc
+
+
 
     def dealer_state(self, pem_file, state):
         """

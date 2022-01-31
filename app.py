@@ -369,6 +369,7 @@ def info_server():
         "smart_token":bc.get_tokens(),
         "tokens_smart":tokens,
         "tokens":vecs,
+        "raw_dealers":[x.hex for x in bc.query("dealers_map")],
         "nb_tokens":len(tokens),
         "addresses":[addr.hex for addr in bc.query("addresses")],
         "strings":strings,
