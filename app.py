@@ -338,16 +338,16 @@ def info_server():
             "resp": int(v[60:62], 16),
             "min_markup": int(v[62:66], 16),
             "max_markup": int(v[66:70], 16),
-            "owner": int(v[70:78], 16),
-            "miner": int(v[78:86], 16),
+            "owner": int(v[70:86], 16),
+            "miner": int(v[86:102], 16),
 
-            "properties":bin(int(v[86:90], 16)),
-            "miner_ratio":int(v[90:94], 16),
+            "properties":bin(int(v[102:106], 16)),
+            "miner_ratio":int(v[106:110], 16),
 
-            "money":int(v[94:98], 16),
-            "status":int(v[98:100], 16),
+            "money":int(v[110:114], 16),
+            "status":int(v[114:116], 16),
 
-            "dealers": int(v[100:102], 16),
+            "dealers": int(v[116:118], 16),
         })
 
     result=bc.query("get_str",[1])
@@ -367,7 +367,7 @@ def info_server():
         "network":bc.network_name,
         "raw_token":[x.hex for x in bc.query("tokens", arguments=[ZERO_ADDR,ZERO_ADDR,ZERO_ADDR], n_try=1)],
         "smart_token":bc.get_tokens(),
-        "tokens_smart":tokens,
+        "decoded_tokens_raw":tokens,
         "tokens":vecs,
         "raw_dealers":[x.hex for x in bc.query("dealers_map")],
         "nb_tokens":len(tokens),
@@ -377,8 +377,9 @@ def info_server():
         "ESDTs":[x.hex for x in bc.query("ESDT_map")]
     }
 
-    rc["addr_zero"]=[addr.hex for addr in bc.query("get_idx_addresses",[ZERO_ADDR])]
-    rc["raw_dealers"]=[addr.hex for addr in bc.query("dealers", [ZERO_ADDR])]
+    rc["idx_addr_zero"]=[addr.hex for addr in bc.query("get_idx_addresses",[ZERO_ADDR])]
+    rc["idx_sc_addr"]=[addr.hex for addr in bc.query("get_idx_addresses",["0x00000000000000000500e3b74dae94d0e864635e88cfb0fa87aa775b1da8e7af"])]
+    rc["idx_unknown_addr"]=[addr.hex for addr in bc.query("get_idx_addresses",["0x"+Account(address="erd1fwl724mvck4drdass0ass3ls43af4xvvx5u2nr8gt0qth7q086ysnjvl9v").address.hex()])]
     rc["dealers"] = bc.dealers()
 
     return jsonify(rc)

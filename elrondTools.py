@@ -1361,9 +1361,10 @@ class ElrondNet:
                 if type(content) != dict:
                     content = {"visual": base64.b64encode(content)}
 
-                content["address"] = Account(address=address).address.bech32()
-                content["state"] = state
-                rc.append(content)
+                if "0x"+address!=ZERO_ADDR:
+                    content["address"] = Account(address=address).address.bech32()
+                    content["state"] = state
+                    rc.append(content)
 
                 i = i + 66
 
