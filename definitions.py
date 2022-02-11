@@ -1,6 +1,6 @@
 from secret import MAIL_PASSWORD, APP_SECRET_KEY
 
-USERNAME="reply@f80.fr"
+USERNAME="reply@f80lab.com"
 PASSWORD=MAIL_PASSWORD
 SMTP_SERVER="smtp.ionos.fr"
 IMAP_SERVER="imap.ionos.fr"
@@ -10,7 +10,7 @@ SECRET_KEY=APP_SECRET_KEY
 APPNAME="TOKEN FORGE"
 
 #DOMAIN_APPLI="http://localhost:4200"
-DOMAIN_APPLI="https://tf.f80.fr"
+DOMAIN_APPLI="https://tf.f80lab.com"
 ERC20_BYTECODE_PATH="./static/deploy-erc20.json"
 NFT_BYTECODE_PATH="./static/deploy-nft.json"
 
@@ -20,7 +20,7 @@ NFT_BYTECODE_PATH="./static/deploy-nft.json"
 MAIN_UNITY="TFE"
 MAIN_DECIMALS=18
 MAIN_NAME="TokenForgeEuroCoin"
-MAIN_URL="https://tf.f80.fr/assets/cmk.html"
+MAIN_URL="https://tf.f80lab.com/assets/cmk.html"
 TOTAL_DEFAULT_UNITY=1000000
 CREDIT_FOR_NEWACCOUNT=100
 
@@ -63,7 +63,7 @@ NETWORKS={
         "proxy":"https://devnet-gateway.elrond.com",
         "explorer":"https://devnet-explorer.elrond.com",
         "wallet":"https://devnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqn69x4z7jex4lnf7g4hzvxcjthxzdfrrgqqes7xf9p2",
+        "nft":"erd1qqqqqqqqqqqqqpgqfsnxg0jm42al5ppftn8rr4e2qsvndghqqqesxvx37l",
         "shard": 1
     },
 
@@ -89,7 +89,7 @@ SIGNATURE="<br><br>L'équipe de TokenForge<br><a href='https://t.me/tokenforge'>
 DB_SERVERS=dict(
     {
         "local":"mongodb://127.0.0.1:27017",
-        "server":"mongodb://admin:hh4271@server.f80.fr:27017",
+        "server":"mongodb://admin:hh4271@server.f80lab.com:27017",
         "cloud":"mongodb+srv://admin:hh4271!!@kerberus-44xyy.gcp.mongodb.net/test"
     }
 )
@@ -124,4 +124,3 @@ LONG_DELAY_TRANSACTION=34 #sec
 SHORT_DELAY_TRANSACTION=9
 MAX_U64=4294967296
 ZERO_ADDR="0x"+"0"*64
-

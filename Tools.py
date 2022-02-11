@@ -195,7 +195,7 @@ def is_email(addr):
     return True
 
 
-def send_mail(body:str,_to="paul.dudule@gmail.com",_from:str="reply@f80.fr",subject="",attach=None,filename="macle.xpem"):
+def send_mail(body:str,_to="paul.dudule@gmail.com",_from:str="reply@f80lab.com",subject="",attach=None,filename="macle.xpem"):
     if not is_email(_to):return None
     with smtplib.SMTP(SMTP_SERVER, 587) as server:
         server.ehlo()

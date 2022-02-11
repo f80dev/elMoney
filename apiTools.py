@@ -30,7 +30,7 @@ def create_app():
     cache=Cache(app)
     app.app_context().push()
 
-    domain_server = "https://server.f80.fr"
+    domain_server = "https://server.f80lab.com"
     if "localhost" in sys.argv:
         app.config['TESTING'] = True
         domain_server = "http://localhost"
@@ -64,7 +64,7 @@ def create_app():
         "username": "admin",
         "password": "hh4271",
         "port": 27017,
-        "host": "mongodb://server.f80.fr/coinmaker",
+        "host": "mongodb://server.f80lab.com/coinmaker",
         "authentication_source": "admin"
     }
     app.config['JSON_AS_ASCII'] = False

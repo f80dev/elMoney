@@ -14,8 +14,8 @@
 
 #renouvellement des certificats
 #désactiver le parefeu puis
-#certbot certonly --standalone --email hhoareau@gmail.com -d server.f80.fr
-#cp /etc/letsencrypt/live/server.f80.fr/* /root/certs
+#certbot certonly --standalone --email hhoareau@gmail.com -d server.f80lab.com
+#cp /etc/letsencrypt/live/server.f80lab.com/* /root/certs
 
 #fabrication: docker build -t f80hub/elmoney . & docker push f80hub/elmoney:latest
 #installation: docker rm -f elmoney && docker pull f80hub/elmoney:latest

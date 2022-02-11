@@ -848,8 +848,8 @@ class ElrondNet:
         id = int(tokens[index:index + 16], 16)
         index = index + 16
 
-        ref_token_id = int(tokens[index:index + 16], 16)
-        index = index + 16
+        # ref_token_id = int(tokens[index:index + 16], 16)
+        # index = index + 16
 
         desc=""
         collection=""
@@ -881,7 +881,6 @@ class ElrondNet:
             "min_markup": min_markup / 100, "max_markup": max_markup / 100,
             "miner_ratio": miner_ratio / 100,
             "miner": miner,
-            "ref_token_id": ref_token_id,
             "owner": owner_addr,
             "visual": "",
             "unity": "EGLD" if money_len == 0 else identifier.split("-")[0],
@@ -914,8 +913,8 @@ class ElrondNet:
 
     # /nfts /get_nfts
     # récupération de l'ensemble des NFT issue du contrat
-    def get_tokens(self, seller_filter="0x0", owner_filter="0x0", miner_filter="0x0",limit=100,offset=0):
-        log("Recherche des NFT pour seller="+seller_filter+" owner="+owner_filter+" miner="+miner_filter)
+    def get_tokens(self, dealer_filter="0x0", owner_filter="0x0", miner_filter="0x0",limit=100,offset=0):
+        log("Recherche des NFT pour seller="+dealer_filter+" owner="+owner_filter+" miner="+miner_filter)
         rc = list()
 
         if owner_filter == "0x0":
@@ -923,10 +922,10 @@ class ElrondNet:
         else:
             owner_filter = "0x" + str(Account(address=owner_filter).address.hex())
 
-        if seller_filter == "0x0":
-            seller_filter = ZERO_ADDR
+        if dealer_filter == "0x0":
+            dealer_filter = ZERO_ADDR
         else:
-            seller_filter = "0x" + str(Account(address=seller_filter).address.hex())
+            dealer_filter = "0x" + str(Account(address=dealer_filter).address.hex())
 
         if miner_filter == "0x0":
             miner_filter = ZERO_ADDR
@@ -934,7 +933,7 @@ class ElrondNet:
             miner_filter = "0x" + str(Account(address=miner_filter).address.hex())
 
         # On récupére les extended NFT
-        tokens = self.query("tokens", arguments=[seller_filter, owner_filter, miner_filter,int(limit),int(offset)], n_try=1)
+        tokens = self.query("tokens", arguments=[dealer_filter, owner_filter, miner_filter,int(limit)], n_try=1)
         if not tokens is None and len(tokens) > 0 and tokens[0] != "":
             log("Analyse de "+str(base64.b64decode(tokens[0].base64)))
             tokens = tokens[0].hex

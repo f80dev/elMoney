@@ -12,7 +12,7 @@ class TestESSAI():
     self.driver.quit()
   
   def test_eSSAI(self):
-    self.driver.get("https://tf.f80.fr/nfts-perso")
+    self.driver.get("https://tf.f80lab.com/nfts-perso")
     self.driver.set_window_size(652, 737)
     self.driver.find_element(By.ID, "cmdMenu").click()
     self.driver.find_element(By.ID, "cmdMenu").click()

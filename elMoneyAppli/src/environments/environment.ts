@@ -1,7 +1,7 @@
 
 export const environment = {
   production: false,
-  idcardserver:"https://server.f80.fr:2222/api/upload/",
+  idcardserver:"https://server.f80lab.com:2222/api/upload/",
   //idcardserver:"http://localhost:2222/api/upload/",
   domain_server: "http://localhost:6660",
   config_file:"config",

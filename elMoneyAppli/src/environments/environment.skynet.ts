@@ -3,7 +3,7 @@ import { version } from '../../package.json';
 
 export const environment = {
   production: true,
-  domain_server: "https://server.f80.fr:5555",
+  domain_server: "https://server.f80lab.com:5555",
   config_file: "config",
   domain_appli: "https://siasky.net/AACKW6mtOhfqwHPMLtM0ApVQyHN7RWp1URFT7DspAPL4EA",
   appVersion: version,
