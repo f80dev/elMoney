@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1643788885364,
+  "timestamp": 1644593006573,
   "index": "https://tf.f80.fr/index.html",
   "assetGroups": [
     {
@@ -124,12 +124,12 @@
     "https://tf.f80.fr/assets/img/vendu.png": "508f0b23afafa2c0284dde1eb9a0ff448c0caa43",
     "https://tf.f80.fr/assets/img/work.png": "817016b0bb4190f9715aae75cfab36a952359d53",
     "https://tf.f80.fr/assets/makemoney.gif": "046a2de48e6ba65e8079e18578c088ca44243f78",
-    "https://tf.f80.fr/assets/store.html": "a82380ea7c3258f65899d32e758b71fc93fbce94",
+    "https://tf.f80.fr/assets/store.html": "90bdeaf2aee2e430228352d82e688f67a4d7916a",
     "https://tf.f80.fr/exif.js": "b5962aef35409d93f1ff55461045a6796e80343f",
     "https://tf.f80.fr/favicon.ico": "c3bbe9dfa628852d8131849561b7fd52194f4d8d",
     "https://tf.f80.fr/favicon.png": "9d07b4062b45b028a517877c4b51af7a330eab1a",
-    "https://tf.f80.fr/index.html": "e5b8a11056024e31ac334bbd8699b2c49ce1eaeb",
-    "https://tf.f80.fr/main.js": "bd17dea4976c05b0117e2a8731c2df32cc0f9ed5",
+    "https://tf.f80.fr/index.html": "c7d1d8bb04026fa9258c650dd854c199a6a07a03",
+    "https://tf.f80.fr/main.js": "ad09a7830eaec8e4405512f83e73643c580e8102",
     "https://tf.f80.fr/manifest.webmanifest": "8291133aeacc475e061eb544514d2c1e8c02c576",
     "https://tf.f80.fr/polyfills.js": "b99841ad52e58a35121bbf56bcb6eaa06caa2cd6",
     "https://tf.f80.fr/runtime.js": "de56d9a36135095cf0ac02c9a71705a7294a844d",
