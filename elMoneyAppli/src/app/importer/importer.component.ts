@@ -89,6 +89,7 @@ export class ImporterComponent implements OnInit {
   opt_miner_can_burn=false;
   nfts_to_send: any[]=[];
   owner_addr: string="";
+  creator_addr: string="";
 
 
   //Money à utiliser pour la transaction du NFT
@@ -260,8 +261,8 @@ export class ImporterComponent implements OnInit {
           instant_sell:this.instant_sell,
           fullscreen: false,
           find_secret: this.find_secret,
-          max_markup: this.max_price,
           min_markup: this.min_price,
+          creator: this.creator_addr,
           dealers: this.dataSource.data,
           properties: properties,
           opt_lot: Number(this.opt_gift),
@@ -273,6 +274,7 @@ export class ImporterComponent implements OnInit {
         };
 
         if(this.owner_addr.length>0)obj["owner"]=this.owner_addr;
+        if(this.creator_addr.length>0)obj["creator"]=this.creator_addr;
 
         showMessage(this,"Création du NFT");
 

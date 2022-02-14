@@ -797,7 +797,7 @@ def mint_from_file(ope:str,data:dict=None):
     return jsonify(rc),200
 
 
-def prepare_data(data):
+def prepare_data(data,miner):
     """
     Prepare the data structure to be treat by the mint function
     :param data:
@@ -805,10 +805,12 @@ def prepare_data(data):
     """
     log("Préparation des données de fabrication depuis " + str(data))
 
+    if not "miner" in data: data["miner"] = miner.address.hex()
     if not "title" in data: data["title"] = data["signature"]
     if not "gift" in data or data["gift"] is None: data["gift"] = 0
     if not "secret" in data: data["secret"] = ""
     if not "price" in data: data["price"] = 0
+    if not "deadline" in data: data["deadline"] = 0
     if not "network" in data: data["network"] = "elrond"
     if not "max_markup" in data: data["max_markup"] = 0
     if not "min_markup" in data: data["min_markup"] = 0
@@ -824,6 +826,7 @@ def prepare_data(data):
     if not "elrond_standard" in data: data["elrond_standard"] = False
     if not "find_secret" in data: data["find_secret"] = 0
     if not "instant_sell" in data: data["instant_sell"] = 1
+    if not "creator" in data or len(data["creator"])==0: data["creator"] = data["miner"]
 
     # TODO: ajouter ici un encodage du secret dont la clé est connu par le contrat
     data["secret"]=str(data["secret"])
@@ -876,6 +879,7 @@ def prepare_arguments(data,owner,count=1):
     price = int(float(data["price"]) * 1e4)
     max_markup = int(float(data["max_markup"]) * 100)
     min_markup = int(float(data["min_markup"]) * 100)
+    deadline = int(data["deadline"])
     properties = int(data["properties"])
     miner_ratio = int(data["miner_ratio"] * 100)
     if type(data["gift"]) == str: data["gift"] = data["gift"].replace(",", ".")
@@ -890,6 +894,7 @@ def prepare_arguments(data,owner,count=1):
     if data["properties"] & ONE_WINNER > 0: pay_count = 1  #TODO implémenté le nombre de payment
 
     miner=Account(address=data["miner"])
+    creator=Account(address=data["creator"])
 
     description=json.dumps(data["desc"])
     rc=[count,
@@ -901,8 +906,10 @@ def prepare_arguments(data,owner,count=1):
         properties,
         "0x" + owner.address.hex(),
         "0x" + miner.address.hex(),
+        "0x" + creator.address.hex(),
         miner_ratio,
         gift,
+        deadline,
         money
         ]
     return rc
@@ -919,18 +926,15 @@ def mint(count:str,data:dict=None):
     :return:
     """
     if data is None:data=json.loads(str(request.data, encoding="utf-8"))
-    data = prepare_data(data)
 
-    log("Minage du NFT " + data["title"]+" avec "+str(data))
-
-    #Préparation du mineur
+    # Préparation du mineur
     miner = bc.get_elrond_user(data["pem"])
     if miner is None:
         miner = bc.bank
         log("Le minage se fait par la banque")
 
-    if not "miner" in data:
-        data["miner"]=miner.address.bech32()
+    data = prepare_data(data,miner)
+    log("Minage du NFT " + data["title"]+" avec "+str(data))
 
     #Preparation du propriétaire
     owner = miner

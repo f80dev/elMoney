@@ -392,8 +392,16 @@
                   <mat-label>Adresse du propriétaire</mat-label>
                   <input matInput id="txtOwner" type="text"
                          autocomplete="false"
-                         [(ngModel)]="owner_addr" [ngModelOptions]="{standalone: true}" (ngModelChange)="update_prices()">
+                         [(ngModel)]="owner_addr" [ngModelOptions]="{standalone: true}">
                   <mat-hint>Laisser vide si vous devez être le propriétaire à la création</mat-hint>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" class="app-field" style="max-width: 300px">
+                  <mat-label>Adresse du createur</mat-label>
+                  <input matInput id="txtCreator" type="text"
+                         autocomplete="false"
+                         [(ngModel)]="creator_addr" [ngModelOptions]="{standalone: true}">
+                  <mat-hint>Laisser vide si vous êtes le créateur</mat-hint>
                 </mat-form-field>
 
                 <br>

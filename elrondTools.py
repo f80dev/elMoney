@@ -814,8 +814,7 @@ class ElrondNet:
         identifier = str(bytearray.fromhex(tokens[index:index + money_len]), "utf-8")
         index = index + money_len
 
-        _u = SmartContract(address=tokens[index:index + 64])
-        owner_addr = _u.address.bech32()
+        owner = Account(address=tokens[index:index + 64]).address.bech32()
         index = index + 64
 
         has_secret = int(tokens[index:index + 2], 16)
@@ -830,19 +829,22 @@ class ElrondNet:
         resp = int(tokens[index:index + 2], 16)
         index = index + 2
 
-        min_markup = int(tokens[index:index + 4], 16)
-        index = index + 4
-
         max_markup = int(tokens[index:index + 4], 16)
         index = index + 4
 
         markup = int(tokens[index:index + 4], 16)
         index = index + 4
 
+        deadline = int(tokens[index:index + 16], 16)
+        index = index + 16
+
         miner_ratio = int(tokens[index:index + 4], 16)
         index = index + 4
 
         miner = Account(address=tokens[index:index + 64]).address.bech32()
+        index = index + 64
+
+        creator = Account(address=tokens[index:index + 64]).address.bech32()
         index = index + 64
 
         id = int(tokens[index:index + 16], 16)
@@ -871,6 +873,8 @@ class ElrondNet:
             "markup": markup / 100,
             "has_secret": has_secret,
             "resp": resp,
+            "deadline": deadline,
+            
             "collection":collection,
             "secret_vote": properties & SECRET_VOTE > 0,
             "unik": properties & UNIK > 0,
@@ -878,10 +882,11 @@ class ElrondNet:
             "vote": properties & VOTE > 0,
             "miner_can_burn": properties & MINER_CAN_BURN > 0,
             "for_sale": properties & FOR_SALE > 0,
-            "min_markup": min_markup / 100, "max_markup": max_markup / 100,
+            "max_markup": max_markup / 100,
             "miner_ratio": miner_ratio / 100,
             "miner": miner,
-            "owner": owner_addr,
+            "owner": owner,
+            "creator": creator,
             "visual": "",
             "unity": "EGLD" if money_len == 0 else identifier.split("-")[0],
             "identifier": identifier,
