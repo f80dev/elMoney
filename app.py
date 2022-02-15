@@ -852,7 +852,8 @@ def prepare_data(data,miner):
 
     data["fee"] = int(float(data["fee"]) * 1e18)
     data["value"] = int(float(data["gift"]) * 1e18)
-    data["deadline"]=int(float(data["deadline"])*(3600*24)/6)
+    #voir la méthode
+    data["deadline"]=int(float(data["deadline"])*(3600*24*1000))
 
     if "visual" in data and len(data["visual"]) > 0:
         res_visual = "%%" + data["visual"]
@@ -881,6 +882,7 @@ def prepare_arguments(data,owner,count=1):
     price = int(float(data["price"]) * 1e4)
     max_markup = int(float(data["max_markup"]) * 100)
     deadline = int(data["deadline"])
+    if deadline==0: deadline=MAX_U64
     properties = int(data["properties"])
     miner_ratio = int(data["miner_ratio"] * 100)
     if type(data["gift"]) == str: data["gift"] = data["gift"].replace(",", ".")

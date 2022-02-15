@@ -372,8 +372,8 @@
               <table style="border-spacing: 3px;">
                 <tr *ngFor="let t of required_tokens">
                   <td>-</td>
-                  <td>{{t.title}}&nbsp;&nbsp;&nbsp;</td>
-                  <td>{{t.desc}}</td>
+                  <td>{{t.description}}&nbsp;&nbsp;&nbsp;</td>
+                  <td>{{t.title}}</td>
                   <td><mat-icon style="cursor: pointer;" (click)="remove_required_token(t)">delete</mat-icon></td>
                 </tr>
               </table>

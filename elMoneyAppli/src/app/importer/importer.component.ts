@@ -748,7 +748,7 @@ export class ImporterComponent implements OnInit {
   //http://localhost:4200/importer?token=member_card
   deadline: number=0;
   limit: number=0;
-  quick_card(token:any,title="Titre de la carte / du club ?"){
+  quick_card(token:any,title="Titre de la carte ?"){
     this.add_visual((visual:any)=>{
       if(visual){
         this.ask_for_text(title,"",(title)=> {
@@ -761,6 +761,8 @@ export class ImporterComponent implements OnInit {
                 this.ask_for_price("Prix unitaire de la carte", (price) => {
                   this.ask_for_text("Combien de cartes fabriquer", "", (num) => {
                     this.count = Number(num);
+                    this.limit=1;
+                    this.collection="Carte de membre de "+club_name;
                     this.opt_miner_can_burn=true;
                     if (this.count < this.config.values.max_token)
                       this.ask_confirm(token.fee);
@@ -772,7 +774,7 @@ export class ImporterComponent implements OnInit {
               },"","number",0,365)
             },"","string",0,"Elrond Fan")
           }
-        },"Exemple: Carte de membre","string",0,"Carte de membre");
+        },"Exemple: Carte de membre, Premium","string",0,"Membre Gold");
       } else this.cancel_wizard();
     },"Visuel associé à la carte",200,200,true,false);
   }
@@ -1060,7 +1062,10 @@ export class ImporterComponent implements OnInit {
     this.api._get("nfts", "").subscribe((nfts: any) => {
       let options=[];
       for(let t of nfts){
-        options.push({value:t,label:t.title});
+        let desc=t.desc;
+        if(desc.startsWith("{"))desc="";
+        let obj={value:t,label:t.collection + " - " + desc};
+        if(t.collection.length>0 && options.indexOf(obj)==-1)options.push(obj);
       }
       if(options.length>0){
         this.dialog.open(PromptComponent,{width: 'auto',data:

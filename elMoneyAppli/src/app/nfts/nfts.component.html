@@ -13,7 +13,9 @@
              class="image-icon"
              style="margin:0;border-radius: 0%;margin-left: 2px;">
 
-        <mat-card-title [ngStyle]="{'font-size':fontsize,'margin-top':'3px','margin-left':'-2px','font-weight':'lighter','line-height':'90%'}">
+        <mat-card-title
+          [title]="nft.deadline+' jours avant expiration'"
+          [ngStyle]="{'font-size':fontsize,'margin-top':'3px','margin-left':'-2px','font-weight':'lighter','line-height':'90%'}">
           <span style="font-size: medium" *ngIf="nft?.count && nft?.count>1">({{nft.count}}) &nbsp;</span>
           <span (dblclick)="edit_field(nft,'title')">{{nft.title}}</span>
           <div *ngIf="nft.price>0 && nft.for_sale && (nft.owner==user.addr || nft.isDealer)"
@@ -45,13 +47,14 @@
           </ul>
         </div>
 
+        <span *ngIf="nft.deadline<40">{{nft.deadline}} jours</span>
+
 
         <app-image [src]="nft.visual" maxwidth="200px" maxheight="200px" width="200px" height="200px"
                    [border]="!is_transparent(nft.properties)"
                    *ngIf="nft.visual?.length>0 && nft.open==''"
                    style="cursor: pointer;display: inline-block;cursor: pointer;"
                    (click)="show_fullscreen(nft)"></app-image>
-
 
         <div
           style="width:90%;margin:5%;line-height: 95%;font-size: small;text-align: center;">
@@ -242,8 +245,6 @@
               <p *ngIf="nft?.price>0">
                 <app-unity [unity]="nft.unity" [value]="nft.price"></app-unity>
               </p>
-
-
 
             </div>
 

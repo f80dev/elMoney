@@ -621,7 +621,6 @@ class ElrondNet:
         rc = self.cached_sess.cache.delete_url(self._proxy.url + "/address/" + _sender.address.bech32() + "/keys")
 
         data = "SaveKeyValue"
-        required_gas = 250000 + 50000  # voir https://docs.elrond.com/developers/account-storage/
         persist_per_byte = 10000
         store_per_byte = 50000
         for k in values.keys():
@@ -629,10 +628,10 @@ class ElrondNet:
             value = str_to_hex(values[k], False)
             if len(value) > 1 or key == "contacts":
                 data = data + "@" + key + "@" + value
-                required_gas = required_gas + persist_per_byte * (len(value) + len(key)) + store_per_byte * len(value)
+                #required_gas = required_gas + persist_per_byte * (len(value) + len(key)) + store_per_byte * len(value)
 
         log("Envoi de la transaction d'enregistrement " + data)
-        t = self.send_transaction(_sender, _sender, _sender, 0, data, gas_limit=required_gas)
+        t = self.send_transaction(_sender, _sender, _sender, 0, data, gas_limit=LIMIT_GAS)
         return t
 
     def get_shard(self, addr):
@@ -873,8 +872,7 @@ class ElrondNet:
             "markup": markup / 100,
             "has_secret": has_secret,
             "resp": resp,
-            "deadline": deadline,
-            
+            "deadline": int((deadline-datetime.now().timestamp())/(3600*24*1000)),
             "collection":collection,
             "secret_vote": properties & SECRET_VOTE > 0,
             "unik": properties & UNIK > 0,
@@ -1032,6 +1030,7 @@ class ElrondNet:
                             "price": int(nft["royalties"]),
                             "miner": nft["creator"],
                             "owner": addr,
+                            "deadline": deadline,
                             "tags": prop["tags"],
                             "description": prop["description"],
                             "visual": visual,
