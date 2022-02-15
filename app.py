@@ -814,6 +814,7 @@ def prepare_data(data,miner):
     if not "network" in data: data["network"] = "elrond"
     if not "max_markup" in data: data["max_markup"] = 0
     if not "min_markup" in data: data["min_markup"] = 0
+    if not "limit" in data: data["limit"] = 0
     if not "collection" in data: data["collection"] = ""
     if not "required_tokens" in data: data["required_tokens"]=[]
     if not "fee" in data: data["fee"] = 0
@@ -851,6 +852,7 @@ def prepare_data(data,miner):
 
     data["fee"] = int(float(data["fee"]) * 1e18)
     data["value"] = int(float(data["gift"]) * 1e18)
+    data["deadline"]=int(float(data["deadline"])*(3600*24)/6)
 
     if "visual" in data and len(data["visual"]) > 0:
         res_visual = "%%" + data["visual"]
@@ -910,6 +912,7 @@ def prepare_arguments(data,owner,count=1):
         miner_ratio,
         gift,
         deadline,
+        data["limit"],
         money
         ]
     return rc

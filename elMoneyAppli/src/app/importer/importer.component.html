@@ -537,7 +537,19 @@
             </button>
 
 
-            <br><br>
+            <br>
+
+            <mat-form-field appearance="fill" class="app-field" id="formPrice" style="max-width: 120px">
+              <mat-label>Durée de vie (en jours)</mat-label>
+              <input matInput id="txtDeadline" type="number"
+                     min="0" step="1" autocomplete="false"
+                     [(ngModel)]="deadline" [ngModelOptions]="{standalone: true}">
+              <mat-hint *ngIf="focus_idx==12">Laisser à zéro pour une durée de vie infinie</mat-hint>
+            </mat-form-field>
+
+
+
+            <br>
             <mat-slide-toggle
               name="opt_miner_canburn"
               [(ngModel)]="opt_miner_can_burn">
