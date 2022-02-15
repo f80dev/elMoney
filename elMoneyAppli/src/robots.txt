@@ -1,4 +1,4 @@
 # Allow all URLs (see http://www.robotstxt.org/robotstxt.html)
 User-agent: *
 Disallow:
-Sitemap: https://elmoney.f80.fr/sitemap.xml
+Sitemap: https://elmoney.f80lab.com/sitemap.xml

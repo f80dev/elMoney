@@ -31,7 +31,7 @@
   "dataGroups": [
   {
   "name": "api",
-  "urls": ["https://server.f80.fr/api","http://localhost:6660/api"],
+  "urls": ["https://server.f80lab.com/api","http://localhost:6660/api"],
   "cacheConfig": {
     "strategy": "freshness",
     "maxSize": 20,
