@@ -114,6 +114,25 @@
 
             <ng-template matStepLabel>Présentation sur la place de marché</ng-template>
 
+            <mat-form-field appearance="fill" class="app-field" style="max-width: 250px;width:80%;">
+              <mat-label>Combien d'exemplaires</mat-label>
+              <input matInput type="number"
+                     id="txtNumber" autocomplete="false"
+                     min="1" step="1" max="500" [(ngModel)]="count"
+                     [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=10">
+              <mat-hint *ngIf="focus_idx==10">Attention le coût de fabrication dépend également du nombre de NFT fabriqués</mat-hint>
+            </mat-form-field>
+
+            <button mat-button mat-icon-button mat-raised-button
+                    id="cmdIncNumber"
+                    class="icon-button"
+                    (click)="count=count+1">
+              +1
+            </button>
+
+
+            <br>
+
             <mat-form-field appearance="fill" class="app-field">
               <mat-label>Collection / Série du NFT</mat-label>
               <input matInput type="text" maxlength="200"
@@ -376,6 +395,16 @@
               Identification formelle du propriétaire
             </mat-slide-toggle>
 
+            <br>
+
+            <mat-form-field appearance="fill" class="app-field" id="formPrice" style="max-width: 200px" *ngIf="count>1">
+              <mat-label>Quantité maximum par utilisateur</mat-label>
+              <input matInput id="txtLimit" type="number"
+                     min="0" step="1" autocomplete="false"
+                     [(ngModel)]="limit" [ngModelOptions]="{standalone: true}">
+              <mat-hint>Laisser à zéro pour des quantités illimité limite</mat-hint>
+            </mat-form-field>
+
 
           </mat-step>
 
@@ -520,26 +549,13 @@
             <app-tuto *ngIf="idx_tab==3" label="Dés le NFT fabriqué, celui-ci est visible dans la place de marché de TOKENFORGE"></app-tuto>
 
             <ng-template matStepLabel>Fabrication</ng-template>
-            <mat-form-field appearance="fill" class="app-field" style="max-width: 250px;width:80%;">
-              <mat-label>Combien d'exemplaire (max 30)</mat-label>
-              <input matInput type="number"
-                     id="txtNumber" autocomplete="false"
-                     min="1" step="1" max="500" [(ngModel)]="count"
-                     [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=10">
-              <mat-hint *ngIf="focus_idx==10">Attention le coût de fabrication dépend également du nombre de NFT fabriqués</mat-hint>
-            </mat-form-field>
 
-            <button mat-button mat-icon-button mat-raised-button
-                    id="cmdIncNumber"
-                    class="icon-button"
-                    (click)="count=count+1">
-              +1
-            </button>
+
 
 
             <br>
 
-            <mat-form-field appearance="fill" class="app-field" id="formPrice" style="max-width: 120px">
+            <mat-form-field appearance="fill" class="app-field" id="formPrice" style="max-width: 200px">
               <mat-label>Durée de vie (en jours)</mat-label>
               <input matInput id="txtDeadline" type="number"
                      min="0" step="1" autocomplete="false"

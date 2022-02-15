@@ -880,7 +880,6 @@ def prepare_arguments(data,owner,count=1):
 
     price = int(float(data["price"]) * 1e4)
     max_markup = int(float(data["max_markup"]) * 100)
-    min_markup = int(float(data["min_markup"]) * 100)
     deadline = int(data["deadline"])
     properties = int(data["properties"])
     miner_ratio = int(data["miner_ratio"] * 100)
@@ -904,7 +903,7 @@ def prepare_arguments(data,owner,count=1):
         "0x" + str(description).encode().hex(),
         0 if len(data["required_tokens"])==0 else data["required_tokens"][0],
         "0x" + ("0" if len(data["secret"])==0 else data["secret"]),
-        price, min_markup, max_markup,
+        price, max_markup,
         properties,
         "0x" + owner.address.hex(),
         "0x" + miner.address.hex(),

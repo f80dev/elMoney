@@ -254,6 +254,7 @@ export class ImporterComponent implements OnInit {
           price: this.price,
           elrond_standard:this.elrond_standard,
           fee: fee,
+          limit:this.limit,
           rent: this.rent,
           tags: this.tags,
           desc: this.desc,
@@ -746,6 +747,7 @@ export class ImporterComponent implements OnInit {
 
   //http://localhost:4200/importer?token=member_card
   deadline: number=0;
+  limit: number=0;
   quick_card(token:any,title="Titre de la carte / du club ?"){
     this.add_visual((visual:any)=>{
       if(visual){
