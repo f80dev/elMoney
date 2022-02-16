@@ -526,7 +526,7 @@
 
                   <br>
                   <mat-form-field appearance="fill" class="app-field" style="max-width: 200px" *ngIf="max_price>min_price">
-                    <mat-label>Marge du créateur</mat-label>
+                    <mat-label>Marge attribuée au créateur</mat-label>
                     <input matInput type="number" min="0" max="100"
                            id="txtMargeCreateur"
                            [(ngModel)]="miner_ratio" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=20">

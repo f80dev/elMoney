@@ -671,7 +671,6 @@ class ElrondNet:
         # Ajouter la recherher de shard
         obj["shard"] = 1
 
-
         if req.status_code == 200:
             rc = dict(json.loads(req.text)["data"]["pairs"])
             for k in rc.keys():

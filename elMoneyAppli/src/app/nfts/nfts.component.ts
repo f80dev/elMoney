@@ -194,10 +194,10 @@ export class NftsComponent {
     this.dialog.open(PromptComponent, {
       data: {
         title: 'Marge vendeur',
-        question: 'Indiquer votre commission entre '+nft.min_markup+" et "+nft.max_markup,
+        question: 'Indiquer votre commission jusqu\'à '+nft.max_markup,
         result:Math.round(nft.price*0.2*100)/100,
         onlyConfirm: false,
-        min:nft.min_markup,
+        min:0,
         max:nft.max_markup,
         type:"number",
         lbl_ok: 'Oui',
@@ -237,26 +237,42 @@ export class NftsComponent {
           result:this.user.addr
         }
       }).afterClosed().subscribe((result) => {
-        if (result!={} && result && result.length>0) {
-          let obj:any={
-            dealers:result,
-            pem:this.user.pem
-          };
-          nft.message="Ajout du distributeur en cours";
-          debugger
-          this.api._post("add_dealer/"+nft.token_id+"/","",obj).subscribe((r:any)=>{
-            nft.message="";
-            if(r.status!="fail"){
-              showMessage(this,"Distributeur ajouté");
-              this.onrefresh.emit();
-            } else {
-              showMessage(this,r.scResults[0].returnMessage);
-            }
-          },(err)=>{
-            nft.message="";
-            showError(this,err);
-          });
-        }
+
+
+        this.dialog.open(PromptComponent, {
+          backdropClass: "removeBackground",
+          position: {left: '5vw', top: '5vh'},
+          maxWidth: 500,  height: 'auto',
+          data: {
+            title: "Montant maximum de sa commission",
+            type: "number",
+            onlyConfirm: false,
+            lbl_ok: 'Fixer',
+            lbl_cancel: 'Annuler'
+          }
+        }).afterClosed().subscribe((max_markup) => {
+          if (result != {} && result && result.length > 0) {
+            let obj: any = {
+              dealers: result,
+              pem: this.user.pem,
+              max_markup:max_markup*100
+            };
+            nft.message = "Ajout du distributeur en cours";
+            debugger
+            this.api._post("add_dealer/" + nft.token_id + "/", "", obj).subscribe((r: any) => {
+              nft.message = "";
+              if (r.status != "fail") {
+                showMessage(this, "Distributeur ajouté");
+                this.onrefresh.emit();
+              } else {
+                showMessage(this, r.scResults[0].returnMessage);
+              }
+            }, (err) => {
+              nft.message = "";
+              showError(this, err);
+            });
+          }
+        });
       });
     });
 

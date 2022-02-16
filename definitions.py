@@ -63,7 +63,7 @@ NETWORKS={
         "proxy":"https://devnet-gateway.elrond.com",
         "explorer":"https://devnet-explorer.elrond.com",
         "wallet":"https://devnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgq58xhg3ev6p6u35qldr72wrdfjyzmvd5xqqes9nkvwe",
+        "nft":"erd1qqqqqqqqqqqqqpgquqklwjk9x7dlewrlcfl6knjtyrke5j7qqqeshd5z45",
         "shard": 1
     },
 

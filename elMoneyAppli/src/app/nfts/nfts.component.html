@@ -120,7 +120,7 @@
 
           <button mat-icon-button mat-flat-button
                   title="Modifier votre commission"
-                  *ngIf="nft?.isDealer && nft.max_markup>nft.min_markup"
+                  *ngIf="nft?.isDealer"
                   class="icon-button"
                   (click)="update_markup(nft)">
             <mat-icon>euro</mat-icon>

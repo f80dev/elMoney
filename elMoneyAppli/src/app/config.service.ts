@@ -4,7 +4,7 @@ import {ApiService} from "./api.service";
 import {Platform} from "@angular/cdk/platform";
 import {HttpClient} from "@angular/common/http";
 import { Location } from '@angular/common';
-import {$$, initAvailableCameras} from "./tools";
+import {$$, initAvailableCameras, showError} from "./tools";
 
 @Injectable({
   providedIn: 'root'
@@ -159,7 +159,8 @@ export class ConfigService {
     $$("Chargement des dealers");
     this.api._get("dealers/","").subscribe((deals:any)=>{
       this.dealers=deals;
-    });
+    },(err)=>{showError(null,err);}
+    );
   }
 
   public hasESDT() : boolean {

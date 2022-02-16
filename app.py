@@ -387,7 +387,7 @@ def info_server():
 
 
 
-#tag: get_tokens tokens all_tokens get_nfts get_nft
+#tag: get_tokens tokens all_tokens get_nfts get_nft /tokens tokens/
 #http://localhost:6660/api/nfts/
 #http://localhost:6660/api/nfts/?format=json
 #http://localhost:6660/api/nfts/?format=csv
@@ -1255,7 +1255,7 @@ def add_dealer(token_ids:str,data:dict=None):
 
     for dealer in data["dealers"]:
         _dealer = Account(address=dealer["address"])
-        arguments = [list_to_vec(token_ids.split(",")), "0x" + _dealer.address.hex()]
+        arguments = [list_to_vec(token_ids.split(",")), "0x" + _dealer.address.hex(),"0",data["max_markup"]]
         tx = bc.add_dealer(NETWORKS[bc.network_name]["nft"], bc.get_elrond_user(data["pem"]), arguments)
 
     return jsonify(tx), 200
