@@ -110,9 +110,6 @@ export class ImporterComponent implements OnInit {
   file_to_send: { pem: string; filename:string,content: any };
   required_tokens: any[]=[];
 
-
-
-
   constructor(public api:ApiService,
               public user:UserService,
               public config:ConfigService,
@@ -1061,11 +1058,14 @@ export class ImporterComponent implements OnInit {
   add_required_token() {
     this.api._get("nfts", "").subscribe((nfts: any) => {
       let options=[];
+      let labels=[];
       for(let t of nfts){
         let desc=t.desc;
         if(desc.startsWith("{"))desc="";
-        let obj={value:t,label:t.collection + " - " + desc};
-        if(t.collection.length>0 && options.indexOf(obj)==-1)options.push(obj);
+        if(t.collection.length>0 && !labels.includes(t.collection)){
+          labels.push(t.collection);
+          options.push({value:t,label:t.collection + " - " + desc});
+        }
       }
       if(options.length>0){
         this.dialog.open(PromptComponent,{width: 'auto',data:
