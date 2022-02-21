@@ -16,11 +16,15 @@ from definitions import DB_SERVERS, SECRET_KEY, UNIK, VOTE, MINER_CAN_BURN, FOR_
 
 
 class DAO:
-    db:any
+    db:any=None
 
     def __init__(self,domain:str="cloud",dbname="coinmaker"):
         log("Ouverture de la base de données "+dbname)
-        self.db: pymongo.mongo_client = pymongo.MongoClient(DB_SERVERS[domain])[dbname]
+        try:
+            self.db: pymongo.mongo_client = pymongo.MongoClient(DB_SERVERS[domain])[dbname]
+            self.db.server_info()
+        except:
+            self.db=None
 
 
     # def add_contact(self, owner_addr, contact_addr):
@@ -94,8 +98,12 @@ class DAO:
         if not pem.endswith(".pem"):
             pem=base64.b64encode(aes256.encrypt(pem,SECRET_KEY))
         body={'addr':addr,"pem":pem}
-        rc = self.db["users"].replace_one(filter={"addr": addr}, replacement=body, upsert=True)
-        return rc.modified_count>0 or (rc.upserted_id is not None),pem
+        if self.db:
+            rc = self.db["users"].replace_one(filter={"addr": addr}, replacement=body, upsert=True)
+            return rc.modified_count>0 or (rc.upserted_id is not None),pem
+        else:
+            log("Impossible d'enregistrer le PEM")
+            return False,pem
 
 
 

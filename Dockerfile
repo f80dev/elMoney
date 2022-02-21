@@ -29,7 +29,6 @@
 FROM python:3.9.0-buster
 
 
-
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
@@ -43,7 +42,7 @@ RUN pip3 install pynacl
 RUN pip3 install pycryptodome
 
 RUN export PATH="$HOME/.local/bin:$PATH"
-RUN pip3 install --user --upgrade --no-cache-dir erdpy==1.0.23
+RUN pip3 install --user --upgrade --no-cache-dir erdpy==1.0.25
 RUN pip3 install pyopenssl
 
 RUN pip3 -v install apscheduler

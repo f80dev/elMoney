@@ -87,7 +87,7 @@ import {ShareButtonsModule} from "ngx-sharebuttons/buttons";
 import {ShareIconsModule} from "ngx-sharebuttons/icons";
 import {QRCodeModule} from "angularx-qrcode";
 import { VotesComponent } from './votes/votes.component';
-import {GoogleChartsModule} from "angular-google-charts";
+import {GoogleChartsModule} from 'angular-google-charts';
 import {VisgraphComponent} from "./visgraph/visgraph.component";
 
 

@@ -80,8 +80,12 @@ def init_default_money(bc,dao):
         else:
             money_idx = rc["contract"]
 
-    if dao.get_money_by_idx(money_idx) is None:
-        dao.add_money(money_idx,MAIN_UNITY,MAIN_DECIMALS,bc.bank.address.bech32(),True,True,MAIN_URL,bc._proxy.url)
+    try:
+        if dao.get_money_by_idx(money_idx) is None:
+            dao.add_money(money_idx,MAIN_UNITY,MAIN_DECIMALS,bc.bank.address.bech32(),True,True,MAIN_URL,bc._proxy.url)
+    except:
+        log("La base ne ")
+        return None
 
     log("Contrat de la monnaie par defaut déployer à "+money_idx)
     return money_idx
@@ -399,8 +403,9 @@ def info_server():
 def nfts(seller_filter="0x0",owner_filter="0x0",miner_filter="0x0"):
     rc=[]
 
-    for t in dao.get_nfts(seller_filter,owner_filter,miner_filter):
-        rc.append(t)
+    if dao.db:
+        for t in dao.get_nfts(seller_filter,owner_filter,miner_filter):
+            rc.append(t)
 
     cache=dict()
     for uri in bc.get_tokens(seller_filter,owner_filter,miner_filter,request.args.get("limit",100),request.args.get("offset",0)):
@@ -905,7 +910,7 @@ def prepare_arguments(data,owner,count=1):
         "0x" + str(description).encode().hex(),
         0 if len(data["required_tokens"])==0 else data["required_tokens"][0],
         "0x" + ("0" if len(data["secret"])==0 else data["secret"]),
-        price, max_markup,
+        price,
         properties,
         "0x" + owner.address.hex(),
         "0x" + miner.address.hex(),
@@ -1240,7 +1245,7 @@ def new_dealer(data:dict=None):
         data = json.loads(str(request.data, encoding="utf-8"))
 
     _user=bc.get_elrond_user(data["pem"])
-    tx=bc.execute(NETWORKS[bc.network_name]["nft"], _user,function="new_dealer", arguments=[])
+    tx=bc.execute(NETWORKS[bc.network_name]["nft"], _user,function="newdealer", arguments=[])
 
     tx = bc.add_miner(NETWORKS[bc.network_name]["nft"], _user, ["0x" + _user.address.hex()])
 
@@ -1345,7 +1350,7 @@ def del_miner(data:dict=None):
         data = json.loads(str(request.data, encoding="utf-8"))
 
     _miner = Account(address=data["address"])
-    tx=bc.execute(NETWORKS[bc.network_name]["nft"],bc.get_elrond_user(data["pem"]),"del_miner",["0x" + _miner.address.hex()])
+    tx=bc.execute(NETWORKS[bc.network_name]["nft"],bc.get_elrond_user(data["pem"]),"delminer",["0x" + _miner.address.hex()])
 
     return jsonify(tx), 200
 
@@ -1548,7 +1553,7 @@ def new_account():
         _infos=bc.get_shard(_a.address.bech32())
 
         log("Création du compte " + _a.address.bech32() + ". Demande de transfert de la monnaie par defaut")
-        n_row, pem = dao.save_pem(_a.address.bech32(), pem)
+        bSave, pem = dao.save_pem(_a.address.bech32(), pem)
         instant_access = app.config["DOMAIN_APPLI"] + "/?instant_access=" + str(pem,"utf8") + "&address=" + _a.address.bech32()
         private = _a.secret_key
 

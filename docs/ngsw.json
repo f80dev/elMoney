@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1645009398192,
+  "timestamp": 1645428690561,
   "index": "https://tf.f80lab.com/index.html",
   "assetGroups": [
     {
@@ -125,12 +125,12 @@
     "https://tf.f80lab.com/assets/img/work.png": "817016b0bb4190f9715aae75cfab36a952359d53",
     "https://tf.f80lab.com/assets/makemoney.gif": "046a2de48e6ba65e8079e18578c088ca44243f78",
     "https://tf.f80lab.com/assets/store.html": "90bdeaf2aee2e430228352d82e688f67a4d7916a",
-    "https://tf.f80lab.com/exif.js": "b5962aef35409d93f1ff55461045a6796e80343f",
+    "https://tf.f80lab.com/exif.js": "f00003a2824ba5ca849a7a54dcf7169d81dafcaf",
     "https://tf.f80lab.com/favicon.ico": "c3bbe9dfa628852d8131849561b7fd52194f4d8d",
     "https://tf.f80lab.com/favicon.png": "9d07b4062b45b028a517877c4b51af7a330eab1a",
-    "https://tf.f80lab.com/index.html": "23832cd35dd8a29cb66129b0a913475813716364",
-    "https://tf.f80lab.com/main.js": "554ce5fc8067ed2e3dcaf657ea8139e31389c693",
-    "https://tf.f80lab.com/manifest.webmanifest": "8291133aeacc475e061eb544514d2c1e8c02c576",
+    "https://tf.f80lab.com/index.html": "5aecc2e6324252bd46320a6ddd1a517e59093876",
+    "https://tf.f80lab.com/main.js": "c2ab3fc88e11cd0419087bc558680171e6e052fa",
+    "https://tf.f80lab.com/manifest.webmanifest": "9131a315bb2ad2994922a3508cc912108c8fd7d9",
     "https://tf.f80lab.com/polyfills.js": "f27c4bb54b0bc8515058abb3416ad07096659b24",
     "https://tf.f80lab.com/runtime.js": "f2560e29ddab8496db5ae82fe808466573f04409",
     "https://tf.f80lab.com/styles.css": "b76761e69f530116266a791ce9ca7d118454b7f5"

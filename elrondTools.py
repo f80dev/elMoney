@@ -1277,14 +1277,14 @@ class ElrondNet:
 
     def add_dealer(self, contract, pem_file, arguments):
         tx = self.execute(contract, pem_file,
-                          function="add_dealer",
+                          function="adddealer",
                           arguments=arguments,
                           )
         return tx
 
     def add_miner(self, contract, pem_file, arguments):
         tx = self.execute(contract, pem_file,
-                          function="add_miner",
+                          function="addminer",
                           arguments=arguments,
                           )
         return tx
@@ -1382,7 +1382,7 @@ class ElrondNet:
         :return:
         """
         tx = self.execute(self.contract, pem_file,
-                          function="dealer_state",
+                          function="dealerstate",
                           arguments=[hex(state)],
                           )
         return tx

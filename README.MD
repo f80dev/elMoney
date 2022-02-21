@@ -17,6 +17,9 @@ L'architecture de la solution repose sur
 - un serveur IPFS pour stocker les fichiers des NFT
 
 
+#Installation de MongoDB
+voir 
+
 #Renouvellement des certificats du serveur
 désactiver le parefeu depuis cockpit
 <pre>
