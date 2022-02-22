@@ -58,6 +58,7 @@ RUN pip3 -v install multiaddr
 RUN pip3 -v install networkx
 #RUN pip3 -v install py7zr
 RUN pip3 -v install PassportEye
+RUN pip3 -v install dnspython3
 
 
 WORKDIR /

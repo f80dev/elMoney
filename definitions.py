@@ -1,4 +1,4 @@
-from secret import MAIL_PASSWORD, APP_SECRET_KEY
+from secret import MAIL_PASSWORD, APP_SECRET_KEY, MONGO_INITDB_ROOT_USERNAME, MONGO_INITDB_ROOT_PASSWORD
 
 USERNAME="reply@f80lab.com"
 PASSWORD=MAIL_PASSWORD
@@ -89,8 +89,8 @@ SIGNATURE="<br><br>L'équipe de TokenForge<br><a href='https://t.me/tokenforge'>
 DB_SERVERS=dict(
     {
         "local":"mongodb://127.0.0.1:27017",
-        "server":"mongodb://admin:hh4271@server.f80lab.com:27017",
-        "cloud":"mongodb+srv://admin:hh4271!!@kerberus-44xyy.gcp.mongodb.net/test"
+        "server":"mongodb://"+MONGO_INITDB_ROOT_USERNAME+":"+MONGO_INITDB_ROOT_PASSWORD+"@server.f80lab.com:27017",
+        "cloud":"mongodb+srv://"+MONGO_INITDB_ROOT_USERNAME+":"+MONGO_INITDB_ROOT_PASSWORD+"@kerberus-44xyy.gcp.mongodb.net/test"
     }
 )
 

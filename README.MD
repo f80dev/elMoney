@@ -18,7 +18,7 @@ L'architecture de la solution repose sur
 
 
 #Installation de MongoDB
-voir 
+voir le fichier secret.py pour le lancement de l'image docker
 
 #Renouvellement des certificats du serveur
 désactiver le parefeu depuis cockpit

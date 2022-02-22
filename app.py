@@ -84,7 +84,7 @@ def init_default_money(bc,dao):
         if dao.get_money_by_idx(money_idx) is None:
             dao.add_money(money_idx,MAIN_UNITY,MAIN_DECIMALS,bc.bank.address.bech32(),True,True,MAIN_URL,bc._proxy.url)
     except:
-        log("La base ne ")
+        log("La base n'est pas disponible")
         return None
 
     log("Contrat de la monnaie par defaut déployer à "+money_idx)

@@ -22,8 +22,10 @@ class DAO:
         log("Ouverture de la base de données "+dbname)
         try:
             self.db: pymongo.mongo_client = pymongo.MongoClient(DB_SERVERS[domain])[dbname]
-            self.db.server_info()
-        except:
+            _lst=list(self.db["ntfs"])
+            pass
+        except Exception as inst:
+            log("Base de données non disponible "+str(inst.args))
             self.db=None
 
 
