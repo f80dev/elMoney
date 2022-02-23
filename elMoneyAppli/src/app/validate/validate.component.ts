@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {ApiService} from "../api.service";
 import {UserService} from "../user.service";
 import {ConfigService} from "../config.service";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {$$, showError, showMessage} from "../tools";
 
@@ -14,6 +14,8 @@ import {$$, showError, showMessage} from "../tools";
 export class ValidateComponent implements OnInit {
   addr: any="";
   nfts: any[]=[];
+  collection="";
+  miner="";
   validate_nfts: any[]=[];
   message: string="";
   photo: string=null;
@@ -23,18 +25,22 @@ export class ValidateComponent implements OnInit {
     public user:UserService,
     public router:Router,
     public toast:MatSnackBar,
+    public routes:ActivatedRoute,
     public config:ConfigService,
   ) { }
 
 
 
   ngOnInit(): void {
+    this.collection=this.routes.snapshot.queryParamMap.get("collection") || "";
+    this.miner=this.routes.snapshot.queryParamMap.get("miner") || "";
     this.refresh();
   }
 
   refresh(){
     this.message="Chargement de vos NFT";
-    this.api._get("nfts/0x0/0x0/" + this.user.addr + "/").subscribe((r: any) => {
+    let miner= this.miner =="" ? this.user.addr : this.miner;
+    this.api._get("nfts/0x0/0x0/" + miner + "/","collection="+this.collection).subscribe((r: any) => {
       this.message="";
       this.nfts=r;
       if(this.nfts.length==0){

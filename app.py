@@ -213,10 +213,21 @@ def transfer(idx:str,dest:str,amount:str,unity:str):
 
 
 
+from NFTSearchEngine import NFTSearchEngine
 
-import erdpy.wallet as wallet
+#test http://localhost:6660/api/query/?owner=erd1z4pjcxsqag8hy3nwpxwmvmnqt82tanymh8hdzleahqtl9xs0cf4slszcku
+#test http://localhost:6660/api/query/
+@app.route('/api/query/',methods=["GET"])
+def nft_query():
+    owner=request.args.get("owner","")
+    miner=request.args.get("miner","")
+    collection=request.args.get("collection","")
+    network=request.args.get("network","elrond")
 
+    nft_search_engine=NFTSearchEngine(network)
+    _data=nft_search_engine.query(owner)
 
+    return jsonify(_data)
 
 
 @app.route('/api/evalprice/<sender>/<data>/<value>/',methods=["GET"])
