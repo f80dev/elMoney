@@ -10,13 +10,13 @@ from time import sleep
 
 import requests
 from AesEverywhere import aes256
-from erdpy.proxy import ElrondProxy, TransactionCostEstimator, TxTypes
+from erdpy.proxy import ElrondProxy
 from erdpy import config
-from erdpy.accounts import Account, AccountsRepository, Address
+from erdpy.accounts import Account, Address
 from erdpy.contracts import SmartContract
 from erdpy.environments import TestnetEnvironment
 from erdpy.transactions import Transaction
-from erdpy.wallet import derive_keys, pem, generate_pair
+from erdpy.wallet import derive_keys, generate_pair
 from erdpy.wallet.keyfile import load_from_key_file
 from requests_cache import CachedSession
 
@@ -69,7 +69,7 @@ class ElrondNet:
         log("Initialisation du proxy")
         self._proxy = ElrondProxy(proxy)
         self.chain_id = self._proxy.get_chain_id()
-        self.tce = TransactionCostEstimator(self._proxy.url)
+        self.tce = 0  #TransactionCostEstimator(self._proxy.url)
 
         log("Initialisation de l'environnement")
         self.environment = TestnetEnvironment(proxy)
@@ -576,7 +576,7 @@ class ElrondNet:
         rc = None
         while timeout > 0:
             sleep(interval)
-            rc = self._proxy.get_transaction(tx_hash=tx, with_results=True)
+            rc = self._proxy.get_transaction(tx_hash=tx, with_results=True).raw
 
             if len(equal) > 0 and rc[field] == equal: break
             if len(not_equal) > 0 and rc[field] != not_equal: break
@@ -854,10 +854,10 @@ class ElrondNet:
         desc=""
         collection=""
         try:
-            collection: str = str(bytearray.fromhex(tokens[index:index + collection_len]), "utf-8")
+            collection = str(bytearray.fromhex(tokens[index:index + collection_len]), "utf-8") if tokens[index:index + collection_len]!="00" else ""
             index = index + collection_len
 
-            desc: str = str(bytearray.fromhex(tokens[index:index + desc_len]), "utf-8")
+            desc: str = str(bytearray.fromhex(tokens[index:index + desc_len]), "utf-8") if tokens[index:index + desc_len]!="00" else ""
             index = index + desc_len
         except:
             log(tokens[index:index+desc_len] + " n'est pas une chaine de caractères")
@@ -1029,7 +1029,7 @@ class ElrondNet:
                             "price": int(nft["royalties"]),
                             "miner": nft["creator"],
                             "owner": addr,
-                            "deadline": deadline,
+                            "deadline": 0,
                             "tags": prop["tags"],
                             "description": prop["description"],
                             "visual": visual,

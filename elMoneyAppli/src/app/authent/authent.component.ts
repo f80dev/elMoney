@@ -44,7 +44,7 @@ export class AuthentComponent implements OnInit {
   }
 
   ngOnInit(): void {
-  debugger
+
   }
 
   quit(result:any=null){

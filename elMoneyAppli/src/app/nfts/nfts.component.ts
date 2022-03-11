@@ -89,7 +89,6 @@ export class NftsComponent {
 
     this.user.check_pem(()=>{
       nft.message = message;
-      debugger
       this.api._post("state_nft/" + ids + "/" + new_state+"/"+nft.network+"/", "", {pem:this.user.pem}).subscribe((r: any) => {
         nft.message = "";
         let mes="Votre NFT n'est plus en vente";
@@ -204,7 +203,6 @@ export class NftsComponent {
         lbl_cancel: 'Non'
       }}).afterClosed().subscribe((result:any) => {
       if(result){
-        debugger
         let obj={
           pem:this.user.pem,
           price:Number(result),
@@ -258,7 +256,6 @@ export class NftsComponent {
               max_markup:max_markup*100
             };
             nft.message = "Ajout du distributeur en cours";
-            debugger
             this.api._post("add_dealer/" + nft.token_id + "/", "", obj).subscribe((r: any) => {
               nft.message = "";
               if (r.status != "fail") {

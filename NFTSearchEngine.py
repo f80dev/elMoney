@@ -3,23 +3,49 @@ import json
 
 import requests
 
-NFT_NETWORKS={
+NFT_SETTINGS={
     "elrond":{
-        "domain":"gateway.elrond.com"
+        "doc":"",
+        "network":"elrond",
+        "domain":"gateway.elrond.com",
+        "from_owner":"https://{{domain}}/address/{{owner}}/esdt",
+        "all_nft":""
+    },
+    "solana":{
+        "doc":"https://docs.solana.com/developing/clients/jsonrpc-api#gettokenaccountsbyowner",
+        "network":"solana",
+        "domain":"",
+        "from_owner":"",
+        "all_nft":""
+    },
+    "nfluent":{
+        "network":"elrond",
+        "from_owner":"https://{{server}}/",
+        "all_nft":""
     }
 }
 
 class NFTSearchEngine:
 
     def __init__(self,network="elrond"):
-        self.network=network
+        pass
+
+    def find_sc_from(self,addr):
+        if addr.startswith("Bj"):return "solana"
+        return ""
+
+    def prepare_url(self,url,owner=""):
+        settings=NFT_SETTINGS[self.sc]
+        url=url.replace("{{domain}}",settings["domain"]).replace("{{owner}}",owner)
+        return url
 
     #Voir la documentation https://docs.elrond.com/developers/esdt-tokens/#get-all-esdt-tokens-for-an-address
     def query(self,owner="",creator="",collection="",prefix=""):
         if len(owner)>0:
-            url = "https://" + NFT_NETWORKS[self.network]["domain"] + "/address/" + owner + "/esdt"
+            self.sc = self.find_sc_from(owner)
+            url=self.prepare_url(NFT_SETTINGS[self.sc]["from_owner"])
         else:
-            url = "https://" + NFT_NETWORKS[self.network]["domain"] + "/network/esdts"
+            url = self.prepare_url(NFT_SETTINGS[self.sc]["all_nft"])
             
 
         rc=[]

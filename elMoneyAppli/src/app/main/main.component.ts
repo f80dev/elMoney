@@ -81,7 +81,7 @@ export class MainComponent implements OnInit {
 
 
   transfer(dest:any){
-    debugger
+
     let value=this.hand;
     let unity=this.user.moneys[this.user.selected_money].unity;
     let question='Vous souhaitez envoyer '+value+" "+unity+" à "+dest.pseudo+" ("+dest.email+") ?";

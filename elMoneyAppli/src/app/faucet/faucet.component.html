@@ -8,12 +8,22 @@
 
   <div style="line-height: 180%">
     Vous disposez de<br>
-      <app-unity fontsize="large" [value]="user.gas/1e18"></app-unity>
+    <app-unity fontsize="large" [value]="user.gas/1e18"></app-unity>
     <br>
     pour vos transactions
   </div>
 
 
+  <div>
+    <br>
+    <h3>Rechargement</h3>
+    <button
+      mat-button class="icon-button" mat-icon-button style="font-size: large"
+      *ngFor="let amount of [2,5,10,25]"
+      (click)="initializePayment(amount)">
+      ${{amount}}
+    </button>
+  </div>
 
 
   <br><br>
@@ -39,6 +49,7 @@
   <br>
   <small>Flasher pour transférer des eGld</small>
   <br>
+
 
 
   <br>

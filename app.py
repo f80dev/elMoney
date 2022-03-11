@@ -216,6 +216,7 @@ def transfer(idx:str,dest:str,amount:str,unity:str):
 from NFTSearchEngine import NFTSearchEngine
 
 #test http://localhost:6660/api/query/?owner=erd1z4pjcxsqag8hy3nwpxwmvmnqt82tanymh8hdzleahqtl9xs0cf4slszcku
+#test http://localhost:6660/api/query/?owner=BjW8USn6XpyCW5dg95bNKey5XZ6KWaTox1nPDFYr4fdc&network=solana
 #test http://localhost:6660/api/query/
 @app.route('/api/query/',methods=["GET"])
 def nft_query():
@@ -224,7 +225,7 @@ def nft_query():
     collection=request.args.get("collection","")
     network=request.args.get("network","elrond")
 
-    nft_search_engine=NFTSearchEngine(network)
+    nft_search_engine=NFTSearchEngine()
     _data=nft_search_engine.query(owner)
 
     return jsonify(_data)

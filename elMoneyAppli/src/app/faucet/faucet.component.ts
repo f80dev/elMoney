@@ -13,6 +13,7 @@ import {ConfigService} from "../config.service";
 })
 export class FaucetComponent implements OnInit {
   message: string="";
+  paymentHandler: any=null;
 
   constructor(public api:ApiService,
               public user:UserService,
@@ -30,6 +31,7 @@ export class FaucetComponent implements OnInit {
       }
     },null,null,"faucet");
 
+    this.invokeStripe();
   }
 
   reload_account() {
@@ -54,5 +56,44 @@ export class FaucetComponent implements OnInit {
 
   informe_clipboard() {
     showMessage(this,"Votre adresse est disponible dans le presse-papier");
+  }
+
+
+  //https://www.freakyjolly.com/stripe-payment-checkout-gateway-angular-tutorial/
+  initializePayment(amount: number) {
+    const paymentHandler = (<any>window).StripeCheckout.configure({
+      key: 'pk_test_sLUqHXtqXOkwSdPosC8ZikQ800snMatYMb',
+      locale: 'auto',
+      token: function (stripeToken: any) {
+        console.log({stripeToken})
+        alert('Stripe token generated!');
+      }
+    });
+
+    paymentHandler.open({
+      name: 'Rechargement',
+      description: 'Transférer '+amount+" euros sur votre compte",
+      amount: amount * 100
+    });
+  }
+
+  invokeStripe() {
+    if(!window.document.getElementById('stripe-script')) {
+      const script = window.document.createElement("script");
+      script.id = "stripe-script";
+      script.type = "text/javascript";
+      script.src = "https://checkout.stripe.com/checkout.js";
+      script.onload = () => {
+        this.paymentHandler = (<any>window).StripeCheckout.configure({
+          key: 'pk_test_sLUqHXtqXOkwSdPosC8ZikQ800snMatYMb',
+          locale: 'auto',
+          token: function (stripeToken: any) {
+            console.log(stripeToken)
+            alert('Payment has been successfull!');
+          }
+        });
+      }
+      window.document.body.appendChild(script);
+    }
   }
 }
