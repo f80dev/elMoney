@@ -21,6 +21,8 @@ from erdpy.accounts import Account
 
 from erdpy.contracts import SmartContract
 from flask import Response, request, jsonify, send_file
+
+from SolanaNet import SolanaNet
 from Tools import log, send_mail, open_html_file, send, dictlist_to_csv, returnError, str_to_hex, \
     is_standard, hex_to_str, list_to_vec
 from apiTools import create_app
@@ -29,8 +31,8 @@ from apiTools import create_app
 from dao import DAO
 from definitions import DOMAIN_APPLI, MAIN_UNITY, CREDIT_FOR_NEWACCOUNT, APPNAME, \
     MAIN_URL, TOTAL_DEFAULT_UNITY, SIGNATURE, \
-    MAIN_NAME, MAIN_DECIMALS, NETWORKS, ESDT_CONTRACT, LIMIT_GAS, ESDT_PRICE, IPFS_NODE_HOST, \
-    IPFS_NODE_PORT, LONG_DELAY_TRANSACTION, SHORT_DELAY_TRANSACTION, FIND_SECRET, MAX_MINT_NFT, ONE_WINNER, MAX_U64, \
+    MAIN_NAME, MAIN_DECIMALS, NETWORKS, ESDT_CONTRACT,  ESDT_PRICE, IPFS_NODE_HOST, \
+    IPFS_NODE_PORT, LONG_DELAY_TRANSACTION, SHORT_DELAY_TRANSACTION,  MAX_MINT_NFT, ONE_WINNER, MAX_U64, \
     FOR_SALE, RESULT_SECTION, ZERO_ADDR
 from elrondTools import ElrondNet
 from giphy_search import ImageSearchEngine
@@ -56,6 +58,8 @@ def init_default_money(bc,dao):
     """
     :return: l'adresse de la monnaie par defaut
     """
+    if bc is None:return None
+
     if bc.bank is None:
         log("Vous devez initialiser la bank pour créer le contrat de monnaie par défaut")
         return None
@@ -69,8 +73,8 @@ def init_default_money(bc,dao):
         money_idx = NETWORKS[bc.network_name]["identifier"]
 
     if len(money_idx) == 0:
-        log("Pas de monnaie dans la configuration, on déploy "+MAIN_NAME+" d'unite "+MAIN_UNITY)
-        rc=bc.deploy(bc.bank, MAIN_NAME,MAIN_UNITY,TOTAL_DEFAULT_UNITY,MAIN_DECIMALS)
+        log("Pas de monnaie dans la configuration, on déploie "+MAIN_NAME+" d'unite "+MAIN_UNITY)
+        rc=bc.deploy_ESDT(bc.bank, MAIN_NAME,MAIN_UNITY,TOTAL_DEFAULT_UNITY,MAIN_DECIMALS)
         if "error" in rc:
             log("Impossible de déployer le contrat de la monnaie par defaut "+rc["message"])
             return None
@@ -97,7 +101,7 @@ def init_default_money(bc,dao):
 #2=adresse du proxy de la blockchain
 #3=nom de la base de données
 
-bc = ElrondNet(network_name=sys.argv[2])
+bc:ElrondNet = None if not "elrond" in sys.argv else ElrondNet(network_name=sys.argv[2])
 dao=DAO("server",sys.argv[3])
 init_default_money(bc,dao)
 app, socketio,cache = create_app()
@@ -649,7 +653,12 @@ def resend_pem(addr:str):
 #http://localhost:6660/api/test/
 @app.route('/api/test/',methods=["GET"])
 def test():
-    pass
+    solanaFactory=SolanaNet()
+    rc=solanaFactory.mint(
+        solanaFactory.account("paul")
+    )
+    return rc
+
 
 
 
@@ -1384,7 +1393,7 @@ def deployESDT(name:str,unity:str,nbdec:str,amount:str,data:dict=None):
 
     owner=bc.get_elrond_user(data["pem"])
     log("Compte propriétaire de la monnaie créé. Lancement du déploiement de "+unity)
-    result=bc.deploy(owner,name,unity.upper(),int(amount),int(nbdec))
+    result=bc.deploy_ESDT(owner,name,unity.upper(),int(amount),int(nbdec))
 
     if "error" in result:
         log("Probléme de création de la monnaie "+str(result))

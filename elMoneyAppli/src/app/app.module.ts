@@ -16,7 +16,7 @@ import {GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule} from "a
 import {FormsModule} from "@angular/forms";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-import {HttpClientModule} from "@angular/common/http";
+import {HttpClientModule} from '@angular/common/http';
 import {ApiService} from "./api.service";
 import {MAT_DIALOG_DATA, MatDialogModule} from "@angular/material/dialog";
 import {MatInputModule} from "@angular/material/input";
@@ -194,6 +194,7 @@ const config: SocketIoConfig = {
     ApiService,
     WalletconnectService,
     TransPipe,
+    SafePipe,
     DatePipe,
     {
       provide: 'SocialAuthServiceConfig',

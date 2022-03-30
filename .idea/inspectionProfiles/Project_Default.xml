@@ -33,34 +33,5 @@
       </option>
       <option name="myCustomValuesEnabled" value="true" />
     </inspection_tool>
-    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
-      <option name="ignoredPackages">
-        <value>
-          <list size="14">
-            <item index="0" class="java.lang.String" itemvalue="Django" />
-            <item index="1" class="java.lang.String" itemvalue="pymongo" />
-            <item index="2" class="java.lang.String" itemvalue="erdpy" />
-            <item index="3" class="java.lang.String" itemvalue="PyYAML" />
-            <item index="4" class="java.lang.String" itemvalue="requests" />
-            <item index="5" class="java.lang.String" itemvalue="APScheduler" />
-            <item index="6" class="java.lang.String" itemvalue="flask-cors" />
-            <item index="7" class="java.lang.String" itemvalue="pycryptodome" />
-            <item index="8" class="java.lang.String" itemvalue="flask-socketio" />
-            <item index="9" class="java.lang.String" itemvalue="ipfshttpclient" />
-            <item index="10" class="java.lang.String" itemvalue="flask" />
-            <item index="11" class="java.lang.String" itemvalue="pynacl" />
-            <item index="12" class="java.lang.String" itemvalue="bson" />
-            <item index="13" class="java.lang.String" itemvalue="aes-everywhere" />
-          </list>
-        </value>
-      </option>
-    </inspection_tool>
-    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
-      <option name="ignoredIdentifiers">
-        <list>
-          <option value="elrondTools.ElrondNet.set_default_money" />
-        </list>
-      </option>
-    </inspection_tool>
   </profile>
 </component>

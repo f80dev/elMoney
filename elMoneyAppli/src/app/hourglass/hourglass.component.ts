@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {Router} from "@angular/router";
-import {clear} from "../tools";
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-hourglass',

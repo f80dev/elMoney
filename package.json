@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "@angular/core": "^12.2.11"
+  },
+  "devDependencies": {
+    "ngx-webcam": "^0.4.1"
   }
 }

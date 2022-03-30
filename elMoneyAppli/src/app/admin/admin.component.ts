@@ -5,7 +5,9 @@ import {$$, api, eval_properties, now, showError, showMessage} from "../tools";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {UserService} from "../user.service";
 import {ConfigService} from "../config.service";
+import {SocketIoConfig} from "ngx-socket-io";
 import {environment} from "../../environments/environment";
+
 
 @Component({
   selector: 'app-admin',

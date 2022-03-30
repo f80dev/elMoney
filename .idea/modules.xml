@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/elMoney.iml" filepath="$PROJECT_DIR$/.idea/elMoney.iml" />
+      <module fileurl="file://$PROJECT_DIR$/elMoneyAppli/elMoneyAppli.iml" filepath="$PROJECT_DIR$/elMoneyAppli/elMoneyAppli.iml" />
     </modules>
   </component>
 </project>

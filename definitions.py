@@ -58,12 +58,12 @@ NETWORKS={
         "new_account":float(0.2*1e18),
         "bank":"bank",
         "unity":"xEgld",
-        "identifier":"TFE-d1f00b",
+        "identifier":"TFE-116a67",
         "faucet":"https://r3d4.fr/elrond/devnet/index.php",
-        "proxy":"https://devnet-gateway.elrond.com",
+        "proxy":"https://devnet-api.elrond.com",
         "explorer":"https://devnet-explorer.elrond.com",
         "wallet":"https://devnet-wallet.elrond.com",
-        "nft":"erd1qqqqqqqqqqqqqpgqff6nh9n06nxkushn0tdphe4x7djd76y58mqsj8sl6p",
+        "nft":"erd1qqqqqqqqqqqqqpgqqg3kxq0x4p3t68yszk5v7v7se6znfmcqqqes67tx40",
         "shard": 1
     },
 
@@ -118,7 +118,7 @@ CAN_TRANSFERT   = 0b0000000000000001
 
 MAX_MINT_NFT=30
 MAX_GAS_LIMIT=600000000
-RESULT_SECTION="results"
+RESULT_SECTION="smartContractResults"
 
 LONG_DELAY_TRANSACTION=34 #sec
 SHORT_DELAY_TRANSACTION=9

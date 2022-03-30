@@ -21,8 +21,8 @@ class DAO:
     def __init__(self,domain:str="cloud",dbname="coinmaker"):
         log("Ouverture de la base de données "+dbname)
         try:
+            log("Connexion à la base de donnée "+DB_SERVERS[domain])
             self.db: pymongo.mongo_client = pymongo.MongoClient(DB_SERVERS[domain])[dbname]
-            _lst=list(self.db["ntfs"])
             pass
         except Exception as inst:
             log("Base de données non disponible "+str(inst.args))

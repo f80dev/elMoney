@@ -56,6 +56,9 @@ def base_alphabet_to_10(letters):
     )
 
 
+def str_to_int(letters):
+    return int(str_to_hex(letters),16)
+
 def str_to_hex(letters,zerox=True):
     if type(letters)==int:
         rc=hex(letters).replace("0x","")
@@ -66,7 +69,7 @@ def str_to_hex(letters,zerox=True):
             rc=rc+hex(ord(letter))[2:]
 
     if len(rc) % 2==1:rc="0"+rc
-    rc=rc.upper()
+    rc=rc.lower()
 
     if zerox:
         return "0x"+rc

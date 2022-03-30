@@ -14,14 +14,14 @@ from erdpy.proxy import ElrondProxy
 from erdpy import config
 from erdpy.accounts import Account, Address
 from erdpy.contracts import SmartContract
-from erdpy.environments import TestnetEnvironment
+from erdpy.proxy.messages import TransactionOnNetwork
 from erdpy.transactions import Transaction
 from erdpy.wallet import derive_keys, generate_pair
 from erdpy.wallet.keyfile import load_from_key_file
 from requests_cache import CachedSession
 
 from Tools import log, base_alphabet_to_10, str_to_hex, hex_to_str, nbr_to_hex, translate, now, is_standard, \
-    returnError, list_to_vec, extract_tags, find_url
+    returnError, list_to_vec, extract_tags, find_url, str_to_int
 from definitions import LIMIT_GAS, ESDT_CONTRACT, NETWORKS, ESDT_PRICE, IPFS_NODE_PORT, IPFS_NODE_HOST, SECRET_KEY, \
     DEFAULT_VISUAL, DEFAULT_VISUAL_SHOP, VOTE, FOR_SALE, SECRET_VOTE, UNIK, MINER_CAN_BURN, CAN_TRANSFERT, CAN_RESELL, \
     DIRECT_SELL, SELF_DESTRUCTION, RENT, FIND_SECRET, FORCE_OPEN, ONE_WINNER, TRANSPARENT, RESULT_SECTION, \
@@ -71,13 +71,11 @@ class ElrondNet:
         self.chain_id = self._proxy.get_chain_id()
         self.tce = 0  #TransactionCostEstimator(self._proxy.url)
 
-        log("Initialisation de l'environnement")
-        self.environment = TestnetEnvironment(proxy)
-
         log("Initialisation de la bank")
         self.init_bank()
 
         log("Initialisation terminée")
+
 
     def get_elrond_user(self, data,with_contact=False):
         """
@@ -391,7 +389,7 @@ class ElrondNet:
             version=config.get_tx_version()
         )
 
-    def deploy(self, pem_file, name, unity, amount, decimals, gas_limit=LIMIT_GAS, timeout=60):
+    def deploy_ESDT(self, pem_file, name, unity, amount, decimals, gas_limit=LIMIT_GAS, timeout=60):
         """
         Déployer une nouvelle monnaie avec ESDT
         exemple de data valable: issue@74657374546f6b656e@545443@d3c21bcecceda1000000@12@63616e55706772616465@66616c7365
@@ -417,7 +415,7 @@ class ElrondNet:
         amount = amount * (10 ** (decimals))
         # ok : issue@506c657368636f696e@504c534843@c350@02@63616e4368616e67654f776e6572@74727565@63616e55706772616465@74727565
         # ko : issue@54686546616D6F75735256436F696E@525643@021E19E0C9BAB2400000@12
-        arguments = [str_to_hex(name), str_to_hex(unity), nbr_to_hex(amount), nbr_to_hex(decimals)]
+        arguments = [str_to_int(name), str_to_int(unity), amount,decimals]
         # for opt in ["canFreeze", "canWipe", "canPause", "canMint", "canBurn","canChangeOwner","canUpgrade"]:
         # for opt in ["canUpgrade"]:
         #    arguments.append(str_to_hex(opt))
@@ -447,7 +445,7 @@ class ElrondNet:
                     "addr": user.address.bech32()
                     }
         else:
-            log("Déploiement du nouveau contrat réussi voir transaction " + self.getExplorer(t["miniBlockHash"]))
+            log("Déploiement du nouveau contrat réussi voir transaction " + self.getExplorer(t["blockHash"]))
             id = ""
             if RESULT_SECTION in t:
                 for result in t[RESULT_SECTION]:
@@ -496,8 +494,7 @@ class ElrondNet:
                                                                                               "address"))
         log("Passage des arguments " + str(arguments))
         try:
-            tx, address = self.environment.deploy_contract(
-                contract=SmartContract(bytecode=bytecode),
+            tx, address = SmartContract(bytecode=bytecode).deploy(
                 owner=user,
                 arguments=arguments,
                 gas_price=config.DEFAULT_GAS_PRICE,
@@ -539,7 +536,7 @@ class ElrondNet:
         :param contract:
         :return:
         """
-        lst = self.environment.query_contract(SmartContract(address=contract), "nameOf")
+        lst = self._proxy.query_contract(SmartContract(address=contract), "nameOf")
         if len(lst) > 0:
             val = str(lst[0].balance)
             name = bytes.fromhex(val).decode("utf-8")
@@ -560,7 +557,7 @@ class ElrondNet:
 
 
 
-    def wait_transaction(self, tx, field="status", equal="", not_equal="", timeout=30, interval=4):
+    def wait_transaction(self, tx:Transaction, field="status", equal="", not_equal="", timeout=30, interval=4):
         """
         Attent qu'une transaction prenne un certain statut
         :param tx:
@@ -571,12 +568,11 @@ class ElrondNet:
         :param interval:
         :return:
         """
-        rc = dict()
-        log("Attente jusqu'a " + str(timeout) + " secs synchrone de la transaction " + self.getExplorer(tx))
-        rc = None
+
+        log("Attente jusqu'a " + str(timeout) + " secs synchrone de la transaction " + self.getExplorer(tx.hash))
         while timeout > 0:
             sleep(interval)
-            rc = self._proxy.get_transaction(tx_hash=tx, with_results=True).raw
+            rc = self._proxy.get_transaction(tx_hash=tx.hash, with_results=True).raw
 
             if len(equal) > 0 and rc[field] == equal: break
             if len(not_equal) > 0 and rc[field] != not_equal: break
@@ -751,14 +747,14 @@ class ElrondNet:
 
 
 
-    def execute(self, _contract, _user, function, arguments=[], value: int = None, gas_limit=LIMIT_GAS, timeout=60,gas_price_factor=1):
+    def execute(self, _contract:SmartContract, _user, function, arguments=[], value: int = None, gas_limit=LIMIT_GAS, timeout=60,gas_price_factor=1) -> dict:
         if _user is None: return None
         if type(_contract) == str: _contract = SmartContract(_contract)
         if type(_user) == str: _user = Account(address=_user)
         _user.sync_nonce(self._proxy)
         if not value is None: value = int(value)
         try:
-            tx = self.environment.execute_contract(_contract, _user,
+            tx = _contract.execute( _user,
                                                    function=function,
                                                    arguments=arguments,
                                                    gas_price=config.DEFAULT_GAS_PRICE * gas_price_factor,
@@ -771,18 +767,19 @@ class ElrondNet:
             log("Impossible d'executer " + function + " " + str(inst.args))
             return None
 
-        tr = self.wait_transaction(tx, "status", not_equal="pending", timeout=timeout)
-        return tr
+        t:TransactionOnNetwork=tx.send_wait_result(self._proxy,timeout=timeout)
+        #tr = self.wait_transaction(tx, "status", not_equal="pending", timeout=timeout)
+        return t.raw
 
 
 
     def query(self, function_name, arguments=None, n_try=3):
-        _contract = SmartContract(address=NETWORKS[self.network_name]["nft"])
+        _contract:SmartContract = SmartContract(address=NETWORKS[self.network_name]["nft"])
 
         d = None
         for i in range(n_try):
             try:
-                d = self.environment.query_contract(_contract, function_name, arguments)
+                d = _contract.query(self._proxy,function_name, arguments)
                 break
             except Exception as inst:
                 sleep(1)

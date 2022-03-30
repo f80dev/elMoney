@@ -33,7 +33,7 @@ export function showError(vm:any,err:any=null){
 }
 
 //Supprime le code html d'une fonction
-export function removeHTML(html_code:string,code_replace=" ") {
+export function removeHTML(html_code:string,code_replace="") {
   while(html_code.indexOf("<")>-1){
     let pos=html_code.indexOf("<")
     if(pos>-1){
@@ -320,80 +320,6 @@ export function $$(s: string, obj: any= null) {
 }
 
 
-/**
- * Creation d'une carte
- */
-
-declare var ol: any;
-
-export function createMap(center:any,
-                          icon="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/240/google/223/man_1f468.png",
-                          zoom=18,scale=0.2,
-                          func_move=null,func_sel=null,func_click=null){
-  var vectorSource = new ol.source.Vector({
-    features: [
-      createMarker(center.lng,center.lat,icon,null,scale)
-    ]
-  });
-
-  var vectorLayer=new ol.layer.Vector({source: vectorSource});
-  //var olSource=new ol.layer.Tile({source: new ol.source.OSM()});
-  //Info sur la source : https://www.bingmapsportal.com/Application
-  var olSource=new ol.layer.Tile({source: new ol.source.BingMaps({
-      imagerySet: 'Road',
-      key: 'Am04xtfIsPy43By5-20LAeD2uxvrX9Yfe3DVunnWQoCeT3Kzks9J7-9DU63EzEaf'
-    })});
-
-  var rc=new ol.Map({
-    target: 'map',
-    layers: [
-      olSource,
-      vectorLayer,
-    ],
-    view: new ol.View({
-      center: ol.proj.fromLonLat([center.lng, center.lat]),
-      zoom: zoom
-    })
-  });
-
-  if(func_sel){
-    rc.on("dblclick", function(e) {
-      rc.forEachFeatureAtPixel(e.pixel, function (feature, layer) {
-        func_sel(feature);
-      })
-    });
-  }
-
-  if(func_click)
-    rc.on("singleclick",(e)=>{
-      rc.forEachFeatureAtPixel(e.pixel, function (feature, layer) {
-        func_click(feature);
-      });
-    });
-
-  // if(func_move)
-  //   rc.on('pointermove',(e)=> {
-  //     rc.forEachFeatureAtPixel(e.pixel, function (feature, layer) {
-  //       func_sel(feature);
-  //     });
-  //   });
-
-
-  if(func_move!=null){
-    rc.on("moveend",func_move);
-  }
-  return rc;
-}
-
-export function getMarkerLayer(map:any):any {
-  var rc=null;
-  map.getLayers().forEach((layer) => {
-    if (layer instanceof ol.layer.Vector) {
-      rc=layer;
-    }
-  });
-  return rc;
-}
 
 /**
  * Affichage du message
@@ -538,54 +464,6 @@ export function buildTeaser(coupon:any,lieu:string,withCondition=false){
   return rc;
 }
 
-
-
-
-
-export function createMarker(lon,lat,icon,coupon=null,scale=0.2){
-  if(!icon)icon="";
-  var iconStyle:any=new ol.style.Style({image: new ol.style.Circle({radius: 15,fill: new ol.style.Fill({color: 'white'})})});
-
-  if(!icon.startsWith("data") && !icon.startsWith("http") && !icon.startsWith("./")) {
-    //On a un emoji
-    iconStyle = new ol.style.Style({
-      text: new ol.style.Text(({
-        anchor: [0.6, 1.0],
-        text: icon,
-        scale:3,
-        textAlign: "center"
-      }))
-    });
-  } else {
-    //On a une image
-    iconStyle = new ol.style.Style({
-      image: new ol.style.Icon(({
-        anchor: [0.6, 1.0],
-        scale:scale,
-        anchorXUnits: 'fraction',
-        anchorYUnits: 'pixels',
-        src: icon,
-        opacity:1.0,
-      })),
-    });
-  }
-
-  if(coupon!=null){
-    iconStyle.setText(new ol.style.Text({
-      text: coupon.symbol,
-      textAlign:"center",
-      font:"22px sans-serif"
-    }));
-  }
-
-  var marker = new ol.Feature({
-    geometry: new ol.geom.Point(ol.proj.fromLonLat([lon, lat])),
-  });
-  marker.coupon=coupon;
-
-  marker.setStyle(iconStyle);
-  return marker;
-}
 
 
 /**
@@ -753,42 +631,7 @@ export function cropToSquare(base64,quality=1,func) {
   img.src=base64;
 }
 
-export function compute(coupon:any){
-  coupon["conditions"]=coupon["conditions"] || "";
-  if(coupon.visual==null)coupon.visual=coupon.picture;
 
-  if(coupon.label=="")coupon.label="Super promotion";
-
-  if(coupon.conditions=="")coupon.conditions="sur simple présentation du coupon REDUCSHARE";
-  if(!coupon.conditions.startsWith("pour ") && !coupon.conditions.startsWith("sur "))coupon.conditions="pour "+coupon.conditions;
-  coupon.conditions=coupon.conditions.replace("offre valable pour","").replace("valable pour","");
-
-  coupon.dtStart=new Date().getTime();
-
-  if(coupon.duration_jours==null)coupon.duration_jours=0;
-  if(coupon.duration_hours==null)coupon.duration_hours=0;
-
-
-  coupon.durationInSec=coupon.duration_jours*24*3600+coupon.duration_hours*3600;
-  coupon.delay=0;
-
-  coupon.share_bonus=Number(coupon.share_bonus);
-  coupon.pay_bonus=Number(coupon.pay_bonus);
-  coupon.direct_bonus=Number(coupon.direct_bonus);
-  coupon.final_bonus=Number(coupon.final_bonus);
-  coupon.max=Number(coupon.max);
-  coupon.stock=Number(coupon.stock);
-  if(coupon.ink_color==null)coupon.ink_color="white";
-
-  if(coupon.nb_partage>0)
-    coupon.share_bonus=1/coupon.nb_partage;
-  else
-    coupon.share_bonus=0;
-
-  //if(coupon.pluriel && coupon.unity.endsWith("s"))coupon.unity=coupon.unity.substr(0,coupon.unity.length-1);
-  coupon.unity=coupon.unity.toLowerCase();
-  return coupon;
-}
 
 export function exportToHTML(src:string,coupon:any,func:Function,color="darkred"){
   var code="";
