@@ -25,7 +25,7 @@ from Tools import log, base_alphabet_to_10, str_to_hex, hex_to_str, nbr_to_hex, 
 from definitions import LIMIT_GAS, ESDT_CONTRACT, NETWORKS, ESDT_PRICE, IPFS_NODE_PORT, IPFS_NODE_HOST, SECRET_KEY, \
     DEFAULT_VISUAL, DEFAULT_VISUAL_SHOP, VOTE, FOR_SALE, SECRET_VOTE, UNIK, MINER_CAN_BURN, CAN_TRANSFERT, CAN_RESELL, \
     DIRECT_SELL, SELF_DESTRUCTION, RENT, FIND_SECRET, FORCE_OPEN, ONE_WINNER, TRANSPARENT, RESULT_SECTION, \
-    MAX_GAS_LIMIT, MAX_MINT_NFT, ID_REQUIRED, ZERO_ADDR
+    MAX_GAS_LIMIT, MAX_MINT_NFT, ID_REQUIRED, ZERO_ADDR, PRICE_FOR_STANDARD_NFT
 from ipfs import IPFS
 
 
@@ -157,14 +157,18 @@ class ElrondNet:
 
     def getExplorer(self, tx, type="transactions"):
         url = NETWORKS[self.network_name]["explorer"] + "/" + type + "/" + tx
+        url=url.replace("api","explorer")
         if "elrond.com" in self._proxy.url:
             return url
         else:
             type = type.replace("transactions", "transaction")
             return self._proxy.url + "/" + type + "/" + tx
 
-    def send_transaction(self, _sender: Account, _receiver: Account, _sign: Account, value: str, data: str,
-                         gas_limit=LIMIT_GAS):
+    def send_transaction(self, _sender: Account,
+                         _receiver: Account,
+                         _sign: Account,
+                         value: str, data: str,
+                         gas_limit=LIMIT_GAS,timeout=60):
         """
         Envoi d'une transaction signée
         :param _sender:
@@ -190,10 +194,11 @@ class ElrondNet:
         t.sign(_sign)
 
         try:
-            tx = t.send(self._proxy)
-            log("Execution de la transaction " + self.getExplorer(tx))
-            tr = self.wait_transaction(tx, not_equal="pending")
-            return tr
+            tx = t.send_wait_result(self._proxy,timeout=timeout)
+            log("Execution de la transaction " + data + " : " + self.getExplorer(tx.raw["sender"],"address"))
+
+            #tr = self.wait_transaction(tx, not_equal="pending")
+            return tx.raw
         except Exception as inst:
             log("Exception d'execution de la requete " + str(inst.args))
             return None
@@ -915,10 +920,12 @@ class ElrondNet:
     def get_tokens(self, dealer_filter="0x0", owner_filter="0x0", miner_filter="0x0",limit=100,offset=0):
         log("Recherche des NFT pour seller="+dealer_filter+" owner="+owner_filter+" miner="+miner_filter)
         rc = list()
+        url=""
 
         if owner_filter == "0x0":
             owner_filter = ZERO_ADDR
         else:
+            url=self._proxy.url+"/address/"+owner_filter+"/esdts/roles"
             owner_filter = "0x" + str(Account(address=owner_filter).address.hex())
 
         if dealer_filter == "0x0":
@@ -929,7 +936,16 @@ class ElrondNet:
         if miner_filter == "0x0":
             miner_filter = ZERO_ADDR
         else:
+            url=self._proxy.url+"/address/"+miner_filter+"/registered-nfts"
             miner_filter = "0x" + str(Account(address=miner_filter).address.hex())
+
+
+        #On récupere les NFT standard
+        if len(url)>0:
+            standard_tokens=requests.get(url).json()
+            for token in standard_tokens["data"]:
+                pass
+
 
         # On récupére les extended NFT
         tokens = self.query("tokens", arguments=[dealer_filter, owner_filter, miner_filter,int(limit)], n_try=1)
@@ -1108,6 +1124,7 @@ class ElrondNet:
                           gas_price_factor=factor,
                           value=value,
                           timeout=600)
+
         if not tx is None and RESULT_SECTION in tx:
             for result in tx[RESULT_SECTION]:
                 s = result["data"]
@@ -1119,8 +1136,20 @@ class ElrondNet:
         return tx
 
 
+    def get_collections(self,creator:Account,field="name"):
+        url=self._proxy.url+"/collections?creator="+creator.address.bech32()
+        rc=list()
+        cols=requests.get(url).json()
+        if len(field)>0:
+            for col in cols:
+                rc.append(col[field])
+        else:
+            rc=cols
 
-    def mint_standard_nft(self, user_from, title, properties: dict, price=0, quantity=1, royalties=0,visual=""):
+        return rc
+
+
+    def mint_standard_nft(self, user_from, title, collection,properties: dict, price=0, quantity=1, royalties=0,visual="",ipfs=None):
         """
         Fabriquer un NFT au standard elrond
         https://docs.elrond.com/developers/nft-tokens/
@@ -1130,50 +1159,90 @@ class ElrondNet:
         :return:
         """
 
-        tokenName = "TFT" + md5(bytes(title, "utf8")).hexdigest()[:10]
-        tokenTicker = "TFT"
+
         hash = hex(int(now() * 1000)).upper().replace("0X", "")
+        tokenName=collection.replace(" ","")
+        collection_id = ""
 
-        data = "issueNonFungible" \
-                + "@" + str_to_hex(tokenName, False) \
-                + "@" + str_to_hex(tokenTicker, False) \
-                + "@" + str_to_hex("canChangeOwner", False) \
-                + "@" + str_to_hex("true", False) \
-                + "@" + str_to_hex("canUpgrade", False) \
-                + "@" + str_to_hex("true", False) \
-                + "@" + str_to_hex("canWipe", False) \
-                + "@" + str_to_hex("true", False)
+        for col in self.get_collections(user_from,""):
+            if col["name"]==collection:
+                collection_id=col["ticker"]
+                break
 
-        t = self.send_transaction(user_from,
-                                  Account(address="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"),
-                                  user_from, 50000000000000000, data)
-
-        if t["status"] == "success" and len(t[RESULT_SECTION][0]["data"].split("@")) > 2:
-            token_id = t[RESULT_SECTION][0]["data"].split("@")[2]
-            data = "setSpecialRole@" + token_id + "@" + user_from.address.hex() \
-                    + "@" + str_to_hex("ESDTRoleNFTCreate",False) \
-                    + "@" + str_to_hex("ESDTRoleNFTBurn", False)
+        if collection_id=="":
+            collection_id=tokenName[:8].upper()
+            data = "issueSemiFungible" \
+                   + "@" + str_to_hex(tokenName, False) \
+                   + "@" + str_to_hex(collection_id, False) \
+                   + "@" + str_to_hex("canChangeOwner", False)+"@"+str_to_hex("true",False) \
+                   + "@" + str_to_hex("canUpgrade", False)+"@"+str_to_hex("true",False) \
+                   + "@" + str_to_hex("canWipe", False)+"@"+str_to_hex("true",False)
 
             t = self.send_transaction(user_from,
-                              Account(address="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"),
-                              user_from, 0, data)
+                                      Account(address="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"),
+                                      user_from,
+                                      PRICE_FOR_STANDARD_NFT,
+                                      data)
 
             if t["status"] == "success":
-                data = "ESDTNFTCreate@" + token_id \
-                       + "@" + hex(int(quantity)).replace("0x", "") \
-                       + "@" + str_to_hex(title, False) \
-                       + "@" + hex(int(royalties)).replace("0x", "")
+                if len(t[RESULT_SECTION][0]["data"].split("@")) > 1:
+                    token_id = t[RESULT_SECTION][0]["data"].split("@")[2]
+                    #voir https://docs.elrond.com/developers/nft-tokens/#assigning-roles
+                    #setSpecialRole@544f555245494646454c2d333535613733@b13a017423c366caff8cecfb77a12610a130f4888134122c7937feae0d6d7d17@45534454526f6c654e4654437265617465@45534454526f6c654e46544164645175616e74697479@45534454526f6c654e46544275726e
+                    #transaction hash : 56b26e5c523f1869a8b3870bcf182452e80f0a8e66c140d1a37b4b92ec3f72ef
 
-                data = data +  "@" + str_to_hex(hash, False) + "@"
-                for k in properties.keys():
-                    if k != "title":
-                        data = data + str_to_hex(k + ":" + properties[k] + ",", False)
-                data = data + "@" + str_to_hex(visual, False)
+                    data = "setSpecialRole@" + token_id + "@" + user_from.address.hex() \
+                           + "@" + str_to_hex("ESDTRoleNFTCreate",False) \
+                           + "@" + str_to_hex("ESDTRoleNFTBurn", False)
+                    #+ "@" + str_to_hex("ESDTRoleNFTUpdateAttributes",False) \
+                    #Exemple d'usage de setSpecialRole sur la collection présente
+                    #setSpecialRole@43414c5649323032322d356364623263@b13a017423c366caff8cecfb77a12610a130f4888134122c7937feae0d6d7d17@45534454526f6c654e4654437265617465@45534454526f6c654e46544164645175616e74697479
 
-                sleep(5)
-                t = self.send_transaction(user_from, user_from, user_from, 0, data)
+                    t = self.send_transaction(user_from,
+                                              Account(address="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"),
+                                              user_from, 0, data)
 
-                return t
+
+
+            #Voir https://docs.elrond.com/developers/nft-tokens/
+                    #exemple de creation d'une collection de SFT
+                    # Name=CalviOnTheRock collection=Calvi2022
+                    # TransferCreateRole
+                    #Résultat issueSemiFungible@43616c76694f6e546865526f636b32303232@43414c564932303232@63616e5472616e736665724e4654437265617465526f6c65@74727565
+                    #Création de billet
+                    #Exemple : issueSemiFungible@546f757245696666656c@544f555245494646454c@63616e467265657a65@74727565@63616e57697065@74727565@63616e5472616e736665724e4654437265617465526f6c65@74727565
+                    #Transaction hash 3f002652038ba8aed2876809a9e019451770c740749c1047a5b4d354f5fb217a
+
+
+
+            sleep(2)
+            cid_metadata=ipfs.add(properties)
+
+            data = "ESDTNFTCreate@" + collection_id \
+                    + "@" + hex(int(quantity)).replace("0x", "") \
+                    + "@" + str_to_hex(title, False) \
+                    + "@" + hex(int(royalties)*100).replace("0x", "") \
+                    + "@" + hash \
+                    + "@" + str_to_hex(visual) \
+                    + "@" + str_to_hex("tags:;metadata:"+cid_metadata)
+
+            #Exemple : Pass5An a 10 exemplaire avec le fichier png chargé et description dans description et tag dans tags
+            # resultat ESDTNFTCreate@43414c5649323032322d356364623263@0a@5061737331416e@09c4@516d50373347703135464461367976474474397765526d7035684d575041734c4c63724e5a686d506e79366d4134@746167733a3b6d657461646174613a516d54713845666d36416634616a35383847694d716b4d44524c475658794133773439315052464e413471546165@68747470733a2f2f697066732e696f2f697066732f516d50373347703135464461367976474474397765526d7035684d575041734c4c63724e5a686d506e79366d4134
+            # exemple : ESDTNFTCreate@544f555245494646454c2d333535613733@0a@5669736974654c6534417672696c32303232@09c4@516d5531394736544c4b704b38436a504c5137726e4d4c4868553346784257317846696b44335a48665a476a6841@746167733a3b6d657461646174613a516d54713845666d36416634616a35383847694d716b4d44524c475658794133773439315052464e413471546165@68747470733a2f2f697066732e696f2f697066732f516d5531394736544c4b704b38436a504c5137726e4d4c4868553346784257317846696b44335a48665a476a6841
+            # traduction : ESDTNFTCreate@TOUREIFFEL-355a73@@VisiteLe4Avril2022@2500@QmU19G6TLKpK8CjPLQ7rnMLHhU3FxBW1xFikD3ZHfZGjhA@tags:;metadata:QmTq8Efm6Af4aj588GiMqkMDRLGVXyA3w491PRFNA4qTae@https://ipfs.io/ipfs/QmU19G6TLKpK8CjPLQ7rnMLHhU3FxBW1xFikD3ZHfZGjhA
+            # transaction : 0652f69168b908faeb497b9fdee8593e747ee759349083f55b2e4ad17de1e2c3
+
+            # data = data +  "@" + str_to_hex(hash, False) + "@"
+            # for k in properties.keys():
+            #     if k != "title":
+            #         data = data + str_to_hex(k + ":" + properties[k] + ",", False)
+            # data = data + "@" + str_to_hex(visual, False)
+
+            t = self.send_transaction(user_from, user_from, user_from, 0, data)
+
+            return t
+        else:
+            log("Probleme de connexion "+t["receipt"]["data"])
 
         return returnError("Impossible de créer le NFT")
 

@@ -103,6 +103,10 @@ def init_default_money(bc,dao):
 
 bc:ElrondNet = None if not "elrond" in sys.argv else ElrondNet(network_name=sys.argv[2])
 dao=DAO("server",sys.argv[3])
+
+#vérifier la connexion avec IPFS
+client = IPFS(IPFS_NODE_HOST,IPFS_NODE_PORT)
+
 init_default_money(bc,dao)
 app, socketio,cache = create_app()
 
@@ -122,7 +126,12 @@ def analyse_pem():
         pubkey=_to.address.bech32()
         _infos = bc.get_shard(pubkey)
         body=str(request.data,"utf8")
-        return jsonify({"address":pubkey,"pem":body,"addr":pubkey,"shard":_infos["shard"]}),200
+        return jsonify({
+            "address":pubkey,
+            "pem":body,
+            "addr":pubkey,
+            "shard":_infos["shard"]
+        }),200
     else:
         return returnError()
 
@@ -653,11 +662,8 @@ def resend_pem(addr:str):
 #http://localhost:6660/api/test/
 @app.route('/api/test/',methods=["GET"])
 def test():
-    solanaFactory=SolanaNet()
-    rc=solanaFactory.mint(
-        solanaFactory.account("paul")
-    )
-    return rc
+    cid=client.add({"test":12})
+    return client.get_link(cid)
 
 
 
@@ -835,6 +841,7 @@ def prepare_data(data,miner):
     if not "title" in data: data["title"] = data["signature"]
     if not "gift" in data or data["gift"] is None: data["gift"] = 0
     if not "secret" in data: data["secret"] = ""
+    if not "visual" in data: data["visual"] = ""
     if not "price" in data: data["price"] = 0
     if not "deadline" in data: data["deadline"] = 0
     if not "network" in data: data["network"] = "elrond"
@@ -881,7 +888,7 @@ def prepare_data(data,miner):
     #voir la méthode
     data["deadline"]=int(float(data["deadline"])*(3600*24*1000))
 
-    if "visual" in data and len(data["visual"]) > 0:
+    if len(data["visual"]) > 0:
         res_visual = "%%" + data["visual"]
         if "fullscreen" in data and data["fullscreen"]: res_visual = res_visual.replace("%%", "!!")
 
@@ -985,14 +992,14 @@ def mint(count:str,data:dict=None):
     if data["elrond_standard"]:
         log("Construction d'un NFT standard elrond")
         bc.mint_standard_nft(miner,
-                             data["desc"]["title"],
+                             data["desc"]["title"],data["collection"],
                              {
                                 "description":data["desc"]["desc"],
                                 "secret":data["secret"],
                                 "properties":hex(data["properties"]),
                                 "state":hex(1)
-                             },
-                             count)
+                             },data["price"],
+                             count,0,data["visual"],client)
     else:
         if data["network"]=="elrond":
             count=int(count)
@@ -1420,52 +1427,56 @@ def deployESDT(name:str,unity:str,nbdec:str,amount:str,data:dict=None):
 @app.route('/api/server_config/')
 @cache.cached(timeout=3600)
 def server_config():
-    log("Récupération de la configuration du server avec la bank "+bc.bank.address.bech32())
+    infos = {}
+    if bc:
+        log("Récupération de la configuration du server avec la bank "+bc.bank.address.bech32())
 
-    profils = [
-        {"label": "Alice", "value": "alice.pem"},
-        {"label": "Eve", "value": "eve.pem"},
-        {"label": "Dan", "value": "dan.pem"},
-        {"label": "Grace", "value": "grace.pem"},
-        {"label": "Franck", "value": "franck.pem"},
-        {"label": "Ivan", "value": "ivan.pem"},
-        {"label": "Mallory", "value": "mallory.pem"},
-        {"label": "Judy", "value": "judy.pem"},
-        {"label": "Thomas", "value": "thomas.pem"},
-        {"label": "Herve", "value": "herve.pem"},
-        {"label": "Test1", "value": "test1.pem"},
-        {"label": "Test2", "value": "test2.pem"},
-        {"label": "Test3", "value": "test3.pem"},
-        {"label": "Test4", "value": "test4.pem"}
-    ]
+        profils = [
+            {"label": "Alice", "value": "alice.pem"},
+            {"label": "Eve", "value": "eve.pem"},
+            {"label": "Dan", "value": "dan.pem"},
+            {"label": "Grace", "value": "grace.pem"},
+            {"label": "Franck", "value": "franck.pem"},
+            {"label": "Ivan", "value": "ivan.pem"},
+            {"label": "Mallory", "value": "mallory.pem"},
+            {"label": "Judy", "value": "judy.pem"},
+            {"label": "Thomas", "value": "thomas.pem"},
+            {"label": "Herve", "value": "herve.pem"},
+            {"label": "Test1", "value": "test1.pem"},
+            {"label": "Test2", "value": "test2.pem"},
+            {"label": "Test3", "value": "test3.pem"},
+            {"label": "Test4", "value": "test4.pem"}
+        ]
 
-    infos = {
-        "bank_addr": bc.bank.address.bech32(),
-        "proxy": bc._proxy.url,
-        "network":bc.network_name,
-        "profils":profils,
-        "appname":APPNAME,
-        "reload_amount":NETWORKS[bc.network_name]["new_account"],
-        "new_esdt_price":ESDT_PRICE/1e18,
-        "nft_contract": NETWORKS[bc.network_name]["nft"],
-        "domain_appli":DOMAIN_APPLI,
-        "esdt_contract": ESDT_CONTRACT,
-        "bank_gas":bc._proxy.get_account_balance(bc.bank.address),
-        "explorer":bc._proxy.url.replace("-gateway","-explorer"),
-        "contract_explorer": bc._proxy.url.replace("-api", "-explorer")+"/address/"+NETWORKS[bc.network_name]["nft"],
-        "wallet": bc._proxy.url.replace("-gateway", "-wallet")+"/unlock/pem",
-        "wallet_domain": bc._proxy.url.replace("-gateway","-wallet") +"/",
-        "faucet":NETWORKS[bc.network_name]["faucet"]
-    }
+        infos = {
+            "bank_addr": bc.bank.address.bech32(),
+            "proxy": bc._proxy.url,
+            "network":bc.network_name,
+            "profils":profils,
+            "appname":APPNAME,
+            "reload_amount":NETWORKS[bc.network_name]["new_account"],
+            "new_esdt_price":ESDT_PRICE/1e18,
+            "nft_contract": NETWORKS[bc.network_name]["nft"],
+            "domain_appli":DOMAIN_APPLI,
+            "esdt_contract": ESDT_CONTRACT,
+            "bank_gas":bc._proxy.get_account_balance(bc.bank.address),
+            "explorer":bc._proxy.url.replace("-gateway","-explorer"),
+            "contract_explorer": bc._proxy.url.replace("-api", "-explorer")+"/address/"+NETWORKS[bc.network_name]["nft"],
+            "wallet": bc._proxy.url.replace("-gateway", "-wallet")+"/unlock/pem",
+            "wallet_domain": bc._proxy.url.replace("-gateway","-wallet") +"/",
+            "faucet":NETWORKS[bc.network_name]["faucet"]
+        }
 
-    bank_balance=bc.getMoneys(bc.bank)
-    if "identifier" in NETWORKS[bc.network_name] and NETWORKS[bc.network_name]["identifier"] in bank_balance:
-        infos["default_money"]=bank_balance[NETWORKS[bc.network_name]["identifier"]]["unity"]
-        infos["bank_esdt_ref"]=NETWORKS[bc.network_name]["identifier"]
-        infos["bank_esdt"]=bank_balance[NETWORKS[bc.network_name]["identifier"]]["balance"]
-        log("Balance de la bank " + str(bank_balance))
+        bank_balance=bc.getMoneys(bc.bank)
+        if "identifier" in NETWORKS[bc.network_name] and NETWORKS[bc.network_name]["identifier"] in bank_balance:
+            infos["default_money"]=bank_balance[NETWORKS[bc.network_name]["identifier"]]["unity"]
+            infos["bank_esdt_ref"]=NETWORKS[bc.network_name]["identifier"]
+            infos["bank_esdt"]=bank_balance[NETWORKS[bc.network_name]["identifier"]]["balance"]
+            log("Balance de la bank " + str(bank_balance))
+        else:
+            log("Pas de monnaie disponible, on charge celle du fichier de config " + str(bank_balance))
     else:
-        log("Pas de monnaie disponible, on charge celle du fichier de config " + str(bank_balance))
+        infos["error"]="Blockchain non disponible"
 
     return jsonify(infos),200
 
@@ -1671,8 +1682,7 @@ def getname(contract:str):
 if __name__ == '__main__':
     _port=int(sys.argv[1])
     scheduler.start()
-    #vérifier la connexion avec IPFS
-    client:IPFS = IPFS(IPFS_NODE_HOST,IPFS_NODE_PORT)
+
 
     if "debug" in sys.argv:
         socketio.run(app,host="0.0.0.0", port=_port, debug=True)

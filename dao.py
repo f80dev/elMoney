@@ -22,7 +22,9 @@ class DAO:
         log("Ouverture de la base de données "+dbname)
         try:
             log("Connexion à la base de donnée "+DB_SERVERS[domain])
-            self.db: pymongo.mongo_client = pymongo.MongoClient(DB_SERVERS[domain])[dbname]
+            url=DB_SERVERS[domain]
+            self.db: pymongo.mongo_client = pymongo.MongoClient(url)[dbname]
+            infos=self.db.server_info()
             pass
         except Exception as inst:
             log("Base de données non disponible "+str(inst.args))
@@ -80,15 +82,16 @@ class DAO:
 
 
     def raz(self,proxy):
-        self.db["moneys"].remove({"proxy":proxy})
-        self.db["contacts"].drop()
-        self.db["users"].drop()
+        if self.db:
+            self.db["moneys"].remove({"proxy":proxy})
+            self.db["contacts"].drop()
+            self.db["users"].drop()
         return True
 
 
     def del_contract(self, idx, proxy):
-        rc=self.db["moneys"].remove({"idx":idx,"proxy": proxy})
-        pass
+        if self.db:
+            rc=self.db["moneys"].remove({"idx":idx,"proxy": proxy})
 
 
     def get_nftcontract_by_owner(self,addr):
