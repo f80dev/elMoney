@@ -12,6 +12,8 @@ import {environment} from "../../environments/environment";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Location} from "@angular/common";
 import {animate, state, style, transition, trigger} from "@angular/animations";
+import {NewDealerComponent} from "../new-dealer/new-dealer.component";
+import {CollectionsComponent} from "../collections/collections.component";
 
 @Component({
   selector: 'app-nfts-perso',
@@ -160,5 +162,15 @@ export class NftsPersoComponent implements OnInit {
 
   tab_changed($event: any) {
     this._location.replaceState("nft-perso","index="+$event);
+  }
+
+  openCollections() {
+    this.dialog.open(CollectionsComponent, {
+      position: {left: '5vw', top: '5vh'},
+      maxWidth: 400, width: '90vw', height: 'auto',
+      data:{title:"Liste des collections"}
+    }).afterClosed().subscribe((result) => {
+
+    });
   }
 }

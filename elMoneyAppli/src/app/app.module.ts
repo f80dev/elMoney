@@ -89,6 +89,7 @@ import {QRCodeModule} from "angularx-qrcode";
 import { VotesComponent } from './votes/votes.component';
 import {GoogleChartsModule} from 'angular-google-charts';
 import {VisgraphComponent} from "./visgraph/visgraph.component";
+import { CollectionsComponent } from './collections/collections.component';
 
 
 const config: SocketIoConfig = {
@@ -146,7 +147,8 @@ const config: SocketIoConfig = {
     ChartsComponent,
     NftConfirmComponent,
     MinicontactsComponent,
-    VotesComponent
+    VotesComponent,
+    CollectionsComponent
   ],
     imports: [
         MatButtonModule,

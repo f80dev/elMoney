@@ -21,6 +21,7 @@ import {map, startWith} from "rxjs/operators";
 import {IpfsService} from "../ipfs.service";
 import {DatePipe, Location} from "@angular/common";
 import {ClipboardService} from "ngx-clipboard";
+import {CollectionsComponent} from "../collections/collections.component";
 
 export interface SellerProperties {
   address: string;
@@ -145,6 +146,11 @@ export class ImporterComponent implements OnInit {
             }
           }
         }
+
+        this.api._get("collections","creator="+this.user.addr).subscribe(r =>{
+          this.collections=r;
+        })
+
       });
     },this,"La création d'un NFT requiert votre signature",()=>{
       this._location.back();
@@ -745,6 +751,7 @@ export class ImporterComponent implements OnInit {
   //http://localhost:4200/importer?token=member_card
   deadline: number=0;
   limit: number=0;
+  collections: any;
   quick_card(token:any,title="Titre de la carte ?"){
     this.add_visual((visual:any)=>{
       if(visual){
@@ -1091,5 +1098,15 @@ export class ImporterComponent implements OnInit {
   remove_required_token(t: any) {
     let i=this.required_tokens.indexOf(t);
     if(i>-1)this.required_tokens.splice(i,1);
+  }
+
+  sel_collection() {
+    this.dialog.open(CollectionsComponent, {
+      position: {left: '5vw', top: '5vh'},
+      maxWidth: 400, width: '90vw', height: 'auto',
+      data:{title:"Liste des collections"}
+    }).afterClosed().subscribe((result) => {
+      this.collection=result.ticker;
+    });
   }
 }

@@ -157,7 +157,6 @@ export class UserService {
     this.api._get("users/"+this.addr).subscribe((body:any)=>{
       $$("Récupération de ",body);
       body=body[0];
-      debugger
       //this.contacts_addr=body.contacts || [];
       this.pseudo=body.pseudo || "";
       this.visual=body.visual || "";

@@ -136,6 +136,27 @@ def analyse_pem():
         return returnError()
 
 
+@app.route('/api/collections/',methods=["GET"])
+def get_collection():
+    rc=bc.get_collections(request.args.get("creator"),[])
+    return jsonify(rc)
+
+
+@app.route('/api/add_collection/',methods=["POST"])
+def add_collection():
+    _owner=bc.get_elrond_user(request.json)
+    if _owner:
+        body=request.json
+        rc=bc.add_collection(
+            _owner,
+            body["name"],
+            type=body["type"]
+        )
+        return jsonify({"ticker":rc})
+    else:
+        return returnError("PEM not correct")
+
+
 
 def refresh_client(dest:str,comment:str=""):
     send(socketio,"refresh_account",dest,"",{"comment":comment})

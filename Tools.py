@@ -7,7 +7,8 @@ from email.mime.text import MIMEText
 from io import StringIO
 
 import pandas as pd
-from flask import jsonify
+import requests.api
+from requests_cache import CachedSession
 
 from definitions import SMTP_SERVER, USERNAME, PASSWORD, DOMAIN_APPLI, SIGNATURE, APPNAME
 
@@ -54,6 +55,40 @@ def base_alphabet_to_10(letters):
             (ord(letter) - ord('A') + 1) * 26**i
             for i, letter in enumerate(reversed(letters.upper()))
     )
+
+
+def api(url,alternate_domain="",cache:CachedSession=None):
+    log("Appel de "+url)
+    if cache:
+        data=cache.get(url)
+    else:
+        data=requests.api.get(url)
+
+    if data.status_code!=200:
+        log("Appel de "+url)
+        url=url.replace(alternate_domain.split("=")[0],alternate_domain.split("=")[1])
+
+        if cache:
+            data=cache.get(url)
+        else:
+            data=requests.api.get(url)
+
+        if data.status_code!=200:
+            log("Echec de l'appel "+str(data.status_code)+" "+data.text)
+            return None
+
+    try:
+        return data.json()
+    except:
+        return data.text
+
+
+
+
+
+
+
+
 
 
 def str_to_int(letters):

@@ -307,7 +307,7 @@ export function $$(s: string, obj: any= null) {
   console.log("");
   if(environment.production)return;
   if((s!=null && s.startsWith("!")) || localStorage.getItem("debug")=="1"){
-    debugger
+    //debugger
   }
   const lg = new Date().getHours() + ':' + new Date().getMinutes() + ' -> ' + s;
   if (obj != null) {

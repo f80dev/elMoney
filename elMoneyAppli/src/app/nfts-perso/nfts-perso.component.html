@@ -38,6 +38,12 @@
                   (transfer)="transfer($event)">
         </app-nfts>
         <br>
+      <button mat-raised-button mat-button
+              class="app-button"
+              (click)="openCollections()">
+        Mes collections
+      </button>
+      &nbsp;
         <button mat-raised-button mat-button
                 class="app-button"
                 (click)="router.navigate(['store'])">

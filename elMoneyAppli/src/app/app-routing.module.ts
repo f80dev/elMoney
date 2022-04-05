@@ -25,6 +25,7 @@ import {NgModule} from "@angular/core";
 import {ChartsComponent} from "./charts/charts.component";
 import {VotesComponent} from "./votes/votes.component";
 import {VisgraphComponent} from "./visgraph/visgraph.component";
+import {CollectionsComponent} from "./collections/collections.component";
 
 const routes: Routes = [
   { path: 'admin', component: AdminComponent},
@@ -32,6 +33,7 @@ const routes: Routes = [
   { path: 'create', component: CreateComponent},
   { path: 'private', component: PrivateComponent},
   { path: 'moneys', component: MoneysComponent},
+  { path: 'collections', component: CollectionsComponent},
   { path: 'faqs', component: FaqsComponent},
   { path: 'settings', component: SettingsComponent},
   { path: 'about', component: AboutComponent},

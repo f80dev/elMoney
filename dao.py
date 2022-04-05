@@ -24,8 +24,6 @@ class DAO:
             log("Connexion à la base de donnée "+DB_SERVERS[domain])
             url=DB_SERVERS[domain]
             self.db: pymongo.mongo_client = pymongo.MongoClient(url)[dbname]
-            infos=self.db.server_info()
-            pass
         except Exception as inst:
             log("Base de données non disponible "+str(inst.args))
             self.db=None

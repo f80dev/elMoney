@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1647601468727,
+  "timestamp": 1649147736827,
   "index": "https://tf.f80lab.com/index.html",
   "assetGroups": [
     {
@@ -129,7 +129,7 @@
     "https://tf.f80lab.com/favicon.ico": "c3bbe9dfa628852d8131849561b7fd52194f4d8d",
     "https://tf.f80lab.com/favicon.png": "9d07b4062b45b028a517877c4b51af7a330eab1a",
     "https://tf.f80lab.com/index.html": "23832cd35dd8a29cb66129b0a913475813716364",
-    "https://tf.f80lab.com/main.js": "2124145528b36f6fe1fe003eedde7af753c5b099",
+    "https://tf.f80lab.com/main.js": "1915403e53e341ac711296e31773a4aaecf5ef0a",
     "https://tf.f80lab.com/manifest.webmanifest": "8291133aeacc475e061eb544514d2c1e8c02c576",
     "https://tf.f80lab.com/polyfills.js": "f27c4bb54b0bc8515058abb3416ad07096659b24",
     "https://tf.f80lab.com/runtime.js": "f2560e29ddab8496db5ae82fe808466573f04409",

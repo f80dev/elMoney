@@ -133,14 +133,22 @@
 
             <br>
 
-            <mat-form-field appearance="fill" class="app-field">
+            <mat-form-field appearance="fill" style="max-width:400px">
               <mat-label>Collection / Série du NFT</mat-label>
-              <input matInput type="text" maxlength="200"
-                     id="txtCollection"
-                     [(ngModel)]="collection" [ngModelOptions]="{standalone: true}" (focusin)="focus_idx=2">
+              <mat-select [(ngModel)]="collection" name="collection" (ngModelChange)="update_user_solde()">
+                <mat-option *ngFor="let col of collections" [value]="col.ticker">
+                  {{col?.name}}
+                </mat-option>
+              </mat-select>
               <mat-hint *ngIf="focus_idx==2">Donner un nom à la collection a laquelle appartient votre NFT</mat-hint>
-              <mat-icon *ngIf="collection?.length>0" matSuffix style="cursor: pointer" (click)="collection=''">cancel</mat-icon>
             </mat-form-field>
+            &nbsp;
+            <button mat-raised-button
+                    mat-button class="app-button"
+                    (click)="sel_collection()">
+              Ajouter
+            </button>
+
             <br>
 
 
